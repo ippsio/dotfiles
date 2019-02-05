@@ -1,0 +1,35 @@
+[[plugins]]
+repo = 'tpope/vim-rails'
+
+# rsense
+[[plugins]]
+repo = 'Shougo/neocomplcache-rsense.vim'
+hook_add = '''
+  if !exists('g:neocomplcache_omni_patterns')
+    let g:neocomplcache_omni_patterns = {}
+  endif
+  let g:neocomplcache_omni_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
+  autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
+
+  "rsenseのインストールフォルダがデフォルトと異なるので設定
+  let g:rsenseHome = expand("/usr/local/bin/rsense")
+  let g:rsenseUseOmniFunc = 1
+'''
+
+[[plugins]]
+repo = 'Shougo/deoplete-rct'
+on_ft = ['ruby']
+
+[[plugins]]
+repo = 'fishbullet/deoplete-ruby'
+on_ft = ['ruby']
+
+[[plugins]]
+repo = 'osyo-manga/vim-monster'
+on_i = 1
+hook_add = '''
+  let g:monster#completion#rcodetools#backend = "async_rct_complete"
+  let g:deoplete#sources#omni#input_patterns = {
+    \ "ruby" : '[^. *\t]\.\w*\|\h\w*::',
+  \}
+'''
