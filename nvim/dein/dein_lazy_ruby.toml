@@ -1,5 +1,13 @@
 [[plugins]]
+repo = 'vim-ruby/vim-ruby'
+[[plugins]]
+repo = 'tpope/vim-rbenv'
+[[plugins]]
+repo = 'tpope/vim-rbenv'
+[[plugins]]
 repo = 'tpope/vim-rails'
+[[plugins]]
+repo = 'tpope/vim-bundler'
 
 # rsense
 [[plugins]]
@@ -16,20 +24,26 @@ hook_add = '''
   let g:rsenseUseOmniFunc = 1
 '''
 
+# Ruby Completion for deoplete using rcodetools
 [[plugins]]
 repo = 'Shougo/deoplete-rct'
 on_ft = ['ruby']
 
+# Deoplete-Ruby Completion
 [[plugins]]
 repo = 'fishbullet/deoplete-ruby'
 on_ft = ['ruby']
 
-[[plugins]]
-repo = 'osyo-manga/vim-monster'
-on_i = 1
-hook_add = '''
-  let g:monster#completion#rcodetools#backend = "async_rct_complete"
-  let g:deoplete#sources#omni#input_patterns = {
-    \ "ruby" : '[^. *\t]\.\w*\|\h\w*::',
-  \}
-'''
+# うまく動かせなかったのでコメントアウト
+## Ruby のコード補完プラグイン
+#[[plugins]]
+#repo = 'osyo-manga/vim-monster'
+#on_i = 1
+#hook_add = '''
+#  let g:monster#completion#rcodetools#backend = "async_rct_complete"
+#  let g:deoplete#sources#omni#input_patterns = {
+#    \ "ruby" : '[^. *\t]\.\w*\|\h\w*::',
+#  \}
+#'''
+
+
