@@ -11,13 +11,6 @@ repo = 'Shougo/context_filetype.vim'
 [[plugins]]
 repo = 'Shougo/unite.vim'
 
-# colorschema
-[[plugins]]
-repo = 'chriskempson/vim-tomorrow-theme'
-hook_post_source = '''
-  colorscheme Tomorrow-Night-Bright
-'''
-
 # statusline
 [[plugins]]
 repo = 'itchyny/lightline.vim'
