@@ -4,6 +4,11 @@
 if &compatible
   set nocompatible
 endif
+
+augroup MyAutoCmd
+  autocmd!
+augroup END
+
 " Add the dein installation directory into runtimepath
 set runtimepath+=~/.cache/dein/repos/github.com/Shougo/dein.vim
 

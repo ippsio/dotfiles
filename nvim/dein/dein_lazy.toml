@@ -1,9 +1,3 @@
-## colorschema
-[[plugins]]
-repo = 'chriskempson/vim-tomorrow-theme'
-hook_add = '''
-  colorscheme Tomorrow-Night-Bright
-'''
 
 # 補完
 # 終了タグ等の自動補完

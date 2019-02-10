@@ -1,15 +1,29 @@
 [[plugins]]
 repo = 'Shougo/dein.vim'
 
-[[plugins]]
-repo = 'osyo-manga/vim-precious'
-depends = ['Shougo/context_filetype.vim']
+#[[plugins]]
+#repo = 'osyo-manga/vim-precious'
+#depends = ['Shougo/context_filetype.vim']
 
 [[plugins]]
 repo = 'Shougo/context_filetype.vim'
 
+#[[plugins]]
+#repo = 'Shougo/unite.vim'
+
+## colorschema
 [[plugins]]
-repo = 'Shougo/unite.vim'
+repo = 'chriskempson/vim-tomorrow-theme'
+hook_add = '''
+  set background=dark
+  au MyAutoCmd VimEnter * nested colorscheme Tomorrow-Night-Bright
+'''
+#[[plugins]]
+#repo = 'w0ng/vim-hybrid'
+#hook_add = '''
+#  set background=dark
+#  au MyAutoCmd VimEnter * nested colorscheme hybrid
+#'''
 
 # statusline
 [[plugins]]
@@ -38,13 +52,13 @@ repo = 'Yggdroot/indentLine'
 [[plugins]]
 repo = 'bronson/vim-trailing-whitespace'
 
-# j, k移動高速化
-[[plugins]]
-repo = 'rhysd/accelerated-jk'
-hook_add = '''
-  nmap j <Plug>(accelerated_jk_gj)
-  nmap k <Plug>(accelerated_jk_gk)
-'''
+## j, k移動高速化
+#[[plugins]]
+#repo = 'rhysd/accelerated-jk'
+#hook_add = '''
+#  nmap j <Plug>(accelerated_jk_gj)
+#  nmap k <Plug>(accelerated_jk_gk)
+#'''
 
 # /検索強化
 [[plugins]]
