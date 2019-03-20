@@ -5,15 +5,14 @@ repo = 'Shougo/dein.vim'
 #repo = 'osyo-manga/vim-precious'
 #depends = ['Shougo/context_filetype.vim']
 
-[[plugins]]
-repo = 'Shougo/context_filetype.vim'
+#[[plugins]]
+#repo = 'Shougo/context_filetype.vim'
 
 #[[plugins]]
 #repo = 'Shougo/unite.vim'
 
-## colorschema
-[[plugins]]
-repo = 'chriskempson/vim-tomorrow-theme'
+## colorschema 
+[[plugins]] repo = 'chriskempson/vim-tomorrow-theme'
 hook_add = '''
   set background=dark
   au MyAutoCmd VimEnter * nested colorscheme Tomorrow-Night-Bright
@@ -121,4 +120,12 @@ if executable('ag')
 
 [[plugins]]
 repo = 'rking/ag.vim'
+
+[[plugins]]
+repo = 'fholgado/minibufexpl.vim'
+hook_add = '''
+  nnoremap gbb :TMiniBufExplorer<CR>
+  nnoremap gbg :MiniBufExplorer<CR>
+  let g:miniBufExplorerMoreThanOne = 0
+'''
 
