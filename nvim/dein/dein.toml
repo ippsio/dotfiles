@@ -129,3 +129,9 @@ hook_add = '''
   let g:miniBufExplorerMoreThanOne = 0
 '''
 
+[[plugins]]
+repo = 'airblade/vim-gitgutter'
+hook_add = '''
+  set signcolumn=yes
+'''
+

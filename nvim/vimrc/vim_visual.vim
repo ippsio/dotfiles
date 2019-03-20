@@ -57,7 +57,7 @@ set shiftround
 " 補完の際の大文字小文字の区別しない
 set infercase
 " 行末1文字までカーソルを移動できるようにする
-set virtualedit=onemore
+"set virtualedit=onemore
 " 変更中のファイルでも、保存しないで他のファイルを表示
 set hidden
 " 新しく開く代わりにすでに開いてあるバッファを開く
