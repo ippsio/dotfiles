@@ -74,13 +74,21 @@ hook_add = '''
 [[plugins]]
 repo = 'rhysd/clever-f.vim'
 
+[[plugins]]
+repo = 'fholgado/minibufexpl.vim'
+hook_add = '''
+  let g:miniBufExplVSplit = 30
+  let g:miniBufExplorerMoreThanOne = 1
+'''
+
+
 # NERDTree
 [[plugins]]
 repo = 'scrooloose/nerdtree'
 hook_add = '''
   let g:NERDTreeShowBookmarks=1
   "引数なしでvimを開いたらNERDTreeを起動、
-  autocmd vimenter * if !argc() | NERDTree | endif
+  "autocmd vimenter * if !argc() | NERDTree | endif
 
   "他のバッファをすべて閉じた時にNERDTreeが開いていたらNERDTreeも一緒に閉じる。
   autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
@@ -120,14 +128,6 @@ if executable('ag')
 
 [[plugins]]
 repo = 'rking/ag.vim'
-
-[[plugins]]
-repo = 'fholgado/minibufexpl.vim'
-hook_add = '''
-  nnoremap gbb :TMiniBufExplorer<CR>
-  nnoremap gbg :MiniBufExplorer<CR>
-  let g:miniBufExplorerMoreThanOne = 0
-'''
 
 [[plugins]]
 repo = 'airblade/vim-gitgutter'
