@@ -67,19 +67,6 @@ hook_add = '''
 #[[plugins]]
 #repo = 'Shougo/unite.vim'
 
-## colorschema 
-[[plugins]] repo = 'chriskempson/vim-tomorrow-theme'
-hook_add = '''
-  set background=dark
-  au MyAutoCmd VimEnter * nested colorscheme Tomorrow-Night-Bright
-'''
-#[[plugins]]
-#repo = 'w0ng/vim-hybrid'
-#hook_add = '''
-#  set background=dark
-#  au MyAutoCmd VimEnter * nested colorscheme hybrid
-#'''
-
 # statusline
 [[plugins]]
 repo = 'itchyny/lightline.vim'

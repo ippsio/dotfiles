@@ -90,6 +90,7 @@ autocmd BufNewFile,BufRead *.vue set filetype=html
 function! ZenkakuSpace()
     highlight ZenkakuSpace cterm=underline ctermfg=lightblue guibg=darkgray
 endfunction
+
 if has('syntax')
     augroup ZenkakuSpace
         autocmd!
@@ -98,4 +99,6 @@ if has('syntax')
     augroup END
     call ZenkakuSpace()
 endif
+
+set termguicolors
 
