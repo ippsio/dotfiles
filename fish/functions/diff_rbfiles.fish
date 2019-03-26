@@ -10,7 +10,9 @@ function diff_rbfiles
     echo -e "==============================================================="
     echo -e " LIST OF DIFF OF *.RB FILES AGAINST [$1]"
     echo -e "==============================================================="
-    echo -e `git diff $argv[1] --name-only| grep -c '\.rb$'` found.
+
+    set files_count (git diff $argv[1] --name-only| grep -c '\.rb$')
+    echo -e "$files_count found."
     echo -en "\e[m"
     git diff $argv[1] --name-only| grep '\.rb$'
     echo -e ""
