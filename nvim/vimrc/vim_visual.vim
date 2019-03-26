@@ -75,7 +75,7 @@ set hlsearch
 " コマンドを画面最下部に表示する
 set showcmd
 " ◆や○文字が崩れる問題を解決"
-set ambiwidth=double
+"set ambiwidth=double
 
 filetype plugin indent on
 syntax enable

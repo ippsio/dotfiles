@@ -1,41 +1,41 @@
-# 補完
-# 終了タグ等の自動補完
-[[plugins]]
-repo = 'tpope/vim-endwise'
-
-[[plugins]]
-repo = 'Shougo/neocomplcache.vim'
-hook_add = '''
-  " Disable AutoComplPop.
-  let g:acp_enableAtStartup = 0
-
-  " Use neocomplcache.
-  let g:neocomplcache_enable_at_startup = 1
-
-  " Use smartcase.
-  let g:neocomplcache_enable_smart_case = 1
-
-  " Set minimum syntax keyword length.
-  let g:neocomplcache_min_syntax_length = 3
-  let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
-
-  let g:neocomplcache_enable_camel_case_completion = 1
-  let g:neocomplcache_enable_underbar_completion = 1
-
-  " 補完候補表示時、先頭1件を選択状態にする
-  let g:neocomplcache_enable_auto_select = 1
-'''
-
-# Ctags generator for vim
-[[plugins]]
-repo = 'szw/vim-tags'
-hook_add = '''
-  let g:vim_tags_project_tags_command = "/usr/local/bin/ctags -f .tags -R . 2>/dev/null"
-  let g:vim_tags_gems_tags_command = "/usr/local/bin/ctags -R -f .Gemfile.lock.tags `bundle show --paths` 2>/dev/null"
-  set tags+=.tags
-  set tags+=.Gemfile.lock.tags<Paste>
-
-  " tagsジャンプ時に複数候補ある場合、一覧表示
-  nnoremap <C-]> g<C-]>
-'''
-
+## 補完
+## 終了タグ等の自動補完
+#[[plugins]]
+#repo = 'tpope/vim-endwise'
+#
+#[[plugins]]
+#repo = 'Shougo/neocomplcache.vim'
+#hook_add = '''
+#  " Disable AutoComplPop.
+#  let g:acp_enableAtStartup = 0
+#
+#  " Use neocomplcache.
+#  let g:neocomplcache_enable_at_startup = 1
+#
+#  " Use smartcase.
+#  let g:neocomplcache_enable_smart_case = 1
+#
+#  " Set minimum syntax keyword length.
+#  let g:neocomplcache_min_syntax_length = 3
+#  let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
+#
+#  let g:neocomplcache_enable_camel_case_completion = 1
+#  let g:neocomplcache_enable_underbar_completion = 1
+#
+#  " 補完候補表示時、先頭1件を選択状態にする
+#  let g:neocomplcache_enable_auto_select = 1
+#'''
+#
+## Ctags generator for vim
+#[[plugins]]
+#repo = 'szw/vim-tags'
+#hook_add = '''
+#  let g:vim_tags_project_tags_command = "/usr/local/bin/ctags -f .tags -R . 2>/dev/null"
+#  let g:vim_tags_gems_tags_command = "/usr/local/bin/ctags -R -f .Gemfile.lock.tags `bundle show --paths` 2>/dev/null"
+#  set tags+=.tags
+#  set tags+=.Gemfile.lock.tags<Paste>
+#
+#  " tagsジャンプ時に複数候補ある場合、一覧表示
+#  nnoremap <C-]> g<C-]>
+#'''
+#
