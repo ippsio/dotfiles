@@ -1,0 +1,12 @@
+[[plugins]]
+repo = 'tpope/vim-markdown'
+on_ft = ['markdown']
+
+[[plugins]]
+repo = 'previm/previm'
+on_ft = ['markdown']
+hook_add = '''
+ let g:previm_open_cmd = 'open -a "Google Chrome"'
+'''
+
+

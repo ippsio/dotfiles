@@ -20,6 +20,7 @@ if dein#load_state('~/.cache/dein')
   call dein#load_toml('~/.config/nvim/dein/dein.toml', {'lazy': 0})
   call dein#load_toml('~/.config/nvim/dein/dein_lazy.toml', {'lazy': 1})
   call dein#load_toml('~/.config/nvim/dein/dein_lazy_ruby.toml', {'lazy': 1})
+  call dein#load_toml('~/.config/nvim/dein/dein_lazy_markdown.toml', {'lazy': 1})
 
   "if !has('nvim')
   "  call dein#add('roxma/nvim-yarp')
