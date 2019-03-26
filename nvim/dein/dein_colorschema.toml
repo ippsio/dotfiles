@@ -1,0 +1,36 @@
+# colorschema
+#[[plugins]]
+#repo = 'chriskempson/vim-tomorrow-theme'
+#hook_add = '''
+#  set background=dark
+#  au MyAutoCmd VimEnter * nested colorscheme Tomorrow-Night-Bright
+#'''
+
+#[[plugins]]
+#repo = 'w0ng/vim-hybrid'
+#hook_add = '''
+#  set background=dark
+#  au MyAutoCmd VimEnter * nested colorscheme hybrid
+#'''
+
+[[plugins]]
+repo = 'tomasr/molokai'
+hook_add = '''
+  set background=dark
+  au MyAutoCmd VimEnter * nested colorscheme molokai
+'''
+
+#[[plugins]]
+#repo = 'znake/znake-vim'
+#hook_add = '''
+#  set background=dark
+#  au MyAutoCmd VimEnter * nested colorscheme znake
+#'''
+
+#[[plugins]]
+#repo = 'archSeer/colibri.vim'
+#hook_add = '''
+#  set background=dark
+#  au MyAutoCmd VimEnter * nested colorscheme colibri
+#'''
+
