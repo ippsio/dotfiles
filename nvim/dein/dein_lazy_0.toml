@@ -117,8 +117,14 @@ repo = 'rhysd/clever-f.vim'
 [[plugins]]
 repo = 'fholgado/minibufexpl.vim'
 hook_add = '''
-  let g:miniBufExplMinSize = 2
-  "let g:miniBufExplVSplit = 30
+  " 画面上部に最低2行で表示
+  "let g:miniBufExplMinSize = 2
+
+  " 画面横に表示
+  let g:miniBufExplBRSplit = 1  " 右
+  "let g:miniBufExplBRSplit = 0  " 左
+  let g:miniBufExplVSplit = 30
+
   let g:miniBufExplorerMoreThanOne = 1
   set background=dark
 
