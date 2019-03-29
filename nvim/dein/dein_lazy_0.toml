@@ -1,0 +1,196 @@
+# 補完
+# 終了タグ等の自動補完
+[[plugins]]
+repo = 'tpope/vim-endwise'
+
+[[plugins]]
+repo = 'Shougo/neocomplcache.vim'
+hook_add = '''
+  " Disable AutoComplPop.
+  let g:acp_enableAtStartup = 0
+
+  " Use neocomplcache.
+  let g:neocomplcache_enable_at_startup = 1
+
+  " Use smartcase.
+  let g:neocomplcache_enable_smart_case = 1
+
+  " Set minimum syntax keyword length.
+  let g:neocomplcache_min_syntax_length = 3
+  let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
+
+  let g:neocomplcache_enable_camel_case_completion = 1
+  let g:neocomplcache_enable_underbar_completion = 1
+
+  " 補完候補表示時、先頭1件を選択状態にする
+  let g:neocomplcache_enable_auto_select = 1
+'''
+
+# rsense
+[[plugins]]
+repo = 'Shougo/neocomplcache-rsense.vim'
+hook_add = '''
+  if !exists('g:neocomplcache_omni_patterns')
+    let g:neocomplcache_omni_patterns = {}
+  endif
+  let g:neocomplcache_omni_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
+  autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
+
+  "rsenseのインストールフォルダがデフォルトと異なるので設定
+  let g:rsenseHome = expand("/usr/local/bin/rsense")
+  let g:rsenseUseOmniFunc = 1
+'''
+
+# Ctags generator for vim
+[[plugins]]
+repo = 'szw/vim-tags'
+hook_add = '''
+  let g:vim_tags_project_tags_command = "/usr/local/bin/ctags -f .tags -R . 2>/dev/null"
+  let g:vim_tags_gems_tags_command = "/usr/local/bin/ctags -R -f .Gemfile.lock.tags `bundle show --paths` 2>/dev/null"
+  set tags+=.tags
+  set tags+=.Gemfile.lock.tags<Paste>
+
+  " tagsジャンプ時に複数候補ある場合、一覧表示
+  nnoremap <C-]> g<C-]>
+'''
+
+#[[plugins]]
+#repo = 'osyo-manga/vim-precious'
+#depends = ['Shougo/context_filetype.vim']
+
+#[[plugins]]
+#repo = 'Shougo/context_filetype.vim'
+
+#[[plugins]]
+#repo = 'Shougo/unite.vim'
+
+# statusline
+[[plugins]]
+repo = 'itchyny/lightline.vim'
+hook_add = '''
+  set laststatus=2
+  let g:lightline = {
+    \ 'colorscheme': 'wombat',
+    \ 'active': {
+    \   'left': [
+    \     ['mode', 'paste'],
+    \     ['readonly', 'filename', 'modified', 'anzu']
+    \   ]
+    \ },
+    \ 'component_function': {
+    \   'anzu': 'anzu#search_status'
+    \ }
+    \ }
+'''
+
+# インデントを可視化
+[[plugins]]
+repo = 'Yggdroot/indentLine'
+
+# 無駄な空白をハイライト
+[[plugins]]
+repo = 'bronson/vim-trailing-whitespace'
+
+## j, k移動高速化
+#[[plugins]]
+#repo = 'rhysd/accelerated-jk'
+#hook_add = '''
+#  nmap j <Plug>(accelerated_jk_gj)
+#  nmap k <Plug>(accelerated_jk_gk)
+#'''
+
+# /検索強化
+[[plugins]]
+repo = 'osyo-manga/vim-anzu'
+hook_add = '''
+  nmap n nzz<Plug>(anzu-update-search-status)
+  nmap N Nzz<Plug>(anzu-update-search-status)
+  nmap * <Plug>(anzu-star)
+  nmap # <Plug>(anzu-sharp)
+  nmap <silent> <ESC><ESC> :<C-u>nohlsearch<CR><Plug>(anzu-clear-search-status)
+'''
+
+# f検索強化
+[[plugins]]
+repo = 'rhysd/clever-f.vim'
+
+[[plugins]]
+repo = 'fholgado/minibufexpl.vim'
+hook_add = '''
+  " 画面上部に最低2行で表示
+  "let g:miniBufExplMinSize = 2
+
+  " 画面横に表示
+  let g:miniBufExplBRSplit = 1  " 右
+  "let g:miniBufExplBRSplit = 0  " 左
+  let g:miniBufExplVSplit = 30
+
+  let g:miniBufExplorerMoreThanOne = 1
+  set background=dark
+
+  " MiniBufExpl Colors
+  hi MBENormal               guifg=fg      guibg=fg
+  hi MBEVisibleNormal        guifg=fg      guibg=#000088
+  hi MBEVisibleActiveNormal  guifg=fg      guibg=#cc2222
+  hi MBEChanged              guifg=#ff0000 guibg=fg
+  hi MBEVisibleChanged       guifg=#ff0000 guibg=#000088
+  hi MBEVisibleActiveChanged guifg=#ff0000 guibg=#cc2222
+  let g:did_minibufexplorer_syntax_inits = 1
+'''
+
+# NERDTree
+[[plugins]]
+repo = 'scrooloose/nerdtree'
+hook_add = '''
+  let g:NERDTreeShowBookmarks=1
+  "引数なしでvimを開いたらNERDTreeを起動、
+  "autocmd vimenter * if !argc() | NERDTree | endif
+
+  "他のバッファをすべて閉じた時にNERDTreeが開いていたらNERDTreeも一緒に閉じる。
+  autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+  autocmd StdinReadPre * let s:std_in=1
+  "autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+
+  map <C-n> :NERDTreeToggle<CR>
+  " NERDTress File highlighting
+  function! NERDTreeHighlightFile(extension, fg, bg, guifg, guibg)
+    exec 'autocmd filetype nerdtree highlight ' . a:extension .' ctermbg='. a:bg .' ctermfg='. a:fg .' guibg='. a:guibg .' guifg='. a:guifg
+    exec 'autocmd filetype nerdtree syn match ' . a:extension .' #^\s\+.*'. a:extension .'$#'
+  endfunction
+  call NERDTreeHighlightFile('py',     'yellow',  'none', 'yellow',  '#151515')
+  call NERDTreeHighlightFile('md',     'blue',    'none', '#3366FF', '#151515')
+  call NERDTreeHighlightFile('yml',    'yellow',  'none', 'yellow',  '#151515')
+  call NERDTreeHighlightFile('vim',    'yellow',  'none', 'yellow',  '#151515')
+  call NERDTreeHighlightFile('config', 'yellow',  'none', 'yellow',  '#151515')
+  call NERDTreeHighlightFile('conf',   'yellow',  'none', 'yellow',  '#151515')
+  call NERDTreeHighlightFile('json',   'yellow',  'none', 'yellow',  '#151515')
+  call NERDTreeHighlightFile('html',   'yellow',  'none', 'yellow',  '#151515')
+  call NERDTreeHighlightFile('styl',   'cyan',    'none', 'cyan',    '#151515')
+  call NERDTreeHighlightFile('css',    'cyan',    'none', 'cyan',    '#151515')
+  call NERDTreeHighlightFile('rb',     'Red',     'none', 'red',     '#151515')
+  call NERDTreeHighlightFile('js',     'Red',     'none', '#ffa500', '#151515')
+  call NERDTreeHighlightFile('php',    'Magenta', 'none', '#ff00ff', '#151515')
+'''
+
+[[plugins]]
+repo = 'ctrlpvim/ctrlp.vim'
+depends = ['rking/ag.vim']
+hook_add = '''
+if executable('ag')
+  let g:ctrlp_use_caching=0
+  let g:ctrlp_user_command='ag %s -i --nocolor --nogroup -g ""'
+  endif
+'''
+
+[[plugins]]
+repo = 'rking/ag.vim'
+
+[[plugins]]
+repo = 'airblade/vim-gitgutter'
+hook_add = '''
+  set signcolumn=yes
+'''
+
+[[plugins]]
+repo = 'tpope/vim-fugitive'
+
