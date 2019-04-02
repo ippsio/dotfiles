@@ -1,4 +1,8 @@
 # 補完
+
+[[plugins]]
+repo = 'Shougo/deoplete.nvim'
+
 # 終了タグ等の自動補完
 [[plugins]]
 repo = 'tpope/vim-endwise'
@@ -26,21 +30,6 @@ hook_add = '''
   let g:neocomplcache_enable_auto_select = 1
 '''
 
-# rsense
-[[plugins]]
-repo = 'Shougo/neocomplcache-rsense.vim'
-hook_add = '''
-  if !exists('g:neocomplcache_omni_patterns')
-    let g:neocomplcache_omni_patterns = {}
-  endif
-  let g:neocomplcache_omni_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
-  autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
-
-  "rsenseのインストールフォルダがデフォルトと異なるので設定
-  let g:rsenseHome = expand("/usr/local/bin/rsense")
-  let g:rsenseUseOmniFunc = 1
-'''
-
 # Ctags generator for vim
 [[plugins]]
 repo = 'szw/vim-tags'
@@ -55,22 +44,19 @@ hook_add = '''
 '''
 
 #[[plugins]]
-#repo = 'osyo-manga/vim-precious'
-#depends = ['Shougo/context_filetype.vim']
-
-#[[plugins]]
 #repo = 'Shougo/context_filetype.vim'
-
-#[[plugins]]
-#repo = 'Shougo/unite.vim'
 
 # statusline
 [[plugins]]
 repo = 'itchyny/lightline.vim'
 hook_add = '''
+  if !has('gui_running')
+    set t_Co=256
+  endif
+
   set laststatus=2
   let g:lightline = {
-    \ 'colorscheme': 'wombat',
+    \ 'colorscheme': 'nord',
     \ 'active': {
     \   'left': [
     \     ['mode', 'paste'],
@@ -91,14 +77,6 @@ repo = 'Yggdroot/indentLine'
 [[plugins]]
 repo = 'bronson/vim-trailing-whitespace'
 
-## j, k移動高速化
-#[[plugins]]
-#repo = 'rhysd/accelerated-jk'
-#hook_add = '''
-#  nmap j <Plug>(accelerated_jk_gj)
-#  nmap k <Plug>(accelerated_jk_gk)
-#'''
-
 # /検索強化
 [[plugins]]
 repo = 'osyo-manga/vim-anzu'
@@ -117,6 +95,8 @@ repo = 'rhysd/clever-f.vim'
 [[plugins]]
 repo = 'fholgado/minibufexpl.vim'
 hook_add = '''
+  map <C-n> :MBEToggle<CR>
+
   " 画面上部に最低2行で表示
   "let g:miniBufExplMinSize = 2
 
@@ -142,16 +122,23 @@ hook_add = '''
 [[plugins]]
 repo = 'scrooloose/nerdtree'
 hook_add = '''
-  let g:NERDTreeShowBookmarks=1
-  "引数なしでvimを開いたらNERDTreeを起動、
+  let g:NERDTreeShowBookmarks=0
+  "引数なしでvimを開いたらNERDTreeを起動
   "autocmd vimenter * if !argc() | NERDTree | endif
+
+  " vim起動時にNERDTreeを起動
+  autocmd vimenter * NERDTree
 
   "他のバッファをすべて閉じた時にNERDTreeが開いていたらNERDTreeも一緒に閉じる。
   autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
   autocmd StdinReadPre * let s:std_in=1
   "autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 
+  " CTRL+Nでトグル（閉じてたNERDTreeを開く、開いてたNERDTreeを閉じる）
   map <C-n> :NERDTreeToggle<CR>
+
+  let g:NERDTreeShowHidden = 1
+
   " NERDTress File highlighting
   function! NERDTreeHighlightFile(extension, fg, bg, guifg, guibg)
     exec 'autocmd filetype nerdtree highlight ' . a:extension .' ctermbg='. a:bg .' ctermfg='. a:fg .' guibg='. a:guibg .' guifg='. a:guifg
@@ -194,3 +181,34 @@ hook_add = '''
 [[plugins]]
 repo = 'tpope/vim-fugitive'
 
+[[plugins]]
+repo = 'kana/vim-submode'
+hook_add = '''
+  " - submode#enter_with:
+  "     Define a key mapping to enter the {submode} from {modes}.
+  "     If {rhs} is given, it will be executed whenever entering the {submode} by {lhs}.
+  "
+  "  - 1: submode name
+  "  - 2: mode (n:normal, i:insert, ni:normal & insert), ...
+  "  - 3: map option (b:<buffer>, e:<expr>)
+  "  - 4: {lhs} of map
+  "  - 5: {rhs} of map
+  "
+  " - submode#map: 
+  "     Define a key mapping ({lhs} to {rhs}) in the {submode} in {modes}.
+  "
+  "  - 1: submode name
+  "  - 2: mode (n:normal, i:insert, ni:normal & insert), ...
+  "  - 3: map option (b:<buffer>, e:<expr>)
+  "  - 4: {lhs} of map
+  "  - 5: {rhs} of map
+
+  " Window mode
+  for k in split('<>+-=n', '.\zs')
+    call submode#enter_with('window_mode', 'n', '', '<C-w>'.k, '<C-w>'.k)
+    call submode#map(       'window_mode', 'n', '',         k, '<C-w>'.k)
+  endfor
+'''
+
+[[plugins]]
+repo = 'tpope/vim-surround'
