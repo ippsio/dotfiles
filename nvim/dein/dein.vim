@@ -16,7 +16,6 @@ if dein#load_state('~/.cache/dein')
   call dein#begin('~/.cache/dein')
 
   call dein#add('~/.cache/dein/repos/github.com/Shougo/dein.vim')
-  call dein#add('Shougo/deoplete.nvim')
   call dein#load_toml('~/.config/nvim/dein/dein.toml', {'lazy': 0})
   call dein#load_toml('~/.config/nvim/dein/dein_lazy_0_color.toml', {'lazy': 0})
   call dein#load_toml('~/.config/nvim/dein/dein_lazy_0.toml', {'lazy': 0})

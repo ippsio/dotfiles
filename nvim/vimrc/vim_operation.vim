@@ -14,10 +14,21 @@ vnoremap <silent> * "vy/\V<C-r>=substitute(escape(@v, '\/'), "\n", '\\n', 'g')<C
 " vを二回で行末まで選択
 vnoremap v $h
 " Ctrl + hjkl でウィンドウ間を移動
+nnoremap s <Nop>
 nnoremap <C-h> <C-w>h
+nnoremap    sh <C-w>h
+nnoremap    sH <C-w>H
 nnoremap <C-j> <C-w>j
+nnoremap    sj <C-w>j
+nnoremap    sJ <C-w>J
 nnoremap <C-k> <C-w>k
+nnoremap    sk <C-w>k
+nnoremap    sK <C-w>K
 nnoremap <C-l> <C-w>l
+nnoremap    sl <C-w>l
+nnoremap    sL <C-w>L
+nnoremap    sr <C-w>r
+nnoremap    s= <C-w>=
 " /{pattern}の入力中は「/」をタイプすると自動で「\/」が、
 " ?{pattern}の入力中は「?」をタイプすると自動で「\?」が 入力されるようになる
 cnoremap <expr> / getcmdtype() == '/' ? '\/' : '/'
