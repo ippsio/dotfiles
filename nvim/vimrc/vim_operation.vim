@@ -15,6 +15,10 @@ vnoremap <silent> * "vy/\V<C-r>=substitute(escape(@v, '\/'), "\n", '\\n', 'g')<C
 vnoremap v $h
 " Ctrl + hjkl でウィンドウ間を移動
 nnoremap s <Nop>
+nnoremap <C-Left>  <C-w>h
+nnoremap <C-Down>  <C-w>j
+nnoremap <C-Up>    <C-w>k
+nnoremap <C-Right> <C-w>l
 nnoremap <C-h> <C-w>h
 nnoremap    sh <C-w>h
 nnoremap    sH <C-w>H

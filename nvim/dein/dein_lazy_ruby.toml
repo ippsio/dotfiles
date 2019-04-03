@@ -15,6 +15,10 @@ repo = 'tpope/vim-rails'
 on_ft = ['ruby']
 
 [[plugins]]
+repo = 'vim-scripts/ruby-matchit'
+on_ft = ['ruby']
+
+[[plugins]]
 repo = 'tpope/vim-bundler'
 on_ft = ['ruby']
 
