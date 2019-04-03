@@ -34,13 +34,44 @@ hook_add = '''
 [[plugins]]
 repo = 'szw/vim-tags'
 hook_add = '''
-  let g:vim_tags_project_tags_command = "/usr/local/bin/ctags -f .tags -R . 2>/dev/null"
-  let g:vim_tags_gems_tags_command = "/usr/local/bin/ctags -R -f .Gemfile.lock.tags `bundle show --paths` 2>/dev/null"
-  set tags+=.tags
-  set tags+=.Gemfile.lock.tags<Paste>
+  let g:vim_tags_project_tags_command = "/usr/local/bin/ctags --langmap=RUBY:.rb --exclude=*.js --exclude=.git* -f ~/rejob-v2/.tags -R . 2>/dev/null"
+  let g:vim_tags_gems_tags_command =    "/usr/local/bin/ctags --langmap=RUBY:.rb --exclude=*.js --exclude=.git* -R -f ~/rejob-v2/.Gemfile.lock.tags `bundle show --paths` 2>/dev/null"
+  set tags+=.tags;~/rejob-v2
+  set tags+=.Gemfile.lock.tags;~/rejob-v2
 
   " tagsジャンプ時に複数候補ある場合、一覧表示
   nnoremap <C-]> g<C-]>
+'''
+
+[[plugins]]
+repo = 'vim-scripts/taglist.vim'
+hook_add = '''
+  " vim起動時に自動的に開く
+  let g:Tlist_Auto_Open = 1
+
+  " ファイルが非アクティブのとき自動的にタグリストを閉じるか
+  "let g:Tlist_File_Fold_Auto_Close = 1
+
+  " タグリストだけが表示されているときに自動的にVimを終了するか
+  let g:Tlist_Exit_OnlyWindow = 1
+
+  " 現在表示中のファイルのみのタグしか表示しない
+  let g:Tlist_Show_One_File = 1
+
+  "マウスでタグをシングルクリックして、対象場所へ遷移するか 0(遷移しない) または 1(遷移する)
+  let g:Tlist_Use_SingleClick = 1
+
+  "自動ハイライト表示 0(表示しない) または 1(表示する)
+  let g:Tlist_Highlight_Tag_On_BufEnter = 1
+
+  " 右側にtag listのウインドうを表示する
+  let g:Tlist_Use_Right_Window = 1
+
+  " taglistのウインドウだけならVimを閉じる
+  let g:Tlist_Exit_OnlyWindow = 1
+
+  " \lでtaglistウインドウを開いたり閉じたり出来るショートカット
+  map <silent> <leader>l :TlistToggle<CR>
 '''
 
 #[[plugins]]
@@ -95,8 +126,6 @@ repo = 'rhysd/clever-f.vim'
 [[plugins]]
 repo = 'fholgado/minibufexpl.vim'
 hook_add = '''
-  map <C-n> :MBEToggle<CR>
-
   " 画面上部に最低2行で表示
   "let g:miniBufExplMinSize = 2
 
@@ -203,7 +232,7 @@ hook_add = '''
   "  - 4: {lhs} of map
   "  - 5: {rhs} of map
 
-  " Window mode
+  " my window mode
   for k in split('<>+-=n', '.\zs')
     call submode#enter_with('window_mode', 'n', '', '<C-w>'.k, '<C-w>'.k)
     call submode#map(       'window_mode', 'n', '',         k, '<C-w>'.k)
