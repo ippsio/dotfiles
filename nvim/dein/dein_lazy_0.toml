@@ -50,13 +50,13 @@ hook_add = '''
   let g:Tlist_Auto_Open = 1
 
   " ファイルが非アクティブのとき自動的にタグリストを閉じるか
-  let g:Tlist_File_Fold_Auto_Close = 1
+  "let g:Tlist_File_Fold_Auto_Close = 1
 
   " タグリストだけが表示されているときに自動的にVimを終了するか
   let g:Tlist_Exit_OnlyWindow = 1
 
   " 現在表示中のファイルのみのタグしか表示しない
-  "let g:Tlist_Show_One_File = 1
+  let g:Tlist_Show_One_File = 1
 
   "マウスでタグをシングルクリックして、対象場所へ遷移するか 0(遷移しない) または 1(遷移する)
   let g:Tlist_Use_SingleClick = 1
