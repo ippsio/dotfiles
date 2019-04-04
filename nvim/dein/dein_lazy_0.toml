@@ -168,6 +168,8 @@ hook_add = '''
 
   let g:NERDTreeShowHidden = 1
 
+  let g:NERDTreeWinSize = 45
+
   " NERDTress File highlighting
   function! NERDTreeHighlightFile(extension, fg, bg, guifg, guibg)
     exec 'autocmd filetype nerdtree highlight ' . a:extension .' ctermbg='. a:bg .' ctermfg='. a:fg .' guibg='. a:guibg .' guifg='. a:guifg
@@ -234,8 +236,8 @@ hook_add = '''
 
   " my window mode
   for k in split('<>+-=n', '.\zs')
-    call submode#enter_with('window_mode', 'n', '', '<C-w>'.k, '<C-w>'.k)
-    call submode#map(       'window_mode', 'n', '',         k, '<C-w>'.k)
+    call submode#enter_with('window_mode', 'n', '', '<C-w>'.k, '<C-w>5'.k)
+    call submode#map(       'window_mode', 'n', '',         k, '<C-w>5'.k)
   endfor
 '''
 

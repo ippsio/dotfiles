@@ -1,11 +1,25 @@
 # colorschema
 
-#[[plugins]]
-#repo = 'chriskempson/vim-tomorrow-theme'
-#hook_add = '''
-#  set background=dark
-#  au MyAutoCmd VimEnter * nested colorscheme Tomorrow-Night-Bright
-#'''
+[[plugins]]
+repo = 'chriskempson/vim-tomorrow-theme'
+hook_add = '''
+  "set background=dark
+  "au MyAutoCmd VimEnter * nested colorscheme Tomorrow-Night-Bright
+'''
+
+[[plugins]]
+repo = 'ntk148v/vim-horizon'
+hook_add = '''
+  "set background=dark
+  "au MyAutoCmd VimEnter * nested colorscheme horizon
+'''
+
+[[plugins]]
+repo = 'SolomonSklash/vim-snazzy'
+hook_add = '''
+  set background=dark
+  au MyAutoCmd VimEnter * nested colorscheme snazzy
+'''
 
 #[[plugins]]
 #repo = 'w0ng/vim-hybrid'
@@ -24,7 +38,7 @@
 #[[plugins]]
 #repo = 'znake/znake-vim'
 #hook_add = '''
-#  set background=dark
+#  "set background=dark
 #  au MyAutoCmd VimEnter * nested colorscheme znake
 #'''
 
@@ -35,10 +49,17 @@
 #  "au MyAutoCmd VimEnter * nested colorscheme colibri
 #'''
 
-[[plugins]]
-repo = 'cocopon/iceberg.vim'
-hook_add = '''
-  set background=dark
-  au MyAutoCmd VimEnter * nested colorscheme iceberg
-'''
+#[[plugins]]
+#repo = 'cocopon/iceberg.vim'
+#hook_add = '''
+#  set background=dark
+#  au MyAutoCmd VimEnter * nested colorscheme iceberg
+#'''
+
+#[[plugins]]
+#repo = 'jacoborus/tender.vim'
+#hook_add = '''
+#  set background=dark
+#  au MyAutoCmd VimEnter * nested colorscheme tender
+#'''
 
