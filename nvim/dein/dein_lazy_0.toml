@@ -30,20 +30,20 @@ hook_add = '''
   let g:neocomplcache_enable_auto_select = 1
 '''
 
-#[[plugins]]
-#repo = 'vim-scripts/taglist.vim'
-#hook_add = '''
-#  set tags+=tags;~/
-#  let g:Tlist_Auto_Open = 1
-#  "let g:Tlist_File_Fold_Auto_Close = 1
-#  let g:Tlist_Exit_OnlyWindow = 1
-#  let g:Tlist_Show_One_File = 1
-#  let g:Tlist_Use_SingleClick = 1
-#  let g:Tlist_Highlight_Tag_On_BufEnter = 1
-#  let g:Tlist_Use_Right_Window = 1
-#  let g:Tlist_Exit_OnlyWindow = 1
-#  map <silent> <leader>l :TlistToggle<CR>
-#'''
+[[plugins]]
+repo = 'vim-scripts/taglist.vim'
+hook_add = '''
+  set tags+=.tags;~/
+  let g:Tlist_Auto_Open = 1
+  "let g:Tlist_File_Fold_Auto_Close = 1
+  let g:Tlist_Exit_OnlyWindow = 1
+  let g:Tlist_Show_One_File = 1
+  let g:Tlist_Use_SingleClick = 1
+  let g:Tlist_Highlight_Tag_On_BufEnter = 1
+  let g:Tlist_Use_Right_Window = 1
+  let g:Tlist_Exit_OnlyWindow = 1
+  map <silent> <leader>l :TlistToggle<CR>
+'''
 
 #[[plugins]]
 #repo = 'Shougo/context_filetype.vim'
