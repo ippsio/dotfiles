@@ -38,6 +38,20 @@ hook_add = '''
   let g:rsenseUseOmniFunc = 1
 '''
 
+# Ctags generator for vim
+[[plugins]]
+repo = 'szw/vim-tags'
+hook_add = '''
+  let g:vim_tags_project_tags_command = "ctags --langmap=RUBY:.rb --exclude=*.js --exclude=.git* -f ~/.tags -R . 2>/dev/null"
+  let g:vim_tags_gems_tags_command =    "ctags --langmap=RUBY:.rb --exclude=*.js --exclude=.git* -R -f ~/.Gemfile.lock.tags `bundle show --paths` 2>/dev/null"
+  set tags+=.tags;~/
+  set tags+=.Gemfile.lock.tags;~/
+
+  " tagsジャンプ時に複数候補ある場合、一覧表示
+  nnoremap <C-]> g<C-]>
+'''
+on_ft = ['ruby']
+
 # Ruby Completion for deoplete using rcodetools
 [[plugins]]
 repo = 'Shougo/deoplete-rct'

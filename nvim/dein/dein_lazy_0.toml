@@ -30,74 +30,74 @@ hook_add = '''
   let g:neocomplcache_enable_auto_select = 1
 '''
 
-# Ctags generator for vim
-[[plugins]]
-repo = 'szw/vim-tags'
-hook_add = '''
-  let g:vim_tags_project_tags_command = "/usr/local/bin/ctags --langmap=RUBY:.rb --exclude=*.js --exclude=.git* -f ~/rejob-v2/.tags -R . 2>/dev/null"
-  let g:vim_tags_gems_tags_command =    "/usr/local/bin/ctags --langmap=RUBY:.rb --exclude=*.js --exclude=.git* -R -f ~/rejob-v2/.Gemfile.lock.tags `bundle show --paths` 2>/dev/null"
-  set tags+=.tags;~/rejob-v2
-  set tags+=.Gemfile.lock.tags;~/rejob-v2
-
-  " tagsジャンプ時に複数候補ある場合、一覧表示
-  nnoremap <C-]> g<C-]>
-'''
-
-[[plugins]]
-repo = 'vim-scripts/taglist.vim'
-hook_add = '''
-  " vim起動時に自動的に開く
-  let g:Tlist_Auto_Open = 1
-
-  " ファイルが非アクティブのとき自動的にタグリストを閉じるか
-  "let g:Tlist_File_Fold_Auto_Close = 1
-
-  " タグリストだけが表示されているときに自動的にVimを終了するか
-  let g:Tlist_Exit_OnlyWindow = 1
-
-  " 現在表示中のファイルのみのタグしか表示しない
-  let g:Tlist_Show_One_File = 1
-
-  "マウスでタグをシングルクリックして、対象場所へ遷移するか 0(遷移しない) または 1(遷移する)
-  let g:Tlist_Use_SingleClick = 1
-
-  "自動ハイライト表示 0(表示しない) または 1(表示する)
-  let g:Tlist_Highlight_Tag_On_BufEnter = 1
-
-  " 右側にtag listのウインドうを表示する
-  let g:Tlist_Use_Right_Window = 1
-
-  " taglistのウインドウだけならVimを閉じる
-  let g:Tlist_Exit_OnlyWindow = 1
-
-  " \lでtaglistウインドウを開いたり閉じたり出来るショートカット
-  map <silent> <leader>l :TlistToggle<CR>
-'''
+#[[plugins]]
+#repo = 'vim-scripts/taglist.vim'
+#hook_add = '''
+#  set tags+=tags;~/
+#  let g:Tlist_Auto_Open = 1
+#  "let g:Tlist_File_Fold_Auto_Close = 1
+#  let g:Tlist_Exit_OnlyWindow = 1
+#  let g:Tlist_Show_One_File = 1
+#  let g:Tlist_Use_SingleClick = 1
+#  let g:Tlist_Highlight_Tag_On_BufEnter = 1
+#  let g:Tlist_Use_Right_Window = 1
+#  let g:Tlist_Exit_OnlyWindow = 1
+#  map <silent> <leader>l :TlistToggle<CR>
+#'''
 
 #[[plugins]]
 #repo = 'Shougo/context_filetype.vim'
 
-# statusline
-[[plugins]]
-repo = 'itchyny/lightline.vim'
-hook_add = '''
-  if !has('gui_running')
-    set t_Co=256
-  endif
+## statusline
+#[[plugins]]
+#repo = 'itchyny/lightline.vim'
+#hook_add = '''
+#  if !has('gui_running')
+#    set t_Co=256
+#  endif
+#
+#  set laststatus=2
+#  let g:lightline = {
+#    \ 'colorscheme': 'nord',
+#    \ 'active': {
+#    \   'left': [
+#    \     ['mode', 'paste'],
+#    \     ['readonly', 'filename', 'modified', 'anzu']
+#a    \   ]
+#    \ },
+#    \ 'component_function': {
+#    \   'anzu': 'anzu#search_status'
+#    \ }
+#    \ }
+#'''
 
-  set laststatus=2
-  let g:lightline = {
-    \ 'colorscheme': 'nord',
-    \ 'active': {
-    \   'left': [
-    \     ['mode', 'paste'],
-    \     ['readonly', 'filename', 'modified', 'anzu']
-    \   ]
-    \ },
-    \ 'component_function': {
-    \   'anzu': 'anzu#search_status'
+#statusline
+[[plugins]]
+repo = 'vim-airline/vim-airline'
+hook_add = '''
+  let g:airline_mode_map = {
+    \ '__' : '-',
+    \ 'n'  : 'N',
+    \ 'i'  : 'I',
+    \ 'R'  : 'R',
+    \ 'c'  : 'C',
+    \ 'v'  : 'V',
+    \ 'V'  : 'V',
+    \ ''  : 'V',
+    \ 's'  : 'S',
+    \ 'S'  : 'S',
+    \ ''  : 'S',
     \ }
-    \ }
+
+  "let g:airline_powerline_fonts = 1
+  "let g:airline_theme = 'badwolf'
+  "let g:airline#extensions#tabline#enabled = 1
+  let g:airline_section_z = airline#section#create(['windowswap', '%3p%% ', 'linenr', ':%3v'])
+  "let g:airline#extensions#virtualenv#enabled = 1
+  "let g:airline#extensions#hunks#enabled = 0
+  "let g:airline#extensions#ale#enabled = 1
+  "let g:airline#extensions#ale#error_symbol = 'E:'
+  "let g:airline#extensions#ale#warning_symbol = 'W:'
 '''
 
 # インデントを可視化
