@@ -1,6 +1,0 @@
-[[plugins]]
-repo = 'Shougo/dein.vim'
-[[plugins]]
-repo = 'Shougo/Unite.vim'
-
-
