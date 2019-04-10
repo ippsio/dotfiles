@@ -116,3 +116,8 @@ endif
 "map <silent> [Tag]p :tabprevious<CR>
 "" tp 前のタブ
 
+" ターミナルモードを開く際、fishが使えるならシェルをfishにする
+if executable("fish")
+  set sh=fish
+endif
+
