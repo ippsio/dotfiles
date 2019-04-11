@@ -21,16 +21,16 @@ nnoremap <C-Up>    <C-w>k
 nnoremap <C-Right> <C-w>l
 nnoremap <C-h> <C-w>h
 nnoremap    sh <C-w>h
-nnoremap    sH <C-w>H
+" nnoremap    sH <C-w>H
 nnoremap <C-j> <C-w>j
 nnoremap    sj <C-w>j
-nnoremap    sJ <C-w>J
+" nnoremap    sJ <C-w>J
 nnoremap <C-k> <C-w>k
 nnoremap    sk <C-w>k
-nnoremap    sK <C-w>K
+" nnoremap    sK <C-w>K
 nnoremap <C-l> <C-w>l
 nnoremap    sl <C-w>l
-nnoremap    sL <C-w>L
+" nnoremap    sL <C-w>L
 nnoremap    sr <C-w>r
 nnoremap    s= <C-w>=
 
