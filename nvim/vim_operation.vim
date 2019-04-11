@@ -76,8 +76,7 @@ endif
 "  return matchstr(expand('<sfile>'), '<SNR>\d\+_\zeSID_PREFIX$')
 "endfunction
 "
-"" Set tabline.
-"function! s:my_tabline()  "{{{
+"" Set tabline.  function! s:my_tabline()  "{{{
 "  let s = ''
 "  for i in range(1, tabpagenr('$'))
 "    let bufnrs = tabpagebuflist(i)
@@ -120,4 +119,7 @@ endif
 if executable("fish")
   set sh=fish
 endif
+
+" スペース２度押しでカーソル下にある単語をハイライト
+nnoremap <silent> <Space><Space> "zyiw:let @/ = '\<' . @z . '\>'<CR>:set hlsearch<CR>
 

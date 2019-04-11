@@ -144,6 +144,8 @@ hook_add = '''
   let g:miniBufExplorerMoreThanOne = 1
   set background=dark
 
+  let g:miniBufExplorerAutoStart = 0
+
   " MiniBufExpl Colors
   hi MBENormal               guifg=fg      guibg=fg
   hi MBEVisibleNormal        guifg=fg      guibg=#000088
@@ -152,6 +154,9 @@ hook_add = '''
   hi MBEVisibleChanged       guifg=#ff0000 guibg=#000088
   hi MBEVisibleActiveChanged guifg=#ff0000 guibg=#cc2222
   let g:did_minibufexplorer_syntax_inits = 1
+
+  nnoremap <silent> <leader>m :MBEToggle<CR>
+  nnoremap <silent> :ls :MBEToggle<CR>
 '''
 
 # NERDTree
@@ -250,3 +255,8 @@ hook_add = '''
 
 [[plugins]]
 repo = 'tpope/vim-surround'
+
+#[[plugins]]
+#repo = 't9md/vim-quickhl'
+#on_ft = ['ruby']
+

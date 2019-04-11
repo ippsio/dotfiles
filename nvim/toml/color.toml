@@ -7,12 +7,12 @@
 #  "au MyAutoCmd VimEnter * nested colorscheme Tomorrow-Night-Bright
 #'''
 
-[[plugins]]
-repo = 'ntk148v/vim-horizon'
-hook_add = '''
-  set background=dark
-  au MyAutoCmd VimEnter * nested colorscheme horizon
-'''
+#[[plugins]]
+#repo = 'ntk148v/vim-horizon'
+#hook_add = '''
+#  set background=dark
+#  au MyAutoCmd VimEnter * nested colorscheme horizon
+#'''
 
 #[[plugins]]
 #repo = 'SolomonSklash/vim-snazzy'
@@ -28,12 +28,12 @@ hook_add = '''
 #  au MyAutoCmd VimEnter * nested colorscheme hybrid
 #'''
 
-#[[plugins]]
-#repo = 'tomasr/molokai'
-#hook_add = '''
-#  set background=dark
-#  au MyAutoCmd VimEnter * nested colorscheme molokai
-#'''
+[[plugins]]
+repo = 'tomasr/molokai'
+hook_add = '''
+  set background=dark
+  au MyAutoCmd VimEnter * nested colorscheme molokai
+'''
 
 #[[plugins]]
 #repo = 'znake/znake-vim'
