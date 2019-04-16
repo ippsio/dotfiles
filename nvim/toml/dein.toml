@@ -383,3 +383,20 @@ hook_add = '''
 [[plugins]]
 repo = 'tpope/vim-surround'
 
+[[plugins]]
+repo = 'fuenor/qfixhowm'
+hook_add = '''
+  " QFixHowm
+
+  "QFixHowmキーマップ
+  let g:QFixHowm_Key = 'g'
+
+  "howm_dirはファイルを保存したいディレクトリを設定。
+  let g:howm_dir             = '~/.memos'
+  let g:howm_filename        = '%Y/%m/%Y-%m-%d-%H%M%S.howm'
+  let g:howm_fileencoding    = 'utf-8'
+  let g:howm_fileformat      = 'unix'
+
+  let g:QFixHowm_DiaryFile = 'diary/%Y/%m/%Y-%m-%d-000000.howm'
+'''
+
