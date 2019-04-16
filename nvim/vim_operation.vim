@@ -11,33 +11,48 @@
 inoremap jj <Esc>
 " ビジュアルモードの選択範囲を * で検索
 vnoremap <silent> * "vy/\V<C-r>=substitute(escape(@v, '\/'), "\n", '\\n', 'g')<CR><CR>
+
 " vを二回で行末まで選択
 vnoremap v $h
-" ウィンドウ
+
+" スペース２度押しでカーソル下にある単語をハイライト
+nnoremap <silent> <Space><Space> "zyiw:let @/ = '\<' . @z . '\>'<CR>:set hlsearch<CR>
+
+" ウィンドウ操作にsキーが都合が良いので、既存のsを塞ぐ
 nnoremap s <Nop>
+
+" ウインドウ間の移動
+nnoremap    sh <C-w>h
+nnoremap    sj <C-w>j
+nnoremap    sk <C-w>k
+nnoremap    sl <C-w>l
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
 nnoremap <C-Left>  <C-w>h
 nnoremap <C-Down>  <C-w>j
 nnoremap <C-Up>    <C-w>k
 nnoremap <C-Right> <C-w>l
-nnoremap <C-h> <C-w>h
-nnoremap    sh <C-w>h
-" nnoremap    sH <C-w>H
-nnoremap <C-j> <C-w>j
-nnoremap    sj <C-w>j
-" nnoremap    sJ <C-w>J
-nnoremap <C-k> <C-w>k
-nnoremap    sk <C-w>k
-" nnoremap    sK <C-w>K
-nnoremap <C-l> <C-w>l
-nnoremap    sl <C-w>l
-" nnoremap    sL <C-w>L
-nnoremap    sr <C-w>r
-nnoremap    s= <C-w>=
 
+" "ウインドウ内のバッファの移動
+" nnoremap    sH <C-w>H
+" nnoremap    sJ <C-w>J
+" nnoremap    sK <C-w>K
+" nnoremap    sL <C-w>L
+" nnoremap    sr <C-w>r
+
+" ウインドウの分割（横）
 nnoremap    s- :split<CR>
+" ウインドウの分割（縦）
 nnoremap    s\ :vsplit<CR>
 nnoremap    s\| :vsplit<CR>
 
+" ウインドウの高さの統一
+nnoremap    s= <C-w>=
+
+" ウインドウのクローズ
+nnoremap    sc <C-w>c
 
 " /{pattern}の入力中は「/」をタイプすると自動で「\/」が、
 " ?{pattern}の入力中は「?」をタイプすると自動で「\?」が 入力されるようになる
@@ -47,16 +62,16 @@ cnoremap <expr> ? getcmdtype() == '?' ? '\?' : '?'
 " -----------------------------------------------------
 " バッファ操作
 " -----------------------------------------------------
-" 一つ次のバッファへ移動
-nnoremap <silent>bp :bp<CR>
-" 一つのバッファへ移動
-nnoremap <silent>bn :bn<CR>
-" バッファ移動
-nnoremap <silent>bb :b#<CR>:ls<CR>
-" バッファ一覧
-nnoremap <silent>bl :ls<CR>
-" 現在のバッファを閉じる
-nnoremap <silent>bd :bd%<CR>
+" " 一つ次のバッファへ移動
+" nnoremap <silent>bp :bp<CR>
+" " 一つのバッファへ移動
+" nnoremap <silent>bn :bn<CR>
+" " バッファ移動
+" nnoremap <silent>bb :b#<CR>:ls<CR>
+" " バッファ一覧
+" nnoremap <silent>bl :ls<CR>
+" " 現在のバッファを閉じる
+" nnoremap <silent>bd :bd%<CR>
 
 
 " -----------------------------------------------------
@@ -120,6 +135,4 @@ if executable("fish")
   set sh=fish
 endif
 
-" スペース２度押しでカーソル下にある単語をハイライト
-nnoremap <silent> <Space><Space> "zyiw:let @/ = '\<' . @z . '\>'<CR>:set hlsearch<CR>
 

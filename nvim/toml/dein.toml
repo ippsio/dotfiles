@@ -198,19 +198,19 @@ hook_add = '''
 [[plugins]]
 repo = 'vim-airline/vim-airline'
 hook_add = '''
-  let g:airline_mode_map = {
-    \ '__' : '-',
-    \ 'n'  : 'N',
-    \ 'i'  : 'I',
-    \ 'R'  : 'R',
-    \ 'c'  : 'C',
-    \ 'v'  : 'V',
-    \ 'V'  : 'V',
-    \ ''  : 'V',
-    \ 's'  : 'S',
-    \ 'S'  : 'S',
-    \ ''  : 'S',
-    \ }
+  "let g:airline_mode_map = {
+  "  \ '__' : '-',
+  "  \ 'n'  : 'N',
+  "  \ 'i'  : 'I',
+  "  \ 'R'  : 'R',
+  "  \ 'c'  : 'C',
+  "  \ 'v'  : 'V',
+  "  \ 'V'  : 'V',
+  "  \ ''  : 'V',
+  "  \ 's'  : 'S',
+  "  \ 'S'  : 'S',
+  "  \ ''  : 'S',
+  "  \ }
 
   "let g:airline_powerline_fonts = 1
   "let g:airline#extensions#tabline#enabled = 1
@@ -363,16 +363,23 @@ hook_add = '''
   "  - 5: {rhs} of map
 
   " my window mode
-  for k in split('<>+-=n', '.\zs')
-    call submode#enter_with('window_mode', 'n', '', '<C-w>'.k, '<C-w>5'.k)
-    call submode#map(       'window_mode', 'n', '',         k, '<C-w>5'.k)
-  endfor
+  " ウインドウの幅変更
+  call submode#enter_with('window_mode', 'n', '', '<C-w>'.'<', '<C-w>5'.'<')
+  call submode#map(       'window_mode', 'n', '',         '<', '<C-w>5'.'<')
+  call submode#enter_with('window_mode', 'n', '', '<C-w>'.'>', '<C-w>5'.'>')
+  call submode#map(       'window_mode', 'n', '',         '>', '<C-w>5'.'>')
+
+  " ウインドウの高さ変更
+  call submode#enter_with('window_mode', 'n', '', '<C-w>'.'-', '<C-w>5'.'-')
+  call submode#map(       'window_mode', 'n', '',         '-', '<C-w>5'.'-')
+  call submode#enter_with('window_mode', 'n', '', '<C-w>'.'-', '<C-w>5'.'+')
+  call submode#map(       'window_mode', 'n', '',         '-', '<C-w>5'.'+')
+
+  " ウインドウの高さ統一
+  call submode#enter_with('window_mode', 'n', '', '<C-w>'.'=', '<C-w>'.'=')
+  call submode#map(       'window_mode', 'n', '',         '=', '<C-w>'.'=')
 '''
 
 [[plugins]]
 repo = 'tpope/vim-surround'
-
-#[[plugins]]
-#repo = 't9md/vim-quickhl'
-#on_ft = ['ruby']
 
