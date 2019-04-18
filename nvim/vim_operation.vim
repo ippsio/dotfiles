@@ -22,10 +22,6 @@ nnoremap <silent> <Space><Space> "zyiw:let @/ = '\<' . @z . '\>'<CR>:set hlsearc
 nnoremap s <Nop>
 
 " ウインドウ間の移動
-nnoremap    sh <C-w>h
-nnoremap    sj <C-w>j
-nnoremap    sk <C-w>k
-nnoremap    sl <C-w>l
 nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
@@ -34,13 +30,6 @@ nnoremap <C-Left>  <C-w>h
 nnoremap <C-Down>  <C-w>j
 nnoremap <C-Up>    <C-w>k
 nnoremap <C-Right> <C-w>l
-
-" "ウインドウ内のバッファの移動
-" nnoremap    sH <C-w>H
-" nnoremap    sJ <C-w>J
-" nnoremap    sK <C-w>K
-" nnoremap    sL <C-w>L
-" nnoremap    sr <C-w>r
 
 " ウインドウの分割（横）
 nnoremap    s- :split<CR>
@@ -53,6 +42,8 @@ nnoremap    s= <C-w>=
 
 " ウインドウのクローズ
 nnoremap    sc <C-w>c
+nnoremap    <Leader> c
+nnoremap <silent> <leader>c <C-w>c
 
 " /{pattern}の入力中は「/」をタイプすると自動で「\/」が、
 " ?{pattern}の入力中は「?」をタイプすると自動で「\?」が 入力されるようになる

@@ -28,12 +28,12 @@
 #  au MyAutoCmd VimEnter * nested colorscheme hybrid
 #'''
 
-[[plugins]]
-repo = 'tomasr/molokai'
-hook_add = '''
-  set background=dark
-  au MyAutoCmd VimEnter * nested colorscheme molokai
-'''
+#[[plugins]]
+#repo = 'tomasr/molokai'
+#hook_add = '''
+#  set background=dark
+#  au MyAutoCmd VimEnter * nested colorscheme molokai
+#'''
 
 #[[plugins]]
 #repo = 'znake/znake-vim'
@@ -69,3 +69,11 @@ hook_add = '''
 #  set background=dark
 #  au MyAutoCmd VimEnter * nested colorscheme madeofcode
 #'''
+
+[[plugins]]
+repo = 'jacoborus/tender'
+hook_add = '''
+  set background=dark
+  au MyAutoCmd VimEnter * nested colorscheme tender
+'''
+
