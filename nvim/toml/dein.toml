@@ -406,3 +406,17 @@ hook_add = '''
   let g:QFixHowm_DiaryFile = 'diary/%Y/%m/%Y-%m-%d-000000.howm'
 '''
 
+# vimは大文字始まりのユーザ定義コマンドしか許容しないが、小文字始まりの方が指が楽なので、
+# エイリアスをvim-altercmdでエイリアスを作り、小文字始まりのユーザ定義コマンドを実現できるようにする。
+#
+# * ユーザ定義コマンドとは、コロンで始まるコマンド
+#   - rking/agなら :Ag とか
+#   - scrooloose/nerdtree なら :NERDTreeFindとか :NERDTreeToggleとか
+[[plugins]]
+repo = 'tyru/vim-altercmd'
+hook_add = '''
+  call altercmd#load()
+  AlterCommand ntf Ntf
+  AlterCommand ntf Ntf
+  AlterCommand ag Ag
+'''
