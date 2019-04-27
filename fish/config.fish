@@ -3,6 +3,8 @@ rbenv init - | source
 alias vi  'nvim'
 alias vim 'nvim'
 
+alias g 'git'
+
 alias gs  'git status'
 alias gst 'git status'
 

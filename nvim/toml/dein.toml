@@ -2,7 +2,11 @@
 repo = 'Shougo/dein.vim'
 
 [[plugins]]
+repo = 'Shougo/neomru.vim'
+
+[[plugins]]
 repo = 'Shougo/Unite.vim'
+depends = ['Shougo/neomru.vim']
 
 # 補完
 
