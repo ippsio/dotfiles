@@ -23,15 +23,15 @@ hook_add = '''
 '''
 on_ft = ['python']
 
-# Ctags generator for vim
-[[plugins]]
-repo = 'szw/vim-tags'
-hook_add = '''
-  let g:vim_tags_project_tags_command = "ctags --langmap=Python:.py --exclude=*.js --exclude=.git* -R . 2>/dev/null"
-  set tags+=tags;~/
-
-  " tagsジャンプ時に複数候補ある場合、一覧表示
-  nnoremap <C-]> g<C-]>
-'''
-on_ft = ['python']
+## Ctags generator for vim
+#[[plugins]]
+#repo = 'szw/vim-tags'
+#hook_add = '''
+#  let g:vim_tags_project_tags_command = "ctags --langmap=Python:.py --exclude=*.js --exclude=.git* -R . 2>/dev/null"
+#  set tags+=.tags;~/
+#
+#  " tagsジャンプ時に複数候補ある場合、一覧表示
+#  nnoremap <C-]> g<C-]>
+#'''
+#on_ft = ['python']
 
