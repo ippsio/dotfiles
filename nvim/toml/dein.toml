@@ -9,7 +9,6 @@ repo = 'Shougo/Unite.vim'
 depends = ['Shougo/neomru.vim']
 
 # 補完
-
 [[plugins]]
 repo = 'Shougo/deoplete.nvim'
 
@@ -44,10 +43,10 @@ hook_add = '''
 repo = 'vim-scripts/taglist.vim'
 hook_add = '''
   set tags+=.tags;~/
-  let g:Tlist_Auto_Open = 1
+  "let g:Tlist_Auto_Open = 1
   "let g:Tlist_File_Fold_Auto_Close = 1
   let g:Tlist_Exit_OnlyWindow = 1
-  let g:Tlist_Show_One_File = 1
+  "let g:Tlist_Show_One_File = 1
   let g:Tlist_Use_SingleClick = 1
   let g:Tlist_Highlight_Tag_On_BufEnter = 1
   let g:Tlist_Use_Right_Window = 1
@@ -55,153 +54,154 @@ hook_add = '''
   map <silent> <leader>l :TlistToggle<CR>
 '''
 
-#[[plugins]]
-#repo = 'Shougo/context_filetype.vim'
+[[plugins]]
+repo = 'Shougo/context_filetype.vim'
 
-## statusline
-#[[plugins]]
-#repo = 'itchyny/lightline.vim'
-#hook_add = '''
-#  if !has('gui_running')
-#    set t_Co=256
-#  endif
-#
-#  set laststatus=2
-#  let g:lightline = {
-#    \ 'colorscheme': 'nord',
-#    \ 'active': {
-#    \   'left': [
-#    \     ['mode', 'paste'],
-#    \     ['readonly', 'filename', 'modified', 'anzu']
-#    \   ]
-#    \ },
-#    \ 'component_function': {
-#    \   'anzu': 'anzu#search_status'
-#    \ }
-#    \ }
-#'''
+# statusline
+[[plugins]]
+repo = 'itchyny/lightline.vim'
+hook_add = '''
+  if !has('gui_running')
+    set t_Co=256
+  endif
 
-#[[plugins]]
-#repo = 'vim-airline/vim-airline-themes'
-#hook_add = '''
-#  " let g:airline_theme = 'molokai'
-#  " let g:airline_theme = 'alduin'
-#  " let g:airline_theme = 'angr'
-#  " let g:airline_theme = 'atomic'
-#  " let g:airline_theme = 'aurora'
-#  " let g:airline_theme = 'ayu_light'
-#  " let g:airline_theme = 'ayu_mirage'
-#  " let g:airline_theme = 'ayu_dark'
-#  " let g:airline_theme = 'badcat'
-#  " let g:airline_theme = 'badwolf'
-#  " let g:airline_theme = 'base16 (|airline-theme-base16|)'
-#  " let g:airline_theme = 'base16_vim (|airline-theme-base16_vim|)'
-#  " let g:airline_theme = 'base16_shell (|airline-theme-base16_shell|)'
-#  " let g:airline_theme = 'base16_3024'
-#  " let g:airline_theme = 'base16_adwaita'
-#  " let g:airline_theme = 'base16_apathy'
-#  " let g:airline_theme = 'base16_ashes'
-#  " let g:airline_theme = 'base16_atelierdune'
-#  " let g:airline_theme = 'base16_atelierforest'
-#  " let g:airline_theme = 'base16_atelierheath'
-#  " let g:airline_theme = 'base16_atelierlakeside'
-#  " let g:airline_theme = 'base16_atelierseaside'
-#  " let g:airline_theme = 'base16_bespin'
-#  " let g:airline_theme = 'base16_brewer'
-#  " let g:airline_theme = 'base16_bright'
-#  " let g:airline_theme = 'base16_chalk'
-#  " let g:airline_theme = 'base16_classic'
-#  " let g:airline_theme = 'base16_codeschool'
-#  " let g:airline_theme = 'base16_colors'
-#  " let g:airline_theme = 'base16_default'
-#  " let g:airline_theme = 'base16_eighties'
-#  " let g:airline_theme = 'base16_embers'
-#  " let g:airline_theme = 'base16_flat'
-#  " let g:airline_theme = 'base16_google'
-#  " let g:airline_theme = 'base16_grayscale'
-#  " let g:airline_theme = 'base16_greenscreen'
-#  " let g:airline_theme = 'base16_harmonic16'
-#  " let g:airline_theme = 'base16_hopscotch'
-#  " let g:airline_theme = 'base16_isotope'
-#  " let g:airline_theme = 'base16_londontube'
-#  " let g:airline_theme = 'base16_marrakesh'
-#  " let g:airline_theme = 'base16_mocha'
-#  " let g:airline_theme = 'base16_monokai'
-#  " let g:airline_theme = 'base16_nord'
-#  " let g:airline_theme = 'base16_ocean'
-#  " let g:airline_theme = 'base16_oceanicnext'
-#  " let g:airline_theme = 'base16_paraiso'
-#  " let g:airline_theme = 'base16_pop'
-#  " let g:airline_theme = 'base16_railscasts'
-#  " let g:airline_theme = 'base16_seti'
-#  " let g:airline_theme = 'base16_shapeshifter'
-#  " let g:airline_theme = 'base16_solarized'
-#  " let g:airline_theme = 'base16_spacemacs'
-#  " let g:airline_theme = 'base16_summerfruit'
-#  " let g:airline_theme = 'base16_tomorrow'
-#  " let g:airline_theme = 'base16_twilight'
-#  " let g:airline_theme = 'base16_vim'
-#  " let g:airline_theme = 'base16color'
-#  " let g:airline_theme = 'behelit'
-#  " let g:airline_theme = 'biogoo'
-#  " let g:airline_theme = 'bubblegum'
-#  " let g:airline_theme = 'cobalt2'
-#  " let g:airline_theme = 'cool'
-#  " let g:airline_theme = 'dark'
-#  " let g:airline_theme = 'dark_minimal'
-#  " let g:airline_theme = 'deus'
-#  " let g:airline_theme = 'distinguished'
-#  " let g:airline_theme = 'dracula'
-#  " let g:airline_theme = 'durant'
-#  " let g:airline_theme = 'faryfloss'
-#  " let g:airline_theme = 'hybrid'
-#  " let g:airline_theme = 'hybridline'
-#  " let g:airline_theme = 'jay'
-#  " let g:airline_theme = 'jellybeans'
-#  " let g:airline_theme = 'jet'
-#  " let g:airline_theme = 'kalisi'
-#  " let g:airline_theme = 'kolor'
-#  " let g:airline_theme = 'laederon'
-#  " let g:airline_theme = 'light'
-#  " let g:airline_theme = 'lucius'
-#  " let g:airline_theme = 'luna'
-#  " let g:airline_theme = 'minimalist (|airline-theme-minimalist|)'
-#  " let g:airline_theme = 'molokai'
-#  " let g:airline_theme = 'monochrome'
-#  " let g:airline_theme = 'murmur'
-#  " let g:airline_theme = 'night_owl'
-#  " let g:airline_theme = 'onedark (|airline-theme-onedark|)'
-#  " let g:airline_theme = 'ouo'
-#  " let g:airline_theme = 'papercolor'
-#  " let g:airline_theme = 'peaksea'
-#  " let g:airline_theme = 'powerlineish'
-#  " let g:airline_theme = 'qwq'
-#  " let g:airline_theme = 'raven'
-#  " let g:airline_theme = 'ravenpower'
-#  " let g:airline_theme = 'seagull'
-#  " let g:airline_theme = 'serene'
-#  " let g:airline_theme = 'sierra'
-#  " let g:airline_theme = 'silver'
-#  " let g:airline_theme = 'simple'
-#  " let g:airline_theme = 'soda'
-#  " let g:airline_theme = 'sol'
-#  " let g:airline_theme = 'solarized (|airline-theme-solarized|)'
-#  " let g:airline_theme = 'solarized_flood'
-#  " let g:airline_theme = 'term'
-#  " let g:airline_theme = 'term_light'
-#  " let g:airline_theme = 'tomorrow'
-#  " let g:airline_theme = 'ubaryd'
-#  " let g:airline_theme = 'understated'
-#  " let g:airline_theme = 'vice'
-#  " let g:airline_theme = 'violet'
-#  " let g:airline_theme = 'wombat'
-#  " let g:airline_theme = 'xtermlight'
-#  " let g:airline_theme = 'zenburn'
-#'''
+  set laststatus=2
+  let g:lightline = {
+    \ 'colorscheme': 'nord',
+    \ 'active': {
+    \   'left': [
+    \     ['mode', 'paste'],
+    \     ['readonly', 'filename', 'modified', 'anzu']
+    \   ]
+    \ },
+    \ 'component_function': {
+    \   'anzu': 'anzu#search_status'
+    \ }
+    \ }
+'''
+
+[[plugins]]
+repo = 'vim-airline/vim-airline-themes'
+hook_add = '''
+  " let g:airline_theme = 'molokai'
+  " let g:airline_theme = 'alduin'
+  " let g:airline_theme = 'angr'
+  " let g:airline_theme = 'atomic'
+  " let g:airline_theme = 'aurora'
+  " let g:airline_theme = 'ayu_light'
+  " let g:airline_theme = 'ayu_mirage'
+  " let g:airline_theme = 'ayu_dark'
+  " let g:airline_theme = 'badcat'
+  " let g:airline_theme = 'badwolf'
+  " let g:airline_theme = 'base16 (|airline-theme-base16|)'
+  " let g:airline_theme = 'base16_vim (|airline-theme-base16_vim|)'
+  " let g:airline_theme = 'base16_shell (|airline-theme-base16_shell|)'
+  " let g:airline_theme = 'base16_3024'
+  " let g:airline_theme = 'base16_adwaita'
+  " let g:airline_theme = 'base16_apathy'
+  " let g:airline_theme = 'base16_ashes'
+  " let g:airline_theme = 'base16_atelierdune'
+  " let g:airline_theme = 'base16_atelierforest'
+  " let g:airline_theme = 'base16_atelierheath'
+  " let g:airline_theme = 'base16_atelierlakeside'
+  " let g:airline_theme = 'base16_atelierseaside'
+  " let g:airline_theme = 'base16_bespin'
+  " let g:airline_theme = 'base16_brewer'
+  " let g:airline_theme = 'base16_bright'
+  " let g:airline_theme = 'base16_chalk'
+  " let g:airline_theme = 'base16_classic'
+  " let g:airline_theme = 'base16_codeschool'
+  " let g:airline_theme = 'base16_colors'
+  " let g:airline_theme = 'base16_default'
+  " let g:airline_theme = 'base16_eighties'
+  " let g:airline_theme = 'base16_embers'
+  " let g:airline_theme = 'base16_flat'
+  " let g:airline_theme = 'base16_google'
+  " let g:airline_theme = 'base16_grayscale'
+  " let g:airline_theme = 'base16_greenscreen'
+  " let g:airline_theme = 'base16_harmonic16'
+  " let g:airline_theme = 'base16_hopscotch'
+  " let g:airline_theme = 'base16_isotope'
+  " let g:airline_theme = 'base16_londontube'
+  " let g:airline_theme = 'base16_marrakesh'
+  " let g:airline_theme = 'base16_mocha'
+  " let g:airline_theme = 'base16_monokai'
+  " let g:airline_theme = 'base16_nord'
+  " let g:airline_theme = 'base16_ocean'
+  " let g:airline_theme = 'base16_oceanicnext'
+  " let g:airline_theme = 'base16_paraiso'
+  " let g:airline_theme = 'base16_pop'
+  " let g:airline_theme = 'base16_railscasts'
+  " let g:airline_theme = 'base16_seti'
+  " let g:airline_theme = 'base16_shapeshifter'
+  " let g:airline_theme = 'base16_solarized'
+  " let g:airline_theme = 'base16_spacemacs'
+  " let g:airline_theme = 'base16_summerfruit'
+  " let g:airline_theme = 'base16_tomorrow'
+  " let g:airline_theme = 'base16_twilight'
+  " let g:airline_theme = 'base16_vim'
+  " let g:airline_theme = 'base16color'
+  " let g:airline_theme = 'behelit'
+  " let g:airline_theme = 'biogoo'
+  " let g:airline_theme = 'bubblegum'
+  " let g:airline_theme = 'cobalt2'
+  " let g:airline_theme = 'cool'
+  " let g:airline_theme = 'dark'
+  " let g:airline_theme = 'dark_minimal'
+  " let g:airline_theme = 'deus'
+  " let g:airline_theme = 'distinguished'
+  " let g:airline_theme = 'dracula'
+  " let g:airline_theme = 'durant'
+  " let g:airline_theme = 'faryfloss'
+  " let g:airline_theme = 'hybrid'
+  " let g:airline_theme = 'hybridline'
+  " let g:airline_theme = 'jay'
+  " let g:airline_theme = 'jellybeans'
+  " let g:airline_theme = 'jet'
+  " let g:airline_theme = 'kalisi'
+  " let g:airline_theme = 'kolor'
+  " let g:airline_theme = 'laederon'
+  " let g:airline_theme = 'light'
+  " let g:airline_theme = 'lucius'
+  " let g:airline_theme = 'luna'
+  " let g:airline_theme = 'minimalist (|airline-theme-minimalist|)'
+  " let g:airline_theme = 'molokai'
+  " let g:airline_theme = 'monochrome'
+  " let g:airline_theme = 'murmur'
+  " let g:airline_theme = 'night_owl'
+  " let g:airline_theme = 'onedark (|airline-theme-onedark|)'
+  " let g:airline_theme = 'ouo'
+  " let g:airline_theme = 'papercolor'
+  " let g:airline_theme = 'peaksea'
+  " let g:airline_theme = 'powerlineish'
+  " let g:airline_theme = 'qwq'
+  " let g:airline_theme = 'raven'
+  " let g:airline_theme = 'ravenpower'
+  " let g:airline_theme = 'seagull'
+  " let g:airline_theme = 'serene'
+  " let g:airline_theme = 'sierra'
+  " let g:airline_theme = 'silver'
+  " let g:airline_theme = 'simple'
+  " let g:airline_theme = 'soda'
+  " let g:airline_theme = 'sol'
+  " let g:airline_theme = 'solarized (|airline-theme-solarized|)'
+  " let g:airline_theme = 'solarized_flood'
+  " let g:airline_theme = 'term'
+  " let g:airline_theme = 'term_light'
+  " let g:airline_theme = 'tomorrow'
+  " let g:airline_theme = 'ubaryd'
+  " let g:airline_theme = 'understated'
+  " let g:airline_theme = 'vice'
+  " let g:airline_theme = 'violet'
+  " let g:airline_theme = 'wombat'
+  " let g:airline_theme = 'xtermlight'
+  " let g:airline_theme = 'zenburn'
+'''
 
 [[plugins]]
 repo = 'vim-airline/vim-airline'
 hook_add = '''
+  " どうも省略された表記に慣れないのでコメントアウト
   "let g:airline_mode_map = {
   "  \ '__' : '-',
   "  \ 'n'  : 'N',
@@ -281,12 +281,12 @@ hook_add = '''
 [[plugins]]
 repo = 'scrooloose/nerdtree'
 hook_add = '''
-  let g:NERDTreeShowBookmarks=0
+  let g:NERDTreeShowBookmarks=1
   "引数なしでvimを開いたらNERDTreeを起動
   "autocmd vimenter * if !argc() | NERDTree | endif
 
   " vim起動時にNERDTreeを起動
-  autocmd vimenter * NERDTree
+  "autocmd vimenter * NERDTree
 
   "他のバッファをすべて閉じた時にNERDTreeが開いていたらNERDTreeも一緒に閉じる。
   autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
@@ -295,10 +295,6 @@ hook_add = '''
 
   " \の後Nでトグル（閉じてたNERDTreeを開く、開いてたNERDTreeを閉じる）
   map <silent> <leader>n :NERDTreeToggle<CR>
-
-  " 'NERDTree'と打つのが長くて打ちにくいので、エイリアスを設定する
-  command Ntf NERDTreeFind
-  command Ntt NERDTreeToggle
 
   let g:NERDTreeShowHidden = 1
 
@@ -420,7 +416,7 @@ hook_add = '''
 repo = 'tyru/vim-altercmd'
 hook_add = '''
   call altercmd#load()
-  AlterCommand ntf Ntf
-  AlterCommand ntf Ntf
+  AlterCommand ntf NERDTreeFind
   AlterCommand ag Ag
 '''
+

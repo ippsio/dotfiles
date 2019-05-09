@@ -7,10 +7,6 @@ repo = 'tpope/vim-rbenv'
 on_ft = ['ruby']
 
 [[plugins]]
-repo = 'tpope/vim-rbenv'
-on_ft = ['ruby']
-
-[[plugins]]
 repo = 'tpope/vim-rails'
 on_ft = ['ruby']
 
@@ -87,8 +83,4 @@ hook_add = '''
   let g:airline#extensions#ale#enabled = 1
 '''
 on_ft = ['ruby']
-
-#[[plugins]]
-#repo = 't9md/vim-quickhl'
-#on_ft = ['ruby']
 
