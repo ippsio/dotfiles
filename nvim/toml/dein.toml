@@ -11,6 +11,12 @@ depends = ['Shougo/neomru.vim']
 # 補完
 [[plugins]]
 repo = 'Shougo/deoplete.nvim'
+on_event = 'InsertEnter'
+hook_add = '''
+  let g:deoplete#enable_at_startup = 1
+  inoremap <expr><Tab> pumvisible() ? "\<DOWN>" : "\<Tab>"
+  inoremap <expr><S-Tab> pumvisible() ? "\<UP>" : "\<S-Tab>"
+'''
 
 [[plugins]]
 repo = 'Shougo/context_filetype.vim'
@@ -26,17 +32,17 @@ repo = 'tpope/vim-surround'
 [[plugins]]
 repo = 'easymotion/vim-easymotion'
 hook_add = '''
-  " <Leader>f{char} to move to {char}
-  map  <Leader>f <Plug>(easymotion-bd-f)
-  nmap <Leader>f <Plug>(easymotion-overwin-f)
+  "" <Leader>f{char} to move to {char}
+  "map  <Leader>f <Plug>(easymotion-bd-f)
+  "nmap <Leader>f <Plug>(easymotion-overwin-f)
 
-  " s{char}{char} to move to {char}{char}
-  " nmap s <Plug>(easymotion-overwin-f2)
-  " vmap s <Plug>(easymotion-bd-f2)
+  "" s{char}{char} to move to {char}{char}
+  "nmap e <Plug>(easymotion-overwin-f2)
+  "vmap e <Plug>(easymotion-bd-f2)
 
-  " Move to line
-  map <Leader>L <Plug>(easymotion-bd-jk)
-  nmap <Leader>L <Plug>(easymotion-overwin-line)
+  "" Move to line
+  "map <Leader>L <Plug>(easymotion-bd-jk)
+  "nmap <Leader>L <Plug>(easymotion-overwin-line)
 
   " Move to word
   map  <Leader>w <Plug>(easymotion-bd-w)
@@ -44,29 +50,6 @@ hook_add = '''
 
   let g:EasyMotion_do_mapping = 0
 '''
-
-# [[plugins]]
-# repo = 'Shougo/neocomplcache.vim'
-# hook_add = '''
-#   " Disable AutoComplPop.
-#   let g:acp_enableAtStartup = 0
-#
-#   " Use neocomplcache.
-#   let g:neocomplcache_enable_at_startup = 1
-#
-#   " Use smartcase.
-#   let g:neocomplcache_enable_smart_case = 1
-#
-#   " Set minimum syntax keyword length.
-#   let g:neocomplcache_min_syntax_length = 3
-#   let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
-#
-#   let g:neocomplcache_enable_camel_case_completion = 1
-#   let g:neocomplcache_enable_underbar_completion = 1
-#
-#   " 補完候補表示時、先頭1件を選択状態にする
-#   let g:neocomplcache_enable_auto_select = 1
-# '''
 
 [[plugins]]
 repo = 'vim-scripts/taglist.vim'
@@ -260,7 +243,7 @@ hook_add = '''
   nmap N Nzz<Plug>(anzu-update-search-status)
   nmap * <Plug>(anzu-star)
   nmap # <Plug>(anzu-sharp)
-  nmap <silent> <ESC><ESC> :<C-u>nohlsearch<CR><Plug>(anzu-clear-search-status)
+  nmap <silent> <ESC> :<C-u>nohlsearch<CR><Plug>(anzu-clear-search-status)
 '''
 
 # f検索強化
