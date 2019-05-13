@@ -277,21 +277,17 @@ hook_add = '''
 [[plugins]]
 repo = 'scrooloose/nerdtree'
 hook_add = '''
-
   " vim起動時のフォーカス移動
-  " （NERDTreeを起動された時、ちゃんと編集側のウインドウ(NERDTreeじゃない方のウインドウ）にフォーカスを当てる）
   function s:MoveToFileAtStart()
+    " NERDTreeを起動された時、ちゃんと編集側のウインドウ(NERDTreeじゃない方のウインドウ）にフォーカスを当てる
     call feedkeys("\<C-w>l")
   endfunction
-
-  "引数なしでvimを開いたらNERDTreeを起動
-  "autocmd vimenter * if !argc() | NERDTree | endif
 
   " vim起動時にNERDTreeを起動
   " さらにカーソルをちゃんとファイルの側のウインドウに移動
   autocmd VimEnter *  NERDTree | call s:MoveToFileAtStart()
 
-  " 起動時、ブックマーク開く
+  " NERDTree起動時、ブックマーク開く
   let g:NERDTreeShowBookmarks=1
 
   "他のバッファをすべて閉じた時にNERDTreeが開いていたらNERDTreeも一緒に閉じる。
@@ -326,6 +322,22 @@ hook_add = '''
   call NERDTreeHighlightFile('rb',     'Red',     'none', 'red',     '#151515')
   call NERDTreeHighlightFile('js',     'Red',     'none', '#ffa500', '#151515')
   call NERDTreeHighlightFile('php',    'Magenta', 'none', '#ff00ff', '#151515')
+'''
+
+[[plugins]]
+repo = 'Xuyuanp/nerdtree-git-plugin'
+hook_add = '''
+  " let g:NERDTreeIndicatorMapCustom = {
+  "     \ "Modified"  : "✹",
+  "     \ "Staged"    : "✚",
+  "     \ "Untracked" : "✭",
+  "     \ "Renamed"   : "➜",
+  "     \ "Unmerged"  : "═",
+  "     \ "Deleted"   : "✖",
+  "     \ "Dirty"     : "✗",
+  "     \ "Clean"     : "✔︎",
+  "     \ "Unknown"   : "?"
+  "     \ }
 '''
 
 [[plugins]]
