@@ -81,7 +81,7 @@ filetype plugin indent on
 syntax enable
 
 " シンタックスハイライトの最大行数
-set synmaxcol=200
+set synmaxcol=2048
 " シンタックスハイライト
 syntax on
 " .vueシンタックスハイライト
