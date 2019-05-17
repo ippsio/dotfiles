@@ -11,7 +11,6 @@ depends = ['Shougo/neomru.vim']
 # 補完
 [[plugins]]
 repo = 'Shougo/deoplete.nvim'
-on_event = 'InsertEnter'
 hook_add = '''
   let g:deoplete#enable_at_startup = 1
   inoremap <expr><Tab> pumvisible() ? "\<DOWN>" : "\<Tab>"
@@ -32,6 +31,8 @@ repo = 'tpope/vim-surround'
 [[plugins]]
 repo = 'easymotion/vim-easymotion'
 hook_add = '''
+  let g:EasyMotion_do_mapping = 0
+
   "" <Leader>f{char} to move to {char}
   "map  <Leader>f <Plug>(easymotion-bd-f)
   "nmap <Leader>f <Plug>(easymotion-overwin-f)
@@ -45,10 +46,11 @@ hook_add = '''
   "nmap <Leader>L <Plug>(easymotion-overwin-line)
 
   " Move to word
-  map  <Leader>w <Plug>(easymotion-bd-w)
-  nmap <Leader>w <Plug>(easymotion-overwin-w)
+  " map  <Leader>w <Plug>(easymotion-bd-w)
+  " nmap <Leader>w <Plug>(easymotion-overwin-w)
+  map  f <Plug>(easymotion-bd-w)
+  nmap f <Plug>(easymotion-overwin-w)
 
-  let g:EasyMotion_do_mapping = 0
 '''
 
 [[plugins]]
@@ -246,37 +248,33 @@ hook_add = '''
   nmap <silent> <ESC> :<C-u>nohlsearch<CR><Plug>(anzu-clear-search-status)
 '''
 
-# f検索強化
-[[plugins]]
-repo = 'rhysd/clever-f.vim'
-
 [[plugins]]
 repo = 'fholgado/minibufexpl.vim'
-hook_add = '''
-  " 画面上部に最低2行で表示
-  "let g:miniBufExplMinSize = 2
-
-  " 画面横に表示
-  let g:miniBufExplBRSplit = 1  " 右
-  "let g:miniBufExplBRSplit = 0  " 左
-  let g:miniBufExplVSplit = 30
-
-  let g:miniBufExplorerMoreThanOne = 1
-  set background=dark
-
-  let g:miniBufExplorerAutoStart = 0
-
-  " MiniBufExpl Colors
-  hi MBENormal               guifg=fg      guibg=fg
-  hi MBEVisibleNormal        guifg=fg      guibg=#000088
-  hi MBEVisibleActiveNormal  guifg=fg      guibg=#cc2222
-  hi MBEChanged              guifg=#ff0000 guibg=fg
-  hi MBEVisibleChanged       guifg=#ff0000 guibg=#000088
-  hi MBEVisibleActiveChanged guifg=#ff0000 guibg=#cc2222
-  let g:did_minibufexplorer_syntax_inits = 1
-
-  nnoremap <silent> <leader>m :MBEToggle<CR>
-'''
+#hook_add = '''
+#  " 画面上部に最低2行で表示
+#  "let g:miniBufExplMinSize = 2
+#
+#  " 画面横に表示
+#  let g:miniBufExplBRSplit = 1  " 右
+#  "let g:miniBufExplBRSplit = 0  " 左
+#  let g:miniBufExplVSplit = 30
+#
+#  let g:miniBufExplorerMoreThanOne = 1
+#  set background=dark
+#
+#  let g:miniBufExplorerAutoStart = 0
+#
+#  " MiniBufExpl Colors
+#  hi MBENormal               guifg=fg      guibg=fg
+#  hi MBEVisibleNormal        guifg=fg      guibg=#000088
+#  hi MBEVisibleActiveNormal  guifg=fg      guibg=#cc2222
+#  hi MBEChanged              guifg=#ff0000 guibg=fg
+#  hi MBEVisibleChanged       guifg=#ff0000 guibg=#000088
+#  hi MBEVisibleActiveChanged guifg=#ff0000 guibg=#cc2222
+#  let g:did_minibufexplorer_syntax_inits = 1
+#
+#  nnoremap <silent> <leader>m :MBEToggle<CR>
+#'''
 
 # NERDTree
 [[plugins]]
