@@ -130,6 +130,10 @@ endif
 nnoremap p "0p
 vnoremap p "0p
 
+" クリップボードの情報はCtrl+Shift+Pでペーストする
+nnoremap <C-P> "*p
+vnoremap <C-P> "*p
+
 " ブロック選択時にxとかdでカットやヤンクした時は、その内容の入れ先は0レジスタに設定。
 vnoremap x "0x
 vnoremap d "0d
