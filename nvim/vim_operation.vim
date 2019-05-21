@@ -125,3 +125,17 @@ if executable("fish")
   set sh=fish
 endif
 
+" レジスタ系(基本、ゼロレジスタをコピペに使うようにする。使い勝手は使いながら改善)
+" ペーストする時は0レジスタに入ってる物をペーストする
+nnoremap p "0p
+vnoremap p "0p
+
+" ブロック選択時にxとかdでカットやヤンクした時は、その内容の入れ先は0レジスタに設定。
+vnoremap x "0x
+vnoremap d "0d
+vnoremap y "0y
+
+" 行カットや行ヤンクした時は、その行の内容の入れ先を0レジスタに設定。
+nnoremap dd "0dd
+nnoremap yy "0yy
+
