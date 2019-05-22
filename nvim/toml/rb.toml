@@ -2,9 +2,9 @@
 repo = 'vim-ruby/vim-ruby'
 on_ft = ['ruby']
 
-[[plugins]]
-repo = 'tpope/vim-rbenv'
-on_ft = ['ruby']
+# [[plugins]]
+# repo = 'tpope/vim-rbenv'
+# on_ft = ['ruby']
 
 [[plugins]]
 repo = 'tpope/vim-rails'
@@ -14,51 +14,51 @@ on_ft = ['ruby']
 repo = 'vim-scripts/ruby-matchit'
 on_ft = ['ruby']
 
-[[plugins]]
-repo = 'tpope/vim-bundler'
-on_ft = ['ruby']
+# [[plugins]]
+# repo = 'tpope/vim-bundler'
+# on_ft = ['ruby']
 
-# rsense
-[[plugins]]
-repo = 'Shougo/neocomplcache-rsense.vim'
-on_ft = ['ruby']
-hook_add = '''
-  if !exists('g:neocomplcache_omni_patterns')
-    let g:neocomplcache_omni_patterns = {}
-  endif
-  let g:neocomplcache_omni_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
-  autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
+## rsense
+#[[plugins]]
+#repo = 'Shougo/neocomplcache-rsense.vim'
+#on_ft = ['ruby']
+#hook_add = '''
+#  if !exists('g:neocomplcache_omni_patterns')
+#    let g:neocomplcache_omni_patterns = {}
+#  endif
+#  let g:neocomplcache_omni_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
+#  autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
+#
+#  "rsenseのインストールフォルダがデフォルトと異なるので設定
+#  let g:rsenseHome = expand("/usr/local/bin/rsense")
+#  let g:rsenseUseOmniFunc = 1
+#'''
 
-  "rsenseのインストールフォルダがデフォルトと異なるので設定
-  let g:rsenseHome = expand("/usr/local/bin/rsense")
-  let g:rsenseUseOmniFunc = 1
-'''
+## Ctags generator for vim
+#[[plugins]]
+#repo = 'szw/vim-tags'
+#hook_add = '''
+#  let g:ctag_cmd = "ctags --langmap=RUBY:.rb --exclude=\"*.js\" --exclude=\".git*\" -R -f "
+#  let g:vim_tags_project_tags_command = g:ctag_cmd . "~/ruby.tags . 2>/dev/null"
+#  let g:vim_tags_gems_tags_command =    g:ctag_cmd . "~/ruby.Gemfile.lock.tags `bundle show --paths` 2>/dev/null"
+#
+#  set tags+=~/ruby.tags
+#  set tags+=~/ruby.Gemfile.lock.tags
+#
+#  " tagsジャンプ時に複数候補ある場合、一覧表示
+#  nnoremap <C-]> g<C-]>
+#'''
+#on_ft = ['ruby']
 
-# Ctags generator for vim
-[[plugins]]
-repo = 'szw/vim-tags'
-hook_add = '''
-  let g:ctag_cmd = "ctags --langmap=RUBY:.rb --exclude=\"*.js\" --exclude=\".git*\" -R -f "
-  let g:vim_tags_project_tags_command = g:ctag_cmd . "~/ruby.tags . 2>/dev/null"
-  let g:vim_tags_gems_tags_command =    g:ctag_cmd . "~/ruby.Gemfile.lock.tags `bundle show --paths` 2>/dev/null"
+## Ruby Completion for deoplete using rcodetools
+#[[plugins]]
+#repo = 'Shougo/deoplete-rct'
+#on_ft = ['ruby']
 
-  set tags+=~/ruby.tags
-  set tags+=~/ruby.Gemfile.lock.tags
-
-  " tagsジャンプ時に複数候補ある場合、一覧表示
-  nnoremap <C-]> g<C-]>
-'''
-on_ft = ['ruby']
-
-# Ruby Completion for deoplete using rcodetools
-[[plugins]]
-repo = 'Shougo/deoplete-rct'
-on_ft = ['ruby']
-
-# Deoplete-Ruby Completion
-[[plugins]]
-repo = 'fishbullet/deoplete-ruby'
-on_ft = ['ruby']
+## Deoplete-Ruby Completion
+#[[plugins]]
+#repo = 'fishbullet/deoplete-ruby'
+#on_ft = ['ruby']
 
 [[plugins]]
 repo = 'slim-template/vim-slim'
@@ -72,8 +72,8 @@ hook_add = '''
   let g:ale_lint_on_save = 1
   let g:ale_lint_on_text_changed = 0
 
-  let g:ale_set_loclist = 1
-  let g:ale_set_quickfix = 0
+  let g:ale_set_loclist = 0
+  let g:ale_set_quickfix = 1
   let g:ale_open_list = 1
   let g:ale_keep_list_window_open = 0
 

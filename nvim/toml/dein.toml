@@ -17,8 +17,8 @@ hook_add = '''
   inoremap <expr><S-Tab> pumvisible() ? "\<UP>" : "\<S-Tab>"
 '''
 
-[[plugins]]
-repo = 'Shougo/context_filetype.vim'
+# [[plugins]]
+# repo = 'Shougo/context_filetype.vim'
 
 # 終了タグ等の自動補完
 [[plugins]]
@@ -250,31 +250,31 @@ hook_add = '''
 
 [[plugins]]
 repo = 'fholgado/minibufexpl.vim'
-#hook_add = '''
-#  " 画面上部に最低2行で表示
-#  "let g:miniBufExplMinSize = 2
-#
-#  " 画面横に表示
-#  let g:miniBufExplBRSplit = 1  " 右
-#  "let g:miniBufExplBRSplit = 0  " 左
-#  let g:miniBufExplVSplit = 30
-#
-#  let g:miniBufExplorerMoreThanOne = 1
-#  set background=dark
-#
-#  let g:miniBufExplorerAutoStart = 0
-#
-#  " MiniBufExpl Colors
-#  hi MBENormal               guifg=fg      guibg=fg
-#  hi MBEVisibleNormal        guifg=fg      guibg=#000088
-#  hi MBEVisibleActiveNormal  guifg=fg      guibg=#cc2222
-#  hi MBEChanged              guifg=#ff0000 guibg=fg
-#  hi MBEVisibleChanged       guifg=#ff0000 guibg=#000088
-#  hi MBEVisibleActiveChanged guifg=#ff0000 guibg=#cc2222
-#  let g:did_minibufexplorer_syntax_inits = 1
-#
-#  nnoremap <silent> <leader>m :MBEToggle<CR>
-#'''
+hook_add = '''
+  " 画面上部に最低2行で表示
+  "let g:miniBufExplMinSize = 2
+
+  " 画面横に表示
+  let g:miniBufExplBRSplit = 1  " 右
+  "let g:miniBufExplBRSplit = 0  " 左
+  let g:miniBufExplVSplit = 30
+
+  let g:miniBufExplorerMoreThanOne = 1
+  set background=dark
+
+  let g:miniBufExplorerAutoStart = 0
+
+  " MiniBufExpl Colors
+  hi MBENormal               guifg=fg      guibg=fg
+  hi MBEVisibleNormal        guifg=fg      guibg=#000088
+  hi MBEVisibleActiveNormal  guifg=fg      guibg=#cc2222
+  hi MBEChanged              guifg=#ff0000 guibg=fg
+  hi MBEVisibleChanged       guifg=#ff0000 guibg=#000088
+  hi MBEVisibleActiveChanged guifg=#ff0000 guibg=#cc2222
+  let g:did_minibufexplorer_syntax_inits = 1
+
+  nnoremap <silent> <leader>m :MBEToggle<CR>
+'''
 
 # NERDTree
 [[plugins]]
@@ -412,22 +412,22 @@ hook_add = '''
   call submode#map(       'window_mode', 'n', '',         '=', '<C-w>'.'=')
 '''
 
-[[plugins]]
-repo = 'fuenor/qfixhowm'
-hook_add = '''
-  " QFixHowm
-
-  "QFixHowmキーマップ
-  let g:QFixHowm_Key = 'g'
-
-  "howm_dirはファイルを保存したいディレクトリを設定。
-  let g:howm_dir             = '~/.memos'
-  let g:howm_filename        = '%Y/%m/%Y-%m-%d-%H%M%S.howm'
-  let g:howm_fileencoding    = 'utf-8'
-  let g:howm_fileformat      = 'unix'
-
-  let g:QFixHowm_DiaryFile = 'diary/%Y/%m/%Y-%m-%d-000000.howm'
-'''
+#[[plugins]]
+#repo = 'fuenor/qfixhowm'
+#hook_add = '''
+#  " QFixHowm
+#
+#  "QFixHowmキーマップ
+#  let g:QFixHowm_Key = 'g'
+#
+#  "howm_dirはファイルを保存したいディレクトリを設定。
+#  let g:howm_dir             = '~/.memos'
+#  let g:howm_filename        = '%Y/%m/%Y-%m-%d-%H%M%S.howm'
+#  let g:howm_fileencoding    = 'utf-8'
+#  let g:howm_fileformat      = 'unix'
+#
+#  let g:QFixHowm_DiaryFile = 'diary/%Y/%m/%Y-%m-%d-000000.howm'
+#'''
 
 # vimは大文字始まりのユーザ定義コマンドしか許容しないが、小文字始まりの方が指が楽なので、
 # エイリアスをvim-altercmdでエイリアスを作り、小文字始まりのユーザ定義コマンドを実現できるようにする。
@@ -435,6 +435,7 @@ hook_add = '''
 # * ユーザ定義コマンドとは、コロンで始まるコマンド
 #   - rking/agなら :Ag とか
 #   - scrooloose/nerdtree なら :NERDTreeFindとか :NERDTreeToggleとか
+
 [[plugins]]
 repo = 'tyru/vim-altercmd'
 hook_add = '''
