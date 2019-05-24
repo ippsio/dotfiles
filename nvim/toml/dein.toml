@@ -1,6 +1,4 @@
 [[plugins]]
-repo = 'tyru/vim-altercmd'
-[[plugins]]
 repo = 'Shougo/dein.vim'
 [[plugins]]
 repo = 'Shougo/neomru.vim'
@@ -20,15 +18,9 @@ hook_add='''
   nnoremap <space>dr :<C-u>Denite file_mru<CR>
   nnoremap <space>db :<C-u>Denite buffer<CR>
   nnoremap <space>dy :<C-u>Denite neoyank<CR>
-  nnoremap <space>df :<C-u>Denite file_rec<CR>
+  nnoremap <space>df :<C-u>Denite file/rec<CR>
   nnoremap <space>do :<C-u>Denite outline<CR>
 
-  call altercmd#load()
-  AlterCommand dr :<C-u>Denite file_mru<CR>
-  AlterCommand db :<C-u>Denite buffer<CR>
-  AlterCommand dy :<C-u>Denite neoyank<CR>
-  AlterCommand df :<C-u>Denite file_rec<CR>
-  AlterCommand do :<C-u>Denite outline<CR>
 '''
 [[plugins]]
 repo = 'Shougo/deoplete.nvim'
@@ -332,9 +324,6 @@ hook_add = '''
   call NERDTreeHighlightFile('js',     'Red',     'none', '#ffa500', '#151515')
   call NERDTreeHighlightFile('php',    'Magenta', 'none', '#ff00ff', '#151515')
 
-  " alias
-  call altercmd#load()
-  AlterCommand ntf NERDTreeFind
 '''
 
 [[plugins]]
@@ -365,9 +354,6 @@ hook_add = '''
   " CTRL+Q、CTRL+Shift+Q でCtrlP起動
   let g:ctrlp_map = '<c-s-q>'
 
-  " alias
-  call altercmd#load()
-  AlterCommand ag Ag
 '''
 
 [[plugins]]
@@ -448,4 +434,22 @@ hook_add = '''
 # * ユーザ定義コマンドとは、コロンで始まるコマンド
 #   - rking/agなら :Ag とか
 #   - scrooloose/nerdtree なら :NERDTreeFindとか :NERDTreeToggleとか
+[[plugins]]
+repo = 'tyru/vim-altercmd'
+hook_add = '''
+  " alias
+  call altercmd#load()
 
+  " Denite
+  AlterCommand dr :<C-u>Denite file_mru
+  AlterCommand db :<C-u>Denite buffer
+  AlterCommand dy :<C-u>Denite neoyank
+  AlterCommand df :<C-u>Denite file/rec
+  AlterCommand do :<C-u>Denite outline
+
+  " NERDTree
+  AlterCommand ntf NERDTreeFind
+
+  " Ag
+  AlterCommand ag Ag
+'''
