@@ -1,7 +1,9 @@
-" -----------------------------------------------------
-" 表示設定
-" -----------------------------------------------------
-
+" =====================================================
+"  動作設定
+" =====================================================
+" --------------------
+"  Tab/ スペース/改行
+" --------------------
 " 挿入モードでTABキーを押した際、対応する数のスペースを入力
 set expandtab
 
@@ -20,15 +22,15 @@ set autoindent
 " 改行時に入力された行の末尾に合わせて次の行のインデントを増減する
 set smartindent
 
-" 256色対応
-set t_Co=256
+" インデントをshiftwidthの倍数に丸める
+set shiftround
 
+" -------------------
+"  ファイル/バッファ
+" -------------------
 " エンコード, ファイルエンコード
 set encoding=utf-8
 set fileencoding=utf-8
-
-" スクロールする時に下が見えるようにする
-set scrolloff=5
 
 " .swapファイルを作らない
 set noswapfile
@@ -39,21 +41,35 @@ set nowritebackup
 " バックアップをしない
 set nobackup
 
+" 変更中のファイルでも、保存しないで他のファイルを表示
+set hidden
+
+" 新しく開く代わりにすでに開いてあるバッファを開く
+set switchbuf=useopen
+" --------------
+"  移動
+" --------------
+" スクロールする時に下が見えるようにする
+set scrolloff=5
+
+" 移動コマンドを使ったとき、行頭に移動しない
+set nostartofline
+
+" --------------
+"  その他
+" --------------
 " ビープ音を消す
 set belloff=all
 
 " OSのクリップボードを使う
 set clipboard=unnamed
 
-" 行番号を表示
-set number
-
 " compatibleオプションをオフにする
 set nocompatible
 
-" 移動コマンドを使ったとき、行頭に移動しない
-set nostartofline
-
+" --------------
+"  括弧
+" --------------
 " 対応括弧に<と>のペアを追加
 set matchpairs& matchpairs+=<:>
 
@@ -62,6 +78,12 @@ set showmatch
 
 " 対応括弧の表示秒数を3秒にする
 set matchtime=3
+
+" --------------
+"  表示
+" --------------
+" 行番号を表示
+set number
 
 " ウィンドウの幅より長い行は折り返され、次の行に続けて表示される
 set wrap
@@ -73,18 +95,27 @@ set textwidth=0
 set list
 set listchars=tab:»-,trail:-,extends:»,precedes:«,nbsp:%
 
-" インデントをshiftwidthの倍数に丸める
-set shiftround
+" ◆や○文字が崩れる問題を解決"
+"set ambiwidth=double
 
+" シンタックスハイライトの最大行数
+set synmaxcol=2048
+
+" 256色対応
+set t_Co=256
+
+" コマンドを画面最下部に表示する
+set showcmd
+
+" --------------
+"  補完
+" --------------
 " 補完の際の大文字小文字の区別しない
 set infercase
 
-" 変更中のファイルでも、保存しないで他のファイルを表示
-set hidden
-
-" 新しく開く代わりにすでに開いてあるバッファを開く
-set switchbuf=useopen
-
+" --------------
+"  検索
+" --------------
 " 小文字の検索でも大文字も見つかるようにする
 set ignorecase
 
@@ -97,20 +128,20 @@ set incsearch
 " 検索結果をハイライト表示
 set hlsearch
 
-" マウスモード有効
-"set mouse=a
+" --------------
+" マウス操作
+" --------------
+if has("mouse")
+  set mouse=a
+endif
 
-" コマンドを画面最下部に表示する
-set showcmd
-
-" ◆や○文字が崩れる問題を解決"
-"set ambiwidth=double
-
-" シンタックスハイライトの最大行数
-set synmaxcol=2048
-
-" .vueシンタックスハイライト
-autocmd BufNewFile,BufRead *.vue set filetype=html
+" ------------
+" ターミナル
+" ------------
+" ターミナルモードを開く際、fishが使えるならシェルをfishにする
+if executable("fish")
+  set sh=fish
+endif
 
 " 全角スペースのハイライト
 function! ZenkakuSpace()
