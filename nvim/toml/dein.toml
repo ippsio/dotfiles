@@ -39,8 +39,8 @@ hook_add = '''
 '''
 on_event = 'InsertEnter'
 
-# [[plugins]]
-# repo = 'Shougo/context_filetype.vim'
+[[plugins]]
+repo = 'Shougo/context_filetype.vim'
 
 # 終了タグ等の自動補完
 [[plugins]]
