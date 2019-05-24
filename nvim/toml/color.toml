@@ -3,8 +3,8 @@
 #[[plugins]]
 #repo = 'chriskempson/vim-tomorrow-theme'
 #hook_add = '''
-#  "set background=dark
-#  "au MyAutoCmd VimEnter * nested colorscheme Tomorrow-Night-Bright
+#  set background=dark
+#  au MyAutoCmd VimEnter * nested colorscheme Tomorrow-Night-Bright
 #'''
 
 #[[plugins]]
