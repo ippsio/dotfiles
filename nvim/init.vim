@@ -4,7 +4,7 @@ filetype plugin indent off
 
 runtime! vim_setting.vim
 runtime! vim_remaps.vim
-runtime! init_dein.vim
+runtime! vim_dein.vim
 
 filetype plugin indent on
-
+filetype on
