@@ -136,9 +136,12 @@ endif
 " ターミナル
 " ------------
 " ターミナルモードを開く際、fishが使えるならシェルをfishにする
-if executable("fish")
-  set sh=fish
-endif
+" NERDTree-git-pluginが、fishからsystem functionを呼べない場合があるため、コメントアウト
+" NOTE: https://github.com/Xuyuanp/nerdtree-git-plugin
+"if executable("fish")
+"  set sh=fish
+"endif
+set sh=/bin/bash
 
 " 全角スペースのハイライト
 function! ZenkakuSpace()
