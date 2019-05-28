@@ -44,32 +44,39 @@ nnoremap <C-Up>    <C-w>k
 nnoremap <C-Right> <C-w>l
 
 " ウインドウの分割（横）
-nnoremap <space>s- :<C-u>split<CR>
+nnoremap <space>- :<C-u>split<CR>
 " ウインドウの分割（縦）
-nnoremap <space>s\  :<C-u>vsplit<CR>
-nnoremap <space>s\| :<C-u>vsplit<CR>
-
+nnoremap <space>\  :<C-u>vsplit<CR>
+nnoremap <space>\| :<C-u>vsplit<CR>
 " ウインドウの高さの統一
-nnoremap <space>s= <C-w>=
+nnoremap <space>= <C-w>=
+
+" 何か挙動が安定しない。特にレジスタとクリップボード間でうまいこといかない。のでコメントアウト
+"
+" " -----------------------------------------------------
+" " レジスタ
+" " -----------------------------------------------------
+" " レジスタ系(基本、ゼロレジスタをコピペに使うようにする。使い勝手は使いながら改善)
+" " ペーストする時は0レジスタに入ってる物をペーストする
+" nnoremap p "0p
+" vnoremap p "0p
+"
+" " クリップボードの情報はCtrl+Shift+Pでペーストする
+" nnoremap <C-P> "*p
+" vnoremap <C-P> "*p
+"
+" " ブロック選択時にxとかdでカットやヤンクした時は、その内容の入れ先は0レジスタに設定。
+" vnoremap x "0x
+" vnoremap d "0d
+" vnoremap y "0y
+"
+" " 行カットや行ヤンクした時は、その行の内容の入れ先を0レジスタに設定。
+" nnoremap dd "0dd
+" nnoremap yy "0yy
 
 " -----------------------------------------------------
-" レジスタ
+" 保存、終了系
 " -----------------------------------------------------
-" レジスタ系(基本、ゼロレジスタをコピペに使うようにする。使い勝手は使いながら改善)
-" ペーストする時は0レジスタに入ってる物をペーストする
-nnoremap p "0p
-vnoremap p "0p
-
-" クリップボードの情報はCtrl+Shift+Pでペーストする
-nnoremap <C-P> "*p
-vnoremap <C-P> "*p
-
-" ブロック選択時にxとかdでカットやヤンクした時は、その内容の入れ先は0レジスタに設定。
-vnoremap x "0x
-vnoremap d "0d
-vnoremap y "0y
-
-" 行カットや行ヤンクした時は、その行の内容の入れ先を0レジスタに設定。
-nnoremap dd "0dd
-nnoremap yy "0yy
+" 終了
+nnoremap qq :<C-u>:q<CR>
 
