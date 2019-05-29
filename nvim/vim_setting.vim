@@ -102,8 +102,7 @@ set synmaxcol=2048
 set t_Co=256
 
 " カーソル行のハイライト
-set cursorline
-hi CursorLine term=reverse cterm=none ctermbg=237
+nnoremap <Leader>c :<C-u>setlocal cursorline! cursorcolumn!<CR>
 
 " コマンドを画面最下部に表示する
 set showcmd
