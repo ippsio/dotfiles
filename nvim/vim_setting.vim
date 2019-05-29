@@ -101,6 +101,10 @@ set synmaxcol=2048
 " 256色対応
 set t_Co=256
 
+" カーソル行のハイライト
+set cursorline
+hi CursorLine term=reverse cterm=none ctermbg=237
+
 " コマンドを画面最下部に表示する
 set showcmd
 
