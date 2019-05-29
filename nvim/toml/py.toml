@@ -14,7 +14,7 @@ on_ft = ['python']
 repo = 'zchee/deoplete-jedi'
 on_ft = ['python']
 hook_add = '''
-  let g:deoplete#sources#jedi#python_path = '/usr/local/bin/python3'
+  "let g:deoplete#sources#jedi#python_path = '/usr/local/bin/python3'
 '''
 
 [[plugins]]
@@ -38,3 +38,23 @@ on_ft = ['python']
 #'''
 #on_ft = ['python']
 
+[[plugins]]
+repo = 'thinca/vim-quickrun'
+hook_add = '''
+  " 成功時にバッファ、失敗時にQuickFixで表示
+  " 結果表示のサイズ調整など
+  let g:quickrun_config = {
+      \ '_' : {
+      "    \ 'runner' : 'vimproc',
+      "    \ 'runner/vimproc/updatetime' : 40,
+          \ 'outputter' : 'error',
+          \ 'outputter/error/success' : 'buffer',
+          \ 'outputter/error/error'   : 'quickfix',
+          \ 'outputter/buffer/split' : ':botright 8sp',
+      \ }
+  \}
+
+  " 実行時に前回の表示内容をクローズ&保存してから実行
+  let g:quickrun_no_default_key_mappings = 1
+  nmap <Leader>r :cclose<CR>:write<CR>:QuickRun -mode n<CR>
+'''
