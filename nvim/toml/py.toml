@@ -13,6 +13,9 @@ on_ft = ['python']
 [[plugins]]
 repo = 'zchee/deoplete-jedi'
 on_ft = ['python']
+hook_add = '''
+  let g:deoplete#sources#jedi#python_path = '/usr/local/bin/python3'
+'''
 
 [[plugins]]
 repo = 'tell-k/vim-autopep8'
