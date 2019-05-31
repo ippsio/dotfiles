@@ -74,9 +74,25 @@ nnoremap <space>= <C-w>=
 " nnoremap dd "0dd
 " nnoremap yy "0yy
 
+" VISUALモードで連続ペーストできるようにする
+" xnoremap = VISUALモードのmapを定義(再マップ無し)
+" 左辺 <expr> p
+"   = <expr> 右辺を指揮として評価する
+" 右辺 'pgv"'.v:register.'y`>' 
+"   = １(p) ペースト
+"    + ２(gv) さっき選択していた範囲を
+"    + ３([v:registerの結果]y) *レジスタを使用してヤンク
+"    + ４(`>) で、最後に選択した範囲の終端にカーソルを戻す
+"
+xnoremap <expr> p 'pgv"'.v:register.'y`>'
+
 " -----------------------------------------------------
 " 保存、終了系
 " -----------------------------------------------------
 " 終了
 nnoremap qq :<C-u>:q<CR>
+
+" スペース２度押しでカーソル下にある単語をハイライト
+"nnoremap <silent> <Space><Space> "zyiw:let @/ = '\<' . @z . '\>'<CR>:set hlsearch<CR>
+nnoremap  m "<C-u>zviw:let @/ = '\<' . @z . '\>'<CR>
 

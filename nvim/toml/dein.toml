@@ -317,8 +317,8 @@ hook_add = '''
   " ウインドウの高さ変更
   call submode#enter_with('window_mode', 'n', '', '<C-w>'.'-', '<C-w>5'.'-')
   call submode#map(       'window_mode', 'n', '',         '-', '<C-w>5'.'-')
-  call submode#enter_with('window_mode', 'n', '', '<C-w>'.'-', '<C-w>5'.'+')
-  call submode#map(       'window_mode', 'n', '',         '-', '<C-w>5'.'+')
+  call submode#enter_with('window_mode', 'n', '', '<C-w>'.'+', '<C-w>5'.'+')
+  call submode#map(       'window_mode', 'n', '',         '+', '<C-w>5'.'+')
 
   " ウインドウの高さ統一
   call submode#enter_with('window_mode', 'n', '', '<C-w>'.'=', '<C-w>'.'=')
@@ -367,3 +367,4 @@ hook_add = '''
   " Ag
   AlterCommand ag Ag
 '''
+
