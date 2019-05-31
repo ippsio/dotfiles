@@ -101,6 +101,9 @@ set synmaxcol=2048
 " 256色対応
 set t_Co=256
 
+" カーソル行のハイライト
+nnoremap <Leader>c :<C-u>setlocal cursorline! cursorcolumn!<CR>
+
 " コマンドを画面最下部に表示する
 set showcmd
 
