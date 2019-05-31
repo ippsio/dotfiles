@@ -50,15 +50,15 @@ on_ft = ['ruby']
 #'''
 #on_ft = ['ruby']
 
-## Ruby Completion for deoplete using rcodetools
-#[[plugins]]
-#repo = 'Shougo/deoplete-rct'
-#on_ft = ['ruby']
+# # Ruby Completion for deoplete using rcodetools
+# [[plugins]]
+# repo = 'Shougo/deoplete-rct'
+# on_ft = ['ruby']
 
-## Deoplete-Ruby Completion
-#[[plugins]]
-#repo = 'fishbullet/deoplete-ruby'
-#on_ft = ['ruby']
+# Deoplete-Ruby Completion
+[[plugins]]
+repo = 'fishbullet/deoplete-ruby'
+on_ft = ['ruby']
 
 [[plugins]]
 repo = 'slim-template/vim-slim'
