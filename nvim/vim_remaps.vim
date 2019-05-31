@@ -92,3 +92,7 @@ xnoremap <expr> p 'pgv"'.v:register.'y`>'
 " 終了
 nnoremap qq :<C-u>:q<CR>
 
+" スペース２度押しでカーソル下にある単語をハイライト
+"nnoremap <silent> <Space><Space> "zyiw:let @/ = '\<' . @z . '\>'<CR>:set hlsearch<CR>
+nnoremap  m "<C-u>zviw:let @/ = '\<' . @z . '\>'<CR>
+
