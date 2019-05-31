@@ -785,6 +785,8 @@ function __bobthefish_prompt_git -S -a current_dir -d 'Display the actual git st
     set flag_colors $color_repo_dirty
   else if [ "$staged" ]
     set flag_colors $color_repo_staged
+  else if [ "$ahead" ]
+    set flag_colors $color_repo_ahead
   end
 
   __bobthefish_path_segment $current_dir
