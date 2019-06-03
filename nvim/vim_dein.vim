@@ -23,6 +23,7 @@ if dein#load_state('~/.cache/dein')
   call dein#load_toml('~/dotfiles/nvim/toml/rb.toml', {'lazy': 1})
   call dein#load_toml('~/dotfiles/nvim/toml/py.toml', {'lazy': 1})
   call dein#load_toml('~/dotfiles/nvim/toml/md.toml', {'lazy': 1})
+  call dein#load_toml('~/dotfiles/nvim/toml/json.toml', {'lazy': 1})
 
   call dein#end()
   call dein#save_state()
