@@ -1,5 +1,8 @@
-export ZPLUG_HOME=~/dotfiles/zsh/.zplug
+export PYENV_ROOT=$HOME/.pyenv
+export PATH=$PYENV_ROOT/bin:$PATH
+eval "$(pyenv init -)"
 
+export ZPLUG_HOME=~/dotfiles/zsh/.zplug
 source ~/dotfiles/zsh/.zplug/init.zsh
 source ~/dotfiles/zsh/00_alias.zsh
 source ~/dotfiles/zsh/10_prompt.zsh
