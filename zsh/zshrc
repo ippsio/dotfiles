@@ -25,13 +25,13 @@ zplug "junegunn/fzf", as:command, use:bin/fzf-tmux
 zplug "supercrabtree/k"
 zplug "junegunn/fzf", use:shell/key-bindings.zsh
 zplug "junegunn/fzf", use:shell/completion.zsh
-zplug "b4b4r07/enhancd", use:init.sh
+#zplug "b4b4r07/enhancd", use:init.sh
 zplug "paulirish/git-open", as:plugin
 zplug "zsh-users/zsh-syntax-highlighting", defer:2
-: "cd先のディレクトリのファイル一覧を表示する" && {
-  [ -z "$ENHANCD_ROOT" ] && function chpwd { tree -L 1 } # enhancdがない場合
-  [ -z "$ENHANCD_ROOT" ] || export ENHANCD_HOOK_AFTER_CD="tree -L 1" # enhancdがあるときはそのHook機構を使う
-}
+#: "cd先のディレクトリのファイル一覧を表示する" && {
+#  [ -z "$ENHANCD_ROOT" ] && function chpwd { tree -L 1 } # enhancdがない場合
+#  [ -z "$ENHANCD_ROOT" ] || export ENHANCD_HOOK_AFTER_CD="tree -L 1" # enhancdがあるときはそのHook機構を使う
+#}
 
 : "sshコマンド補完を~/.ssh/configから行う" && {
   function _ssh { compadd $(fgrep 'Host ' ~/.ssh/*/config | grep -v '*' |  awk '{print $2}' | sort) }
