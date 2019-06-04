@@ -40,7 +40,7 @@ function __bobthefish_glyphs -S -d 'Define glyphs used by bobthefish'
   set -x git_untracked_glyph  '…'
   set -x git_ahead_glyph      \u2191 # '↑'
   set -x git_behind_glyph     \u2193 # '↓'
-  set -x git_plus_glyph       '+ 未pushあるよ'
+  set -x git_plus_glyph       '+ あ～あ～、まだ未pushあるよ'
   set -x git_minus_glyph      '-'
   set -x git_plus_minus_glyph '±'
 

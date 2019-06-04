@@ -21,6 +21,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_repo_dirty               brred $colorfg
       set -x color_repo_staged              yellow $colorfg
       set -x color_repo_ahead               yellow $colorfg
+      #set -x color_repo_stashed             yellow $colorfg
 
       set -x color_vi_mode_default          brblue $colorfg --bold
       set -x color_vi_mode_insert           brgreen $colorfg --bold
@@ -83,6 +84,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_repo_dirty               brred $colorfg
       set -x color_repo_staged              yellow $colorfg
       set -x color_repo_ahead               yellow $colorfg
+      #set -x color_repo_stashed             yellow $colorfg
 
       set -x color_vi_mode_default          brblue $colorfg --bold
       set -x color_vi_mode_insert           brgreen $colorfg --bold
@@ -114,6 +116,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_repo_dirty               brred $colorfg
       set -x color_repo_staged              yellow $colorfg
       set -x color_repo_ahead               yellow $colorfg
+      #set -x color_repo_stashed             yellow $colorfg
 
       set -x color_vi_mode_default          brblue $colorfg --bold
       set -x color_vi_mode_insert           brgreen $colorfg --bold
@@ -151,6 +154,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_repo_dirty               $red $grey
       set -x color_repo_staged              $yellow $grey
       set -x color_repo_ahead               $yellow $grey
+      #set -x color_repo_stashed             $yellow $grey
 
       set -x color_vi_mode_default          $grey $yellow --bold
       set -x color_vi_mode_insert           $green $white --bold
@@ -199,6 +203,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_repo_dirty               $base08 $colorfg
       set -x color_repo_staged              $base09 $colorfg
       set -x color_repo_ahead               $base09 $colorfg
+      #set -x color_repo_stashed             $base09 $colorfg
 
       set -x color_vi_mode_default          $base04 $colorfg --bold
       set -x color_vi_mode_insert           $base0B $colorfg --bold
@@ -247,6 +252,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_repo_dirty               $base08 $colorfg
       set -x color_repo_staged              $base09 $colorfg
       set -x color_repo_ahead               $base09 $colorfg
+      #set -x color_repo_stashed             $base09 $colorfg
 
       set -x color_vi_mode_default          $base03 $colorfg --bold
       set -x color_vi_mode_insert           $base0B $colorfg --bold
@@ -295,6 +301,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_repo_dirty               $red $colorfg
       set -x color_repo_staged              $yellow $colorfg
       set -x color_repo_ahead               $yellow $colorfg
+      #set -x color_repo_stashed             $yellow $colorfg
 
       set -x color_vi_mode_default          $blue $colorfg --bold
       set -x color_vi_mode_insert           $green $colorfg --bold
@@ -343,6 +350,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_repo_dirty               $red $colorfg
       set -x color_repo_staged              $yellow $colorfg
       set -x color_repo_ahead               $yellow $colorfg
+      #set -x color_repo_stashed             $yellow $colorfg
 
       set -x color_vi_mode_default          $blue $colorfg --bold
       set -x color_vi_mode_insert           $green $colorfg --bold
@@ -384,6 +392,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_repo_dirty               $red[2] $white
       set -x color_repo_staged              $orange[1] $orange[3]
       set -x color_repo_ahead               $orange[1] $orange[3]
+      #set -x color_repo_stashed             $orange[1] $orange[3]
 
       set -x color_vi_mode_default          $grey[2] $grey[3] --bold
       set -x color_vi_mode_insert           $green[2] $grey[3] --bold
@@ -424,6 +433,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_repo_dirty            $red[2] $fg[2]
       set -x color_repo_staged           $yellow[1] $bg[1]
       set -x color_repo_ahead            $yellow[1] $bg[1]
+      #set -x color_repo_stashed          $yellow[1] $bg[1]
 
       set -x color_vi_mode_default       $fg[4] $bg[2] --bold
       set -x color_vi_mode_insert        $blue[1] $bg[2] --bold
@@ -466,6 +476,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_repo_dirty            $red $bg
       set -x color_repo_staged           $yellow $bg
       set -x color_repo_ahead            $yellow $bg
+      #set -x color_repo_stashed          $yellow $bg
 
       set -x color_vi_mode_default       $bg $yellow --bold
       set -x color_vi_mode_insert        $green $bg --bold
@@ -508,6 +519,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_repo_dirty               $red[2] $white
       set -x color_repo_staged              $orange[1] $orange[3]
       set -x color_repo_ahead               $orange[1] $red[2]
+      #set -x color_repo_stashed             $go_blue[1] $red[2]
 
       set -x color_vi_mode_default          $grey[2] $grey[3] --bold
       set -x color_vi_mode_insert           $green[2] $grey[3] --bold
@@ -537,6 +549,7 @@ function __bobthefish_user_color_scheme_deprecated
   set -q __color_repo_dirty;            or set -l __color_repo_dirty            ce000f ffffff
   set -q __color_repo_staged;           or set -l __color_repo_staged           f6b117 3a2a03
   set -q __color_repo_ahead ;           or set -l __color_repo_ahead            f6b117 3a2a03
+  set -q __color_repo_stashed ;         or set -l __color_repo_stashed          f6b117 3a2a03
   set -q __color_vi_mode_default;       or set -l __color_vi_mode_default       999999 333333 --bold
   set -q __color_vi_mode_insert;        or set -l __color_vi_mode_insert        189303 333333 --bold
   set -q __color_vi_mode_visual;        or set -l __color_vi_mode_visual        f6b117 3a2a03 --bold
@@ -574,6 +587,7 @@ function __bobthefish_user_color_scheme_deprecated
   set -x color_repo_dirty            $__color_repo_dirty
   set -x color_repo_staged           $__color_repo_staged
   set -x color_repo_ahead            $__color_repo_ahead
+  #set -x color_repo_stashed          $__color_repo_stashed
   set -x color_vi_mode_default       $__color_vi_mode_default
   set -x color_vi_mode_insert        $__color_vi_mode_insert
   set -x color_vi_mode_visual        $__color_vi_mode_visual
