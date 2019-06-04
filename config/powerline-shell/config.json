@@ -1,0 +1,9 @@
+{
+  "segments": [
+    "cwd",
+    "git",
+    "jobs",
+    "root"
+  ],
+  "mode": "flat"
+}
