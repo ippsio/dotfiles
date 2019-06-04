@@ -1,0 +1,2 @@
+#!/bin/sh
+powerline-shell --generate-config > ~/dotfiles/zsh/.powerline-shell.json
