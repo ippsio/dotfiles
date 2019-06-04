@@ -1,6 +1,15 @@
-export PYENV_ROOT=$HOME/.pyenv
-export PATH=$PYENV_ROOT/bin:$PATH
-eval "$(pyenv init -)"
+# python
+pyenv --version &> /dev/null
+if [ $? -eq 0 ]; then
+  export PYENV_ROOT=$HOME/.pyenv
+  export PATH=$PYENV_ROOT/bin:$PATH
+  eval "$(pyenv init -)"
+fi
+
+rbenv --version &> /dev/null
+if [ $? -eq 0 ]; then
+  eval "$(rbenv init -)"
+fi
 
 export ZPLUG_HOME=~/.cache/zplug
 source ~/.cache/zplug/init.zsh
@@ -8,11 +17,8 @@ source ~/.cache/zplug/init.zsh
 source ~/dotfiles/zsh/00_alias.zsh
 source ~/dotfiles/zsh/10_prompt.zsh
 
-#autoload -U promptinit; promptinit
-# プロンプトを変更
-#prompt pure
-
-#setopt auto_cd
+# CTRL-D,DELで前方削除
+bindkey "^[[3~" delete-char
 
 zplug 'zsh-users/zsh-autosuggestions'
 zplug 'zsh-users/zsh-completions'
