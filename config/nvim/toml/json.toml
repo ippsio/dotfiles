@@ -1,0 +1,4 @@
+[[plugins]]
+repo = 'leshill/vim-json'
+on_ft = ['json']
+

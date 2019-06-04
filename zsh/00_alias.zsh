@@ -1,4 +1,3 @@
+alias ll='ls -Ula'
 alias ls='ls -G'
-alias ll='ls -GUla'
 alias vim='nvim'
-
