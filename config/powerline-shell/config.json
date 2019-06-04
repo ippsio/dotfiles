@@ -1,12 +1,16 @@
 {
   "segments": [
+    "time",
     "cwd",
     "git",
-    "jobs",
-    "root"
+    "jobs"
   ],
   "mode":"flat",
   "cwd": {
     "max_depth": 1
+  },
+  "time": {
+    "format": "%Y/%m/%d %H:%M:%S"
   }
 }
+
