@@ -1,8 +1,8 @@
 # python
+export PYENV_ROOT=$HOME/.pyenv
+export PATH=$PYENV_ROOT/bin:$PATH
 pyenv --version &> /dev/null
 if [ $? -eq 0 ]; then
-  export PYENV_ROOT=$HOME/.pyenv
-  export PATH=$PYENV_ROOT/bin:$PATH
   eval "$(pyenv init -)"
 fi
 
@@ -12,10 +12,15 @@ if [ $? -eq 0 ]; then
 fi
 
 export ZPLUG_HOME=~/.cache/zplug
+zplug --version &> /dev/null
+if [ ! -d ${ZPLUG_HOME} ]; then
+  ~/.config/zsh/install_zplug.sh && sleep 5
+fi
+
 source ~/.cache/zplug/init.zsh
 
-source ~/dotfiles/zsh/00_alias.zsh
-source ~/dotfiles/zsh/10_prompt.zsh
+source ~/dotfiles/.config/zsh/00_alias.zsh
+source ~/dotfiles/.config/zsh/10_prompt.zsh
 
 # CTRL-D,DELで前方削除
 bindkey "^[[3~" delete-char
@@ -26,7 +31,7 @@ zplug 'zsh-users/zsh-syntax-highlighting'
 zplug "mollifier/anyframe"
 zplug "mollifier/cd-gitroot"
 # zplug "b4b4r07/enhancd", use:enhancd.sh
-zplug "zsh-users/zsh-history-substring-search", hook-build:"__zsh_version 4.3"
+#zplug "zsh-users/zsh-history-substring-search", hook-build:"__zsh_version 4.3"
 zplug "junegunn/fzf-bin", as:command, from:gh-r, rename-to:fzf
 zplug "junegunn/fzf", as:command, use:bin/fzf-tmux
 zplug "supercrabtree/k"

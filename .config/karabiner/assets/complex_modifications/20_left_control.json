@@ -1,0 +1,21 @@
+{
+  "title": "[20:L-CTRL] behaviors.",
+  "rules": [
+    {
+      "description": "[20:L-CTRL]: to L-CMD.",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {"key_code": "left_control","modifiers": {"optional": ["any"]}},
+          "to": [{"key_code": "left_command"}],
+          "conditions": [
+            {
+              "type": "frontmost_application_unless",
+              "bundle_identifiers": ["^com\\.googlecode\\.iterm2"]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

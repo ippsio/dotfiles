@@ -1,0 +1,32 @@
+{
+  "title": "[40:JETBRAINS] behaviors.",
+  "rules": [
+    {
+      "description": "[40:JETBRAINS only]:L-CMD: +lc to L-CTRL+lc.",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {"key_code": "l","modifiers": {"mandatory": ["left_command"]}},
+          "to": [{"key_code": "l", "modifiers": ["left_control"]}],
+          "conditions": [
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": ["^com\\.jetbrains\\."]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {"key_code": "c","modifiers": {"mandatory": ["left_command"]}},
+          "to": [{"key_code": "c", "modifiers": ["left_control"]}],
+          "conditions": [
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": ["^com\\.jetbrains\\."]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
