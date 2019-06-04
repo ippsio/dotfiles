@@ -1,0 +1,12 @@
+{
+  "segments": [
+    "cwd",
+    "git",
+    "jobs",
+    "root"
+  ],
+  "mode":"flat",
+  "cwd": {
+    "max_depth": 1
+  }
+}

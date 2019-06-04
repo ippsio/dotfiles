@@ -1,7 +1,10 @@
 #!/bin/sh
-cd ~/.cache
-export ZPLUG_HOME=~/.cache/zplug
-mkdir -p ${ZPLUG_HOME}
+
+export ZPLUG_HOME=~/dotfiles/zsh/.zplug
+
+brew install zsh
+
+echo `which zsh` | sudo tee -a /etc/shells
+
 curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh | zsh
-pip install psutil powerline-shell
 
