@@ -1,0 +1,45 @@
+{
+  "title": "[30:L-CMD] behaviors.", 
+  "rules": [
+    {
+      "description": "[30:L-CMD]: +poiu to L-CTRL+poiu(like MS-IME), L-CMD: +space to L-CTRL+space",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {"key_code": "p","modifiers": {"mandatory": ["left_command"]}},
+          "to": [{"key_code": "p","modifiers": ["left_control"]}],
+          "conditions": [{"type": "input_source_if","input_sources": [{"language": "ja"}]}]
+        },
+        {
+          "type": "basic",
+          "from": {"key_code": "o","modifiers": {"mandatory": ["left_command"]}},
+          "to": [{"key_code": "o","modifiers": ["left_control"]}],
+          "conditions": [{"type": "input_source_if","input_sources": [{"language": "ja"}]}]
+        },
+        {
+          "type": "basic",
+          "from": {"key_code": "i","modifiers": {"mandatory": ["left_command"]}},
+          "to": [{"key_code": "i","modifiers": ["left_control"]}],
+          "conditions": [{"type": "input_source_if","input_sources": [{"language": "ja"}]}]
+        },
+        {
+          "type": "basic",
+          "from": {"key_code": "u","modifiers": {"mandatory": ["left_command"]}},
+          "to": [{"key_code": "u","modifiers": ["left_control"]}],
+          "conditions": [{"type": "input_source_if","input_sources": [{"language": "ja"}]}]
+        },
+        {
+          "type": "basic",
+          "from": {"key_code": "spacebar","modifiers": {"mandatory": ["left_command"]}},
+          "to": [{"key_code": "spacebar","modifiers": ["left_control"]}],
+          "conditions": [
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": ["^com\\.jetbrains\\.rubymine"]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "title": "[70:vim_for_japanese] behaviors.",
+  "rules": [
+    {
+      "description": "[70: send also 英数 when ESC pushed.]",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "escape"
+          },
+          "to": [
+            {
+              "key_code": "escape"
+            },
+            {
+              "key_code": "japanese_eisuu"
+            }
+          ],
+          "conditions": [
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.googlecode\\.iterm2",
+                "^com\\.apple\\.Terminal"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
