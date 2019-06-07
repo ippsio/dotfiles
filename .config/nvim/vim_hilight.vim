@@ -10,6 +10,8 @@
 
 " カーソル行
 hi CursorLine term=reverse cterm=none ctermbg=237
+" カーソル自体の色は、iTerm2等のターミナルの設定であるため、コメントアウト
+"hi Cursor ctermbg=1 ctermfg=240
 
 " 補完ポップアップ
 hi Pmenu ctermbg=7
@@ -18,13 +20,8 @@ hi PmenuSbar ctermbg=2
 hi PmenuThumb ctermbg=4
 
 " 検索単語
-hi Search ctermbg=red ctermfg=White
+hi Search ctermbg=22 ctermfg=White
 
-
-
-
-
-
-
-
+" フォーカスのないウインドウ
+hi NormalNC ctermbg=0 ctermfg=240
 
