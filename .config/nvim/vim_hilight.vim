@@ -28,3 +28,21 @@ hi NormalNC ctermbg=0 ctermfg=240
 " コメント
 hi Comment ctermbg=17
 
+" カーソル下のhighlight情報を表示する {{{
+function! s:syn_attr(transparent, str)
+  let s = synID(line("."), col("."), 1)
+  if a:transparent
+    let s = synIDtrans(s)
+  endif
+  echo "[" . a:str . "]"
+  echo "hi ".synIDattr(s,"name")." ctermfg=".synIDattr(s,"fg","cterm")." ctermbg=".synIDattr(s,"bg","cterm")." guifg=".synIDattr(s,"fg","gui")." guibg=".synIDattr(s,"bg","gui")
+  echo " "
+endfunction
+
+function! s:syn_info()
+  echo "Hi info under the cursor.."
+  let s:hoge = s:syn_attr(0, "highlight")
+  let s:hoge = s:syn_attr(1, "highlight group")
+endfunction
+
+command! Hiinfo call s:syn_info()
