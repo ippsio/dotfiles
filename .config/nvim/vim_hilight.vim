@@ -10,8 +10,7 @@
 
 " カーソル行
 hi CursorLine term=reverse cterm=none ctermbg=237
-" カーソル自体の色は、iTerm2等のターミナルの設定であるため、コメントアウト
-"hi Cursor ctermbg=1 ctermfg=240
+" カーソル自体の色は、iTerm2等のターミナルの設定であるため、コメントアウト hi Cursor ctermbg=1 ctermfg=240
 
 " 補完ポップアップ
 hi Pmenu ctermbg=7
@@ -28,21 +27,32 @@ hi NormalNC ctermbg=0 ctermfg=240
 " コメント
 hi Comment ctermbg=17
 
+hi Constant ctermfg=152 ctermbg=22
+
 " カーソル下のhighlight情報を表示する {{{
-function! s:syn_attr(transparent, str)
-  let s = synID(line("."), col("."), 1)
-  if a:transparent
-    let s = synIDtrans(s)
-  endif
-  echo "[" . a:str . "]"
-  echo "hi ".synIDattr(s,"name")." ctermfg=".synIDattr(s,"fg","cterm")." ctermbg=".synIDattr(s,"bg","cterm")." guifg=".synIDattr(s,"fg","gui")." guibg=".synIDattr(s,"bg","gui")
-  echo " "
+function! s:part(s, fgbg, type)
+  let l:attr = synIDattr(a:s, a:fgbg, a:type)
+  return l:attr ? " " . a:type . a:fgbg . "=" . l:attr : ""
+endfunction
+
+function! s:attr(transparent)
+  let l:s = synID(line("."), col("."), 1)
+  let l:s = a:transparent ? synIDtrans(l:s) : l:s
+  return synIDattr(l:s,"name").s:part(l:s, "fg", "cterm").s:part(l:s, "bg", "cterm").s:part(l:s, "fg", "gui").s:part(l:s, "bg", "gui")
 endfunction
 
 function! s:syn_info()
-  echo "Hi info under the cursor.."
-  let s:hoge = s:syn_attr(0, "highlight")
-  let s:hoge = s:syn_attr(1, "highlight group")
+  let l:prev_attr = ""
+  let l:curr_attr = ""
+  for i in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    let l:curr_attr = s:attr(i)
+    if l:curr_attr == l:prev_attr
+      :break
+    endif
+    echo "hi " . l:curr_attr
+    let l:prev_attr = l:curr_attr
+  endfor
 endfunction
 
 command! Hiinfo call s:syn_info()
+
