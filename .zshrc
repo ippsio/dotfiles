@@ -1,3 +1,4 @@
+# LANGUAGE
 # python
 export PYENV_ROOT=$HOME/.pyenv
 export PATH=$PYENV_ROOT/bin:$PATH
@@ -6,11 +7,17 @@ if [ $? -eq 0 ]; then
   eval "$(pyenv init -)"
 fi
 
+# ruby
 rbenv --version &> /dev/null
 if [ $? -eq 0 ]; then
   eval "$(rbenv init -)"
 fi
 
+# KEYBINDING
+# CTRL-D,DELで前方削除
+bindkey "^[[3~" delete-char
+
+# ZPLUG
 export ZPLUG_HOME=~/.cache/zplug
 zplug --version &> /dev/null
 if [ ! -d ${ZPLUG_HOME} ]; then
@@ -21,9 +28,6 @@ source ~/.cache/zplug/init.zsh
 
 source ~/dotfiles/.config/zsh/00_alias.zsh
 source ~/dotfiles/.config/zsh/10_prompt.zsh
-
-# CTRL-D,DELで前方削除
-bindkey "^[[3~" delete-char
 
 zplug 'zsh-users/zsh-autosuggestions'
 zplug 'zsh-users/zsh-completions'
