@@ -25,3 +25,6 @@ hi Search ctermbg=22 ctermfg=White
 " フォーカスのないウインドウ
 hi NormalNC ctermbg=0 ctermfg=240
 
+" コメント
+hi Comment ctermbg=17
+
