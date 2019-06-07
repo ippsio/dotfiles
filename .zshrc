@@ -34,14 +34,12 @@ zplug 'zsh-users/zsh-completions'
 zplug 'zsh-users/zsh-syntax-highlighting'
 zplug "mollifier/anyframe"
 zplug "mollifier/cd-gitroot"
-# zplug "b4b4r07/enhancd", use:enhancd.sh
 #zplug "zsh-users/zsh-history-substring-search", hook-build:"__zsh_version 4.3"
 zplug "junegunn/fzf-bin", as:command, from:gh-r, rename-to:fzf
 zplug "junegunn/fzf", as:command, use:bin/fzf-tmux
 zplug "supercrabtree/k"
 zplug "junegunn/fzf", use:shell/key-bindings.zsh
 zplug "junegunn/fzf", use:shell/completion.zsh
-#zplug "b4b4r07/enhancd", use:init.sh
 zplug "paulirish/git-open", as:plugin
 zplug "zsh-users/zsh-syntax-highlighting", defer:2
 #: "cd先のディレクトリのファイル一覧を表示する" && {
