@@ -20,7 +20,7 @@ hi PmenuSbar ctermbg=2
 hi PmenuThumb ctermbg=4
 
 " 検索単語
-hi Search ctermbg=22 ctermfg=White
+hi Search ctermbg=22 ctermfg=255
 
 " フォーカスのないウインドウ
 hi NormalNC ctermbg=0 ctermfg=240
