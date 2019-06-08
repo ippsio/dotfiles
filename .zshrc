@@ -29,23 +29,25 @@ source ~/.cache/zplug/init.zsh
 source ~/dotfiles/.config/zsh/00_alias.zsh
 source ~/dotfiles/.config/zsh/10_prompt.zsh
 
+# 履歴からコマンド候補をサジェスト
 zplug 'zsh-users/zsh-autosuggestions'
+
+# Zshの補完を拡張してくれる設定が入ったパッケージ
 zplug 'zsh-users/zsh-completions'
-zplug 'zsh-users/zsh-syntax-highlighting'
+
 zplug "mollifier/anyframe"
-zplug "mollifier/cd-gitroot"
-#zplug "zsh-users/zsh-history-substring-search", hook-build:"__zsh_version 4.3"
+zplug "zsh-users/zsh-history-substring-search", hook-build:"__zsh_version 4.3"
 zplug "junegunn/fzf-bin", as:command, from:gh-r, rename-to:fzf
 zplug "junegunn/fzf", as:command, use:bin/fzf-tmux
-zplug "supercrabtree/k"
 zplug "junegunn/fzf", use:shell/key-bindings.zsh
 zplug "junegunn/fzf", use:shell/completion.zsh
-zplug "paulirish/git-open", as:plugin
 zplug "zsh-users/zsh-syntax-highlighting", defer:2
-#: "cd先のディレクトリのファイル一覧を表示する" && {
-#  [ -z "$ENHANCD_ROOT" ] && function chpwd { tree -L 1 } # enhancdがない場合
-#  [ -z "$ENHANCD_ROOT" ] || export ENHANCD_HOOK_AFTER_CD="tree -L 1" # enhancdがあるときはそのHook機構を使う
-#}
+
+# cd先のディレクトリのファイル一覧を表示する
+# enhancdがない場合
+[ -z "$ENHANCD_ROOT" ] && function chpwd { tree -L 1 }
+# enhancdがあるときはそのHook機構を使う
+[ -z "$ENHANCD_ROOT" ] || export ENHANCD_HOOK_AFTER_CD="tree -L 1"
 
 : "sshコマンド補完を~/.ssh/configから行う" && {
   function _ssh { compadd $(fgrep 'Host ' ~/.ssh/*/config | grep -v '*' |  awk '{print $2}' | sort) }
@@ -57,6 +59,6 @@ if ! zplug check --verbose; then
 fi
 
 # コマンドをリンクして、PATH に追加し、プラグインは読み込む
-zplug load
-#zplug load --verbose
+#zplug load
+zplug load --verbose
 

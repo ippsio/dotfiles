@@ -83,3 +83,11 @@
 #  set background=dark
 #  au MyAutoCmd VimEnter * nested colorscheme birds-of-paradise
 #'''
+
+[[plugins]]
+repo = 'yuratomo/neon.vim'
+hook_add = '''
+  set background=dark
+  au MyAutoCmd VimEnter * nested colorscheme neon
+'''
+

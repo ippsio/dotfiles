@@ -27,11 +27,7 @@ hi NormalNC ctermbg=0 ctermfg=240
 " コメント
 hi Comment ctermbg=17 ctermfg=14
 
-" 変数、文字列
-hi Constant ctermfg=161
-
-" 行番号
-hi LineNr ctermfg=243
+hi Constant ctermfg=161 ctermbg=20
 
 " カーソル下のhighlight情報を表示する {{{
 function! s:part(s, fgbg, type)
