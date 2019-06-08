@@ -49,9 +49,8 @@ zplug "zsh-users/zsh-syntax-highlighting", defer:2
 # enhancdがあるときはそのHook機構を使う
 [ -z "$ENHANCD_ROOT" ] || export ENHANCD_HOOK_AFTER_CD="tree -L 1"
 
-: "sshコマンド補完を~/.ssh/configから行う" && {
-  function _ssh { compadd $(fgrep 'Host ' ~/.ssh/*/config | grep -v '*' |  awk '{print $2}' | sort) }
-}
+# sshコマンド補完を~/.ssh/configから行う
+function _ssh { compadd $(fgrep 'Host ' ~/.ssh/*/config | grep -v '*' |  awk '{print $2}' | sort) }
 
 # 未インストール項目をインストールする
 if ! zplug check --verbose; then
