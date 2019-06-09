@@ -8,9 +8,15 @@
 " 現在設定している色の確認（結構時間かかりまっせ）
 " :so $VIMRUNTIME/syntax/hitest.vim
 
+if has('nvim')
+  set termguicolors
+endif
+
 " カーソル行
 hi CursorLine term=reverse cterm=none ctermbg=237
 " カーソル自体の色は、iTerm2等のターミナルの設定であるため、コメントアウト hi Cursor ctermbg=1 ctermfg=240
+
+hi Statement guibg=111
 
 " 補完ポップアップ
 hi Pmenu ctermbg=7
@@ -25,13 +31,16 @@ hi Search ctermbg=22 ctermfg=255
 hi NormalNC ctermbg=0 ctermfg=240
 
 " コメント
-hi Comment ctermbg=17 ctermfg=14
+hi Comment ctermbg=17 ctermfg=14 guibg=#002233 guifg=#00ffaa
 
 " 変数、文字列
-hi Constant ctermfg=161
+hi Constant ctermfg=161 guifg=#ffaaaa guibg=#330000
 
 " 行番号
-hi LineNr ctermfg=243
+hi LineNr ctermfg=243 guifg=#ffcfbb
+
+"hi Function guifg=#ffff00 guibg=#444400
+hi Statement guifg=#ffff00
 
 " カーソル下のhighlight情報を表示する {{{
 function! s:part(s, fgbg, type)
@@ -48,7 +57,7 @@ endfunction
 function! s:syn_info()
   let l:prev_attr = ""
   let l:curr_attr = ""
-  for i in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  for i in [0, 1]
     let l:curr_attr = s:attr(i)
     if l:curr_attr == l:prev_attr
       :break
