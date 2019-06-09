@@ -17,6 +17,12 @@ fi
 # CTRL-D,DELで前方削除
 bindkey "^[[3~" delete-char
 
+# tmux
+export TMUX_PLUGINS=~/.cache/tmux/plugins
+if [ ! -d ${TMUX_PLUGINS} ]; then
+  git clone https://github.com/tmux-plugins/tpm ${TMUX_PLUGINS}/tpm
+fi
+
 # ZPLUG
 export ZPLUG_HOME=~/.cache/zplug
 zplug --version &> /dev/null
