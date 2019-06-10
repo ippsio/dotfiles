@@ -10,6 +10,8 @@
 
 if has('nvim')
   set termguicolors
+  let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+  let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 endif
 
 " カーソル行
@@ -31,7 +33,7 @@ hi Search ctermbg=22 ctermfg=255
 hi NormalNC ctermbg=0 ctermfg=240
 
 " コメント
-hi Comment ctermbg=17 ctermfg=14 guibg=#002233 guifg=#00ffaa
+hi Comment ctermbg=17 ctermfg=14 guibg=#002255 guifg=#00ffaa
 
 " 変数、文字列
 hi Constant ctermfg=161 guifg=#ffaaaa guibg=#330000
