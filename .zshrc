@@ -45,11 +45,15 @@ zplug "mollifier/anyframe"
 zplug "zsh-users/zsh-history-substring-search", hook-build:"__zsh_version 4.3"
 zplug "junegunn/fzf-bin", as:command, from:gh-r, rename-to:fzf
 zplug "junegunn/fzf", as:command, use:bin/fzf-tmux
-zplug "junegunn/fzf", use:shell/key-bindings.zsh
+#zplug "junegunn/fzf", use:shell/key-bindings.zsh
 zplug "junegunn/fzf", use:shell/completion.zsh
 zplug "zsh-users/zsh-syntax-highlighting", defer:2
 
 # cd先のディレクトリのファイル一覧を表示する
+tree --version &> /dev/null
+if [ ! $? -eq 0 ]; then
+  brew install tree
+fi
 # enhancdがない場合
 [ -z "$ENHANCD_ROOT" ] && function chpwd { tree -L 1 }
 # enhancdがあるときはそのHook機構を使う
