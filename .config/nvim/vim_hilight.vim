@@ -42,6 +42,9 @@ hi Constant ctermfg=161 guifg=#ffaaaa guibg=#330000
 " 行番号
 hi LineNr ctermfg=243 guifg=#ffcfbb
 
+" directory
+hi Directory guifg=#88ccff guibg=#000055
+
 "hi Function guifg=#ffff00 guibg=#444400
 hi Statement guifg=#ffff00
 
