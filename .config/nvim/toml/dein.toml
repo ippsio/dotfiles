@@ -252,7 +252,7 @@ hook_add = '''
   call s:hi_file('html',   'yellow',  'none', 'yellow',  '#151515')
   call s:hi_file('styl',   'cyan',    'none', 'cyan',    '#151515')
   call s:hi_file('css',    'cyan',    'none', 'cyan',    '#151515')
-  call s:hi_file('rb',     'Red',     'none', '#cc2233',     '#151515')
+  call s:hi_file('rb',     'Red',     'none', '#ffbbff', '#330000')
   call s:hi_file('js',     'Red',     'none', '#ffa500', '#151515')
   call s:hi_file('php',    'Magenta', 'none', '#ff00ff', '#151515')
   call s:hi_file('toml',   'Gray',    'none', '#ff00ff', '#151515')

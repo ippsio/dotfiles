@@ -45,6 +45,10 @@ hi LineNr ctermfg=243 guifg=#ffcfbb
 " directory
 hi Directory guifg=#88ccff guibg=#000055
 
+hi Type guibg=#004433 guifg=#00ff33
+
+
+
 "hi Function guifg=#ffff00 guibg=#444400
 hi Statement guifg=#ffff00
 

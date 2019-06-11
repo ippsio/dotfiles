@@ -71,3 +71,11 @@ fi
 #zplug load
 zplug load --verbose
 
+function battery {
+  ~/dotfiles/bin/battery
+}
+
+function wifi {
+  ~/dotfiles/bin/wifi
+}
+
