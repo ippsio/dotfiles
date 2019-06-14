@@ -36,7 +36,7 @@ source ~/dotfiles/.config/zsh/00_alias.zsh
 source ~/dotfiles/.config/zsh/10_prompt.zsh
 
 # historyj
-HISTFILE=$HOME/.zsh_history # ヒストリファイル名
+HISTFILE=~/.zsh_history # ヒストリファイル名
 HISTSIZE=10000 # メモリに保存される履歴の件数
 SAVEHIST=10000 # 履歴ファイルに保存される履歴の件数
 setopt hist_ignore_dups # 直前と同じコマンドをヒストリに追加しない
