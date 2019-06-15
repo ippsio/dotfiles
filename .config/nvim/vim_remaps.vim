@@ -44,10 +44,10 @@ nnoremap <C-Up>    <C-w>k
 nnoremap <C-Right> <C-w>l
 
 " ウインドウの分割（横）
-nnoremap <space>- :<C-u>split<CR>
+nnoremap <space>- :<C-u>new<CR>
 " ウインドウの分割（縦）
-nnoremap <space>\  :<C-u>vsplit<CR>
-nnoremap <space>\| :<C-u>vsplit<CR>
+nnoremap <space>\  :<C-u>vnew<CR>
+nnoremap <space>\| :<C-u>vnew<CR>
 " ウインドウの高さの統一
 nnoremap <space>= <C-w>=
 
