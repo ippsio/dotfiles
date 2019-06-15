@@ -93,8 +93,8 @@ repo = 'tpope/vim-surround'
 repo = 'easymotion/vim-easymotion'
 hook_add = '''
   let g:EasyMotion_do_mapping = 0
-  map  F <Plug>(easymotion-bd-w)
-  nmap F <Plug>(easymotion-overwin-w)
+  map  f <Plug>(easymotion-bd-w)
+  nmap f <Plug>(easymotion-overwin-w)
 '''
 
 [[plugins]]
