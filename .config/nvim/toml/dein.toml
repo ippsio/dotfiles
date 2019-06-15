@@ -1,17 +1,24 @@
 [[plugins]]
 repo = 'Shougo/dein.vim'
+
 [[plugins]]
 repo = 'Shougo/neomru.vim'
+
 [[plugins]]
 repo = 'Shougo/unite-outline'
+
 [[plugins]]
 repo = 'Shougo/neomru.vim'
+
 [[plugins]]
 repo = 'Shougo/neoyank.vim'
+
 [[plugins]]
 repo = 'Shougo/Unite.vim'
+
 depends = ['Shougo/neomru.vim']
 [[plugins]]
+
 repo = 'Shougo/denite.nvim'
 depends = ['Shougo/neomru.vim']
 hook_add='''
@@ -20,16 +27,10 @@ hook_add='''
   nnoremap <space>dy :<C-u>Denite neoyank<CR>
   nnoremap <space>df :<C-u>Denite file/rec<CR>
   nnoremap <space>do :<C-u>Denite outline<CR>
-
 '''
+
 [[plugins]]
 repo = 'Shougo/deoplete.nvim'
-#hook_add = '''
-#  let g:deoplete#enable_at_startup = 1
-#  inoremap <expr><Tab> pumvisible() ? "\<DOWN>" : "\<Tab>"
-#  inoremap <expr><S-Tab> pumvisible() ? "\<UP>" : "\<S-Tab>"
-#  let g:deoplete-options-auto_complete = v:false
-#'''
 hook_source = '''
   let g:deoplete#enable_at_startup = 1
   let g:deoplete#enable_ignore_case = 1
@@ -54,29 +55,6 @@ hook_source = '''
   "   return deoplete#cancel_popup() . "\<CR>"
   " endfunction
 '''
-#hook_source = '''
-#  " <TAB>: completion.
-#  inoremap <silent><expr> <TAB>
-#        \ pumvisible() ? "\<C-n>" :
-#        \ <SID>check_back_space() ? "\<TAB>" :
-#        \ deoplete#manual_complete()
-#  function! s:check_back_space() abort "{{{
-#    let col = col('.') - 1
-#    return !col || getline('.')[col - 1]  =~ '\s'
-#  endfunction"}}}
-#
-#  " <S-TAB>: completion back.
-#  inoremap <expr><S-TAB>  pumvisible() ? "\<C-p>" : "\<C-h>"
-#
-#  " <BS>: close popup and delete backword char.
-#  inoremap <expr><BS> deoplete#smart_close_popup()."\<C-h>"
-#
-#  " " <CR>: close popup and save indent.
-#  " inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-#  " function! s:my_cr_function() abort
-#  "   return deoplete#cancel_popup() . "\<CR>"
-#  " endfunction
-#'''
 on_event = 'InsertEnter'
 
 [[plugins]]
@@ -123,31 +101,7 @@ hook_add = '''
   endif
 
   set laststatus=2
-  "let g:lightline_colorscheme = '16color'
-  "let g:lightline_colorscheme = 'OldHope'
-  "let g:lightline_colorscheme = 'PaperColor'
   let g:lightline_colorscheme = 'PaperColor_dark'
-  "let g:lightline_colorscheme = 'PaperColor_light'
-  "let g:lightline_colorscheme = 'Tomorrow'
-  "let g:lightline_colorscheme = 'Tomorrow_Night'
-  "let g:lightline_colorscheme = 'Tomorrow_Night_Blue'
-  "let g:lightline_colorscheme = 'Tomorrow_Night_Bright'
-  "let g:lightline_colorscheme = 'Tomorrow_Night_Eighties'
-  "let g:lightline_colorscheme = 'darcula'
-  "let g:lightline_colorscheme = 'defaul'
-  "let g:lightline_colorscheme = 'deus'
-  "let g:lightline_colorscheme = 'jellybeans'
-  "let g:lightline_colorscheme = 'landscape'
-  "let g:lightline_colorscheme = 'materia'
-  "let g:lightline_colorscheme = 'material'
-  "let g:lightline_colorscheme = 'molokai'
-  "let g:lightline_colorscheme = 'nord'
-  "let g:lightline_colorscheme = 'one'
-  "let g:lightline_colorscheme = 'powerline'
-  "let g:lightline_colorscheme = 'seoul256'
-  "let g:lightline_colorscheme = 'solarized'
-  "let g:lightline_colorscheme = 'srcery_drk'
-  "let g:lightline_colorscheme = 'wombat'
   let g:lightline = {
     \ 'colorscheme': g:lightline_colorscheme,
     \ 'active': {'left': [['mode', 'paste'], ['readonly', 'filename', 'modified', 'anzu']]},
@@ -176,34 +130,6 @@ hook_add = '''
 # vimのf検索中に、f連打で次々と検索できるようにする
 [[plugins]]
 repo = 'rhysd/clever-f.vim'
-
-[[plugins]]
-repo = 'fholgado/minibufexpl.vim'
-hook_add = '''
-  " 画面上部に最低2行で表示
-  "let g:miniBufExplMinSize = 2
-
-  " 画面横に表示
-  let g:miniBufExplBRSplit = 1  " 右
-  "let g:miniBufExplBRSplit = 0  " 左
-  let g:miniBufExplVSplit = 30
-
-  let g:miniBufExplorerMoreThanOne = 1
-  set background=dark
-
-  let g:miniBufExplorerAutoStart = 0
-
-  " MiniBufExpl Colors
-  hi MBENormal               guifg=fg      guibg=fg
-  hi MBEVisibleNormal        guifg=fg      guibg=#000088
-  hi MBEVisibleActiveNormal  guifg=fg      guibg=#cc2222
-  hi MBEChanged              guifg=#ff0000 guibg=fg
-  hi MBEVisibleChanged       guifg=#ff0000 guibg=#000088
-  hi MBEVisibleActiveChanged guifg=#ff0000 guibg=#cc2222
-  let g:did_minibufexplorer_syntax_inits = 1
-
-  nnoremap <silent> <space>m :MBEToggle<CR>
-'''
 
 # NERDTree
 [[plugins]]
@@ -329,29 +255,6 @@ hook_add = '''
   call submode#map(       'window_mode', 'n', '',         '=', '<C-w>'.'=')
 '''
 
-#[[plugins]]
-#repo = 'fuenor/qfixhowm'
-#hook_add = '''
-#  " QFixHowm
-#
-#  "QFixHowmキーマップ
-#  let g:QFixHowm_Key = 'g'
-#
-#  "howm_dirはファイルを保存したいディレクトリを設定。
-#  let g:howm_dir             = '~/.memos'
-#  let g:howm_filename        = '%Y/%m/%Y-%m-%d-%H%M%S.howm'
-#  let g:howm_fileencoding    = 'utf-8'
-#  let g:howm_fileformat      = 'unix'
-#
-#  let g:QFixHowm_DiaryFile = 'diary/%Y/%m/%Y-%m-%d-000000.howm'
-#'''
-
-# vimは大文字始まりのユーザ定義コマンドしか許容しないが、小文字始まりの方が指が楽なので、
-# エイリアスをvim-altercmdでエイリアスを作り、小文字始まりのユーザ定義コマンドを実現できるようにする。
-#
-# * ユーザ定義コマンドとは、コロンで始まるコマンド
-#   - rking/agなら :Ag とか
-#   - scrooloose/nerdtree なら :NERDTreeFindとか :NERDTreeToggleとか
 [[plugins]]
 repo = 'tyru/vim-altercmd'
 hook_add = '''
