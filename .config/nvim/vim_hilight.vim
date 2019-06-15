@@ -23,8 +23,8 @@ hi Statement guibg=111
 " 補完ポップアップ
 hi Pmenu ctermbg=7 guibg=#333333
 hi PmenuSel ctermbg=255 guibg=#aaaaaa guifg=#333333
-hi PmenuSbar ctermbg=2
-hi PmenuThumb ctermbg=4
+hi PmenuSbar ctermbg=2 guibg=#222222
+hi PmenuThumb ctermbg=4 guibg=#ffffff
 
 " 検索単語
 hi IncSearch ctermbg=22 ctermfg=255 cterm=underline guibg=#882200 guifg=#ff22ff gui=underline
