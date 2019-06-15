@@ -21,8 +21,8 @@ hi CursorLine term=reverse cterm=none ctermbg=237
 hi Statement guibg=111
 
 " 補完ポップアップ
-hi Pmenu ctermbg=7
-hi PmenuSel ctermbg=255
+hi Pmenu ctermbg=7 guibg=#333333
+hi PmenuSel ctermbg=255 guibg=#aaaaaa guifg=#333333
 hi PmenuSbar ctermbg=2
 hi PmenuThumb ctermbg=4
 
