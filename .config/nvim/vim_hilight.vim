@@ -46,8 +46,21 @@ hi LineNr ctermfg=243 guifg=#ffcfbb
 hi Directory guifg=#88ccff guibg=#000055
 
 hi Type guibg=#004433 guifg=#00ff33
+hi Visual guibg=#2211aa
 
-
+" markdown
+hi markdownH1          guibg=#552299 guifg=#4499ff
+hi markdownH1Delimiter guibg=#552299 guifg=#4499ff
+hi markdownH2          guibg=#552299 guifg=#4499ff
+hi markdownH2Delimiter guibg=#552299 guifg=#4499ff
+hi markdownH3          guibg=#552299 guifg=#4499ff
+hi markdownH3Delimiter guibg=#552299 guifg=#4499ff
+hi markdownH4          guibg=#552299 guifg=#4499ff
+hi markdownH4Delimiter guibg=#552299 guifg=#4499ff
+hi markdownH5          guibg=#552299 guifg=#4499ff
+hi markdownH5Delimiter guibg=#552299 guifg=#4499ff
+hi markdownCode          guibg=#333333 guifg=#cccccc
+hi markdownCodeDelimiter guibg=#222222 guifg=#cccccc
 
 "hi Function guifg=#ffff00 guibg=#444400
 hi Statement guifg=#ffff00
