@@ -207,6 +207,20 @@ hook_add = '''
 
 [[plugins]]
 repo = 'Xuyuanp/nerdtree-git-plugin'
+hook_add = '''
+  let g:NERDTreeIndicatorMapCustom = {
+    \ "Modified"  : "\*",
+    \ "Staged"    : "\Staged",
+    \ "Untracked" : "\Untracked",
+    \ "Renamed"   : "\Renamed",
+    \ "Unmerged"  : "\Unmerged",
+    \ "Deleted"   : "\Deleted",
+    \ "Dirty"     : "\x",
+    \ "Clean"     : "\v",
+    \ 'Ignored'   : '☒',
+    \ "Unknown"   : "?"
+    \ }
+'''
 
 [[plugins]]
 repo = 'ctrlpvim/ctrlp.vim'
