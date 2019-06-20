@@ -30,6 +30,12 @@ if [ ! -d ${ZPLUG_HOME} ]; then
   ~/.config/zsh/install_zplug.sh && sleep 5
 fi
 
+export FZF_DEFAULT_OPTS="--extended --cycle --reverse"
+fzf --version &> /dev/null
+if [ $? -eq 0]; then
+  brew install fzf
+fi
+
 source ~/.cache/zplug/init.zsh
 
 source ~/dotfiles/.config/zsh/00_alias.zsh
@@ -71,7 +77,7 @@ fi
 [ -z "$ENHANCD_ROOT" ] || export ENHANCD_HOOK_AFTER_CD="tree -L 1"
 
 # sshコマンド補完を~/.ssh/configから行う
-function _ssh { compadd $(fgrep 'Host ' ~/.ssh/*/config | grep -v '*' |  awk '{print $2}' | sort) }
+function _ssh { compadd $(fgrep 'Host ' ~/.ssh/config | grep -v '*' |  awk '{print $2}' | sort | fzf) }
 
 # 未インストール項目をインストールする
 if ! zplug check --verbose; then

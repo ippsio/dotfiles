@@ -7,7 +7,7 @@
   ],
   "mode":"flat",
   "cwd": {
-    "max_depth": 1
+    "max_depth": 5
   },
   "time": {
     "format": "%Y/%m/%d %H:%M:%S"
