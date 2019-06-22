@@ -1,5 +1,5 @@
 # LANGUAGE
-# python
+## PYTHON
 export PYENV_ROOT=$HOME/.pyenv
 export PATH=$PYENV_ROOT/bin:$PATH
 pyenv --version &> /dev/null
@@ -7,7 +7,7 @@ if [ $? -eq 0 ]; then
   eval "$(pyenv init -)"
 fi
 
-# ruby
+# RUBY
 rbenv --version &> /dev/null
 if [ $? -eq 0 ]; then
   eval "$(rbenv init -)"
@@ -87,6 +87,20 @@ fi
 # コマンドをリンクして、PATH に追加し、プラグインは読み込む
 #zplug load
 zplug load --verbose
+
+# expand global aliases by space
+# http://blog.patshead.com/2012/11/automatically-expaning-zsh-global-aliases---simplified.html
+globalias() {
+  if [[ $LBUFFER =~ ' [A-Z0-9]+$' ]]; then
+    zle _expand_alias
+    # zle expand-word
+  fi
+  zle self-insert
+}
+
+zle -N globalias
+
+bindkey " " globalias
 
 function battery {
   ~/dotfiles/bin/battery
