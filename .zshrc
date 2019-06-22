@@ -32,7 +32,7 @@ fi
 
 export FZF_DEFAULT_OPTS="--extended --cycle --reverse"
 fzf --version &> /dev/null
-if [ $? -eq 0 ]; then
+if [ ! $? -eq 0 ]; then
   brew install fzf
 fi
 
