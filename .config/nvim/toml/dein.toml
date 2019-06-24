@@ -289,6 +289,19 @@ hook_add = '''
   call submode#enter_with('window_mode', 'n', '', '<C-w>'.'=', '<C-w>'.'=')
   call submode#map(       'window_mode', 'n', '',         '=', '<C-w>'.'=')
 '''
+[[plugins]]
+repo = 'junegunn/fzf'
+build = './install --all'
+
+###fzf.vim
+[[plugins]]
+repo = 'junegunn/fzf.vim'
+hook_add = '''
+  nnoremap <C-p> :FZFFileList<CR>
+  command! FZFFileList call fzf#run(fzf#wrap({
+            \ 'source': 'find . -type d -name .git -prune -o ! -name .DS_Store',
+            \ 'down': '40%'}))
+'''
 
 [[plugins]]
 repo = 'tyru/vim-altercmd'
