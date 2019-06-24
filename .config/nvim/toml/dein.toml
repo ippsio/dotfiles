@@ -216,7 +216,7 @@ hook_add = '''
     \ "Unmerged"  : "\Unmerged",
     \ "Deleted"   : "\Deleted",
     \ "Dirty"     : "\x",
-    \ "Clean"     : "\v",
+    \ "Clean"     : "\VV",
     \ 'Ignored'   : '☒',
     \ "Unknown"   : "?"
     \ }
