@@ -102,11 +102,27 @@ zle -N globalias
 
 bindkey " " globalias
 
-function battery {
-  ~/dotfiles/bin/battery
+# function battery {
+#   ~/dotfiles/bin/battery
+# }
+# 
+# function wifi {
+#   ~/dotfiles/bin/wifi
+# }
+# 
+# agの結果をfzfで絞り込み選択するとvimで開く
+alias agg="_agAndVim"
+function _agAndVim() {
+    if [ -z "$1" ]; then
+        echo 'Usage: agg PATTERN'
+        return 0
+    fi
+    result=`ag $1 | fzf`
+    line=`echo "$result" | awk -F ':' '{print $2}'`
+    file=`echo "$result" | awk -F ':' '{print $1}'`
+    if [ -n "$file" ]; then
+        nvim $file +$line
+    fi
 }
 
-function wifi {
-  ~/dotfiles/bin/wifi
-}
-
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
