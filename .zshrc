@@ -23,6 +23,12 @@ if [ ! -d ${TMUX_PLUGINS} ]; then
   git clone https://github.com/tmux-plugins/tpm ${TMUX_PLUGINS}/tpm
 fi
 
+# ripgrep(rg)
+rg --version &> /dev/null
+if [ ! $? -eq 0 ]; then
+  brew install rg
+fi
+
 # ZPLUG
 export ZPLUG_HOME=~/.cache/zplug
 zplug --version &> /dev/null
@@ -72,7 +78,7 @@ if [ ! $? -eq 0 ]; then
   brew install tree
 fi
 # enhancdがない場合
-[ -z "$ENHANCD_ROOT" ] && function chpwd { tree -L 1 }
+[ -z "$ENHANCD_ROOT" ] && function chpwd { pwd; tree -L 1 }
 # enhancdがあるときはそのHook機構を使う
 [ -z "$ENHANCD_ROOT" ] || export ENHANCD_HOOK_AFTER_CD="tree -L 1"
 
