@@ -1,1 +1,1 @@
-/Users/i/.cache/dein/repos/github.com/junegunn/fzf/shell/key-bindings.fish
+/Users/ippei.shioiri/.cache/dein/repos/github.com/junegunn/fzf/shell/key-bindings.fish
