@@ -29,6 +29,6 @@ SETUVAR fish_pager_color_completion:B3A06D
 SETUVAR fish_pager_color_description:B3A06D
 SETUVAR fish_pager_color_prefix:cyan\x1e\x2d\x2dunderline
 SETUVAR fish_pager_color_progress:brwhite\x1e\x2d\x2dbackground\x3dcyan
-SETUVAR fish_user_paths:/Users/i/\x2ecache/dein/repos/github\x2ecom/junegunn/fzf/bin
+SETUVAR fish_user_paths:/Users/i/\x2ecache/dein/repos/github\x2ecom/junegunn/fzf/bin\x1e/Users/ippei\x2eshioiri/\x2ecache/dein/repos/github\x2ecom/junegunn/fzf/bin
 SETUVAR fisher_active_prompt:bobthefish
 SETUVAR fisher_dependency_count:bobthefish
