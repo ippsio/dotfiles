@@ -1,11 +1,14 @@
 # LANGUAGE
 ## PYTHON
+# pyenv
 export PYENV_ROOT=$HOME/.pyenv
-export PATH=$PYENV_ROOT/bin:$PATH
 pyenv --version &> /dev/null
-if [ $? -eq 0 ]; then
-  eval "$(pyenv init -)"
+if [ ! $? -eq 0 ]; then
+  git clone git://github.com/yyuu/pyenv.git ${PYENV_ROOT}
+  git clone git://github.com/yyuu/pyenv-virtualenv.git ${PYENV_ROOT}/plugins/pyenv-virtualenv
 fi
+export PATH=$PYENV_ROOT/bin:$PATH
+eval "$(pyenv init -)"
 
 # RUBY
 rbenv --version &> /dev/null
@@ -77,10 +80,10 @@ tree --version &> /dev/null
 if [ ! $? -eq 0 ]; then
   brew install tree
 fi
-# enhancdがない場合
-[ -z "$ENHANCD_ROOT" ] && function chpwd { pwd; tree -L 1 }
+# enhancdがない場合('tail +2'=> 1行目の情報は不要なので捨て、2行目以降をtail)
+[ -z "$ENHANCD_ROOT" ] && function chpwd { pwd; tree -C -L 1| tail +2 }
 # enhancdがあるときはそのHook機構を使う
-[ -z "$ENHANCD_ROOT" ] || export ENHANCD_HOOK_AFTER_CD="tree -L 1"
+[ -z "$ENHANCD_ROOT" ] || export ENHANCD_HOOK_AFTER_CD="tree -C -L 1| tail +2"
 
 # sshコマンド補完を~/.ssh/configから行う
 function _ssh { compadd $(fgrep 'Host ' ~/.ssh/config | grep -v '*' |  awk '{print $2}' | sort | fzf) }
