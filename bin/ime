@@ -1,0 +1,1 @@
+if /usr/libexec/PlistBuddy -c 'Print AppleSelectedInputSources' ~/Library/Preferences/com.apple.HIToolbox.plist|grep -Eo 'Input.*Mode.*Japanese'>/dev/null; then echo 'あ'; else echo 'A'; fi
