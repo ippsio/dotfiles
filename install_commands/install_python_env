@@ -1,0 +1,7 @@
+#!/bin/sh
+
+pyenv --version &> /dev/null
+if [ ! $? -ne 0 ]; then
+  brew install pyenv
+fi
+
