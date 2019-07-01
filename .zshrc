@@ -1,10 +1,28 @@
 # LANGUAGE
 ## PYTHON
+### pyenv
 export PYENV_ROOT=$HOME/.pyenv
 export PATH=$PYENV_ROOT/bin:$PATH
+if [ ! -d ${PYENV_ROOT} ]; then
+  git clone https://github.com/pyenv/pyenv.git ${PYENV_ROOT}
+fi
+### pyenv-virtualenv
+if [ ! -d ${PYENV_ROOT}/plugins/pyenv-virtualenv ]; then
+  git clone git://github.com/yyuu/pyenv-virtualenv.git ${PYENV_ROOT}/plugins/pyenv-virtualenv
+fi
 pyenv --version &> /dev/null
 if [ $? -eq 0 ]; then
   eval "$(pyenv init -)"
+fi
+
+# direnv
+direnv --version &> /dev/null
+if [ ! $? -eq 0 ]; then
+  brew install direnv
+fi
+direnv --version &> /dev/null
+if [ $? -eq 0 ]; then
+  eval "$(direnv hook zsh)"
 fi
 
 # RUBY
