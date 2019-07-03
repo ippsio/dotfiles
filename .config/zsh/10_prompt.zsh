@@ -1,7 +1,6 @@
 zplug "b-ryan/powerline-shell"
 function powerline_precmd() {
-  PS1="$(powerline-shell --shell zsh $?)
-\$ "
+  PS1="$(powerline-shell --shell zsh $?)"
 }
 
 function install_powerline_precmd() {

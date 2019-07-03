@@ -4,6 +4,8 @@
     "cwd",
     "git",
     "jobs",
+    "newline",
+    "root",
     "virtual_env"
   ],
   "mode":"flat",
