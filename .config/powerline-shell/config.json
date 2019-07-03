@@ -3,7 +3,8 @@
     "time",
     "cwd",
     "git",
-    "jobs"
+    "jobs",
+    "virtual_env"
   ],
   "mode":"flat",
   "cwd": {
@@ -11,6 +12,9 @@
   },
   "time": {
     "format": "%Y/%m/%d %H:%M:%S"
+  },
+  "vcs": {
+    "show_symbol": true
   }
 }
 
