@@ -1,6 +1,7 @@
 filetype off
 filetype plugin indent off
 
+runtime! vim_nvimvar.vim
 runtime! vim_autocmd.vim
 runtime! vim_setting.vim
 runtime! vim_remaps.vim
@@ -17,3 +18,4 @@ command! -bang -nargs=* Rg
 \ <bang>0 ? fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'up:60%')
 \ : fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:50%:hidden', '?'),
 \ <bang>0)
+

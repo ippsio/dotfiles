@@ -1,7 +1,4 @@
 [[plugins]]
-repo = 'Shougo/dein.vim'
-
-[[plugins]]
 repo = 'Shougo/neomru.vim'
 
 [[plugins]]
@@ -15,10 +12,9 @@ repo = 'Shougo/neoyank.vim'
 
 [[plugins]]
 repo = 'Shougo/Unite.vim'
-
 depends = ['Shougo/neomru.vim']
-[[plugins]]
 
+[[plugins]]
 repo = 'Shougo/denite.nvim'
 depends = ['Shougo/neomru.vim']
 hook_add='''
@@ -28,7 +24,6 @@ hook_add='''
   nnoremap <space>df :<C-u>Denite file/rec<CR>
   nnoremap <space>do :<C-u>Denite outline<CR>
 
-  " 一部を抜粋しています。完全版はドキュメントを参照してください
   autocmd FileType denite call s:denite_my_settings()
   function! s:denite_my_settings() abort
     nnoremap <silent><buffer><expr> i       denite#do_map('open_filter_buffer')
@@ -56,6 +51,7 @@ hook_source = '''
   let g:deoplete#enable_at_startup = 1
   let g:deoplete#enable_ignore_case = 1
   let g:deoplete#enable_smart_case = 1
+  let g:deoplete#omni_patterns = {}
 
   " <TAB>: completion.
   imap <silent><expr> <TAB> pumvisible() ? "\<C-n>" : <SID>check_back_space() ? "\<TAB>" : deoplete#mappings#manual_complete()
@@ -312,7 +308,6 @@ repo = 'tyru/vim-altercmd'
 hook_add = '''
   " alias
   call altercmd#load()
-
   " Denite
   AlterCommand dr :<C-u>Denite file_mru
   AlterCommand db :<C-u>Denite buffer
