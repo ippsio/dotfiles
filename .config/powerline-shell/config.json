@@ -8,7 +8,7 @@
     "jobs",
     "exit_code",
     "virtual_env",
-    {"type": "stdout","command": ["rbenv-local"], "bg_color": 109},
+    {"type": "stdout","command": ["rbenv-local"], "bg_color": 135},
     "root",
     "set_term_title"
   ],
