@@ -1,0 +1,4 @@
+#!/bin/bash
+# Return git repo url if git managed directory.
+git remote get-url origin 2> /dev/null
+exit 0

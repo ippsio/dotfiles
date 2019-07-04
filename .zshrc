@@ -1,3 +1,4 @@
+export PATH=~/dotfiles/bin:$PATH
 # LANGUAGE
 ## PYTHON
 ### pyenv
@@ -98,10 +99,12 @@ tree --version &> /dev/null
 if [ ! $? -eq 0 ]; then
   brew install tree
 fi
-# enhancdがない場合('tail +2'=> 1行目の情報は不要なので捨て、2行目以降をtail)
-[ -z "$ENHANCD_ROOT" ] && function chpwd { pwd; tree -C -L 1| tail +2 }
-# enhancdがあるときはそのHook機構を使う
-[ -z "$ENHANCD_ROOT" ] || export ENHANCD_HOOK_AFTER_CD="tree -C -L 1| tail +2"
+## enhancdがない場合('tail +2'=> 1行目の情報は不要なので捨て、2行目以降をtail)
+#[ -z "$ENHANCD_ROOT" ] && function chpwd { pwd; tree -C -L 1| tail +2 }
+## enhancdがあるときはそのHook機構を使う
+#[ -z "$ENHANCD_ROOT" ] || export ENHANCD_HOOK_AFTER_CD="tree -C -L 1| tail +2"
+## tree邪魔なのでtreeしない
+[ -z "$ENHANCD_ROOT" ] && function chpwd { pwd }
 
 # sshコマンド補完を~/.ssh/configから行う
 function _ssh { compadd $(fgrep 'Host ' ~/.ssh/config | grep -v '*' |  awk '{print $2}' | sort | fzf) }
@@ -153,3 +156,4 @@ function _agAndVim() {
 }
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+

@@ -1,8 +1,9 @@
 {
   "segments": [
     "time",
-    "cwd",
+    {"type": "stdout","command": ["pwd"], "fg_color": 255},
     "git",
+    {"type": "stdout","command": ["git-url"], "fg_color": 255},
     "newline",
     "jobs",
     "exit_code",
