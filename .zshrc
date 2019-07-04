@@ -1,3 +1,7 @@
+if [[ -z "$TMUX" && ! -z "$PS1" ]]; then
+  tmux && echo "tmux終了。5秒くらいしたら閉じるね" && sleep 5 && exit
+fi
+
 export PATH=~/dotfiles/bin:$PATH
 # LANGUAGE
 ## PYTHON
