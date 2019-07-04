@@ -141,8 +141,10 @@ repo = 'bronson/vim-trailing-whitespace'
 [[plugins]]
 repo = 'osyo-manga/vim-anzu'
 hook_add = '''
-  nmap n nzz<Plug>(anzu-update-search-status)
+  nmap n ngNzz<Plug>(anzu-update-search-status)
   nmap N Nzz<Plug>(anzu-update-search-status)
+  xmap n <Esc>ngNzz<Plug>(anzu-update-search-status)
+  xmap N <Esc>NgNzz<Plug>(anzu-update-search-status)
   nmap * <Plug>(anzu-star)
   nmap # <Plug>(anzu-sharp)
   nmap <silent> <ESC> :<C-u>nohlsearch<CR><Plug>(anzu-clear-search-status)
