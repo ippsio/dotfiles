@@ -25,8 +25,8 @@ vnoremap <silent> * "vy/\V<C-r>=substitute(escape(@v, '\/'), "\n", '\\n', 'g')<C
 nnoremap <silent> <Space><Space> "zyiw:let @/ = '\<' . @z . '\>'<CR>:set hlsearch<CR>
 
 " #でカーソル下の単語、または選択中の文字列をハイライトして置換
-nnoremap # "zyiw:let @/ = '\<' . @z . '\>'<CR>:set hlsearch<CR>:%s/<C-r>"///g<Left><Left>
-vnoremap # <Esc>gv"zy:let @/ = '\<' . @z . '\>'<CR>:set hlsearch<CR>:%s/<C-r>"///g<Left><Left>
+nnoremap # "zyiw:let @/ = '\<' . @z . '\>'<CR>:set hlsearch<CR>:%s/<C-r>"//g<Left><Left>
+vnoremap # <Esc>gv"zy:let @/ = '\<' . @z . '\>'<CR>:set hlsearch<CR>:%s/<C-r>"//g<Left><Left>
 
 " 面倒な\エスケープを簡易に。/{pattern}の入力中は「/」をタイプすると自動で「\/」が入力されるようになる。
 cnoremap <expr> / getcmdtype() == '/' ? '\/' : '/'
