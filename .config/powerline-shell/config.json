@@ -1,14 +1,13 @@
 {
   "segments": [
-    "time",
+    "jobs",
     {"type": "stdout","command": ["current-dir"], "fg_color": 255},
     "git",
     {"type": "stdout","command": ["git-url"]},
     "newline",
-    "jobs",
     "exit_code",
+    "time",
     "virtual_env",
-    {"type": "stdout","command": ["rbenv-local"], "bg_color": 135},
     "root",
     "set_term_title"
   ],
