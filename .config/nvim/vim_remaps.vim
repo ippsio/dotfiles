@@ -18,15 +18,19 @@ vnoremap v $h
 " -----------------------------------------------------
 " 検索
 " -----------------------------------------------------
-" ビジュアルモードの選択範囲を * で検索
-vnoremap <silent> * "vy/\V<C-r>=substitute(escape(@v, '\/'), "\n", '\\n', 'g')<CR><CR>
-
 " スペース２度押しでカーソル下にある単語をハイライト
 nnoremap <silent> <Space><Space> "zyiw:let @/ = '\<' . @z . '\>'<CR>:set hlsearch<CR>
 
-" #でカーソル下の単語、または選択中の文字列をハイライトして置換
-nnoremap # "zyiw:let @/ = '\<' . @z . '\>'<CR>:set hlsearch<CR>:%s/<C-r>"//g<Left><Left>
-vnoremap # <Esc>gv"zy:let @/ = '\<' . @z . '\>'<CR>:set hlsearch<CR>:%s/<C-r>"//g<Left><Left>
+" ビジュアルモードの選択中にスペース２度押しで選択中の文字をハイライト
+xnoremap <silent> <Space><Space> mz:call <SID>set_vsearch()<CR>:set hlsearch<CR>`z
+xnoremap * :<C-u>call <SID>set_vsearch()<CR>/<C-r>/<CR>
+
+" ビジュアルモードの選択中に#で選択中の文字列をハイライトしつつ置換モード(:%s/xxx/xxx/)に入る
+xnoremap # mz:call <SID>set_vsearch()<CR>:set hlsearch<CR>`z:%s/<C-r>///g<Left><Left>
+function! s:set_vsearch()
+  silent normal gv"zy
+  let @/ = '\V' . substitute(escape(@z, '/\'), '\n', '\\n', 'g')
+endfunction
 
 " 面倒な\エスケープを簡易に。/{pattern}の入力中は「/」をタイプすると自動で「\/」が入力されるようになる。
 cnoremap <expr> / getcmdtype() == '/' ? '\/' : '/'
