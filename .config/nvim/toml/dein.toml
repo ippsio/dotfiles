@@ -146,7 +146,7 @@ hook_add = '''
   xmap n <Esc>ngNzz<Plug>(anzu-update-search-status)
   xmap N <Esc>NgNzz<Plug>(anzu-update-search-status)
   nmap * <Plug>(anzu-star)
-  nmap # <Plug>(anzu-sharp)
+  "nmap # <Plug>(anzu-sharp)
   nmap <silent> <ESC> :<C-u>nohlsearch<CR><Plug>(anzu-clear-search-status)
 '''
 
