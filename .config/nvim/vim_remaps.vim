@@ -23,7 +23,6 @@ nnoremap <silent> <Space><Space> "zyiw:let @/ = '\<' . @z . '\>'<CR>:set hlsearc
 
 " ビジュアルモードの選択中にスペース２度押しで選択中の文字をハイライト
 xnoremap <silent> <Space><Space> mz:call <SID>set_vsearch()<CR>:set hlsearch<CR>`z
-xnoremap * :<C-u>call <SID>set_vsearch()<CR>/<C-r>/<CR>
 
 " ビジュアルモードの選択中に#で選択中の文字列をハイライトしつつ置換モード(:%s/xxx/xxx/)に入る
 xnoremap # mz:call <SID>set_vsearch()<CR>:set hlsearch<CR>`z:%s/<C-r>///g<Left><Left>
