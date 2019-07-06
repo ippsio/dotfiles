@@ -1,0 +1,82 @@
+# NERDTree
+[[plugins]]
+repo = 'scrooloose/nerdtree'
+hook_add = '''
+  " vim起動時のフォーカス移動
+  function s:MoveToFileAtStart()
+    " NERDTreeを起動された時、ちゃんと編集側のウインドウ(NERDTreeじゃない方のウインドウ）にフォーカスを当てる
+    " call feedkeys("\<C-w>l")
+  endfunction
+
+  " vim起動時にNERDTreeを起動
+  " さらにカーソルをちゃんとファイルの側のウインドウに移動
+  autocmd VimEnter *  NERDTree | call s:MoveToFileAtStart()
+
+  " NERDTree起動時、ブックマーク開く
+  let g:NERDTreeShowBookmarks=1
+
+  "他のバッファをすべて閉じた時にNERDTreeが開いていたらNERDTreeも一緒に閉じる。
+  autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+  autocmd StdinReadPre * let s:std_in=1
+  "autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+
+  " \の後Nでトグル（閉じてたNERDTreeを開く、開いてたNERDTreeを閉じる）
+  map <silent> <space>n :NERDTreeToggle<CR>
+
+  " 隠しファイルの表示
+  let g:NERDTreeShowHidden = 1
+
+  " 横幅
+  let g:NERDTreeWinSize = 45
+
+  " NERDTress File highlighting
+  function! s:hi_file(extension, fg, bg, guifg, guibg)
+    exec 'autocmd filetype nerdtree highlight ' . a:extension .' ctermbg='. a:bg .' ctermfg='. a:fg .' guibg='. a:guibg .' guifg='. a:guifg
+    exec 'autocmd filetype nerdtree syn match ' . a:extension .' #^\s\+.*'. a:extension .'$#'
+  endfunction
+  call s:hi_file('directories',     'yellow',  'none', 'yellow',  '#151515')
+  call s:hi_file('py',     'yellow',  'none', 'yellow',  '#151515')
+  call s:hi_file('md',     'blue',    'none', '#3366FF', '#151515')
+  call s:hi_file('yml',    'yellow',  'none', 'yellow',  '#151515')
+  call s:hi_file('vim',    'yellow',  'none', 'yellow',  '#133535')
+  call s:hi_file('config', 'yellow',  'none', 'yellow',  '#151515')
+  call s:hi_file('conf',   'yellow',  'none', 'yellow',  '#151515')
+  call s:hi_file('json',   'yellow',  'none', 'yellow',  '#151515')
+  call s:hi_file('html',   'yellow',  'none', 'yellow',  '#151515')
+  call s:hi_file('styl',   'cyan',    'none', 'cyan',    '#151515')
+  call s:hi_file('css',    'cyan',    'none', 'cyan',    '#151515')
+  call s:hi_file('rb',     'Red',     'none', '#ffbbff', '#330000')
+  call s:hi_file('js',     'Red',     'none', '#ffa500', '#151515')
+  call s:hi_file('php',    'Magenta', 'none', '#ff00ff', '#151515')
+  call s:hi_file('toml',   'Gray',    'none', '#ff00ff', '#151515')
+'''
+
+[[plugins]]
+repo = 'Xuyuanp/nerdtree-git-plugin'
+hook_add = '''
+  let g:NERDTreeIndicatorMapCustom = {
+    \ "Modified"  : "\@M",
+    \ "Staged"    : "\@S",
+    \ "Untracked" : "\@U",
+    \ "Renamed"   : "\@R",
+    \ "Unmerged"  : "\@U",
+    \ "Deleted"   : "\@D",
+    \ "Dirty"     : "\@X",
+    \ "Clean"     : "\@VV",
+    \ 'Ignored'   : '@☒',
+    \ "Unknown"   : "@?"
+    \ }
+'''
+
+[[plugins]]
+repo = 'airblade/vim-gitgutter'
+hook_add = '''
+  set signcolumn=yes
+'''
+
+[[plugins]]
+repo = 'tpope/vim-fugitive'
+hook_add = '''
+  nnoremap <silent> <space>a :Gblame<CR>
+'''
+

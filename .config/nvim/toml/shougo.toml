@@ -1,0 +1,78 @@
+[[plugins]]
+repo = 'Shougo/neomru.vim'
+
+[[plugins]]
+repo = 'Shougo/unite-outline'
+
+[[plugins]]
+repo = 'Shougo/neomru.vim'
+
+[[plugins]]
+repo = 'Shougo/neoyank.vim'
+
+[[plugins]]
+repo = 'Shougo/Unite.vim'
+depends = ['Shougo/neomru.vim']
+
+[[plugins]]
+repo = 'Shougo/denite.nvim'
+depends = ['Shougo/neomru.vim']
+hook_add='''
+  nnoremap <space>dr :<C-u>Denite file_mru<CR>
+  nnoremap <space>db :<C-u>Denite buffer<CR>
+  nnoremap <space>dy :<C-u>Denite neoyank<CR>
+  nnoremap <space>df :<C-u>Denite file/rec<CR>
+  nnoremap <space>do :<C-u>Denite outline<CR>
+
+  autocmd FileType denite call s:denite_my_settings()
+  function! s:denite_my_settings() abort
+    nnoremap <silent><buffer><expr> i       denite#do_map('open_filter_buffer')
+    nnoremap <silent><buffer><expr> q       denite#do_map('quit')
+    nnoremap <silent><buffer><expr> <CR>    denite#do_map('do_action')
+  endfunction
+
+
+  " Define mappings
+  autocmd FileType denite call s:denite_my_settings()
+  function! s:denite_my_settings() abort
+    nnoremap <silent><buffer><expr> <CR> denite#do_map('do_action')
+    nnoremap <silent><buffer><expr> d denite#do_map('do_action', 'delete')
+    nnoremap <silent><buffer><expr> p denite#do_map('do_action', 'preview')
+    nnoremap <silent><buffer><expr> q denite#do_map('quit')
+    nnoremap <silent><buffer><expr> i denite#do_map('open_filter_buffer')
+    nnoremap <silent><buffer><expr> <Space> denite#do_map('toggle_select').'j'
+  endfunction
+'''
+
+[[plugins]]
+repo = 'Shougo/deoplete.nvim'
+hook_source = '''
+  let g:deoplete#enable_at_startup = 1
+  let g:deoplete#enable_ignore_case = 1
+  let g:deoplete#enable_smart_case = 1
+  let g:deoplete#omni_patterns = {}
+
+  " <TAB>: completion.
+  imap <silent><expr> <TAB> pumvisible() ? "\<C-n>" : <SID>check_back_space() ? "\<TAB>" : deoplete#mappings#manual_complete()
+  function! s:check_back_space() abort
+      let col = col('.') - 1
+      return !col || getline('.')[col - 1]  =~ '\s'
+  endfunction
+
+  " <S-TAB>: completion back.
+  inoremap <expr><S-TAB>  pumvisible() ? "\<C-p>" : "\<C-h>"
+
+  " <BS>: close popup and delete backword char.
+  inoremap <expr><BS> deoplete#smart_close_popup()."\<C-h>"
+
+  " " <CR>: close popup and save indent.
+  " inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+  " function! s:my_cr_function() abort
+  "   return deoplete#cancel_popup() . "\<CR>"
+  " endfunction
+'''
+on_event = 'InsertEnter'
+
+[[plugins]]
+repo = 'Shougo/context_filetype.vim'
+
