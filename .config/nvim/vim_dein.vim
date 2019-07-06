@@ -14,18 +14,17 @@ set runtimepath+=~/.cache/dein/repos/github.com/Shougo/dein.vim
 
 if dein#load_state('~/.cache/dein')
   call dein#begin('~/.cache/dein')
-
   call dein#add('~/.cache/dein/repos/github.com/Shougo/dein.vim')
-  call dein#load_toml('~/.config/nvim/toml/shougo.toml', {'lazy': 0})
-  call dein#load_toml('~/.config/nvim/toml/search.toml', {'lazy': 0})
-  call dein#load_toml('~/.config/nvim/toml/file_manage.toml', {'lazy': 0})
-  call dein#load_toml('~/.config/nvim/toml/dein.toml', {'lazy': 0})
-  call dein#load_toml('~/.config/nvim/toml/color.toml', {'lazy': 0})
-  call dein#load_toml('~/.config/nvim/toml/toml.toml', {'lazy': 1})
-  call dein#load_toml('~/.config/nvim/toml/rb.toml', {'lazy': 1})
-  call dein#load_toml('~/.config/nvim/toml/py.toml', {'lazy': 1})
-  call dein#load_toml('~/.config/nvim/toml/md.toml', {'lazy': 1})
-  call dein#load_toml('~/.config/nvim/toml/json.toml', {'lazy': 1})
+
+  call dein#load_toml('~/.config/nvim/toml/0_shougo.toml', {'lazy': 0})
+  call dein#load_toml('~/.config/nvim/toml/0_search.toml', {'lazy': 0})
+  call dein#load_toml('~/.config/nvim/toml/0_file_manage.toml', {'lazy': 0})
+  call dein#load_toml('~/.config/nvim/toml/0_dein.toml', {'lazy': 0})
+  call dein#load_toml('~/.config/nvim/toml/1_toml.toml', {'lazy': 1})
+  call dein#load_toml('~/.config/nvim/toml/1_rb.toml', {'lazy': 1})
+  call dein#load_toml('~/.config/nvim/toml/1_py.toml', {'lazy': 1})
+  call dein#load_toml('~/.config/nvim/toml/1_md.toml', {'lazy': 1})
+  call dein#load_toml('~/.config/nvim/toml/1_json.toml', {'lazy': 1})
 
   call dein#end()
   call dein#save_state()
