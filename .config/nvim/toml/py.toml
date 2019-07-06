@@ -1,7 +1,7 @@
 [[plugins]]
 repo = 'davidhalter/jedi-vim'
 on_ft = ['python']
-depens = ['lambdalisue/vim-pyenv']
+#depens = ['lambdalisue/vim-pyenv']
 
 [[plugins]]
 repo = 'lambdalisue/vim-pyenv'
@@ -11,24 +11,24 @@ on_ft = ['python']
 repo = 'plytophogy/vim-virtualenv'
 on_ft = ['python']
 
-#[[plugins]]
-#repo = 'zchee/deoplete-jedi'
-#on_ft = ['python']
-#hook_add = '''
-#  "let g:deoplete#sources#jedi#python_path = '/usr/local/bin/python3'
-#  set completeopt=menuone
-#  "set completeopt=menu,preview
-#  autocmd! User jedi-vim call s:jedivim_hook()
-#
-#  function! s:jedivim_hook()
-#    let g:jedi#auto_initialization = 0
-#    let g:jedi#auto_vim_configuration = 0
-#    let g:jedi#popup_on_dot = 0
-#    let g:jedi#popup_select_first = 0
-#    let g:jedi#show_call_signatures = 0
-#    autocmd FileType python setlocal omnifunc=jedi#completions
-#  endfunction
-#'''
+[[plugins]]
+repo = 'zchee/deoplete-jedi'
+on_ft = ['python']
+hook_add = '''
+  "let g:deoplete#sources#jedi#python_path = '/usr/local/bin/python3'
+  set completeopt=menuone
+  "set completeopt=menu,preview
+  autocmd! User jedi-vim call s:jedivim_hook()
+
+  function! s:jedivim_hook()
+    let g:jedi#auto_initialization = 0
+    let g:jedi#auto_vim_configuration = 0
+    let g:jedi#popup_on_dot = 0
+    let g:jedi#popup_select_first = 0
+    let g:jedi#show_call_signatures = 0
+    autocmd FileType python setlocal omnifunc=jedi#completions
+  endfunction
+'''
 
 
 [[plugins]]

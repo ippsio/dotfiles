@@ -1,0 +1,31 @@
+# /検索強化
+[[plugins]]
+repo = 'osyo-manga/vim-anzu'
+hook_add = '''
+  nmap n nzz<Plug>(anzu-update-search-status)
+  nmap N Nzz<Plug>(anzu-update-search-status)
+  xmap n <Esc>ngN
+  xmap N <Esc>NgN
+  nmap * <Plug>(anzu-star)
+  "nmap # <Plug>(anzu-sharp)
+  nmap <silent> <ESC> :<C-u>nohlsearch<CR><Plug>(anzu-clear-search-status)
+'''
+
+# vimのf検索中に、f連打で次々と検索できるようにする
+[[plugins]]
+repo = 'rhysd/clever-f.vim'
+
+[[plugins]]
+repo = 'junegunn/fzf'
+build = './install --all'
+
+###fzf.vim
+[[plugins]]
+repo = 'junegunn/fzf.vim'
+hook_add = '''
+  nnoremap <C-p> :FZFFileList<CR>
+  command! FZFFileList call fzf#run(fzf#wrap({
+            \ 'source': 'find . -type d -name .git -prune -o ! -name .DS_Store',
+            \ 'down': '40%'}))
+'''
+
