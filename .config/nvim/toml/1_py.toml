@@ -1,7 +1,6 @@
 [[plugins]]
 repo = 'davidhalter/jedi-vim'
 on_ft = ['python']
-#depens = ['lambdalisue/vim-pyenv']
 
 [[plugins]]
 repo = 'lambdalisue/vim-pyenv'
