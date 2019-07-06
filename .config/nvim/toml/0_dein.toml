@@ -6,13 +6,6 @@ repo = 'tpope/vim-endwise'
 [[plugins]]
 repo = 'tpope/vim-surround'
 
-[[plugins]]
-repo = 'easymotion/vim-easymotion'
-hook_add = '''
-  let g:EasyMotion_do_mapping = 0
-  map  f <Plug>(easymotion-bd-w)
-  nmap f <Plug>(easymotion-overwin-w)
-'''
 
 [[plugins]]
 repo = 'vim-scripts/taglist.vim'
@@ -29,35 +22,6 @@ hook_add = '''
 
   nnoremap <silent> <space>l :TlistToggle<CR>
 '''
-
-# statusline
-[[plugins]]
-repo = 'itchyny/lightline.vim'
-hook_add = '''
-  if !has('gui_running')
-    set t_Co=256
-  endif
-
-  set laststatus=2
-  let g:lightline_colorscheme = 'PaperColor_dark'
-  let g:lightline = {
-    \ 'colorscheme': g:lightline_colorscheme,
-    \ 'active': {'left': [['mode', 'paste'], ['readonly', 'filepath', 'modified', 'anzu']]},
-    \ 'component_function': {'anzu': 'anzu#search_status', 'filepath': 'FPath'}}
-
-  function! FPath()
-    return expand("%:s")
-  endfunction
-'''
-
-# インデントを可視化
-[[plugins]]
-repo = 'Yggdroot/indentLine'
-
-# 無駄な空白をハイライト
-[[plugins]]
-repo = 'bronson/vim-trailing-whitespace'
-
 
 [[plugins]]
 repo = 'kana/vim-submode'

@@ -29,3 +29,11 @@ hook_add = '''
             \ 'down': '40%'}))
 '''
 
+[[plugins]]
+repo = 'easymotion/vim-easymotion'
+hook_add = '''
+  let g:EasyMotion_do_mapping = 0
+  map  f <Plug>(easymotion-bd-w)
+  nmap f <Plug>(easymotion-overwin-w)
+'''
+
