@@ -41,7 +41,7 @@ hook_add = '''
 repo = 'osyo-manga/vim-over'
 hook_add = '''
   " over.vimの起動
-  nnoremap <silent> <space>b :OverCommandLine<CR>
+  nnoremap <silent> <space>over :OverCommandLine<CR>
 
   " ビジュアルモードの選択中に#で選択中の文字列をハイライトしつつ置換モード(:%s/xxx/xxx/)に入る
   xnoremap # mz:call <SID>set_vsearch()<CR>:set hlsearch<CR>`z:OverCommandLine<CR>:%s/<C-r>///g<Left><Left>
