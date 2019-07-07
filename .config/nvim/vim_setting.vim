@@ -47,7 +47,7 @@ set switchbuf=useopen
 "  移動
 " --------------
 " スクロールする時に下が見えるようにする
-set scrolloff=5
+set scrolloff=10
 
 " 移動コマンドを使ったとき、行頭に移動しない
 set nostartofline
@@ -104,13 +104,10 @@ set listchars=tab:»-,trail:-,extends:»,precedes:«,nbsp:%
 "set ambiwidth=double
 
 " シンタックスハイライトの最大行数
-set synmaxcol=2048
+set synmaxcol=256
 
 " 256色対応
 set t_Co=256
-
-" カーソル行のハイライト
-nnoremap <Leader>c :<C-u>setlocal cursorline! cursorcolumn!<CR>
 
 " コマンドを画面最下部に表示する
 set showcmd
