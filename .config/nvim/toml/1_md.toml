@@ -9,3 +9,10 @@ hook_add = '''
 '''
 on_ft = ['markdown']
 
+[[plugins]]
+repo = 'dhruvasagar/vim-table-mode'
+hook_add = '''
+  let g:table_mode_corner = "|"
+  
+'''
+on_ft = ['markdown']
