@@ -5,22 +5,22 @@ hook_add = '''
   " vim起動時のフォーカス移動
   function s:MoveToFileAtStart()
     " NERDTreeを起動された時、ちゃんと編集側のウインドウ(NERDTreeじゃない方のウインドウ）にフォーカスを当てる
-    " call feedkeys("\<C-w>l")
+    call feedkeys("\<C-w>l")
   endfunction
 
   " vim起動時にNERDTreeを起動
-  " さらにカーソルをちゃんとファイルの側のウインドウに移動
-  autocmd VimEnter *  NERDTree | call s:MoveToFileAtStart()
+  autocmd VimEnter *  NERDTree
+  " ファイル指定があればNERDTree起動後、フォーカスを編集ウインドウに移動
+  autocmd StdinReadPre * let s:std_in=1
+  autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | else | NERDTree | call s:MoveToFileAtStart()| endif
 
   " NERDTree起動時、ブックマーク開く
   let g:NERDTreeShowBookmarks=1
 
   "他のバッファをすべて閉じた時にNERDTreeが開いていたらNERDTreeも一緒に閉じる。
   autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-  autocmd StdinReadPre * let s:std_in=1
-  "autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 
-  " \の後Nでトグル（閉じてたNERDTreeを開く、開いてたNERDTreeを閉じる）
+  " spaceの後nでトグル（閉じてたNERDTreeを開く、開いてたNERDTreeを閉じる）
   map <silent> <space>n :NERDTreeToggle<CR>
 
   " 隠しファイルの表示
@@ -30,9 +30,9 @@ hook_add = '''
   let g:NERDTreeWinSize = 45
 
   " NERDTress File highlighting
-  function! s:hi_file(extension, fg, bg, guifg, guibg)
-    exec 'autocmd filetype nerdtree highlight ' . a:extension .' ctermbg='. a:bg .' ctermfg='. a:fg .' guibg='. a:guibg .' guifg='. a:guifg
-    exec 'autocmd filetype nerdtree syn match ' . a:extension .' #^\s\+.*'. a:extension .'$#'
+  function! s:hi_file(ex, fg, bg, gf, gg)
+    exec 'au filetype nerdtree hi '.a:ex.' ctermbg='.a:bg.' ctermfg='.a:fg.' guibg='.a:gg.' guifg='.a:gf
+    exec 'au filetype nerdtree syn match '.a:ex.' #^\s\+.*'.a:ex.'$#'
   endfunction
   call s:hi_file('directories',     'yellow',  'none', 'yellow',  '#151515')
   call s:hi_file('py',     'yellow',  'none', 'yellow',  '#151515')
