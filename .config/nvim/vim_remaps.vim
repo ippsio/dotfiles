@@ -74,7 +74,7 @@ xnoremap <expr> p 'pgv"'.v:register.'y`>'
 " カーソル移動
 " -----------------------------------------------------
 " C-aで先頭、C-eで末尾(Emacs like cursor behavior)
-nnoremap <C-a> 0
+"nnoremap <C-a> 0
 inoremap <C-a> <Home>
 cnoremap <C-a> <Home>
 nnoremap <C-e> $
