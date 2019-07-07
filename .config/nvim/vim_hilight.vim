@@ -18,6 +18,10 @@ endif
 hi CursorLine term=reverse cterm=none ctermbg=237
 " カーソル自体の色は、iTerm2等のターミナルの設定であるため、コメントアウト hi Cursor ctermbg=1 ctermfg=240
 
+"" 挿入モードの時のみ、カーソル行をハイライトする
+"set nocursorline
+"autocmd InsertEnter,InsertLeave * set cursorline!
+
 hi Statement guibg=111
 
 " 補完ポップアップ
@@ -64,6 +68,7 @@ hi markdownCodeDelimiter guibg=#222222 guifg=#cccccc
 
 "hi Function guifg=#ffff00 guibg=#444400
 hi Statement guifg=#ffff00
+
 
 " カーソル下のhighlight情報を表示する {{{
 function! s:part(s, fgbg, type)
