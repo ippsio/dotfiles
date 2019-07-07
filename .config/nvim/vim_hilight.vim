@@ -44,7 +44,7 @@ hi Comment ctermbg=17 ctermfg=14 guibg=#002255 guifg=#00ffaa
 hi Constant ctermfg=161 guifg=#ffaaaa guibg=#330000
 
 " 行番号
-hi LineNr ctermfg=243 guifg=#ffcfbb
+hi LineNr guifg=#006666
 
 " directory
 hi Directory guifg=#88ccff guibg=#000055
