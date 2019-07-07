@@ -15,11 +15,11 @@ hook_add = '''
 [[plugins]]
 repo = 'rhysd/clever-f.vim'
 
+###fzf
 [[plugins]]
 repo = 'junegunn/fzf'
 build = './install --all'
 
-###fzf.vim
 [[plugins]]
 repo = 'junegunn/fzf.vim'
 hook_add = '''
@@ -43,10 +43,11 @@ hook_add = '''
   " over.vimの起動
   nnoremap <silent> <space>b :OverCommandLine<CR>
 
-  " カーソル下の単語をハイライト付きで置換
-  nnoremap sub :OverCommandLine<CR>%s/<C-r><C-w>//g<Left><Left>
-
-  " コピーした文字列をハイライト付きで置換
-  nnoremap subp y:OverCommandLine<CR>%s!<C-r>=substitute(@0, '!', '\\!', 'g')<CR>!!gI<Left><Left><Left>
+  " ビジュアルモードの選択中に#で選択中の文字列をハイライトしつつ置換モード(:%s/xxx/xxx/)に入る
+  xnoremap # mz:call <SID>set_vsearch()<CR>:set hlsearch<CR>`z:OverCommandLine<CR>:%s/<C-r>///g<Left><Left>
+  function! s:set_vsearch()
+    silent normal gv"zy
+    let @/ = '\V' . substitute(escape(@z, '/\'), '\n', '\\n', 'g')
+  endfunction
 '''
 
