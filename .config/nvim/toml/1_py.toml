@@ -1,14 +1,14 @@
 [[plugins]]
-repo = 'davidhalter/jedi-vim'
-on_ft = ['python']
-
-[[plugins]]
 repo = 'lambdalisue/vim-pyenv'
 on_ft = ['python']
 
 [[plugins]]
 repo = 'plytophogy/vim-virtualenv'
 on_ft = ['python']
+
+#[[plugins]]
+#repo = 'davidhalter/jedi-vim'
+#on_ft = ['python']
 
 [[plugins]]
 repo = 'zchee/deoplete-jedi'
