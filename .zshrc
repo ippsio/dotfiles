@@ -55,6 +55,18 @@ if [ ! $? -eq 0 ]; then
   brew install rg
 fi
 
+# diff-highlight
+if [ -e  /usr/local/share/git-core/contrib/diff-highlight/diff-highlight ]; then
+  PATH=$PATH:/usr/local/share/git-core/contrib/diff-highlight
+fi
+
+nvim -version &> /dev/null
+if [ $? -eq 0 ]; then
+  export EDITOR=nvim
+else
+  export EDITOR=vim
+fi
+
 # ZPLUG
 export ZPLUG_HOME=~/.cache/zplug
 zplug --version &> /dev/null
