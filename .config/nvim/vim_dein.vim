@@ -22,6 +22,7 @@ if dein#load_state('~/.cache/dein')
   call dein#load_toml('~/.config/nvim/toml/0_file_manage.toml', {'lazy': 0})
   call dein#load_toml('~/.config/nvim/toml/0_edit_operation.toml', {'lazy': 0})
   call dein#load_toml('~/.config/nvim/toml/0_dein.toml', {'lazy': 0})
+  call dein#load_toml('~/.config/nvim/toml/0_vcs.toml', {'lazy': 0})
 
   call dein#load_toml('~/.config/nvim/toml/1_toml.toml', {'lazy': 1})
   call dein#load_toml('~/.config/nvim/toml/1_rb.toml', {'lazy': 1})
