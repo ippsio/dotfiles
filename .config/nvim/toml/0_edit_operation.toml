@@ -26,3 +26,5 @@ hook_add = '''
 [[plugins]]
 repo = 'cohama/vim-insert-linenr'
 
+[[plugins]]
+repo = 'rhysd/accelerated-jk'
