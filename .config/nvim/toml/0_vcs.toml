@@ -1,4 +1,16 @@
 [[plugins]]
+repo = 'airblade/vim-gitgutter'
+hook_add = '''
+  set signcolumn=yes
+'''
+
+[[plugins]]
+repo = 'tpope/vim-fugitive'
+hook_add = '''
+  nnoremap <silent> <space>a :Gblame<CR>
+'''
+[[plugins]]
+
 repo = 'iberianpig/tig-explorer.vim'
 hook_add = '''
   " Default keymap setting
@@ -28,3 +40,4 @@ hook_add = '''
   " open tig blame with current file
   nnoremap <Leader>b :TigBlame<CR>
 '''
+

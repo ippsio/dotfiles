@@ -51,6 +51,7 @@ hook_source = '''
   let g:deoplete#enable_ignore_case = 1
   let g:deoplete#enable_smart_case = 1
   let g:deoplete#omni_patterns = {}
+  let g:deoplete#auto_complete_delay = 0
 
   " <TAB>: completion.
   imap <silent><expr> <TAB> pumvisible() ? "\<C-n>" : <SID>check_back_space() ? "\<TAB>" : deoplete#mappings#manual_complete()
