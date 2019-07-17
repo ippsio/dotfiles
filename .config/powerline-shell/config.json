@@ -1,9 +1,9 @@
 {
   "segments": [
     "jobs",
-    {"type": "stdout","command": ["current-dir"], "fg_color": 255},
     "git",
     {"type": "stdout","command": ["git-url"]},
+    {"type": "stdout","command": ["current-dir"], "fg_color": 255},
     "newline",
     "exit_code",
     "time",
