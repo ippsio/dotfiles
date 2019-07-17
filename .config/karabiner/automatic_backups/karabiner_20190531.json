@@ -754,12 +754,7 @@
                                     }
                                 ],
                                 "from": {
-                                    "key_code": "home",
-                                    "modifiers": {
-                                        "optional": [
-                                            "any"
-                                        ]
-                                    }
+                                    "key_code": "home"
                                 },
                                 "to": [
                                     {
@@ -784,12 +779,7 @@
                                     }
                                 ],
                                 "from": {
-                                    "key_code": "end",
-                                    "modifiers": {
-                                        "optional": [
-                                            "any"
-                                        ]
-                                    }
+                                    "key_code": "end"
                                 },
                                 "to": [
                                     {
