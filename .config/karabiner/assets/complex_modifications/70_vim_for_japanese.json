@@ -11,10 +11,10 @@
           },
           "to": [
             {
-              "key_code": "escape"
+              "key_code": "japanese_eisuu"
             },
             {
-              "key_code": "japanese_eisuu"
+              "key_code": "escape"
             }
           ],
           "conditions": [
