@@ -916,10 +916,10 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "japanese_eisuu"
+                                        "key_code": "escape"
                                     },
                                     {
-                                        "key_code": "escape"
+                                        "key_code": "japanese_eisuu"
                                     }
                                 ],
                                 "type": "basic"
@@ -1132,9 +1132,6 @@
                 }
             ],
             "name": "Default profile",
-            "parameters": {
-                "delay_milliseconds_before_open_device": 1000
-            },
             "selected": true,
             "simple_modifications": [],
             "virtual_hid_keyboard": {
