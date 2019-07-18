@@ -72,6 +72,9 @@ set clipboard=unnamed
 " compatibleオプションをオフにする
 set nocompatible
 
+" 起動時のメッセージを非表示にする（ウガンダ非表示化）
+set shortmess+=I
+
 " --------------
 "  括弧
 " --------------
