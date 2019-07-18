@@ -24,8 +24,17 @@ nnoremap <silent> <Space><Space> "zyiw:let @/ = '\<' . @z . '\>'<CR>:set hlsearc
 " ビジュアルモードの選択中にスペース２度押しで選択中の文字をハイライト
 xnoremap <silent> <Space><Space> mz:call <SID>set_vsearch()<CR>:set hlsearch<CR>`z
 
-" ビジュアルモードの選択中に#で選択中の文字列をハイライトしつつ置換モード(:%s/xxx/xxx/)に入る
+" ビジュアルモードの選択中に#で、選択中の文字列をハイライトしつつ置換モード(:%s/xxx/xxx/)に入る
 xnoremap # mz:call <SID>set_vsearch()<CR>:set hlsearch<CR>`z:%s/<C-r>///g<Left><Left>
+
+" ビジュアルモードの選択中にF3で、選択中の文字列をハイライトしつつ、Ripgrepで検索
+xnoremap <F3> mz:call <SID>set_search()<CR>:set hlsearch<CR>`z:Rg <C-r>/<CR>
+
+function! s:set_search()
+  silent normal gv"zy
+  let @/ = @z
+  "let @/ = '' . substitute(escape(@z, '/\'), '\n', '\\n', 'g')
+endfunction
 function! s:set_vsearch()
   silent normal gv"zy
   let @/ = '\V' . substitute(escape(@z, '/\'), '\n', '\\n', 'g')
