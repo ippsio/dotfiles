@@ -14,6 +14,11 @@ if has('nvim')
   let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 endif
 
+" 背景色(カレントウインドウ)
+hi Normal   guibg=#221144
+" 背景色(非カレントウインドウ)
+hi NormalNC guibg=#000000
+
 " カーソル行
 hi CursorLine term=reverse cterm=none ctermbg=237
 " カーソル自体の色は、iTerm2等のターミナルの設定であるため、コメントアウト hi Cursor ctermbg=1 ctermfg=240
