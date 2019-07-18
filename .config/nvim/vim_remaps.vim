@@ -29,7 +29,7 @@ xnoremap # mz:call <SID>set_vsearch()<CR>:set hlsearch<CR>`z:%s/<C-r>///g<Left><
 
 " 選択した単語やカーソル下の単語を全体検索
 " ノーマルモードでF3で、カーソル下にある単語をハイライトしつつ、Ripgrepで検索
-nnoremap <F3> "zyiw:set hlsearch<CR>`z:Rg <C-r>/<CR>
+nmap <F3> <Space><Space>gN<F3>
 
 " ビジュアルモードの選択中にF3で、選択中の文字列をハイライトしつつ、Ripgrepで検索
 xnoremap <F3> mz:call <SID>set_search()<CR>:set hlsearch<CR>`z:Rg <C-r>/<CR>
