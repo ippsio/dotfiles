@@ -104,7 +104,7 @@ set listchars=tab:»-,trail:-,extends:»,precedes:«,nbsp:%
 "set ambiwidth=double
 
 " シンタックスハイライトの最大行数
-set synmaxcol=1024
+set synmaxcol=2048
 
 " 256色対応
 set t_Co=256

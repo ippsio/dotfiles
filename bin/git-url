@@ -1,5 +1,4 @@
 #!/bin/bash
 # Return git repo url if git managed directory.
-#git remote get-url origin 2> /dev/null
 git remote get-url origin 2> /dev/null| grep -Eo "([a-zA-Z0-9+-]+)\/([a-zA-Z0-9+-]+).git$"
 exit 0
