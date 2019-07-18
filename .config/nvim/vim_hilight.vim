@@ -14,10 +14,17 @@ if has('nvim')
   let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 endif
 
-" 背景色(カレントウインドウ)
-hi Normal   guibg=#221144
-" 背景色(非カレントウインドウ)
+" 背景色
+hi Normal guibg=#221144
 hi NormalNC guibg=#000000
+
+" 背景色により、現在カーソルのあるウインドウをわかりやすくする。
+augroup ChangeBackground
+  autocmd!
+  "" 背景色(カレントウインドウ)
+  autocmd FocusGained * hi Normal guibg=#221144
+  autocmd FocusLost   * hi Normal guibg=default
+augroup END
 
 " カーソル行
 hi CursorLine term=reverse cterm=none ctermbg=237
