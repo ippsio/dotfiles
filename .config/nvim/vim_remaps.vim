@@ -37,7 +37,6 @@ xnoremap <F3> mz:call <SID>set_search()<CR>:set hlsearch<CR>`z:Rg <C-r>/<CR>
 function! s:set_search()
   silent normal gv"zy
   let @/ = @z
-  "let @/ = '' . substitute(escape(@z, '/\'), '\n', '\\n', 'g')
 endfunction
 function! s:set_vsearch()
   silent normal gv"zy
