@@ -24,7 +24,7 @@ build = './install --all'
 repo = 'junegunn/fzf.vim'
 hook_add = '''
   nnoremap <C-p> :FZFFileList<CR>
-  map <silent> <space>f :FZFFileList<CR>
+  map <silent> <space>e :FZFFileList<CR>
 
   command! FZFFileList
   \ call fzf#run(fzf#wrap(
