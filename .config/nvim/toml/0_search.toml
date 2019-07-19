@@ -23,32 +23,34 @@ build = './install --all'
 [[plugins]]
 repo = 'junegunn/fzf.vim'
 hook_add = '''
-    nnoremap <C-p> :FZFFileList<CR>
-    command! FZFFileList
-    \ call fzf#run(fzf#wrap(
-    \   {
-    \    'source': 'find . -type d -name .git -prune -o ! -name .DS_Store',
-    \    'down': '40%'
-    \   }
-    \ ))
+  nnoremap <C-p> :FZFFileList<CR>
+  map <silent> <space>f :FZFFileList<CR>
 
-    command! -bang -nargs=* Rg
-    \ call fzf#vim#grep(
-    \   'rg -g !.git
-    \     --column
-    \     --line-number
-    \     --hidden
-    \     --ignore-case
-    \     --no-heading
-    \     --color=always
-    \   '.shellescape(<q-args>), 0,
-    \   fzf#vim#with_preview(
-    \     {
-    \       'options': '--exact --reverse'
-    \     },
-    \     'right:50%:wrap', '?'
-    \   )
-    \ )
+  command! FZFFileList
+  \ call fzf#run(fzf#wrap(
+  \   {
+  \    'source': 'find . -type d -name .git -prune -o ! -name .DS_Store',
+  \    'down': '40%'
+  \   }
+  \ ))
+
+  command! -bang -nargs=* Rg
+  \ call fzf#vim#grep(
+  \   'rg -g !.git
+  \     --column
+  \     --line-number
+  \     --hidden
+  \     --ignore-case
+  \     --no-heading
+  \     --color=always
+  \   '.shellescape(<q-args>), 0,
+  \   fzf#vim#with_preview(
+  \     {
+  \       'options': '--exact --reverse'
+  \     },
+  \     'right:50%:wrap', '?'
+  \   )
+  \ )
 '''
 
 [[plugins]]
