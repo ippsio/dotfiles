@@ -13,6 +13,5 @@ on_ft = ['markdown']
 repo = 'dhruvasagar/vim-table-mode'
 hook_add = '''
   let g:table_mode_corner = "|"
-  
 '''
 on_ft = ['markdown']
