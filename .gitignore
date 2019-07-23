@@ -1,2 +1,5 @@
 .netrwhist
 .config/fish/functions/fzf_key_bindings.fish
+
+.config/karabiner/karabiner.json
+.config/karabiner/automatic_backups
