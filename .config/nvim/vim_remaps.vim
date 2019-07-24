@@ -18,11 +18,11 @@ vnoremap v $h
 " -----------------------------------------------------
 " 検索
 " -----------------------------------------------------
-" スペース2度押しでカーソル下にある単語をハイライト（\<や\>は、単語の境界を示す特殊文字）
-nnoremap <silent> <Space><Space> "zyiw:let @/ = '\<' . @z . '\>'<CR>:set hlsearch<CR>
+" スペース2度押しでカーソル下にある文字をハイライト（単語以外でも、一致する文字列をハイライト）
+nnoremap <silent> <Space><Space> "zyiw:let @/ = @z<CR>:set hlsearch<CR>
 
-" スペース3度押しでカーソル下にある文字をハイライト（単語以外でも、一致する文字列をハイライト）
-nnoremap <silent> <Space><Space><Space> "zyiw:let @/ = @z<CR>:set hlsearch<CR>
+" スペース2度押しでカーソル下にある単語をハイライト（\<や\>は、単語の境界を示す特殊文字）
+nnoremap <silent> <Space><Space><Space> "zyiw:let @/ = '\<' . @z . '\>'<CR>:set hlsearch<CR>
 
 " ビジュアルモードの選択中にスペース２度押しで選択中の文字をハイライト
 xnoremap <silent> <Space><Space> mz:call <SID>set_vsearch()<CR>:set hlsearch<CR>`z
