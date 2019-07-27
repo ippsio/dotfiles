@@ -11,14 +11,41 @@ hook_add = '''
   nmap <silent> <ESC> :<C-u>nohlsearch<CR><Plug>(anzu-clear-search-status)
 '''
 
-# vimのf検索中に、f連打で次々と検索できるようにする
 [[plugins]]
-repo = 'rhysd/clever-f.vim'
+repo = 'osyo-manga/vim-over'
+hook_add = '''
+  " over.vimの起動
+  nnoremap <silent> <space>over :OverCommandLine<CR>
+
+  " ビジュアルモードの選択中に#で選択中の文字列をハイライトしつつ置換モード(:%s/xxx/xxx/)に入る
+  xnoremap # mz:call <SID>set_vsearch()<CR>:set hlsearch<CR>`z:OverCommandLine<CR>:%s/<C-r>///g<Left><Left>
+  function! s:set_vsearch()
+    silent normal gv"zy
+    let @/ = '\V' . substitute(escape(@z, '/\'), '\n', '\\n', 'g')
+  endfunction
+'''
+
+# ノーマルモードでf押下でプラグイン起動
+# ジャンプしたい先の文字を2文字入力でジャンプ候補表示
+# 説明が難しいが、試せばわかる。
+[[plugins]]
+repo = 'easymotion/vim-easymotion'
+hook_add = '''
+  let g:EasyMotion_do_mapping = 0
+  let g:EasyMotion_keys = ';HKLYUIOPNM,QWERTASDGZXCVBJF'
+  let g:EasyMotion_keys = ';HKLYUIOPNM,QWERTASDGZXCVBJF'
+  " Show target key with upper case to improve readability
+  let g:EasyMotion_use_upper = 1
+  " Jump to first match with enter & space
+  let g:EasyMotion_enter_jump_first = 1
+  let g:EasyMotion_space_jump_first = 1
+  nmap  f <Plug>(easymotion-s2)
+'''
 
 ###fzf
 [[plugins]]
 repo = 'junegunn/fzf'
-build = './install --all'
+#build = './install --all'
 
 [[plugins]]
 repo = 'junegunn/fzf.vim'
@@ -53,25 +80,4 @@ hook_add = '''
   \ )
 '''
 
-[[plugins]]
-repo = 'easymotion/vim-easymotion'
-hook_add = '''
-  let g:EasyMotion_do_mapping = 0
-  map  f <Plug>(easymotion-bd-w)
-  nmap f <Plug>(easymotion-overwin-w)
-'''
-
-[[plugins]]
-repo = 'osyo-manga/vim-over'
-hook_add = '''
-  " over.vimの起動
-  nnoremap <silent> <space>over :OverCommandLine<CR>
-
-  " ビジュアルモードの選択中に#で選択中の文字列をハイライトしつつ置換モード(:%s/xxx/xxx/)に入る
-  xnoremap # mz:call <SID>set_vsearch()<CR>:set hlsearch<CR>`z:OverCommandLine<CR>:%s/<C-r>///g<Left><Left>
-  function! s:set_vsearch()
-    silent normal gv"zy
-    let @/ = '\V' . substitute(escape(@z, '/\'), '\n', '\\n', 'g')
-  endfunction
-'''
 
