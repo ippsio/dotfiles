@@ -25,23 +25,28 @@ nnoremap <silent> <Space><Space> "zyiw:let @/ = @z<CR>:set hlsearch<CR>
 nnoremap <silent> <Space><Space><Space> "zyiw:let @/ = '\<' . @z . '\>'<CR>:set hlsearch<CR>
 
 " ビジュアルモードの選択中にスペース２度押しで選択中の文字をハイライト
-xnoremap <silent> <Space><Space> mz:call <SID>set_vsearch()<CR>:set hlsearch<CR>`z
+xnoremap <silent> <Space><Space> mz:call <SID>set_Vsearch()<CR>:set hlsearch<CR>`z
 
 " ビジュアルモードの選択中に#で、選択中の文字列をハイライトしつつ置換モード(:%s/xxx/xxx/)に入る
-xnoremap # mz:call <SID>set_vsearch()<CR>:set hlsearch<CR>`z:%s/<C-r>///g<Left><Left>
+xnoremap # mz:call <SID>set_Vsearch()<CR>:set hlsearch<CR>`z:%s/<C-r>///g<Left><Left>
 
 " 選択した単語やカーソル下の単語を全体検索
-" ノーマルモードでF3で、カーソル下にある単語をハイライトしつつ、Ripgrepで検索
-nmap <F3> <Space><Space>gN<F3>
+" ノーマルモードでF3で、カーソル下にある文字（単語以外でも、一致する文字列を）をハイライトしつつ、Ripgrepで検索
+nnoremap <F3> "zyiw:let @/ = @z<CR>mz:call <SID>set_search()<CR>:set hlsearch<CR>`z:Rg <C-r>/<CR>
 
 " ビジュアルモードの選択中にF3で、選択中の文字列をハイライトしつつ、Ripgrepで検索
 xnoremap <F3> mz:call <SID>set_search()<CR>:set hlsearch<CR>`z:Rg <C-r>/<CR>
+
+" ノーマルモードでF4で、カーソル下にある文字（単語以外でも、一致する文字列を）をハイライトしつつ、現在のファイルをvimgrepで検索
+nnoremap <F4> "zyiw:let @/ = @z<CR>mz:call <SID>set_search()<CR>:set hlsearch<CR>`z:vimgrep <C-r>/ %\|cw<CR>
+
+xnoremap <F4> mz:call <SID>set_search()<CR>:set hlsearch<CR>`z:vimgrep <C-r>/ %\|cw<CR>
 
 function! s:set_search()
   silent normal gv"zy
   let @/ = @z
 endfunction
-function! s:set_vsearch()
+function! s:set_Vsearch()
   silent normal gv"zy
   let @/ = '\V' . substitute(escape(@z, '/\'), '\n', '\\n', 'g')
 endfunction
@@ -51,6 +56,7 @@ cnoremap <expr> / getcmdtype() == '/' ? '\/' : '/'
 
 " 面倒な\エスケープを簡易に。?{pattern}の入力中は「?」をタイプすると自動で「\?」が 入力されるようになる
 cnoremap <expr> ? getcmdtype() == '?' ? '\?' : '?'
+
 
 " -----------------------------------------------------
 " ウインドウ操作
@@ -64,7 +70,6 @@ nnoremap <C-Left>  <C-w>h
 nnoremap <C-Down>  <C-w>j
 nnoremap <C-Up>    <C-w>k
 nnoremap <C-Right> <C-w>l
-nnoremap <S-Tab> <C-w>W
 
 " ウインドウの分割（横）
 nnoremap <space>- :<C-u>new<CR>
