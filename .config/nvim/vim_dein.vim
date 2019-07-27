@@ -14,7 +14,6 @@ set runtimepath+=~/.cache/dein/repos/github.com/Shougo/dein.vim
 
 if dein#load_state('~/.cache/dein')
   call dein#begin('~/.cache/dein')
-  #let g:dein#auto_recache = 1
   call dein#add('~/.cache/dein/repos/github.com/Shougo/dein.vim')
 
   call dein#load_toml('~/.config/nvim/toml/0_shougo.toml', {'lazy': 0})
