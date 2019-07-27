@@ -6,22 +6,6 @@ repo = 'tpope/vim-endwise'
 [[plugins]]
 repo = 'tpope/vim-surround'
 
-[[plugins]]
-repo = 'vim-scripts/taglist.vim'
-hook_add = '''
-  set tags+=.tags;~/
-  "let g:Tlist_Auto_Open = 1
-  "let g:Tlist_File_Fold_Auto_Close = 1
-  let g:Tlist_Exit_OnlyWindow = 1
-  "let g:Tlist_Show_One_File = 1
-  let g:Tlist_Use_SingleClick = 1
-  let g:Tlist_Highlight_Tag_On_BufEnter = 1
-  let g:Tlist_Use_Right_Window = 1
-  let g:Tlist_Exit_OnlyWindow = 1
-
-  nnoremap <silent> <space>l :TlistToggle<CR>
-'''
-
 # インサートモードで行番号をハイライトONし、状態をわかりやすくする
 [[plugins]]
 repo = 'cohama/vim-insert-linenr'
