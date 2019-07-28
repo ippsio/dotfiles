@@ -45,13 +45,12 @@ hook_add = '''
 ###fzf
 [[plugins]]
 repo = 'junegunn/fzf'
-#build = './install --all'
+build = './install --all --no-bash --no-fish --no-zsh'
 
 [[plugins]]
 repo = 'junegunn/fzf.vim'
 hook_add = '''
   nnoremap <C-p> :FZFFileList<CR>
-  map <silent> <space>e :FZFFileList<CR>
 
   command! FZFFileList
   \ call fzf#run(fzf#wrap(
@@ -80,3 +79,22 @@ hook_add = '''
   \ )
 '''
 
+[[plugins]]
+repo = 'fuenor/qfixgrep'
+hook_add = '''
+  " QuickFix処理制御
+  " 0 : なにもしない
+  " 1 : QuickFix/ロケーションリストの両方で有効
+  " 2 : ロケーションリストのみ有効
+  " 3 : QFixMemo/QFixGrepコマンドで開いた場合のみ有効
+  let QFixWin_EnableMode = 1
+
+  " プレビューや絞り込みをQuickFix/ロケーションリストの両方で有効化(デフォルト:2)
+  let g:QFixWin_EnableMode = 1
+
+  " QFixHowm/QFixGrepでロケーションリストを使用する/しない
+  let g:QFix_UseLocationList = 0
+
+  " QuickFixウィンドウでプレビューを有効にする
+  let QFix_PreviewEnable = 1
+'''

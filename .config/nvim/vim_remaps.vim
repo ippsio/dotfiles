@@ -35,15 +35,18 @@ xnoremap # mz:call <SID>set_Vsearch()<CR>:set hlsearch<CR>`z:%s/<C-r>///g<Left><
 
 " 選択した単語やカーソル下の単語を全体検索
 " ノーマルモードでF3で、カーソル下にある文字（単語以外でも、一致する文字列を）をハイライトしつつ、Ripgrepで検索
-nnoremap <F3> "zyiw:let @/ = @z<CR>mz:call <SID>set_search()<CR>:set hlsearch<CR>`z:Rg <C-r>/<CR>
+"nnoremap <F3> "zyiw:let @/ = @z<CR>mz:call <SID>set_search()<CR>:set hlsearch<CR>`z:Rg <C-r>/<CR>
+nnoremap <F3> "zyiw:let @/ = @z<CR>mz:call <SID>set_search()<CR>:set hlsearch<CR>`z:vimgrep <C-r>/ **/*<CR>
 
 " ビジュアルモードの選択中にF3で、選択中の文字列をハイライトしつつ、Ripgrepで検索
-xnoremap <F3> mz:call <SID>set_search()<CR>:set hlsearch<CR>`z:Rg <C-r>/<CR>
+"xnoremap <F3> mz:call <SID>set_search()<CR>:set hlsearch<CR>`z:Rg <C-r>/<CR>
+xnoremap <F3> mz:call <SID>set_search()<CR>:set hlsearch<CR>`z:vimgrep <C-r>/ **/* <CR>
 
 " ノーマルモードでF4で、カーソル下にある文字（単語以外でも、一致する文字列を）をハイライトしつつ、現在のファイルをvimgrepで検索
-nnoremap <F4> "zyiw:let @/ = @z<CR>mz:call <SID>set_search()<CR>:set hlsearch<CR>`z:vimgrep <C-r>/ %\|cw<CR>
+"nnoremap <F4> "zyiw:let @/ = @z<CR>mz:call <SID>set_search()<CR>:set hlsearch<CR>`z:vimgrep <C-r>/ %\|cw<CR>
+nnoremap <F4> "zyiw:let @/ = @z<CR>mz:call <SID>set_search()<CR>:set hlsearch<CR>`z:vimgrep <C-r>/ %<CR>
 
-xnoremap <F4> mz:call <SID>set_search()<CR>:set hlsearch<CR>`z:vimgrep <C-r>/ %\|cw<CR>
+xnoremap <F4> mz:call <SID>set_search()<CR>:set hlsearch<CR>`z:vimgrep <C-r>/ %<CR>
 
 function! s:set_search()
   silent normal gv"zy

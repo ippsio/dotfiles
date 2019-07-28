@@ -5,4 +5,4 @@
 "    または
 "  :vim 検索したい文字列 検索したいディレクトリ/*
 autocmd QuickFixCmdPost *grep* cwindow
-
+autocmd QuickfixCmdPost make,grep cw

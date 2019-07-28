@@ -12,7 +12,13 @@
 "
 " (b)を発火させるには、(a)が発火する前にもう一度スペースキーを入力する必要がある。
 " 急がないと(a)が発火しちゃう。
-set timeoutlen=400
+"set timeoutlen=400
+
+" ripgrepが利用できるなら、ripgrepをgrepに使用する。
+if executable('rg')
+  let &grepprg ='rg -g !.git --column --line-number --hidden --ignore-case --no-heading'
+  set grepformat=%f:%l:%c:%m
+endif
 
 " --------------------
 "  Tab/ スペース/改行
