@@ -41,6 +41,20 @@ hook_add='''
     nnoremap <silent><buffer><expr> i denite#do_map('open_filter_buffer')
     nnoremap <silent><buffer><expr> <Space> denite#do_map('toggle_select').'j'
   endfunction
+
+  nnoremap [de] <NOP>
+  nmap <C-u> [de]
+
+  " -buffer-name=
+  nnoremap <silent> [de]g :<C-u>Denite -auto-action=preview grep -buffer-name=search-buffer-denite<CR>
+
+  " Denite grep検索結果を再表示する
+  nnoremap <silent> [denite]r :<C-u>Denite -resume -buffer-name=search-buffer-denite<CR>
+  " resumeした検索結果の次の行の結果へ飛ぶ
+  nnoremap <silent> [denite]n :<C-u>Denite -resume -buffer-name=search-buffer-denite -select=+1 -immediately<CR>
+  " resumeした検索結果の前の行の結果へ飛ぶ
+  nnoremap <silent> [denite]p :<C-u>Denite -resume -buffer-name=search-buffer-denite -select=-1 -immediately<CR>
+
 '''
 
 [[plugins]]
