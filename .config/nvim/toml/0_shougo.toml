@@ -18,11 +18,14 @@ depends = ['Shougo/neomru.vim']
 repo = 'Shougo/denite.nvim'
 depends = ['Shougo/neomru.vim']
 hook_add='''
-  nnoremap <space>dr :<C-u>Denite file_mru<CR>
-  nnoremap <space>db :<C-u>Denite buffer<CR>
-  nnoremap <space>dy :<C-u>Denite neoyank<CR>
-  nnoremap <space>df :<C-u>Denite file/rec<CR>
-  nnoremap <space>do :<C-u>Denite outline<CR>
+  nnoremap [denite] <NOP>
+  nmap <Space>d [denite]
+
+  nnoremap [denite]f :<C-u>Denite file_mru<CR>
+  nnoremap [denite]b :<C-u>Denite buffer<CR>
+  nnoremap [denite]y :<C-u>Denite neoyank<CR>
+  nnoremap [denite]f :<C-u>Denite file/rec<CR>
+  nnoremap [denite]o :<C-u>Denite outline<CR>
 
   autocmd FileType denite call s:denite_my_settings()
   function! s:denite_my_settings() abort
@@ -42,16 +45,16 @@ hook_add='''
     nnoremap <silent><buffer><expr> <Space> denite#do_map('toggle_select').'j'
   endfunction
 
-  nnoremap [de] <NOP>
-  nmap <C-u> [de]
 
   " -buffer-name=
-  nnoremap <silent> [de]g :<C-u>Denite -auto-action=preview grep -buffer-name=search-buffer-denite<CR>
+  nnoremap <silent> [denite]g :<C-u>Denite -auto-action=preview grep -buffer-name=search-buffer-denite<CR>
 
   " Denite grep検索結果を再表示する
   nnoremap <silent> [denite]r :<C-u>Denite -resume -buffer-name=search-buffer-denite<CR>
+
   " resumeした検索結果の次の行の結果へ飛ぶ
   nnoremap <silent> [denite]n :<C-u>Denite -resume -buffer-name=search-buffer-denite -select=+1 -immediately<CR>
+
   " resumeした検索結果の前の行の結果へ飛ぶ
   nnoremap <silent> [denite]p :<C-u>Denite -resume -buffer-name=search-buffer-denite -select=-1 -immediately<CR>
 
