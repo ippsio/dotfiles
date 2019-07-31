@@ -16,12 +16,12 @@ if dein#load_state('~/.cache/dein')
   call dein#begin('~/.cache/dein')
   call dein#add('~/.cache/dein/repos/github.com/Shougo/dein.vim')
 
+  call dein#load_toml('~/.config/nvim/toml/0_altercmd.toml', {'lazy': 0})
   call dein#load_toml('~/.config/nvim/toml/0_shougo.toml', {'lazy': 0})
   call dein#load_toml('~/.config/nvim/toml/0_search.toml', {'lazy': 0})
   call dein#load_toml('~/.config/nvim/toml/0_visual.toml', {'lazy': 0})
   call dein#load_toml('~/.config/nvim/toml/0_file_manage.toml', {'lazy': 0})
   call dein#load_toml('~/.config/nvim/toml/0_edit_operation.toml', {'lazy': 0})
-  call dein#load_toml('~/.config/nvim/toml/0_altercmd.toml', {'lazy': 0})
   call dein#load_toml('~/.config/nvim/toml/0_vcs.toml', {'lazy': 0})
 
   call dein#load_toml('~/.config/nvim/toml/1_toml.toml', {'lazy': 1})
