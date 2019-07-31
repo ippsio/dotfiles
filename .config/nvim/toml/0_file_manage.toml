@@ -2,6 +2,10 @@
 [[plugins]]
 repo = 'scrooloose/nerdtree'
 hook_add = '''
+
+  call altercmd#load()
+  AlterCommand ntf NERDTreeFind
+
   " vim起動時のフォーカス移動
   function s:MoveToFileAtStart()
     " NERDTreeを起動された時、ちゃんと編集側のウインドウ(NERDTreeじゃない方のウインドウ）にフォーカスを当てる

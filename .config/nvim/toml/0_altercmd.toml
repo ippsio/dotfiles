@@ -2,15 +2,15 @@
 repo = 'tyru/vim-altercmd'
 hook_add = '''
   " alias
-  call altercmd#load()
-  " Denite
-  AlterCommand dr :<C-u>Denite file_mru
-  AlterCommand db :<C-u>Denite buffer
-  AlterCommand dy :<C-u>Denite neoyank
-  AlterCommand df :<C-u>Denite file/rec
-  AlterCommand do :<C-u>Denite outline
+  "call altercmd#load()
+  " " Denite
+  " AlterCommand dr :<C-u>Denite file_mru
+  " AlterCommand db :<C-u>Denite buffer
+  " AlterCommand dy :<C-u>Denite neoyank
+  " AlterCommand df :<C-u>Denite file/rec
+  " AlterCommand do :<C-u>Denite outline
 
   " NERDTree
-  AlterCommand ntf NERDTreeFind
+  "AlterCommand ntf NERDTreeFind
 '''
 
