@@ -22,7 +22,7 @@ vnoremap v $h
 nnoremap <silent> <Space><Space> "zyiw:let @/ = @z<CR>:set hlsearch<CR>
 
 " スペース3度押しでカーソル下にある単語をハイライト（\<や\>は、単語の境界を示す特殊文字）
-nnoremap <silent> <Space><Space><Space> "zyiw:let @/ = '\<' . @z . '\>'<CR>:set hlsearch<CR>
+"nnoremap <silent> <Space><Space><Space> "zyiw:let @/ = '\<' . @z . '\>'<CR>:set hlsearch<CR>
 
 " ビジュアルモードの選択中にスペース２度押しで選択中の文字をハイライト
 xnoremap <silent> <Space><Space> mz:call <SID>set_Vsearch()<CR>:set hlsearch<CR>`z
@@ -30,17 +30,20 @@ xnoremap <silent> <Space><Space> mz:call <SID>set_Vsearch()<CR>:set hlsearch<CR>
 " ビジュアルモードの選択中に#で、選択中の文字列をハイライトしつつ置換モード(:%s/xxx/xxx/)に入る
 xnoremap # mz:call <SID>set_Vsearch()<CR>:set hlsearch<CR>`z:%s/<C-r>///g<Left><Left>
 
+" ripgrep
 " 選択した単語やカーソル下の単語を全体検索
 " ノーマルモードでF3で、カーソル下にある文字（単語以外でも、一致する文字列を）をハイライトしつつ、Ripgrepで検索
-"nnoremap <F3> "zyiw:let @/ = @z<CR>mz:call <SID>set_search()<CR>:set hlsearch<CR>`z:Rg <C-r>/<CR>
-nnoremap <F3> "zyiw:let @/ = @z<CR>mz:call <SID>set_search()<CR>:set hlsearch<CR>`z:vimgrep <C-r>/ **/*<CR>
-
+nnoremap <F3> "zyiw:let @/ = @z<CR>mz:call <SID>set_search()<CR>:set hlsearch<CR>`z:Rg <C-r>/<CR>
 " ビジュアルモードの選択中にF3で、選択中の文字列をハイライトしつつ、Ripgrepで検索
-"xnoremap <F3> mz:call <SID>set_search()<CR>:set hlsearch<CR>`z:Rg <C-r>/<CR>
-xnoremap <F3> mz:call <SID>set_search()<CR>:set hlsearch<CR>`z:vimgrep <C-r>/ **/* <CR>
+xnoremap <F3> mz:call <SID>set_search()<CR>:set hlsearch<CR>`z:Rg <C-r>/<CR>
+
+" vimgrep
+" ノーマルモードでF3で、カーソル下にある文字（単語以外でも、一致する文字列を）をハイライトしつつ、vimgrepで検索
+"nnoremap <F3> "zyiw:let @/ = @z<CR>mz:call <SID>set_search()<CR>:set hlsearch<CR>`z:vimgrep <C-r>/ **/*<CR>
+" ビジュアルモードの選択中にF3で、選択中の文字列をハイライトしつつ、vimgrepで検索
+"xnoremap <F3> mz:call <SID>set_search()<CR>:set hlsearch<CR>`z:vimgrep <C-r>/ **/* <CR>
 
 " ノーマルモードでF4で、カーソル下にある文字（単語以外でも、一致する文字列を）をハイライトしつつ、現在のファイルをvimgrepで検索
-"nnoremap <F4> "zyiw:let @/ = @z<CR>mz:call <SID>set_search()<CR>:set hlsearch<CR>`z:vimgrep <C-r>/ %\|cw<CR>
 nnoremap <F4> "zyiw:let @/ = @z<CR>mz:call <SID>set_search()<CR>:set hlsearch<CR>`z:vimgrep <C-r>/ %<CR>
 
 xnoremap <F4> mz:call <SID>set_search()<CR>:set hlsearch<CR>`z:vimgrep <C-r>/ %<CR>
