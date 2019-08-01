@@ -59,25 +59,10 @@ hook_add = '''
   \    'down': '40%'
   \   }
   \ ))
-
-  command! -bang -nargs=* Rg
-  \ call fzf#vim#grep(
-  \   'rg -g !.git
-  \     --column
-  \     --line-number
-  \     --hidden
-  \     --ignore-case
-  \     --no-heading
-  \     --color=always
-  \   '.shellescape(<q-args>), 0,
-  \   fzf#vim#with_preview(
-  \     {
-  \       'options': '--exact --reverse'
-  \     },
-  \     'right:50%:wrap', '?'
-  \   )
-  \ )
 '''
+
+[[plugins]]
+repo = 'jremmen/vim-ripgrep'
 
 [[plugins]]
 repo = 'fuenor/qfixgrep'
