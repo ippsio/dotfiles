@@ -11,8 +11,16 @@ hook_add = '''
   let g:lightline = {
     \ 'colorscheme': g:lightline_colorscheme,
     \ 'inactive': {'left': [['mode', 'paste'], ['readonly', 'filepath', 'modified', 'anzu']]},
-    \ 'active': {'left': [['mode', 'paste'], ['readonly', 'filepath', 'modified', 'anzu']]},
-    \ 'component_function': {'anzu': 'anzu#search_status', 'filepath': 'FPath'}}
+    \ 'active': {'left': [
+    \    ['mode', 'paste'],
+    \    ['readonly', 'filepath', 'modified', 'anzu', 'branch']
+    \  ]},
+    \ 'component_function': {
+    \    'anzu': 'anzu#search_status',
+    \    'filepath': 'FPath',
+    \    'branch': 'fugitive#statusline'
+    \  }
+    \ }
 
   function! FPath()
     return expand("%:s")
