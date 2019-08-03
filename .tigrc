@@ -1,246 +1,76 @@
-# ---------------------------------
-# 外観
-# ---------------------------------
-# main view の左端にコミットIDを表示する
-#set main-view = id date author:email-user commit-title:graph=yes,refs=yes
-set main-view = id date author commit-title:graph=yes,refs=yes
+color default           250             234
+color 'Author '         15              default
+color 'Commit: '        242             default
+color 'Merge: '         45              default
+color id                167             default
+color date              242             default
+color graph-commit      161             default
+color status            15              default
+color delimiter         90              default
+color cursor            234             7
+color help-group        161             default
+color main-tracked      105             default             bold
+color cursor            226             94
+color title-focus       234             250
+color title-blur        234             250
+color diff-stat         45              default
+color diff-index        14              default
+color diff-add          40              default
+color diff-del          161             default
+color diff-chunk        190             default
 
-# blame view の行数表示をON、intervalを1に
-#set blame-view  = date:default author:email-user id:yes,color line-number:yes,interval=1 text
-set blame-view  = date:default author id:yes,color line-number:yes,interval=1 text
-
-# Pager系の行数表示をON、intervalを1に (default: line-number:no,interval=5)
+set main-view   = date id author:email-user commit-title:graph=yes,refs=yes
+set blame-view  = date:default author:email-user id:yes,color line-number:yes,interval=1 text
 set pager-view  = line-number:yes,interval=1 text
 set stage-view  = line-number:yes,interval=1 text
 set log-view    = line-number:yes,interval=1 text
 set blob-view   = line-number:yes,interval=1 text
 set diff-view   = line-number:yes,interval=1 text:yes,commit-title-overflow=no
 
-# 差分の前後の表示行数（diff-context)を指定 
-set diff-context = 6
-
-# ---------------------------------
-# その他
-# ---------------------------------
-
-# # 画面を垂直方向に分割する
 # set vertical-split = yes
-#
-# 横分割に強制する
 set vertical-split = no
-#
-# # デフォルト値
 # set vertical-split = auto
 
-# utf-8 文字で画面描画する (~でトグル)
 set line-graphics = utf-8
-
-# タブサイズ
-set tab-size = 4
-
-# # 空白無視
+# set tab-size = 4
+set tab-size = 2
 # set ignore-space = all
-
-# 空白無視 (status-view では表示するが diff-view では無視する) (W でトグル)
 set ignore-space = at-eol
-
-# 検索時に大文字小文字を無視する (default: false)
 set ignore-case = true
-
-# 水平分割したウィンドウの下画面サイズを % で指定（行数指定も可）
 set split-view-height = 80%
-
-# マージ diff を表示する
 set diff-options = -m --first-parent
-
-# マウスを有効にする
 set mouse = true
-
-# '+行数' の形で Editor に行番号を引数として渡すか
 set editor-line-number = yes
-
-# リフレッシュするタイミング
 set refresh-mode = auto
 #set refresh-mode = after-command
 #set refresh-mode = periodic
 #set refresh-interval = 1
-
-# ---------------------------------
-# diff-gighlight設定
-# ---------------------------------
-
-# 差分表示に diff-highlight を使う (要 tig 2.2.1 以降. diff-highlight が $PATH にあること)
 set diff-highlight = true
 
-# ---------------------------------
-# カラー設定
-# ---------------------------------
-# diff-view で境界が見やすくなるように変更
-color  diff-header       default magenta
-color  diff-chunk        black   white
+color diff-header       default red
+color diff-chunk        black   white
 
-# ---------------------------------
-# キーバインド（移動系）
-# ---------------------------------
-# g をファイル先頭に移動に変更、 view-grep を再割当て
+# set key 'g' / goto file top
 bind generic g      move-first-line
-bind generic E      view-grep
 
-# G でファイル末尾に移動 (default: :toggle commit-title-graph)
+# set key 'G' / goto file bottom
 bind generic G      move-last-line
 bind main    G      move-last-line
 
-# Alt-g で :toggle commit-title-graph
-bind main    <Esc>g :toggle commit-title-graph
+# set key 'E'
+bind generic E      view-grep
 
-
-# ---------------------------------
-# キーバインド（段落移動）
-# ---------------------------------
-# n / p を上下移動に割り当て (default: find-next / view-pager)
-bind generic n      move-down
-bind generic p      move-up
-
-# n / p で単位ごとの移動
-bind diff    n      :/^@@
-bind diff    p      :?^@@
-bind diff    <Esc>n :/^diff --(git|cc)
-bind diff    <Esc>p :?^diff --(git|cc)
-bind stage   n      :/^@@
-bind stage   p      :?^@@
-bind stage   <Esc>n :/^diff --(git|cc)
-bind stage   <Esc>p :?^diff --(git|cc)
-bind pager   n      :/^@@
-bind pager   p      :?^@@
-bind pager   <Esc>n :/^diff --(git|cc)
-bind pager   <Esc>p :?^diff --(git|cc)
-bind log     n      :/^commit
-bind log     p      :?^commit
-
-# ---------------------------------
-# キーバインド（その他）
-# ---------------------------------
-
-# 元の n / p を別に割り当て
-bind generic V      view-pager
-bind generic <Ctrl-s> find-next # 要 stty stop undef
-bind generic <Ctrl-r> find-prev
-
-# Ctrl-v, Alt-v でページ単位移動 (ターミナルに食われるので Ctrl-v は2度押しが必要)
-bind generic <Ctrl-v> move-page-down
-bind generic <Esc>v move-page-up
-
-# Ctrl-f, Ctrl-b で左右スクロール
-bind generic <Ctrl-f> scroll-right
-bind generic <Ctrl-b> scroll-left
-
-# Ctrl-g でリフレッシュ
-bind generic <Ctrl-g> refresh
-
-# ---------------------------------
-# キーバインド（gitコマンド）
-# ---------------------------------
-
-# ---
-# fetch/ pull/ push
-# ---
-# F で fetch (default: :toggle file-name / :toggle commit-title-refs)
+# set key 'F'
 bind generic F      ?git fetch %(remote)
 bind main    F      ?git fetch %(remote)
 
-# Alt-f で :toggle file-name / :toggle commit-title-refs
-bind generic <Esc>f :toggle file-name
-bind main    <Esc>f :toggle commit-title-refs
-
-# U で pull
+# set key 'U'
 bind generic U      ?git pull %(remote)
 
-# Alt-u で該当ブランチを更新
-bind main    <Esc>u ?sh -c "git checkout %(branch) && git pull %(remote) --ff-only && git checkout -"
-bind diff    <Esc>u ?sh -c "git checkout %(branch) && git pull %(remote) --ff-only && git checkout -"
-bind refs    <Esc>u ?sh -c "git checkout %(branch) && git pull %(remote) --ff-only && git checkout -"
-
-# P で remote への push
-bind generic P      ?git push -u %(remote) %(repo:head)
-
-# ---
-# commit
-# ---
-# C で commit (refs での C は checkout, main での C は cherry-pick だが上書きする)
+# set key 'C'
 bind generic C      !git commit
-bind refs    C      !git commit
+#bind refs    C      !git commit
 bind main    C      !git commit
 
-# Alt-c で commit --allow-empty
-bind generic <Esc>c !git commit --allow-empty
-
-# + で commit --amend
-bind generic +      !git commit --amend --allow-empty
-
-# ---
-# reflog
-# ---
-# L で reflog
-bind generic L      !sh -c "git reflog --pretty=raw | tig --pretty=raw"
-
-# _ で指定 reflog 番号にリセット
-bind generic _      ?git reset --hard HEAD@{"%(prompt Enter HEAD@{} number: )"}
-
-# ---
-# diff
-# ---
-# . で HEAD との diff
-bind main    .      !sh -c "git diff %(commit) | tig"
-bind diff    .      !sh -c "git diff %(commit) | tig"
-bind refs    .      !sh -c "git diff %(branch) | tig"
-
-# Alt-. で指定 commit ID との diff
-bind main    <Esc>. ?sh -c "git diff %(commit)..%(prompt Enter commit ID: ) | tig"
-bind diff    <Esc>. ?sh -c "git diff %(commit)..%(prompt Enter commit ID: ) | tig"
-bind refs    <Esc>. ?sh -c "git diff %(branch)..%(prompt Enter branch name: ) | tig"
-
-# ---
-# 親コミットへの移動
-# ---
-# ~ で親コミットに移動 (default: :toggle line-graphics)
-bind generic ~      :goto %(commit)^
-
-# Alt-~ で表示のトグル (default: ~)
-bind generic <Esc>~ :toggle line-graphics
-
-# ---
-# stash
-# ---
-# S で stash save
-bind generic S      ?git stash save "%(prompt Enter stash comment: )"
-
-# Y で stash pop
-bind diff    Y      ?git stash pop %(stash)
-bind stash   Y      ?git stash pop %(stash)
-
-# Alt-y で stash apply
-bind diff    <Esc>y ?git stash apply %(stash)
-bind stash   <Esc>y ?git stash apply %(stash)
-
-# github(hub)連携
-# ; で GitHub の該当コミットを開く ※要 hub インストール
-bind main    ;      @hub browse -- commit/%(commit)
-bind blame   ;      @hub browse -- commit/%(commit)
-bind diff    ;      @hub browse -- commit/%(commit)
-
-# ; で GitHub の該当ページを開く
-bind tree    ;      @hub browse -- blob/%(branch)/%(file)
-bind blob    ;      @hub browse -- blob/%(branch)/%(file)
-bind grep    ;      @hub browse -- blob/%(branch)/%(file)
-
-# Alt-; で GitHub の指定ブランチの該当ページを開く
-bind tree    <Esc>; @hub browse -- blob/"%(prompt Enter branch name: )"/%(file)
-bind blob    <Esc>; @hub browse -- blob/"%(prompt Enter branch name: )"/%(file)
-bind grep    <Esc>; @hub browse -- blob/"%(prompt Enter branch name: )"/%(file)
-
-# w で GitHub の該当ブランチの Pull Request 作成ページを開く ※要 hub インストール
-bind main    w      @hub browse -- compare/%(branch)?expand=1
-bind diff    w      @hub browse -- compare/%(branch)?expand=1
-bind refs    w      @hub browse -- compare/%(branch)?expand=1
-
-
+# set key 'P'
+bind generic P      ?git push -u %(remote) %(repo:head)
