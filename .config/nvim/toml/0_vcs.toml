@@ -17,5 +17,5 @@ repo = 'rhysd/git-messenger.vim'
 repo = 'gregsexton/gitv'
 hook_add = '''
   " git diffの折りたたみが自動で開くようにする
-  autocmd FileType git :setlocal foldlevel=99
+  "autocmd FileType git :setlocal foldlevel=99
 '''
