@@ -72,5 +72,8 @@ bind generic C      !git commit
 #bind refs    C      !git commit
 bind main    C      !git commit
 
+bind main    R !git rebase -i %(commit)
+bind diff    R !git rebase -i %(commit)
+
 # set key 'P'
 bind generic P      ?git push -u %(remote) %(repo:head)
