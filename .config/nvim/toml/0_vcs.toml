@@ -9,3 +9,6 @@ repo = 'tpope/vim-fugitive'
 hook_add = '''
   nnoremap <silent> <space>a :Gblame<CR>
 '''
+
+[[plugins]]
+repo = 'rhysd/git-messenger.vim'
