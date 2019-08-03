@@ -4,10 +4,15 @@
 " set pasteすると貼り付けモードとなり、inoremapが効かなくなり、jjをESCと見なせなくなるため、コメントアウト
 " set paste
 
-" " インサートモードでbackspaceを有効に
-" set backspace=indent,eol,start
 " 入力モード中に素早くjjと入力した場合はESCとみなす
 inoremap jj <Esc>
+
+" ;は;とする。USキーボードで:を打つにはSHIFTキーも同時に押す必要があり面倒くさいので
+nnoremap ; :
+
+" コマンドモードで;や:で、コマンドモードを抜ける。Esc押すのが面倒臭いので
+cnoremap <expr> : getcmdline() != '' ? ':' : 'echo ""<CR><Esc>'
+cnoremap <expr> ; getcmdline() != '' ? ';' : 'echo ""<CR><Esc>'
 
 " -----------------------------------------------------
 " ブロック選択
@@ -76,6 +81,9 @@ nnoremap <C-Left>  <C-w>h
 nnoremap <C-Down>  <C-w>j
 nnoremap <C-Up>    <C-w>k
 nnoremap <C-Right> <C-w>l
+nnoremap ]] <C-w>w " 次のウインドウ
+nnoremap [[ <C-w>W " 前のウインドウ
+
 
 " ウインドウの分割（横）
 nnoremap <space>- :<C-u>new<CR>
@@ -124,6 +132,8 @@ hi ColorColumn ctermbg=235 guibg=#2c2d27
 " 保存、終了系
 " -----------------------------------------------------
 " 終了
+" ノーマルモード中にQ、または素早くqqと入力した場合は:q<CR>とみなす
+nnoremap qq :q<CR>
 nnoremap Q :<C-u>:q<CR>
 nnoremap W :<C-u>:w<CR>:echo "SAVED! [" . expand("%:p") . "]"<CR>
 
