@@ -18,8 +18,9 @@ hook_add = '''
   " NERDTree起動時、ブックマーク開く
   let g:NERDTreeShowBookmarks=1
 
-  "他のバッファをすべて閉じた時にNERDTreeが開いていたらNERDTreeも一緒に閉じる。
-  autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+  " NERDTreeだけ開いていてほしいときもあるのでコメントアウト
+  " "他のバッファをすべて閉じた時にNERDTreeが開いていたらNERDTreeも一緒に閉じる。
+  " autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
   " spaceの後nでトグル（閉じてたNERDTreeを開く、開いてたNERDTreeを閉じる）
   map <silent> <space>n :NERDTreeToggle<CR>
