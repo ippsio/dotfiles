@@ -16,8 +16,8 @@ hook_add = '''
     \              ['readonly', 'filepath', 'modified', 'anzu'],
     \              []
     \            ],
-    \   'right': [ [ 'lineinfo', 'percent' ],
-    \              [ 'diff_base' ],
+    \   'right': [ [ 'diff_base' ],
+    \              [ 'lineinfo', 'percent' ],
     \              [ 'fileformat', 'fileencoding', 'filetype']
     \            ]
     \  },
