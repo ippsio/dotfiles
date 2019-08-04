@@ -17,10 +17,11 @@ color title-blur        234             250
 color author 79 default
 
 set diff-highlight = true
-color diff-stat         45 default bold
-color diff-index        25 17
-color "+++ "            25 17
-color "--- "            25 17
+#color diff-stat         45 default bold
+color diff-stat         45 18 bold reverse
+color diff-index        25 17 reverse
+color "+++ "            25 17 reverse
+color "--- "            25 17 reverse
 color "+"               47    default
 color " +"              47    default
 color "-"              203    default
