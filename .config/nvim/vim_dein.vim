@@ -5,6 +5,7 @@ if &compatible
   set nocompatible
 endif
 
+" test2
 augroup MyAutoCmd
   autocmd!
 augroup END
