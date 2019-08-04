@@ -11,19 +11,30 @@ hook_add = '''
   let g:lightline = {
     \  'colorscheme': g:lightline_colorscheme,
     \  'inactive': {'left': [['mode', 'paste'], ['readonly', 'filepath', 'modified', 'anzu']]},
-    \  'active': {'left': [
-    \     ['mode', 'paste'],
-    \     ['readonly', 'filepath', 'modified', 'anzu', 'branch']
-    \   ]},
+    \  'active': {
+    \    'left': [ ['mode', 'paste'],
+    \              ['readonly', 'filepath', 'modified', 'anzu'],
+    \              []
+    \            ],
+    \   'right': [ [ 'lineinfo', 'percent' ],
+    \              [ 'diff_base' ],
+    \              [ 'fileformat', 'fileencoding', 'filetype']
+    \            ]
+    \  },
     \  'component_function': {
     \     'anzu': 'anzu#search_status',
     \     'filepath': 'FPath',
-    \     'branch': 'fugitive#statusline'
+    \     'diff_base': 'GitGutterDiffBase'
     \   }
     \ }
-
   function! FPath()
     return expand("%:s")
+  endfunction
+
+  function! GitGutterDiffBase()
+    let s:curr_branch = fugitive#statusline()[5:-3]
+    echo s:curr_branch
+    return "" . g:gitgutter_diff_base . "[BASE]<==[HEAD]" . s:curr_branch
   endfunction
 '''
 

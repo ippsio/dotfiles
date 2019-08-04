@@ -4,19 +4,34 @@ hook_add = '''
   " 変更マーク
   let g:gitgutter_sign_added              = '+'
   let g:gitgutter_sign_modified           = '~'
-  let g:gitgutter_sign_removed            = 'rm'
+  let g:gitgutter_sign_removed            = 'X'
   let g:gitgutter_sign_removed_first_line = '_^'
   let g:gitgutter_sign_modified_removed   = '~R'
 
   " 変更マークのハイライト
-  let g:gitgutter_override_sign_column_highlight = 0
   hi SignColumn guibg=none
   hi GitGutterAdd          guifg=#ffff00 guibg=#8800aa " an added line
   hi GitGutterChange       guifg=#ffff00 guibg=#8800aa " a changed line
-  hi GitGutterDelete       guifg=#ffffff guibg=#000000 " at least one removed line
+  hi GitGutterDelete       guifg=#ffff00 guibg=#000000 " at least one removed line
   hi GitGutterChangeDelete guifg=#ffff00 guibg=#000000 " a changed line followed by at least one removed line
 
+  " developブランチとの差分を表示
   let g:gitgutter_diff_base = 'origin/develop'
+
+  " 現在の比較対象(diff_base)を表示するコマンド
+  " 使い方:
+  "   :GitGutterShowDiffBase[enter]
+  command! -nargs=0 GitGutterShowDiffBase :echo "GitGutter 現在の比較対象は[" . g:gitgutter_diff_base . "] です"
+
+  " 比較対象(diff_base)を変更するコマンド
+  " 使い方:
+  "   :GGCB develop[enter] など
+  command! -nargs=1 GGCB call s:change_base(<f-args>)
+  function! s:change_base(diff_base)
+    echo "GitGutter 比較対象を[" . g:gitgutter_diff_base . "]->[" . a:diff_base ."]に変更しました。"
+    let g:gitgutter_diff_base = a:diff_base
+    GitGutter
+  endfunction
 '''
 
 [[plugins]]
@@ -31,6 +46,8 @@ repo = 'rhysd/git-messenger.vim'
 [[plugins]]
 repo = 'gregsexton/gitv'
 hook_add = '''
-  " git diffの折りたたみが自動で開くようにする
-  "autocmd FileType git :setlocal foldlevel=99
+  " やっぱりしない
+  "" git diffの折りたたみが自動で開くようにする
+  ""autocmd FileType git :setlocal foldlevel=99
 '''
+
