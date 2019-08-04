@@ -15,6 +15,8 @@ hook_add = '''
   hi GitGutterChange       guifg=#ffff00 guibg=#8800aa " a changed line
   hi GitGutterDelete       guifg=#ffffff guibg=#000000 " at least one removed line
   hi GitGutterChangeDelete guifg=#ffff00 guibg=#000000 " a changed line followed by at least one removed line
+
+  let g:gitgutter_diff_base = 'origin/develop'
 '''
 
 [[plugins]]
