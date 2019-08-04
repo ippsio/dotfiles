@@ -36,9 +36,18 @@ set log-view    = line-number:yes,interval=1 text
 set blob-view   = line-number:yes,interval=1 text
 set diff-view   = line-number:yes,interval=1 text:yes,commit-title-overflow=no
 
-# set vertical-split = yes
-set vertical-split = no
+# main-view での日付
+#set main-view-date-display = relative-compact
+#set main-view-date-display = relative
+#set main-view-date-display = default
+#set main-view-date-width = 10
+set main-view-date-display = custom
+set main-view-date-format = "%m-%d %H:%M"
+
+# diff-viewの開き方
+# set vertical-split = no
 # set vertical-split = auto
+set vertical-split = yes
 
 set line-graphics = utf-8
 # set tab-size = 4
@@ -77,6 +86,8 @@ bind generic C      !git commit
 #bind refs    C      !git commit
 bind main    C      !git commit
 
+# main-viewで今のカーソルよりも上（未来）にある全コミットをリベース
+# diff-viewで今開いてるよりも上（未来）にある全コミットをリベース
 bind main    R !git rebase -i %(commit)~
 bind diff    R !git rebase -i %(commit)~
 
