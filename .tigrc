@@ -100,4 +100,6 @@ bind diff    p      :?^@@
 # set key 't'
 bind diff    t      :/^---$
 
+# set key '@reset'
+bind diff   @reset !git reset %(commit)~
 
