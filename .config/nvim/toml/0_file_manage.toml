@@ -12,8 +12,11 @@ hook_add = '''
     call feedkeys("\<C-w>l")
   endfunction
 
-  " ファイル指定があればNERDTree起動後、フォーカスを編集ウインドウに移動
-  autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | else | NERDTree | call s:MoveToFileAtStart()| endif
+  "" ファイル指定があればNERDTree起動後、フォーカスを編集ウインドウに移動
+  " autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | else | NERDTree | call s:MoveToFileAtStart()| endif
+
+  " ファイル指定があればNERDTree自動起動しない
+  autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree
 
   " NERDTree起動時、ブックマーク開く
   let g:NERDTreeShowBookmarks=1

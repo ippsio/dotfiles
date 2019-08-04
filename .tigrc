@@ -1,5 +1,5 @@
 # NOTE https://github.com/jonas/tig/blob/master/tigrc
-color default           240             default
+color default           default             default
 color 'Author: '        241             default
 color 'AuthorDate: '        241             default
 color 'Commit: '        241             default
@@ -76,8 +76,8 @@ bind generic C      !git commit
 #bind refs    C      !git commit
 bind main    C      !git commit
 
-bind main    R !git rebase -i %(commit)
-bind diff    R !git rebase -i %(commit)
+bind main    R !git rebase -i %(commit)~
+bind diff    R !git rebase -i %(commit)~
 
 # set key 'P'
 bind generic P      ?git push -u %(remote) %(repo:head)

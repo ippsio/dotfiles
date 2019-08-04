@@ -14,4 +14,3 @@ hook_add = '''
   "AlterCommand ntf NERDTreeFind
 '''
 
-# add test 1
