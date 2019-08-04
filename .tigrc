@@ -1,33 +1,33 @@
+# color setting
 # NOTE https://github.com/jonas/tig/blob/master/tigrc
-color default           default             default
-color 'Author: '        241             default
-color 'AuthorDate: '        241             default
-color 'Commit: '        241             default
-color 'CommitDate: '        241             default
-color 'Merge: '         45              default bold
-color 'Date: '        241             default
+color default           default default
+color 'Author: '        241     default
+color 'AuthorDate: '    241     default
+color 'Commit: '        241     default
+color 'CommitDate: '    241     default
+color 'Merge: '          45     default bold
+color 'Date: '          241     default
 
-color date            27             17
-color graph-commit      161             default
-#color cursor            160             52 bold
-color cursor            226             3 bold
-color main-tracked      105             default             bold
-color title-focus       234             250
-color title-blur        234             250
+color date               27     17
+color graph-commit      161     default
+#color cursor           160     52      bold
+color cursor            226     3       bold
+color main-tracked      105     default bold
+color title-focus       234     250
+color title-blur        234     250
 color author 79 default
 
 set diff-highlight = true
-#color diff-stat         45 default bold
-color diff-stat         45 18 bold reverse
-color diff-index        25 17 reverse
-color "+++ "            25 17 reverse
-color "--- "            25 17 reverse
-color "+"               47    default
-color " +"              47    default
-color "-"              203    default
-color " -"             203    default
-color diff-header       45 18 bold reverse
-color diff-chunk       190 17
+color diff-stat         45      18      bold reverse
+color diff-index        25      17      reverse
+color "+++ "            25      17      reverse
+color "--- "            25      17      reverse
+color "+"               47      default
+color " +"              47      default
+color "-"              203      default
+color " -"             203      default
+color diff-header       45      18      bold reverse
+color diff-chunk       190      17
 
 set main-view   = date id author:email-user commit-title:graph=yes,refs=yes
 set blame-view  = date:default author:email-user id:yes,color line-number:yes,interval=1 text
@@ -89,7 +89,7 @@ bind main    C      !git commit
 
 # main-viewで今のカーソルよりも上（未来）にある全コミットをリベース
 # diff-viewで今開いてるよりも上（未来）にある全コミットをリベース
-bind main    R !git rebase -i %(commit)~
+bind main    R !git rebase -i %(commit)~ && git reset HEAD^
 bind diff    R !git rebase -i %(commit)~
 
 # set key 'P'
