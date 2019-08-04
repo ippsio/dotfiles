@@ -67,6 +67,7 @@ set refresh-mode = auto
 
 # set key 'g' / goto file top
 bind generic g      move-first-line
+bind diff    g      :/^---$ # goto file list
 
 # set key 'G' / goto file bottom
 bind generic G      move-last-line
@@ -97,9 +98,7 @@ bind generic P      ?git push -u %(remote) %(repo:head)
 bind diff    n      :/^@@
 bind diff    p      :?^@@
 
-# set key 't'
-bind diff    t      :/^---$
 
 # set key '@reset'
-bind diff   @reset !git reset %(commit)~
+bind diff   @re !git reset %(commit)~
 

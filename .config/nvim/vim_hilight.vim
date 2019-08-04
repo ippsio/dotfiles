@@ -82,7 +82,7 @@ hi markdownCodeDelimiter guibg=#222222 guifg=#cccccc
 hi Statement guifg=#ffff00
 
 
-" カーソル下のhighlight情報を表示する {{{
+" カーソル下のhighlight情報を表示する
 function! s:part(s, fgbg, type)
   let l:attr = synIDattr(a:s, a:fgbg, a:type)
   return l:attr ? " " . a:type . a:fgbg . "=" . l:attr : ""
