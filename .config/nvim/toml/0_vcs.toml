@@ -1,7 +1,29 @@
 [[plugins]]
 repo = 'airblade/vim-gitgutter'
 hook_add = '''
-  set signcolumn=yes
+  " 変更マーク
+  let g:gitgutter_sign_added              = '+'
+  let g:gitgutter_sign_modified           = '~'
+  let g:gitgutter_sign_removed            = '_'
+  let g:gitgutter_sign_removed_first_line = '_^'
+  let g:gitgutter_sign_modified_removed   = '~_'
+
+  " 変更マークのハイライト
+  let g:gitgutter_override_sign_column_highlight = 0
+  hi SignColumn guibg=none
+  hi GitGutterAdd          guifg=#ffff00 guibg=#8800aa " an added line
+  hi GitGutterChange       guifg=#ffff00 guibg=#8800aa " a changed line
+  hi GitGutterDelete       guifg=#ffffff guibg=#000000 " at least one removed line
+  hi GitGutterChangeDelete guifg=#ffffff guibg=#000000 " a changed line followed by at least one removed line
+
+  " 不要なのでコメントアウト
+  " " 行のハイライト
+  " let g:gitgutter_highlight_lines = 1
+  " "hi GitGutterAdd              ctermfg=blue ctermbg=brown
+  " "hi GitGutterAddLine          ctermfg=blue ctermbg=brown " default: links to DiffAdd
+  " "hi GitGutterChangeLine       ctermfg=blue ctermbg=brown " default: links to DiffChange
+  " "hi GitGutterDeleteLine       ctermfg=blue ctermbg=brown " default: links to DiffDelete
+  " "hi GitGutterChangeDeleteLine ctermfg=blue ctermbg=brown " default: links to GitGutterChangeLineDefault, i.e. DiffChange
 '''
 
 [[plugins]]
