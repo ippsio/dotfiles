@@ -9,7 +9,8 @@ color 'Date: '        241             default
 
 color date            27             17
 color graph-commit      161             default
-color cursor            160             52 bold
+#color cursor            160             52 bold
+color cursor            226             3 bold
 color main-tracked      105             default             bold
 color title-focus       234             250
 color title-blur        234             250
