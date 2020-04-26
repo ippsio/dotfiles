@@ -1,5 +1,0 @@
-[[plugins]]
-repo = 'tpope/vim-fugitive'
-hook_add = '''
-  nnoremap <silent> <space>a :Gblame<CR>
-'''

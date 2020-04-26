@@ -1,3 +1,0 @@
-# 文字をシングルクォートとか（）で囲む
-[[plugins]]
-repo = 'tpope/vim-surround'

@@ -1,4 +1,0 @@
-# インサートモードで行番号をハイライトONし、状態をわかりやすくする
-[[plugins]]
-repo = 'cohama/vim-insert-linenr'
-
