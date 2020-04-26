@@ -1,0 +1,26 @@
+{
+  "title": "[40:Device specific behaviors.",
+  "rules": [
+    {
+      "description": "[41:Apple Magic Keyboard 2(US) only]:eject to F15.",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {"consumer_key_code": "eject"},
+          "to": [{"key_code": "f15"}],
+          "conditions": [{"type": "device_if", "identifiers": [{"vendor_id": 76,"product_id": 615}]}]
+        }
+      ]
+    },
+    {
+      "description": "[42:Topre Realforce 87(vendor_id:2131, product_id:273) only]:disable application key.",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {"key_code": "application", "modifiers": {"optional": ["any"]}},
+          "conditions": [{"type": "device_if", "identifiers": [{"vendor_id": 2131,"product_id": 273}]}]
+        }
+      ]
+    }
+  ]
+}

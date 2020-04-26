@@ -1,0 +1,17 @@
+[[plugins]]
+repo = 'tpope/vim-markdown'
+on_ft = ['markdown']
+
+[[plugins]]
+repo = 'previm/previm'
+hook_add = '''
+  let g:previm_open_cmd = 'open -a "Google Chrome"'
+'''
+on_ft = ['markdown']
+
+[[plugins]]
+repo = 'dhruvasagar/vim-table-mode'
+hook_add = '''
+  let g:table_mode_corner = "|"
+'''
+on_ft = ['markdown']

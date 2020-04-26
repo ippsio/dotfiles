@@ -1,0 +1,15 @@
+###fzf
+[[plugins]]
+repo = 'junegunn/fzf'
+build = './install --all --no-bash --no-fish --no-zsh'
+
+[[plugins]]
+repo = 'junegunn/fzf.vim'
+hook_add = '''
+  nnoremap <C-p> :FZFFileList<CR>
+  nnoremap <space>f :FZFFileList<CR>
+  command! FZFFileList
+  \ call fzf#run(
+  \   fzf#wrap({ 'source': 'find . -type d -name .git -prune -o ! -name .DS_Store', 'down': '40%'})
+  \ )
+'''

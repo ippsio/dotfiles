@@ -1,0 +1,19 @@
+[[plugins]]
+repo = 'fuenor/qfixgrep'
+hook_add = '''
+  " NOTE: QuickFix上で 'i' を入力すると、プレビューのON/OFFを切り替えることができます。
+
+  " QuickFix処理制御
+  " プレビューや絞り込みをQuickFix/ロケーションリストの両方で有効化(デフォルト:2)
+  " 0 : なにもしない
+  " 1 : QuickFix/ロケーションリストの両方で有効
+  " 2 : ロケーションリストのみ有効
+  " 3 : QFixMemo/QFixGrepコマンドで開いた場合のみ有効
+  let g:QFixWin_EnableMode = 1
+
+  " QFixHowm/QFixGrepでロケーションリストを使用する/しない
+  let g:QFix_UseLocationList = 0
+
+  " QuickFixウィンドウでプレビューを有効にする
+  let g:QFix_PreviewEnable = 0
+'''

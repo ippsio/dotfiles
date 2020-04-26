@@ -1,0 +1,38 @@
+[[plugins]]
+repo = 'fuenor/qfixhowm'
+hook_add = '''
+" なぜかNeoVimでは画面が崩れてしまうので
+  let QFixHowm_MenuPreview = 0
+  let QFixHowm_MenuPreviewEnable = 0
+
+  let QFixHowm_Key = 'g'
+  let howm_dir='~/Documents/howm'
+  let howm_filename        = '%Y/%m/%Y-%m-%d-%H%M%S.howm'
+  let QFixHowm_DiaryFile = 'diary/%Y/%m/%Y-%m-%d.howm'
+  let QFixHowm_QuickMemoFile = 'Qmem-00-0000-00-00-000000.howm'
+  let howm_fileencoding    = 'utf-8'
+  let howm_fileformat      = 'unix'
+  " キーコードやマッピングされたキー列が完了するのを待つ時間（ミリ秒）
+  set timeout timeoutlen=3000 ttimeoutlen=100
+
+  " QuickFixウィンドウでもプレビューや絞り込みを有効
+  "let QFixWin_EnableMode=1
+
+  " QuickHowm/QuickGrepの結果表示にロケーションリストを使用する／しない
+  let QFix_UseLocationList=0
+  let QFixHowm_SaveTime = 1           "保存時にタイムスタンプを更新
+
+  "MarkdownをHowmファイルとして利用する
+  let QFixHowm_FileType='markdown'
+
+  " タイトル記号を # に変更する(markdown使用の都合上)
+  let QFixHowm_Title='#'
+  let QFixHowm_HolidayFile='~/Documents/howm/Sche-Hd-0000-00-00-000000.howm'
+  let QFixHowm_ST= -9
+  let QFix_CopenCmd = 'botright'
+  au FileType markdown setlocal textwidth=0  "テキストを折り返さないための設定
+  let QFixHowm_UserSwActionLock = ['[ ]',' [:org]','[:tririga]']  "カテゴリタグ
+          \ 'args'      : '/Applications/Marked\ 2.app',
+          \ 'exec'      : '%c %o %a %s',
+          \ }
+'''

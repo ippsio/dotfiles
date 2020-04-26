@@ -1,0 +1,154 @@
+# color setting
+# NOTE https://github.com/jonas/tig/blob/master/tigrc
+color default           default default
+color 'Author: '        241     default
+color 'AuthorDate: '    241     default
+color 'Commit: '        241     default
+color 'CommitDate: '    241     default
+color 'Merge: '          45     default bold
+color 'Date: '          241     default
+
+color date               27     17
+color graph-commit      161     default
+#color cursor           160     52      bold
+color cursor            226     3       bold
+color main-tracked      105     default bold
+color title-focus       234     250
+color title-blur        234     250
+color author 79 default
+
+color diff-stat         45      18      bold reverse
+color diff-index        25      17      reverse
+color "+++ "            25      17      reverse
+color "--- "            25      17      reverse
+color "+"               47      24
+color " +"              47      24
+color "-"              203      53
+color " -"             203      53
+color diff-header       45      18      bold reverse
+color diff-chunk       190      17
+
+# delimiterは、set wrap-lines = yesの時に、1画面に収まりきらなかった文字を次の行に表示する際
+# 前の行からの続きであることを意味する「+」マークの事。
+color delimiter        8     247
+
+# 単語単位で差分をハイライトできるように
+set diff-highlight = true
+
+set main-view   = date id author:email-user commit-title:graph=yes,refs=yes
+set blame-view  = date:default author:email-user id:yes,color line-number:yes,interval=1 text
+set pager-view  = line-number:yes,interval=1 text
+set stage-view  = line-number:yes,interval=1 text
+set log-view    = line-number:yes,interval=1 text
+set blob-view   = line-number:yes,interval=1 text
+set diff-view   = line-number:yes,interval=1 text:yes,commit-title-overflow=no
+
+# main-view での日付
+#set main-view-date-display = relative-compact
+#set main-view-date-display = relative
+#set main-view-date-display = default
+#set main-view-date-width = 10
+set main-view-date-display = custom
+set main-view-date-format = "%m-%d %H:%M"
+set split-view-width = 75%
+
+# diff-viewの開き方
+# set vertical-split = no
+# set vertical-split = auto
+set vertical-split = yes
+
+set wrap-lines = no
+
+set line-graphics = utf-8
+# set tab-size = 4
+set tab-size = 2
+# set ignore-space = all
+set ignore-space = at-eol
+set ignore-case = true
+set split-view-height = 80%
+set diff-options = -m --first-parent
+set mouse = true
+set editor-line-number = yes
+set refresh-mode = auto
+#set refresh-mode = after-command
+#set refresh-mode = periodic
+#set refresh-interval = 1
+
+# User-defined commands
+# ---------------------
+# These commands allow to run shell commands directly from within Tig.
+# Unless otherwise specified, commands are run in the foreground with
+# their console output shown (as if '!' was specified). When multiple
+# command options are specified their behavior are combined, e.g. "?<git
+# commit" will prompt the user whether to execute the command and will
+# exit Tig after completion.
+#
+#   !	Run the command in the foreground with output shown.
+#   @	Run the command in the background with no output.
+#   ?	Prompt the user before executing the command.
+#   +   Run the command synchronously, and echo the first line of output to the status bar.
+#   <	Exit Tig after executing the command.
+#   >	Re-open Tig instantly in the last displayed view after executing the command.
+# set key to page-down/page-up
+
+bind generic <C-b> move-page-up
+bind generic <C-f> move-page-down
+
+bind generic <C-k> previous
+bind generic <C-j> next
+
+# set cursor key to down/up
+bind generic <Up>   move-up
+bind generic <Down> move-down
+
+# set key 'g' / goto file top
+bind generic g      move-first-line
+bind diff    g      :/^---$ # goto file list
+
+# set key 'G' / goto file bottom
+bind generic G      move-last-line
+bind main    G      move-last-line
+
+# set key 'E'
+bind generic E      view-grep
+
+# set key 'F'
+bind generic F      ?git fetch %(remote)
+bind main    F      ?git fetch %(remote)
+
+# set key 'U'
+bind generic U      ?git pull %(remote)
+
+# set key 'C'
+bind generic C      !git commit
+#bind refs    C      !git commit
+bind main    C      !git commit
+
+# main-viewで今のカーソルよりも上（未来）にある全コミットをリベース
+# diff-viewで今開いてるよりも上（未来）にある全コミットをリベース
+bind main    R !git rebase -i %(commit)~
+bind diff    R !git rebase -i %(commit)~
+
+# set key 'P'
+#bind generic P      ?git push -u %(remote) %(repo:head)
+bind generic P      none
+bind diff    ]      :/^@@
+bind diff    [      :?^@@
+bind diff    <Tab>      :/^@@
+
+bind main    ]      move-down
+bind main    [      move-up
+
+# set key '#(Hash)'
+bind generic <Hash> none
+bind generic <Hash> @sh -c "echo %(commit) | pbcopy"
+
+bind main L !sh -c "echo %(commit) | pbcopy"
+bind diff L !sh -c "echo %(commit) | pbcopy"
+
+# key key 'o'
+bind main o enter
+bind diff o none
+
+# set key '@reset'
+bind diff   @re !git reset %(commit)~

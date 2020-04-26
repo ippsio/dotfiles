@@ -1,0 +1,4 @@
+# たぶんこれがcocの補完決定時に暴発するやつ
+# 終了タグ等の自動補完
+[[plugins]]
+repo = 'tpope/vim-endwise'

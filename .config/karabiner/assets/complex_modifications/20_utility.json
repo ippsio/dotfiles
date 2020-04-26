@@ -1,0 +1,57 @@
+{
+  "title": "[20:UTILITY] behaviors.",
+  "rules": [
+    {
+      "description": "[20:HOME-END for chrome, slack, jetbrains only]:home to CTRL-A, end to CTRL+e.",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {"key_code": "home", "modifiers": {"optional": ["any"]}},
+          "to": [{"key_code": "a", "modifiers": ["left_control"]}],
+          "conditions": [
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google.Chrome",
+                "^com.tinyspeck.slackmacgap",
+                "^com\\.jetbrains\\.",
+                "^com\\.vivaldi\\.Vivaldi"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {"key_code": "end", "modifiers": {"optional": ["any"]}},
+          "to": [{"key_code": "e", "modifiers": ["left_control"]}],
+          "conditions": [
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google.Chrome",
+                "^com.tinyspeck.slackmacgap",
+                "^com\\.jetbrains\\.",
+                "^com\\.vivaldi\\.Vivaldi"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "[21:Print to screen_shot]: .",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {"key_code": "print_screen"},
+          "to": [{"key_code": "4", "modifiers": ["left_command", "left_shift"]}]
+        },
+        {
+          "type": "basic",
+          "from": {"key_code": "print_screen","modifiers": {"mandatory": ["left_command"]}},
+          "to": [{"key_code": "4", "modifiers": ["left_command", "left_shift", "left_control"]}]
+        }
+      ]
+    }
+  ]
+}

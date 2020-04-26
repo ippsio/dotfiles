@@ -1,0 +1,3 @@
+# 対応するカッコに色を付ける
+[[plugins]]
+repo = 'junegunn/rainbow_parentheses.vim'
