@@ -7,4 +7,7 @@ hook_add = '''
     normal gv"zy
     let @/ = '\V' . substitute(escape(@z, '/\'), '\n', '\\n', 'g')
   endfunction
+
+  " :%sが入力されたら
+  cnoremap %s :OverCommandLine<CR>s<Home>%<End>/g<Left><Left>
 '''
