@@ -49,7 +49,14 @@ if dein#load_state('~/.cache/dein')
   call dein#load_toml('~/.config/nvim/toml/0_memo_vim-cheatsheet.toml', {'lazy': 0})
   call dein#load_toml('~/.config/nvim/toml/0_vimdoc_vimdoc-ja.toml', {'lazy': 0})
   call dein#load_toml('~/.config/nvim/toml/0_syntax_context_filetype.toml', {'lazy': 0})
-  call dein#load_toml('~/.config/nvim/toml/0_syntax_vim-precious.toml', {'lazy': 0})
+  "
+  " vim-preciousを使っている時、
+  " なんかtomlを編集していると、エラーが出る端末があるのよね。うまくいく端末もあるんだけど、不思議。
+  " function precious#context_filetype[2]..275[5]..context_filetype#get_filetype[2]..context_filetype#get[3]..<SNR>109_get_nest[1]..<SNR>109_get_context[20]..<SNR>109_search_range
+  " の処理中にエラーが検出されました:
+  " 行   28:
+  " E65: 不正な後方参照です
+  " call dein#load_toml('~/.config/nvim/toml/0_syntax_vim-precious.toml', {'lazy': 0})
 
   " 二軍
   "call dein#load_toml('~/.config/nvim/toml/0_pane_vim-choosewin.toml', {'lazy': 0})

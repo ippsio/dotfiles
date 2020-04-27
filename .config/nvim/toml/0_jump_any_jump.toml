@@ -1,2 +1,5 @@
 [[plugins]]
 repo = 'pechorin/any-jump.vim'
+hook_add = '''
+  nnoremap <silent> <C-j> :AnyJump<CR>
+'''
