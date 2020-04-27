@@ -4,19 +4,20 @@ build = 'coc#util#install()'
 rev = 'release'
 merge = 0
 hook_source = '''
-  let l=[]
-  let l=add(l,"coc-solargraph")
-  let l=add(l,"coc-python")
-  let l=add(l,"coc-pyls")
-  let l=add(l,"coc-json")
-  let l=add(l,"coc-snippets")
-  let l=add(l,"coc-todolist")
-  let l=add(l,"coc-translator")
-  let l=add(l,"coc-tsserver")
-  let l=add(l,"coc-yaml")
-  let l=add(l,"coc-yank")
+  let extensions =[]
+  let extensions = add(extensions,"coc-solargraph")
+  let extensions = add(extensions,"coc-python")
+  let extensions = add(extensions,"coc-pyls")
+  let extensions = add(extensions,"coc-json")
+  let extensions = add(extensions,"coc-snippets")
+  let extensions = add(extensions,"coc-todolist")
+  let extensions = add(extensions,"coc-translator")
+  let extensions = add(extensions,"coc-tsserver")
+  let extensions = add(extensions,"coc-yaml")
+  let extensions = add(extensions,"coc-yank")
+  let extensions = add(extensions,"coc-docker")
 
-  let g:coc_global_extensions = l
+  let g:coc_global_extensions = extensions
 
   " if hidden is not set, TextEdit might fail.
   set hidden
