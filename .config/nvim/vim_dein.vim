@@ -15,7 +15,9 @@ set runtimepath+=~/.cache/dein/repos/github.com/Shougo/dein.vim
 if dein#load_state('~/.cache/dein')
   call dein#begin('~/.cache/dein')
   call dein#add('~/.cache/dein/repos/github.com/Shougo/dein.vim')
-  "call dein#add('vim-jp/vimdoc-ja')
+
+  " お試し
+  call dein#load_toml('~/.config/nvim/toml/0_jump_any_jump.toml', {'lazy': 0})
 
   " lazy0: どんなfiletypeでも動く
   " 一軍
