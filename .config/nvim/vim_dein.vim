@@ -18,6 +18,7 @@ if dein#load_state('~/.cache/dein')
 
   " お試し
   call dein#load_toml('~/.config/nvim/toml/0_jump_any_jump.toml', {'lazy': 0})
+  call dein#load_toml('~/.config/nvim/toml/0_textobj_vim-expand-region.toml')
 
   " lazy0: どんなfiletypeでも動く
   " 一軍
