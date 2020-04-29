@@ -1,5 +1,7 @@
 #!/bin/bash
-# ---------------------------------------------------------------------------------------------------------------------
+function log_exist() { echo "[o] exist! '$1'" }
+function log_not_exist() { echo "------------\n[x] not found! '$1' " }
+
 N="nvm"
 D=${NVM_DIR}
 if [ ! -d ${D} ]; then
