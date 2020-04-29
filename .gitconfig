@@ -1,5 +1,5 @@
 [core]
-	excludesfile = ~/.gitignore_global
+  excludesfile = ~/.gitignore_global
 
 [color]
   ui = auto
@@ -19,6 +19,3 @@
   #func = 7 250
 [diff]
   compactionHeuristic = true
-[difftool "sourcetree"]
-	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-	path = 

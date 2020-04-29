@@ -1,11 +1,14 @@
+#!/bin/bash
 # src=$1 のファイルを dest=$2 に同期する。
 echo "[$(cd $(dirname $0); pwd)/$(basename $0)]"
 src=${1%/}
 dest=${2%/}
+
+# ---------------------------------------------------------------------------------------------------------------------
 echo "(src->dest)=(${src}->${dest})"
-for abs_file in ${src}/*(.); do
+files=($(ls ${src}/*))
+for abs_file in ${files[@]}; do
   file=$(basename ${abs_file})
-  echo "<Check ${file}>";
 
   # dest にファイルがなければコピー
   abs_binfile=${dest}/${file}
@@ -30,7 +33,5 @@ for abs_file in ${src}/*(.); do
     echo "Copy ${abs_file} --> ${abs_binfile}"
     cp ${abs_file} ${abs_binfile}
   fi
-  echo "<Existence ${abs_binfile}>";
-  echo "$(ls -l ${abs_binfile})"
-  echo "------------------------------------------------------"
+  echo "ls ${abs_binfile} => $(ls ${abs_binfile})";
 done
