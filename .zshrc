@@ -1,6 +1,10 @@
 # zsh起動時にtmux起動
 if (type "tmux" > /dev/null 2>&1) ; then
-  [[ -z "$TMUX" && ! -z "$PS1" ]] && tmux && exit
+  [[ -z "$TMUX" && ! -z "$PS1" ]] \
+    &&  tmux \
+    && echo "$(date +'%Y/%m/%d %H:%M:%S')\nbyebye from tmux.\nThis shell will be closed after 5sec." \
+    && sleep 5 \
+    && exit
 fi
 
 # 必要なミドルウェア類の準備

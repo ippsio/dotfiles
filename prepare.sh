@@ -24,7 +24,6 @@ export FZF_TMUX_HEIGHT=10
 # ~/dotfiles/bin/内部を /usr/local/bin/にコピー
 bash ~/dotfiles/zsh/oneway_sync.zsh ~/dotfiles/bin/ /usr/local/bin/
 
-function generate_symlink() { [ ! -e $1 ] && ln -s $2 && echo "Symlink generated ($1<-$2)" }
 
 echo "[PREPARING -source] start"
 source ~/dotfiles/prepare/prepare_zsh.sh
@@ -43,15 +42,20 @@ source ~/dotfiles/prepare/prepare_diff-highlight.sh
 source ~/dotfiles/prepare/prepare_fzf.sh
 source ~/dotfiles/prepare/prepare_zplug.sh
 
+function generate_symlink() { [ ! -f $1 ] && ln -s $2 && echo "Symlink generated ($1<-$2)" }
+function generate_symlink_d() { [ ! -d $1 ] && ln -s $2 && echo "Symlink generated ($1<-$2)" }
 echo "[PREPARING generate_symlink] start"
 generate_symlink ~/.zshrc ~/dotfiles/.zshrc
 generate_symlink ~/.tigrc ~/dotfiles/.tigrc
 generate_symlink ~/.tmux.conf ~/dotfiles/.tmux.conf
 generate_symlink ~/.gitconfig ~/dotfiles/.gitconfig
-generate_symlink ~/.config/nvim ~/dotfiles/.config/nvim
+generate_symlink_d ~/.config/nvim ~/dotfiles/.config/nvim
 
 # その他、karabiner等の設定
-[ ! -d ~/setting_box ] && git clone https://github.com/ippsio/setting_box.git ~/
-generate_symlink ~/.config/karabiner ~/setting_box/.config/karabiner
+[ ! -d ~/setting_box ] && git clone https://github.com/ippsio/setting_box.git ~/setting_box
+if [ ! -d ~/setting_box/kara ]; then
+  rm -rf  ~/.config/karabiner
+  ln -s ~/setting_box/.config/karabiner ~/.config/karabiner
+fi
 
 echo "[PREPARING] finish"

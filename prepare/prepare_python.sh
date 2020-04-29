@@ -15,5 +15,3 @@ if [ "$(pyenv version| awk '{print $1}')" != "${PYTHON_VER}" ]; then
   pyenv global ${PYTHON_VER}
   pip3 install --upgrade pip
 fi
-echo "prepare_python.shです。
-sleep 60
