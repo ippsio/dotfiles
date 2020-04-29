@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 ZPLUG_HOME=~/.cache/zplug
 N="zplug"
 D=${ZPLUG_HOME}

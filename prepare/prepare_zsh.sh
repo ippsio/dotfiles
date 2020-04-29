@@ -1,5 +1,4 @@
-#!/bin/bash
-
+#!/bin/sh
 # version5.8以上を期待
 EXPECTING_MAJOR_VER=5
 EXPECTING_MINOR_VER=8

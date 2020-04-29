@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 N="Python ${PYTHON_VER}"
 eval "$(pyenv init -)"
 if [ "$(pyenv version| awk '{print $1}')" != "${PYTHON_VER}" ]; then
@@ -10,5 +10,5 @@ if [ "$(pyenv version| awk '{print $1}')" != "${PYTHON_VER}" ]; then
     log_exist $N
   fi
   pyenv global ${PYTHON_VER}
-  pip install --upgrade pip
+  pip3 install --upgrade pip
 fi

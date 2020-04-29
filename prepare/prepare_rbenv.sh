@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 N="rbenv"
 D=${RBENV_ROOT}
 if [ ! -d ${D} ]; then

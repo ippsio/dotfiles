@@ -23,8 +23,8 @@ export FZF_TMUX_HEIGHT=10
 bash ~/dotfiles/zsh/oneway_sync.zsh ~/dotfiles/bin/ /usr/local/bin/
 
 function log_exist() { echo "[o] exist! '$1'" }
-function log_not_exist() { echo "[x] not found! '$1' " }
-function make_symlink() { [ ! -f $1 ] && ln -s $2 && echo "Symlink generated ($1<-$2)" }
+function log_not_exist() { echo "------------\n[x] not found! '$1' " }
+function generate_symlink() { [ ! -f $1 ] && ln -s $2 && echo "Symlink generated ($1<-$2)" }
 
 source ~/dotfiles/prepare/prepare_zsh.sh
 source ~/dotfiles/prepare/prepare_tmux.sh
@@ -42,8 +42,9 @@ source ~/dotfiles/prepare/prepare_diff-highlight.sh
 source ~/dotfiles/prepare/prepare_fzf.sh
 source ~/dotfiles/prepare/prepare_zplug.sh
 
-make_symlink ~/.zshrc ~/dotfiles/.zshrc
-make_symlink ~/.tigrc ~/dotfiles/.tigrc
-make_symlink ~/.tmux.conf ~/dotfiles/.tmux.conf
-make_symlink ~/.gitconfig ~/dotfiles/.gitconfig
+generate_symlink ~/.zshrc ~/dotfiles/.zshrc
+generate_symlink ~/.tigrc ~/dotfiles/.tigrc
+generate_symlink ~/.tmux.conf ~/dotfiles/.tmux.conf
+generate_symlink ~/.gitconfig ~/dotfiles/.gitconfig
+generate_symlink ~/.config/nvim ~/dotfiles/.config/nvim
 

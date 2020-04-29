@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 N="tpm(tmux plugin manager)"
 D=${TMUX_PLUGINS}/tpm
 if [ ! -d ${D} ]; then

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 N="pyenv"
 D=${PYENV_ROOT}
 U=https://github.com/pyenv/pyenv.git

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 N="diff-highlight"
 DIFF_HL_PATH=/usr/local/share/git-core/contrib/diff-highlight
 D=${DIFF_HL_PATH}
