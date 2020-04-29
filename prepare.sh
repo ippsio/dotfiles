@@ -1,4 +1,5 @@
 #!/bin/sh
+start_time=`date +%s`
 # python
 PYTHON_VER="3.7.3"
 export PYENV_ROOT=$HOME/.pyenv
@@ -58,4 +59,9 @@ if [ ! -d ~/setting_box/kara ]; then
   ln -s ~/setting_box/.config/karabiner ~/.config/karabiner
 fi
 
-echo "[PREPARING] finish"
+end_time=`date +%s`
+seconds=$((end_time - start_time))
+
+echo $run_time
+echo "[PREPARING] finish in ${seconds} sec"
+
