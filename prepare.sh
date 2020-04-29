@@ -10,6 +10,8 @@ export PATH=${PATH}:$RBENV_ROOT/bin
 
 # node
 export NVM_DIR="$HOME/.nvm"
+
+# tmux
 export TMUX_PLUGINS=~/.cache/tmux/plugins
 
 # basis
@@ -24,7 +26,7 @@ bash ~/dotfiles/zsh/oneway_sync.zsh ~/dotfiles/bin/ /usr/local/bin/
 
 function log_exist() { echo "[o] exist! '$1'" }
 function log_not_exist() { echo "------------\n[x] not found! '$1' " }
-function generate_symlink() { [ ! -f $1 ] && ln -s $2 && echo "Symlink generated ($1<-$2)" }
+function generate_symlink() { [ ! -e $1 ] && ln -s $2 && echo "Symlink generated ($1<-$2)" }
 
 source ~/dotfiles/prepare/prepare_zsh.sh
 source ~/dotfiles/prepare/prepare_tmux.sh
@@ -47,4 +49,8 @@ generate_symlink ~/.tigrc ~/dotfiles/.tigrc
 generate_symlink ~/.tmux.conf ~/dotfiles/.tmux.conf
 generate_symlink ~/.gitconfig ~/dotfiles/.gitconfig
 generate_symlink ~/.config/nvim ~/dotfiles/.config/nvim
+
+# その他、karabiner等の設定
+[ ! -d ~/setting_box ] && git clone https://github.com/ippsio/setting_box.git ~/
+generate_symlink ~/.config/karabiner ~/setting_box/.config/karabiner
 
