@@ -26,7 +26,7 @@ bash ~/dotfiles/zsh/oneway_sync.zsh ~/dotfiles/bin/ /usr/local/bin/
 
 function generate_symlink() { [ ! -e $1 ] && ln -s $2 && echo "Symlink generated ($1<-$2)" }
 
-echo "[PREPARING] start"
+echo "[PREPARING -source] start"
 source ~/dotfiles/prepare/prepare_zsh.sh
 source ~/dotfiles/prepare/prepare_tmux.sh
 source ~/dotfiles/prepare/prepare_neovim.sh
@@ -43,6 +43,7 @@ source ~/dotfiles/prepare/prepare_diff-highlight.sh
 source ~/dotfiles/prepare/prepare_fzf.sh
 source ~/dotfiles/prepare/prepare_zplug.sh
 
+echo "[PREPARING generate_symlink] start"
 generate_symlink ~/.zshrc ~/dotfiles/.zshrc
 generate_symlink ~/.tigrc ~/dotfiles/.tigrc
 generate_symlink ~/.tmux.conf ~/dotfiles/.tmux.conf

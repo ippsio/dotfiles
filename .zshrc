@@ -3,6 +3,7 @@ if (type "tmux" > /dev/null 2>&1) ; then
   [[ -z "$TMUX" && ! -z "$PS1" ]] && tmux && exit
 fi
 
+# 必要なミドルウェア類の準備
 source ~/dotfiles/prepare.sh
 
 ### pyenv/ pyenv-virtualenv
