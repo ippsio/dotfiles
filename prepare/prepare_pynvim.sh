@@ -5,7 +5,7 @@ function log_not_exist() { echo "------------\n[x] not found! '$1' " }
 N="pynvim"
 if [[ $(pip freeze| grep -c pynvim) -eq 0 ]]; then
   log_not_exist $N
-  pip install pynvim
+  pip3 install pynvim
 else
   log_exist $N
 fi
