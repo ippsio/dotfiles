@@ -1,5 +1,5 @@
 #!/bin/sh
-N="tpm(tmux plugin manager)"
+N="tpm"
 D=${TMUX_PLUGINS}/tpm
 if [ ! -d ${D} ]; then
   log_not_exist $N $D

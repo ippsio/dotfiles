@@ -9,7 +9,7 @@ export RBENV_ROOT=$HOME/.rbenv
 export PATH=${PATH}:$RBENV_ROOT/bin
 
 # node
-export NVM_DIR="$HOME/.nvm"
+export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
 
 # tmux
 export TMUX_PLUGINS=~/.cache/tmux/plugins
@@ -28,6 +28,7 @@ function log_exist() { echo "[o] exist! '$1'" }
 function log_not_exist() { echo "------------\n[x] not found! '$1' " }
 function generate_symlink() { [ ! -e $1 ] && ln -s $2 && echo "Symlink generated ($1<-$2)" }
 
+echo "[PREPARING] start"
 source ~/dotfiles/prepare/prepare_zsh.sh
 source ~/dotfiles/prepare/prepare_tmux.sh
 source ~/dotfiles/prepare/prepare_neovim.sh
@@ -54,3 +55,4 @@ generate_symlink ~/.config/nvim ~/dotfiles/.config/nvim
 [ ! -d ~/setting_box ] && git clone https://github.com/ippsio/setting_box.git ~/
 generate_symlink ~/.config/karabiner ~/setting_box/.config/karabiner
 
+echo "[PREPARING] finish"
