@@ -24,8 +24,6 @@ export FZF_TMUX_HEIGHT=10
 # ~/dotfiles/bin/内部を /usr/local/bin/にコピー
 bash ~/dotfiles/zsh/oneway_sync.zsh ~/dotfiles/bin/ /usr/local/bin/
 
-function log_exist() { echo "[o] exist! '$1'" }
-function log_not_exist() { echo "------------\n[x] not found! '$1' " }
 function generate_symlink() { [ ! -e $1 ] && ln -s $2 && echo "Symlink generated ($1<-$2)" }
 
 echo "[PREPARING] start"
