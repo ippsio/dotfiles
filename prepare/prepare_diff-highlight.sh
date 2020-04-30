@@ -11,3 +11,4 @@ if [ ! -e ${D} ]; then
 else
   log_exist $N $D
 fi
+[ -e ${DIFF_HL}/diff-highlight ] && export PATH=${PATH}:${DIFF_HL_PATH}

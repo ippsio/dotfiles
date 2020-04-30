@@ -1,38 +1,33 @@
 # zsh起動時にtmux起動
 if (type "tmux" > /dev/null 2>&1) ; then
-  [[ -z "$TMUX" && ! -z "$PS1" ]] \
-    &&  tmux \
-    && echo "$(date +'%Y/%m/%d %H:%M:%S')\nbyebye from tmux.\nThis shell will be closed after 5sec." \
-    && sleep 5 \
-    && exit
+  [[ -z "$TMUX" && ! -z "$PS1" ]] &&  tmux \
+    && echo "$(date +'%Y/%m/%d %H:%M:%S')\nbyebye from tmux.\n(Closed after 1 sec.)" && sleep 1 && exit
 fi
 
-# 必要なミドルウェア類の準備
-source ~/dotfiles/prepare.sh
-
-### pyenv/ pyenv-virtualenv
-[ -d ${PYENV_ROOT} ] && eval "$(pyenv init -)"
-
-# direnv
-direnv version &> /dev/null && eval "$(direnv hook zsh)"
-
-# RUBY
+# ------------------
+# preparing section
+# ------------------
+# prepare essential utility/middle/environmental softwares.
+source ~/dotfiles/prepare.zsh
+### pyenv/rbenv/direnv/node
+eval "$(pyenv init -)"
 eval "$(rbenv init -)"
-
-# node
+eval "$(direnv hook zsh)"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-# diff-highlight
-DIFF_HL_PATH=/usr/local/share/git-core/contrib/diff-highlight
-[ -e ${DIFF_HL}/diff-highlight ] && export PATH=${PATH}:${DIFF_HL_PATH}
-
-# ZPLUG
-source ${ZPLUG_HOME}/init.zsh
-
-# FZF
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
+# -------------------------------
+# Authentic zsh settings section
+# -------------------------------
+source ~/dotfiles/zsh/00_alias.zsh
+source ~/dotfiles/zsh/10_prompt.zsh
+source ~/dotfiles/zsh/20_bindkeys.zsh
+source ~/dotfiles/zsh/30_color_to_man.zsh
+# custom functions
+source ~/dotfiles/zsh/custom_functions/rgg_search_with_rg_then_open_with_vim.zsh
+source ~/dotfiles/zsh/custom_functions/rv_review_current_git_branch.zsh
+# custom completion
+source ~/dotfiles/zsh/custom_completions/ssh_completion.zsh
 # history
 HISTFILE=~/.zsh_history
 HISTSIZE=10000 # メモリに保存される履歴の件数
@@ -44,11 +39,12 @@ setopt hist_no_store # historyコマンドは履歴に登録しない
 setopt hist_reduce_blanks # 余分な空白は詰めて記録
 setopt hist_verify # `!!`を実行したときにいきなり実行せずコマンドを見せる
 
-# 履歴からコマンド候補をサジェスト
+# ------------------
+# zplug
+# ------------------
+source ${ZPLUG_HOME}/init.zsh
 zplug 'zsh-users/zsh-autosuggestions'
 zplug "zsh-users/zsh-autosuggestions", hook-load: "ZSH_AUTOSUGGEST_CLEAR_WIDGETS=(end-of-line $ZSH_AUTOSUGGEST_CLEAR_WIDGETS)"
-
-# Zshの補完を拡張してくれる設定が入ったパッケージ
 zplug 'zsh-users/zsh-completions'
 zplug "mollifier/anyframe"
 zplug "zsh-users/zsh-history-substring-search", hook-build:"__zsh_version 4.3"
@@ -57,24 +53,6 @@ zplug "junegunn/fzf", as:command, use:bin/fzf-tmux
 #zplug "junegunn/fzf", use:shell/key-bindings.zsh
 zplug "junegunn/fzf", use:shell/completion.zsh
 zplug "zsh-users/zsh-syntax-highlighting", defer:2
-
-source ~/dotfiles/zsh/00_alias.zsh
-source ~/dotfiles/zsh/10_prompt.zsh
-source ~/dotfiles/zsh/20_bindkeys.zsh
-
-REVIEWDOG_DIR=~/inu/
-source ~/dotfiles/zsh/custom_functions/git_review.zsh
-source ~/dotfiles/zsh/custom_functions/_ssh.zsh
-
-# 未インストール項目をインストールする
 zplug check || zplug install
+zplug load --verbose
 
-# コマンドをリンクして、PATH に追加し、プラグインは読み込む
-# zplug load --verbose
-zplug load
-
-#[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
-# LAST PROCESS
-# $HOME/binを先頭にする
-export PATH=~/bin:${PATH}
