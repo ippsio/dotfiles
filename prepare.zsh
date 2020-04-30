@@ -37,6 +37,7 @@ source ~/dotfiles/prepare/prepare_rbenv.sh
 source ~/dotfiles/prepare/prepare_tpm.sh
 source ~/dotfiles/prepare/prepare_nvm.sh
 source ~/dotfiles/prepare/prepare_rg.sh
+source ~/dotfiles/prepare/prepare_tig.sh
 source ~/dotfiles/prepare/prepare_diff-highlight.sh
 source ~/dotfiles/prepare/prepare_fzf.sh
 source ~/dotfiles/prepare/prepare_zplug.sh
