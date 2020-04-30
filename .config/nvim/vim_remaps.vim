@@ -4,14 +4,6 @@
 " 入力モード中に素早くjjと入力した場合はESCとみなす
 inoremap jj <Esc>
 
-" やっぱコメントアウト。
-" " ;は;とする。USキーボードで:を打つにはSHIFTキーも同時に押す必要があり面倒くさいので
-" nnoremap ; :
-"
-" " コマンドモードで;や:で、コマンドモードを抜ける。Esc押すのが面倒臭いので
-" cnoremap <expr> : getcmdline() != '' ? ':' : 'echo ""<CR><Esc>'
-" cnoremap <expr> ; getcmdline() != '' ? ';' : 'echo ""<CR><Esc>'
-
 " 自分にとってはqで:recording開始のトリガーになるのは邪魔なので無効化。
 nnoremap q <Nop>
 xnoremap q <Nop>
@@ -23,7 +15,7 @@ xnoremap @ <Nop>
 " ブロック選択
 " -----------------------------------------------------
 " vを二回で行末まで選択
-"vnoremap v $h
+vnoremap v $h
 
 " -----------------------------------------------------
 " 検索
