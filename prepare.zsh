@@ -19,7 +19,7 @@ export PATH=${PATH}:$PYENV_ROOT/bin:$RBENV_ROOT/bin
 # Copy ~/dotfiles/bin/* into /usr/local/bin/*
 #  (For example, tmux status bar uses it)
 # --------------------------------------------
-sh ~/dotfiles/zsh/oneway_sync ~/dotfiles/bin/ /usr/local/bin/
+sh ~/dotfiles/zsh/oneway_sync ~/dotfiles/prepare/usr/local/bin/ /usr/local/bin/
 
 # ----------------------------------
 # Install software if not installed.
