@@ -12,11 +12,14 @@ function _space_extraction() {
   [[ $BUFFER =~ '^gs+$' ]]              && BUFFER="git status -sb " && zle end-of-line && return
   [[ $BUFFER =~ '^git st+$' ]]          && BUFFER="git status " && zle end-of-line && return
   # git checkout completion
+  [[ $BUFFER =~ '^gco+$' ]]             && BUFFER="git checkout $(git branch -a |fzf| tr -d ' ')" && zle end-of-line && return
   [[ $BUFFER =~ '^git co+$' ]]          && BUFFER="git checkout $(git branch -a |fzf| tr -d ' ')" && zle end-of-line && return
   [[ $BUFFER =~ '^git checkout[ ]*$' ]] && BUFFER="git checkout $(git branch -a |fzf| tr -d ' ')" && zle end-of-line && return
   # git fetch origin --prune for short
+  [[ $BUFFER =~ '^gfo+$' ]]             && BUFFER="git fetch origin --prune " && zle end-of-line && return
   [[ $BUFFER =~ '^git fo+$' ]]          && BUFFER="git fetch origin --prune " && zle end-of-line && return
   # git merge for short
+  [[ $BUFFER =~ '^gme+$' ]]             && BUFFER="git merge " && zle end-of-line && return
   [[ $BUFFER =~ '^git me+$' ]]          && BUFFER="git merge " && zle end-of-line && return
   # bundle exec for short
   [[ $BUFFER =~ '^be+$' ]] && BUFFER="bundle exec " && zle end-of-line && return
