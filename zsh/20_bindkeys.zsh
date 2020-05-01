@@ -6,15 +6,21 @@ function _space_extraction() {
   # NOTE: 一般的に大文字が使われるらしいので、ここでも大文字（と数字）でのみチェックしている。
   [[ $LBUFFER =~ ' [A-Z0-9]+$' ]] && zle _expand_alias
 
-  # よく使うコマンドの展開
-  [[ $BUFFER =~ '^gs+$' ]] && BUFFER="git status -sb " && zle end-of-line && return
-  [[ $BUFFER =~ '^gd+$' ]] && BUFFER="git diff " && zle end-of-line && return
-  [[ $BUFFER =~ '^git st+$' ]] && BUFFER="git status " && zle end-of-line && return
-  [[ $BUFFER =~ '^git co+$' ]] && BUFFER="git checkout " && zle end-of-line && return
-  [[ $BUFFER =~ '^git fo+$' ]] && BUFFER="git fetch origin --prune " && zle end-of-line && return
-  [[ $BUFFER =~ '^git me+$' ]] && BUFFER="git merge " && zle end-of-line && return
+  # git diff for short
+  [[ $BUFFER =~ '^gd+$' ]]              && BUFFER="git diff " && zle end-of-line && return
+  # git status for short
+  [[ $BUFFER =~ '^gs+$' ]]              && BUFFER="git status -sb " && zle end-of-line && return
+  [[ $BUFFER =~ '^git st+$' ]]          && BUFFER="git status " && zle end-of-line && return
+  # git checkout completion
+  [[ $BUFFER =~ '^git co+$' ]]          && BUFFER="git checkout $(git branch -a |fzf| tr -d ' ')" && zle end-of-line && return
+  [[ $BUFFER =~ '^git checkout[ ]*$' ]] && BUFFER="git checkout $(git branch -a |fzf| tr -d ' ')" && zle end-of-line && return
+  # git fetch origin --prune for short
+  [[ $BUFFER =~ '^git fo+$' ]]          && BUFFER="git fetch origin --prune " && zle end-of-line && return
+  # git merge for short
+  [[ $BUFFER =~ '^git me+$' ]]          && BUFFER="git merge " && zle end-of-line && return
+  # bundle exec for short
   [[ $BUFFER =~ '^be+$' ]] && BUFFER="bundle exec " && zle end-of-line && return
-  [[ $BUFFER =~ '^v+$' ]] && BUFFER="vim " && zle end-of-line && return
+  # dockero-compose for short
   [[ $BUFFER =~ '^dc+$' ]] && BUFFER="docker-compose " && zle end-of-line && return
   zle self-insert
   #[[ $LBUFFER =~ ' $' ]] && zle end-of-line
