@@ -21,6 +21,8 @@ function _space_extraction() {
   # git merge for short
   [[ $BUFFER =~ '^gme+$' ]]             && BUFFER="git merge " && zle end-of-line && return
   [[ $BUFFER =~ '^git me+$' ]]          && BUFFER="git merge " && zle end-of-line && return
+  # git push origin HEAD for short
+  [[ $BUFFER =~ '^gps+$' ]]             && BUFFER="git push origin HEAD " && zle end-of-line && return
   # bundle exec for short
   [[ $BUFFER =~ '^be+$' ]] && BUFFER="bundle exec " && zle end-of-line && return
   # dockero-compose for short
