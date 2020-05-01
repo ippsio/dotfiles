@@ -24,7 +24,14 @@ function _space_extraction() {
   # git push origin HEAD for short
   [[ $BUFFER =~ '^gps+$' ]]             && BUFFER="git push origin HEAD " && zle end-of-line && return
   # bundle exec for short
-  [[ $BUFFER =~ '^be+$' ]] && BUFFER="bundle exec " && zle end-of-line && return
+  [[ $BUFFER =~ '^be+$' ]]   && BUFFER="bundle exec " && zle end-of-line && return
+  # bundle exec rails c for short
+  [[ $BUFFER =~ '^c+$' ]]    && BUFFER="bundle exec rails c" && zle end-of-line && return
+  [[ $BUFFER =~ '^rc+$' ]]   && BUFFER="bundle exec rails c" && zle end-of-line && return
+  [[ $BUFFER =~ '^berc+$' ]] && BUFFER="bundle exec rails c" && zle end-of-line && return
+  # bundle exec rails s for short
+  [[ $BUFFER =~ '^rs+$' ]]   && BUFFER="bundle exec rails s -b 0.0.0.0" && zle end-of-line && return
+  [[ $BUFFER =~ '^bers+$' ]] && BUFFER="bundle exec rails s -b 0.0.0.0" && zle end-of-line && return
   # dockero-compose for short
   [[ $BUFFER =~ '^dc+$' ]] && BUFFER="docker-compose " && zle end-of-line && return
   zle self-insert
