@@ -45,19 +45,22 @@ bindkey " " _space_extraction
 # TAB(CTRL-I)補完
 function _ctrl_space_completion() {
   # cd にfzfで補完候補を付ける
-  [[ $BUFFER =~ '^cd *$' ]] \
-    && FIND_PATH="." \
-    && FAILOVER_RESLT="" \
-    && FIND_RESULT="$(find ${FIND_PATH} -path '*/\.' -prune -o -path '*/\.git' -prune -o -type d|sed -e 's#$#/#g'|sed -e 's#\/\/*#\/#g'|fzf +m --prompt=${$(pwd)/${HOME}/'~'}/ --preview 'echo -n $(cd {}; echo `pwd`); echo '/'; echo; ls -Ula {}' --preview-window=right:60%:wrap || echo ${FAILOVER_RESLT})" \
-    && BUFFER="cd ${FIND_RESULT}" \
-    && zle end-of-line \
-    && return
-  # cd xxx/ にfzfで補完候補を付ける
+  [[ $BUFFER =~ '^cd *$' ]] && BUFFER="cd ./" && zle end-of-line # zle end-of-lineの後に && returnしないのは意図的
   [[ $BUFFER =~ '^cd *.+/+$' ]] \
     && FIND_PATH="${${BUFFER#cd }:-.}" \
     && FAILOVER_RESLT="${BUFFER#cd }" \
-    && FIND_RESULT="$(find ${FIND_PATH} -path '*/\.' -prune -o -path '*/\.git' -prune -o -type d|sed -e 's#$#/#g'|sed -e 's#\/\/*#\/#g'|fzf +m --prompt=${FIND_PATH/${HOME}/'~'} --preview 'echo -n $(cd {}; pwd); echo '/'; echo; ls -Ula {}' --preview-window=right:60%:wrap || echo ${FAILOVER_RESLT})" \
+    && FIND_RESULT="$(find ${FIND_PATH} -path '*/\.' -prune -o -path '*/\.git' -prune -o -type d|sed -e 's#$#/#g'|sed -e 's#\/\/*#\/#g'|fzf +m --prompt=${FIND_PATH/${HOME}/'~'} --preview 'echo -n $(cd {}; pwd); echo '/'; echo; ls -UlaF {}' --preview-window=right:60%:wrap || echo ${FAILOVER_RESLT})" \
     && BUFFER="cd ${FIND_RESULT}" \
+    && zle end-of-line \
+    && return
+
+  # vim にfzfで補完候補を付ける
+  [[ $BUFFER =~ '^vim *$' ]] && BUFFER="vim ./" && zle end-of-line # zle end-of-lineの後に && returnしないのは意図的
+  [[ $BUFFER =~ '^vim *.+/+$' ]] \
+    && FIND_PATH="${${BUFFER#vim }:-.}" \
+    && FAILOVER_RESLT="${BUFFER#vim }" \
+    && FIND_RESULT="$(find ${FIND_PATH} -d 2 -type f -path '*/\.' -prune -o -path '*/\.git' -prune -o -type f|sed -e 's#\/\/*#\/#g'|fzf +m --prompt=${FIND_PATH/${HOME}/'~'} --preview 'ls -d {}; echo;cat {}' --preview-window=right:60%:wrap || echo ${FAILOVER_RESLT})" \
+    && BUFFER="vim ${FIND_RESULT}" \
     && zle end-of-line \
     && return
 

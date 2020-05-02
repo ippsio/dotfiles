@@ -5,10 +5,6 @@ START_TIME=`date +%s`
 # ----------------------------------
 export EDITOR=nvim
 export ZPLUG_HOME=~/.cache/zplug
-export FZF_DEFAULT_OPTS=$(echo "-e --extended --cycle --reverse --border --color" \
-  "fg:248,hl:202,fg+:214,bg+:92,hl+:231 --color info:44,prompt:67,spinner:209,pointer:103,marker:173")
-export FZF_TMUX=1
-export FZF_TMUX_HEIGHT=10
 export TMUX_PLUGINS=~/.cache/tmux/plugins
 export PYENV_ROOT=$HOME/.pyenv
 export RBENV_ROOT=$HOME/.rbenv
