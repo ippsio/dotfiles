@@ -48,7 +48,7 @@ function _ctrl_space_completion() {
   [[ $BUFFER =~ '^cd *$' ]] \
     && FIND_PATH="." \
     && FAILOVER_RESLT="" \
-    && FIND_RESULT="$(find ${FIND_PATH} -path '*/\.' -prune -o -path '*/\.git' -prune -o -type d|sed -e 's#$#/#g'|sed -e 's#\/\/*#\/#g'|fzf +m --preview "ls -Ula {}" --preview-window=right:60%:wrap || echo ${FAILOVER_RESLT})" \
+    && FIND_RESULT="$(find ${FIND_PATH} -path '*/\.' -prune -o -path '*/\.git' -prune -o -type d|sed -e 's#$#/#g'|sed -e 's#\/\/*#\/#g'|fzf +m --prompt=${$(pwd)/${HOME}/'~'}/ --preview 'echo -n $(cd {}; echo `pwd`); echo '/'; echo; ls -Ula {}' --preview-window=right:60%:wrap || echo ${FAILOVER_RESLT})" \
     && BUFFER="cd ${FIND_RESULT}" \
     && zle end-of-line \
     && return
@@ -56,7 +56,7 @@ function _ctrl_space_completion() {
   [[ $BUFFER =~ '^cd *.+/+$' ]] \
     && FIND_PATH="${${BUFFER#cd }:-.}" \
     && FAILOVER_RESLT="${BUFFER#cd }" \
-    && FIND_RESULT="$(find ${FIND_PATH} -path '*/\.' -prune -o -path '*/\.git' -prune -o -type d|sed -e 's#$#/#g'|sed -e 's#\/\/*#\/#g'|fzf +m --preview "ls -Ula {}" --preview-window=right:60%:wrap || echo ${FAILOVER_RESLT})" \
+    && FIND_RESULT="$(find ${FIND_PATH} -path '*/\.' -prune -o -path '*/\.git' -prune -o -type d|sed -e 's#$#/#g'|sed -e 's#\/\/*#\/#g'|fzf +m --prompt=${FIND_PATH/${HOME}/'~'} --preview 'echo -n $(cd {}; pwd); echo '/'; echo; ls -Ula {}' --preview-window=right:60%:wrap || echo ${FAILOVER_RESLT})" \
     && BUFFER="cd ${FIND_RESULT}" \
     && zle end-of-line \
     && return
