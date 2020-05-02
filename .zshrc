@@ -23,11 +23,13 @@ source ~/dotfiles/zsh/00_alias.zsh
 source ~/dotfiles/zsh/10_prompt.zsh
 source ~/dotfiles/zsh/20_bindkeys.zsh
 source ~/dotfiles/zsh/30_color_to_man.zsh
+source ~/dotfiles/zsh/40_cdr.zsh
 # custom functions
 source ~/dotfiles/zsh/custom_functions/rgg_search_with_rg_then_open_with_vim.zsh
 source ~/dotfiles/zsh/custom_functions/rv_review_current_git_branch.zsh
 # custom completion
 source ~/dotfiles/zsh/custom_completions/ssh_completion.zsh
+
 # history
 HISTFILE=~/.zsh_history
 HISTSIZE=10000 # メモリに保存される履歴の件数
@@ -53,6 +55,8 @@ zplug "junegunn/fzf", as:command, use:bin/fzf-tmux
 #zplug "junegunn/fzf", use:shell/key-bindings.zsh
 zplug "junegunn/fzf", use:shell/completion.zsh
 zplug "zsh-users/zsh-syntax-highlighting", defer:2
+#zplug "b4b4r07/enhancd", use:init.sh
+
 zplug check || zplug install
 zplug load --verbose
 

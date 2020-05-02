@@ -6,26 +6,31 @@ function _space_extraction() {
   # NOTE: 一般的に大文字が使われるらしいので、ここでも大文字（と数字）でのみチェックしている。
   [[ $LBUFFER =~ ' [A-Z0-9]+$' ]] && zle _expand_alias
 
+  # cd
+  #[[ $BUFFER =~ '^cd+$' ]]     && BUFFER="cd $(ls -aF                            |egrep ".*/+$"|sort| fzf +m --prompt=${BUFFER#cd })" && zle end-of-line && return
+  #[[ $BUFFER =~ '^cd .*/+$' ]] && BUFFER="cd ${BUFFER#cd }$(ls -aF ${BUFFER#cd }|egrep ".*/+$"|sort| fzf +m --prompt=${BUFFER#cd }|sed -e 's#^/##')" && zle end-of-line && return
+
+
   # git
-  [[ $BUFFER =~ '^g+$' ]]               && BUFFER="git " && zle end-of-line && return
+  [[ $BUFFER =~ '^g+$' ]]            && BUFFER="git " && zle end-of-line && return
   # git diff for short
-  [[ $BUFFER =~ '^git di+$' ]]          && BUFFER="git diff " && zle end-of-line && return
+  [[ $BUFFER =~ '^git di+$' ]]       && BUFFER="git diff " && zle end-of-line && return
   # git status for short
-  [[ $BUFFER =~ '^gs+$' ]]              && BUFFER="git status -sb " && zle end-of-line && return
-  [[ $BUFFER =~ '^git st+$' ]]          && BUFFER="git status " && zle end-of-line && return
+  [[ $BUFFER =~ '^gs+$' ]]           && BUFFER="git status -sb " && zle end-of-line && return
+  [[ $BUFFER =~ '^git st+$' ]]       && BUFFER="git status " && zle end-of-line && return
   # git checkout completion
-  [[ $BUFFER =~ '^gco+$' ]]             && BUFFER="git checkout $(echo "$(git branch -a)\n--"|tr -d '* '|fzf|tr -d ' ')" && zle end-of-line && return
-  [[ $BUFFER =~ '^git co+$' ]]          && BUFFER="git checkout $(echo "$(git branch -a)\n--"|tr -d '* '|fzf|tr -d ' ')" && zle end-of-line && return
-  [[ $BUFFER =~ '^git checkout+$' ]]    && BUFFER="git checkout $(echo "$(git branch -a)\n--"|tr -d '* '|fzf|tr -d ' ')" && zle end-of-line && return
+  [[ $BUFFER =~ '^gco+$' ]]          && BUFFER="git checkout $(echo "$(git branch -a)\n--"|tr -d '* '|fzf --prompt='git checkout>'|tr -d ' ')" && zle end-of-line && return
+  [[ $BUFFER =~ '^git co+$' ]]       && BUFFER="git checkout $(echo "$(git branch -a)\n--"|tr -d '* '|fzf --prompt='git checkout>'|tr -d ' ')" && zle end-of-line && return
+  [[ $BUFFER =~ '^git checkout+$' ]] && BUFFER="git checkout $(echo "$(git branch -a)\n--"|tr -d '* '|fzf --prompt='git checkout>'|tr -d ' ')" && zle end-of-line && return
   # git fetch origin --prune for short
-  [[ $BUFFER =~ '^gfo+$' ]]             && BUFFER="git fetch origin --prune " && zle end-of-line && return
-  [[ $BUFFER =~ '^git fo+$' ]]          && BUFFER="git fetch origin --prune " && zle end-of-line && return
+  [[ $BUFFER =~ '^gfo+$' ]]          && BUFFER="git fetch origin --prune " && zle end-of-line && return
+  [[ $BUFFER =~ '^git fo+$' ]]       && BUFFER="git fetch origin --prune " && zle end-of-line && return
   # git merge for short
-  [[ $BUFFER =~ '^gme+$' ]]             && BUFFER="git merge " && zle end-of-line && return
-  [[ $BUFFER =~ '^git me+$' ]]          && BUFFER="git merge " && zle end-of-line && return
+  [[ $BUFFER =~ '^gme+$' ]]          && BUFFER="git merge " && zle end-of-line && return
+  [[ $BUFFER =~ '^git me+$' ]]       && BUFFER="git merge " && zle end-of-line && return
   # git push origin HEAD for short
-  [[ $BUFFER =~ '^gps+$' ]]             && BUFFER="git push origin HEAD " && zle end-of-line && return
-  [[ $BUFFER =~ '^git ps+$' ]]          && BUFFER="git push origin HEAD " && zle end-of-line && return
+  [[ $BUFFER =~ '^gps+$' ]]          && BUFFER="git push origin HEAD " && zle end-of-line && return
+  [[ $BUFFER =~ '^git ps+$' ]]       && BUFFER="git push origin HEAD " && zle end-of-line && return
   # bundle exec for short
   [[ $BUFFER =~ '^be+$' ]]   && BUFFER="bundle exec " && zle end-of-line && return
   # bundle exec rails c for short
@@ -42,6 +47,14 @@ function _space_extraction() {
 }
 zle -N _space_extraction
 bindkey " " _space_extraction
+
+function _tab_extraction() {
+  [[ $BUFFER =~ '^cd *$' ]] && BUFFER="cd $(find . -path '*/\.' -prune -o -path '*/\.git' -prune -o -type d|sed -e 's#$#/#g'|sed -e 's#\/\/*#\/#g'|fzf +m)" && zle end-of-line && return
+  [[ $BUFFER =~ '^cd .*/.+/+$' ]] && BUFFER="cd $(find ${${BUFFER#cd }:-.} -path '*/\.' -prune -o -path '*/\.git' -prune -o -type d|sed -e 's#$#/#g'|sed -e 's#\/\/*#\/#g'|fzf +m)" && zle end-of-line && return
+  #zle self-insert
+}
+zle -N _tab_extraction
+bindkey "^ " _tab_extraction
 
 # ^で一つ上のフォルダへ移動
 function hat_cdup () { [[ ${BUFFER} == "" ]] && cd .. && zle accept-line && zle reset-prompt && return || zle self-insert }
