@@ -6,11 +6,6 @@ function _space_extraction() {
   # NOTE: 一般的に大文字が使われるらしいので、ここでも大文字（と数字）でのみチェックしている。
   [[ $LBUFFER =~ ' [A-Z0-9]+$' ]] && zle _expand_alias
 
-  # cd
-  #[[ $BUFFER =~ '^cd+$' ]]     && BUFFER="cd $(ls -aF                            |egrep ".*/+$"|sort| fzf +m --prompt=${BUFFER#cd })" && zle end-of-line && return
-  #[[ $BUFFER =~ '^cd .*/+$' ]] && BUFFER="cd ${BUFFER#cd }$(ls -aF ${BUFFER#cd }|egrep ".*/+$"|sort| fzf +m --prompt=${BUFFER#cd }|sed -e 's#^/##')" && zle end-of-line && return
-
-
   # git
   [[ $BUFFER =~ '^g+$' ]]            && BUFFER="git " && zle end-of-line && return
   # git diff for short
@@ -43,28 +38,36 @@ function _space_extraction() {
   # dockero-compose for short
   [[ $BUFFER =~ '^dc+$' ]] && BUFFER="docker-compose " && zle end-of-line && return
   zle self-insert
-  #[[ $LBUFFER =~ ' $' ]] && zle end-of-line
 }
 zle -N _space_extraction
 bindkey " " _space_extraction
 
-function _tab_extraction() {
-  [[ $BUFFER =~ '^cd *$'     ]] \
+# TAB(CTRL-I)補完
+function _ctrl_space_completion() {
+  # cd にfzfで補完候補を付ける
+  [[ $BUFFER =~ '^cd *$' ]] \
     && FIND_PATH="." \
-    && FIND_RESULT="$(find ${FIND_PATH} -path '*/\.' -prune -o -path '*/\.git' -prune -o -type d|sed -e 's#$#/#g'|sed -e 's#\/\/*#\/#g'|fzf +m || echo '')" \
+    && FAILOVER_RESLT="" \
+    && FIND_RESULT="$(find ${FIND_PATH} -path '*/\.' -prune -o -path '*/\.git' -prune -o -type d|sed -e 's#$#/#g'|sed -e 's#\/\/*#\/#g'|fzf +m || echo ${FAILOVER_RESLT})" \
     && BUFFER="cd ${FIND_RESULT}" \
     && zle end-of-line \
     && return
+  # cd xxx/ にfzfで補完候補を付ける
   [[ $BUFFER =~ '^cd *.+/+$' ]] \
     && FIND_PATH="${${BUFFER#cd }:-.}" \
-    && FIND_RESULT="$(find ${FIND_PATH} -path '*/\.' -prune -o -path '*/\.git' -prune -o -type d|sed -e 's#$#/#g'|sed -e 's#\/\/*#\/#g'|fzf +m || echo ${BUFFER#cd })" \
+    && FAILOVER_RESLT="${BUFFER#cd }" \
+    && FIND_RESULT="$(find ${FIND_PATH} -path '*/\.' -prune -o -path '*/\.git' -prune -o -type d|sed -e 's#$#/#g'|sed -e 's#\/\/*#\/#g'|fzf +m || echo ${FAILOVER_RESLT})" \
     && BUFFER="cd ${FIND_RESULT}" \
     && zle end-of-line \
     && return
-  #zle self-insert
+
+  # 上記にヒットしなかたら、普通っぽい挙動にする
+  zle expand-or-complete
 }
-zle -N _tab_extraction
-bindkey "^ " _tab_extraction
+
+# TAB(CTRL+I)補完
+zle -N _ctrl_space_completion
+bindkey "^I" _ctrl_space_completion
 
 # ^で一つ上のフォルダへ移動
 function hat_cdup () { [[ ${BUFFER} == "" ]] && cd .. && zle accept-line && zle reset-prompt && return || zle self-insert }
