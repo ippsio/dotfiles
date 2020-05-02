@@ -49,8 +49,18 @@ zle -N _space_extraction
 bindkey " " _space_extraction
 
 function _tab_extraction() {
-  [[ $BUFFER =~ '^cd *$' ]] && BUFFER="cd $(find . -path '*/\.' -prune -o -path '*/\.git' -prune -o -type d|sed -e 's#$#/#g'|sed -e 's#\/\/*#\/#g'|fzf +m)" && zle end-of-line && return
-  [[ $BUFFER =~ '^cd .*/.+/+$' ]] && BUFFER="cd $(find ${${BUFFER#cd }:-.} -path '*/\.' -prune -o -path '*/\.git' -prune -o -type d|sed -e 's#$#/#g'|sed -e 's#\/\/*#\/#g'|fzf +m)" && zle end-of-line && return
+  [[ $BUFFER =~ '^cd *$'     ]] \
+    && FIND_PATH="." \
+    && FIND_RESULT="$(find ${FIND_PATH} -path '*/\.' -prune -o -path '*/\.git' -prune -o -type d|sed -e 's#$#/#g'|sed -e 's#\/\/*#\/#g'|fzf +m || echo '')" \
+    && BUFFER="cd ${FIND_RESULT}" \
+    && zle end-of-line \
+    && return
+  [[ $BUFFER =~ '^cd *.+/+$' ]] \
+    && FIND_PATH="${${BUFFER#cd }:-.}" \
+    && FIND_RESULT="$(find ${FIND_PATH} -path '*/\.' -prune -o -path '*/\.git' -prune -o -type d|sed -e 's#$#/#g'|sed -e 's#\/\/*#\/#g'|fzf +m || echo ${BUFFER#cd })" \
+    && BUFFER="cd ${FIND_RESULT}" \
+    && zle end-of-line \
+    && return
   #zle self-insert
 }
 zle -N _tab_extraction
