@@ -52,10 +52,7 @@ generate_symlink_d ~/.config/nvim ~/dotfiles/.config/nvim
 
 # その他、karabiner等の設定
 [ ! -d ~/setting_box ] && git clone https://github.com/ippsio/setting_box.git ~/setting_box
-if [ ! -d ~/setting_box/kara ]; then
-  rm -rf  ~/.config/karabiner
-  ln -s ~/setting_box/.config/karabiner ~/.config/karabiner
-fi
+[ ! -d ~/.config/karabiner ] && ln -s ~/setting_box/karabiner ~/.config/karabiner
 
 TURN_AROUND_TIME=$(($(date +%s) - START_TIME))
 echo "[PREPARING] finish in ${TURN_AROUND_TIME} sec"
