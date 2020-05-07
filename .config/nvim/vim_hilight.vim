@@ -66,16 +66,16 @@ hi Type guibg=#004433 guifg=#00ff33
 hi Visual guibg=#2211aa
 
 " markdown
-hi markdownH1          guibg=#552299 guifg=#4499ff
-hi markdownH1Delimiter guibg=#552299 guifg=#4499ff
-hi markdownH2          guibg=#552299 guifg=#4499ff
-hi markdownH2Delimiter guibg=#552299 guifg=#4499ff
-hi markdownH3          guibg=#552299 guifg=#4499ff
-hi markdownH3Delimiter guibg=#552299 guifg=#4499ff
-hi markdownH4          guibg=#552299 guifg=#4499ff
-hi markdownH4Delimiter guibg=#552299 guifg=#4499ff
-hi markdownH5          guibg=#552299 guifg=#4499ff
-hi markdownH5Delimiter guibg=#552299 guifg=#4499ff
+hi markdownH1          guibg=#cc2299 guifg=#ffff66
+hi markdownH1Delimiter guibg=#ff2299 guifg=#ffff00
+hi markdownH2          guibg=#cc2299 guifg=#ffff66
+hi markdownH2Delimiter guibg=#ff2299 guifg=#ffff00
+hi markdownH3          guibg=#cc2299 guifg=#ffff66
+hi markdownH3Delimiter guibg=#ff2299 guifg=#ffff00
+hi markdownH4          guibg=#cc2299 guifg=#ffff66
+hi markdownH4Delimiter guibg=#ff2299 guifg=#ffff00
+hi markdownH5          guibg=#cc2299 guifg=#ffff66
+hi markdownH5Delimiter guibg=#ff2299 guifg=#ffff00
 hi markdownCode          guibg=#333333 guifg=#cccccc
 hi markdownCodeDelimiter guibg=#222222 guifg=#cccccc
 

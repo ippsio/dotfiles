@@ -14,9 +14,9 @@ function _space_extraction() {
   [[ $BUFFER =~ '^gs+$' ]]           && BUFFER="git status -sb " && zle end-of-line && return
   [[ $BUFFER =~ '^git st+$' ]]       && BUFFER="git status " && zle end-of-line && return
   # git checkout completion
-  [[ $BUFFER =~ '^gco+$' ]]          && BUFFER="git checkout $(echo "$(git branch -a)\n--"|tr -d '* '|fzf --prompt='git checkout>'|tr -d ' ')" && zle end-of-line && return
-  [[ $BUFFER =~ '^git co+$' ]]       && BUFFER="git checkout $(echo "$(git branch -a)\n--"|tr -d '* '|fzf --prompt='git checkout>'|tr -d ' ')" && zle end-of-line && return
-  [[ $BUFFER =~ '^git checkout+$' ]] && BUFFER="git checkout $(echo "$(git branch -a)\n--"|tr -d '* '|fzf --prompt='git checkout>'|tr -d ' ')" && zle end-of-line && return
+  [[ $BUFFER =~ '^gco+$' ]]          && BUFFER="git checkout $(echo "$(git branch -a)\\n-- ."|tr -d '*'|fzf --prompt='git checkout> '|tr -d ' ')" && zle end-of-line && return
+  [[ $BUFFER =~ '^git co+$' ]]       && BUFFER="git checkout $(echo "$(git branch -a)\\n-- ."|tr -d '*'|fzf --prompt='git checkout> '|tr -d ' ')" && zle end-of-line && return
+  [[ $BUFFER =~ '^git checkout+$' ]] && BUFFER="git checkout $(echo "$(git branch -a)\\n-- ."|tr -d '*'|fzf --prompt='git checkout> '|tr -d ' ')" && zle end-of-line && return
   # git fetch origin --prune for short
   [[ $BUFFER =~ '^gfo+$' ]]          && BUFFER="git fetch origin --prune " && zle end-of-line && return
   [[ $BUFFER =~ '^git fo+$' ]]       && BUFFER="git fetch origin --prune " && zle end-of-line && return

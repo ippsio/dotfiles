@@ -2,17 +2,27 @@ alias ll='ls -Ulah'
 alias ls='ls -G'
 alias vim='nvim'
 alias v='nvim'
-function _todays_memo() {
-  MEMO_NAME=$1
-  YMDA=$(date '+%Y/%m/%d(%a)')
-  DIR=~/${MEMO_NAME}/$(date '+%Y_%m')
-  FILE=${DIR}/$(date '+%Y_%m%d').md
-  mkdir -p ${DIR}
-  [ ! -f ${FILE} ] && echo "# ${YMDA}\n${MEMO_NAME}\n---\n" >> ${FILE}
-  nvim ${FILE} +4
+
+function memo() {
+  NOTE_TYPE=${1:-memo}
+  echo "NOTE_TYPE=${NOTE_TYPE}"
+
+  VALID_ARGS=("memo" "note" "todo")
+  if [[ -n ${VALID_ARGS[(re)$NOTE_TYPE]} ]]; then
+    YMDA=$(date '+%Y/%m/%d(%a)')
+    NOTE_DIR=${ENV_ROOT_NOTES_DIR:-~/notes}/${NOTE_TYPE}/$(date '+%Y_%m')
+    NOTE_FILE=${NOTE_DIR}/$(date '+%Y_%m%d').md
+    echo "FILE=$NOTE_FILE"
+    mkdir -p ${NOTE_DIR}
+    [ ! -f ${NOTE_FILE} ] && echo "# ${YMDA}\n${NOTE_TYPE}\n---\n" >> ${NOTE_FILE}
+    nvim ${NOTE_FILE} +4
+  else
+    echo "args must be one of [$VALID_ARGS]."
+  fi
 }
-alias m="_todays_memo memo"
-alias n"=_todays_memo note"
+alias m="memo"
+alias n"=memo note"
+alias todo"=memo todo"
 
 # global arial
 alias -g D='-w --reverse $(git merge-base develop HEAD)...HEAD'
