@@ -1,3 +1,6 @@
+# emacs like
+bindkey -e
+
 # スペースでよく使うコマンドを展開
 function _space_extraction() {
   #printf "BUFFER=[${BUFFER}] LBUFFER=[${LBUFFER}] RBUFFER=[${RBUFFER}]\n"
@@ -42,8 +45,8 @@ function _space_extraction() {
 zle -N _space_extraction
 bindkey " " _space_extraction
 
-# TAB(CTRL-I)補完
-function _ctrl_space_completion() {
+# TAB(=CTRL+I)補完
+function _tab_completion() {
   # cd にfzfで補完候補を付ける
   [[ $BUFFER =~ '^cd *$' ]] && BUFFER="cd ./" && zle end-of-line # zle end-of-lineの後に && returnしないのは意図的
   [[ $BUFFER =~ '^cd *.+/+$' ]] \
@@ -68,9 +71,9 @@ function _ctrl_space_completion() {
   zle expand-or-complete
 }
 
-# TAB(CTRL+I)補完
-zle -N _ctrl_space_completion
-bindkey "^I" _ctrl_space_completion
+# TAB(=CTRL+I)補完
+zle -N _tab_completion
+bindkey "^I" _tab_completion
 
 # ^で一つ上のフォルダへ移動
 function hat_cdup () { [[ ${BUFFER} == "" ]] && cd .. && zle accept-line && zle reset-prompt && return || zle self-insert }
