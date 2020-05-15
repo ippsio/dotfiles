@@ -1,7 +1,7 @@
 [[plugins]]
 repo = 'pechorin/any-jump.vim'
 hook_add = '''
-  nnoremap <silent> <C-j> :AnyJump<CR>
+  nnoremap <silent> <C-J> :AnyJump<CR>
 
   " Show line numbers in search rusults
   let g:any_jump_list_numbers = 0
