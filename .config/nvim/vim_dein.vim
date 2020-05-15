@@ -17,7 +17,6 @@ if dein#load_state('~/.cache/dein')
   call dein#add('~/.cache/dein/repos/github.com/Shougo/dein.vim')
 
   " お試し
-  call dein#load_toml('~/.config/nvim/toml/0_jump_any_jump.toml', {'lazy': 0})
   call dein#load_toml('~/.config/nvim/toml/0_textobj_vim-expand-region.toml', {'lazy': 0})
   call dein#load_toml('~/.config/nvim/toml/0_datetime_current_datetime.vim.toml', {'lazy': 0})
 
@@ -25,6 +24,7 @@ if dein#load_state('~/.cache/dein')
   " 一軍
   call dein#load_toml('~/.config/nvim/toml/0_command_altercmd.toml', {'lazy': 0})
   call dein#load_toml('~/.config/nvim/toml/0_format_sqlutilities.toml', {'lazy': 0})
+  call dein#load_toml('~/.config/nvim/toml/0_search_any_jump.toml', {'lazy': 0})
   call dein#load_toml('~/.config/nvim/toml/0_search_fzf.toml', {'lazy': 0})
   call dein#load_toml('~/.config/nvim/toml/0_search_qfixgrep.toml', {'lazy': 0})
   call dein#load_toml('~/.config/nvim/toml/0_search_vim-anzu.toml', {'lazy': 0})

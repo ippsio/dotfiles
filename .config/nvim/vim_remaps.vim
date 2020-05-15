@@ -25,10 +25,10 @@ vnoremap v $h
 nnoremap <silent> <Space><Space> mz:call <SID>hi_word()<CR>
 xnoremap <silent> <Space><Space> mz:call <SID>hi_selected()<CR>
 
-" F3で、カレントバッファをハイライト＋Ripgrep検索(要ripgrepコマンド)
-nnoremap <F3>       mz:call <SID>hi_word_and_grep(1)<CR>
-xnoremap <F3>       mz:call <SID>hi_selected_and_grep(1)<CR>
-cnoremap <F3> <CR>gnmz:call <SID>hi_selected_and_grep(1)<CR>
+" F4で、ハイライト＋Ripgrep検索(要ripgrepコマンド)
+nnoremap <F4>       mz:call <SID>hi_word_and_grep(1)<CR>
+xnoremap <F4>       mz:call <SID>hi_selected_and_grep(1)<CR>
+cnoremap <F4> <CR>gnmz:call <SID>hi_selected_and_grep(1)<CR>
 
 " カーソル下にある単語をハイライト
 function s:hi_word()
