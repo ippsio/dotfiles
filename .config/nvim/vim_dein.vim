@@ -29,7 +29,6 @@ if dein#load_state('~/.cache/dein')
   call dein#load_toml('~/.config/nvim/toml/0_search_qfixgrep.toml', {'lazy': 0})
   call dein#load_toml('~/.config/nvim/toml/0_search_vim-anzu.toml', {'lazy': 0})
   call dein#load_toml('~/.config/nvim/toml/0_search_vim-easymotion.toml', {'lazy': 0})
-  call dein#load_toml('~/.config/nvim/toml/0_search_vim-over.toml', {'lazy': 0})
   call dein#load_toml('~/.config/nvim/toml/0_search_vim-ripgrep.toml', {'lazy': 0})
   call dein#load_toml('~/.config/nvim/toml/0_filemanage_nerdtree.toml', {'lazy': 0})
   call dein#load_toml('~/.config/nvim/toml/0_filemanage_denite.toml', {'lazy': 0})
@@ -65,6 +64,7 @@ if dein#load_state('~/.cache/dein')
   "call dein#load_toml('~/.config/nvim/toml/0_buffer_minibufexpl.toml', {'lazy': 0})
   "call dein#load_toml('~/.config/nvim/toml/0_filemanage_mru.toml', {'lazy': 0})
   "call dein#load_toml('~/.config/nvim/toml/0_visual_indentline.toml', {'lazy': 0})
+  "call dein#load_toml('~/.config/nvim/toml/0_search_vim-over.toml', {'lazy': 0})
 
   " lazy1: 特定のfiletypeでのみ動く
   " 一軍
