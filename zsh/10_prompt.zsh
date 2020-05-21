@@ -50,12 +50,12 @@ local _mark_ahead="^"
 local _mark_behind="v"
 
 # exit status and git basic infomations.
-local EXIT_CD="%K{red}%(?.. %? )%k"
-local GIT_REPO_NAME="%K{24}%(1v| %1v |)%k"
-local GIT_BRANCH="%K{28}%(2v| %2v |)%k"
+local EXIT_CD="%K{red}%(?..[EXIT_CD=%?])%k"
+local GIT_REPO_NAME="%K{24}%(1v|[%1v |)%k"
+local GIT_BRANCH="%K{28}%(2v| %2v]|)%k"
 
 # git working_tree
-local _deleted="%(3v| ${_mark_deleted}%3v|)"
+local _deleted="%(3v|[${_mark_deleted}%3v|)"
 local _untracked="%(4v| ${_mark_untracked}%4v|)"
 local _unstaged="%(5v| ${_mark_unstaged}%5v |)"
 local GIT_WORKING_TREE="%K{172}${_deleted}${_untracked}${_unstaged}%k"
@@ -66,7 +66,7 @@ local GIT_STAGE="%K{196}${_staged}%k"
 
 # git local repositry
 local _ahead="%(7v| %7v${_mark_ahead}|)"
-local _behind="%(8v| ${_mark_behind}%8v |)"
+local _behind="%(8v| ${_mark_behind}%8v]|)"
 local GIT_LOCAL_REPO="%K{88}${_ahead}${_behind}%k"
 
 # others
@@ -76,5 +76,5 @@ local CURRENT_DATETIME="%K{237}%D{%m/%d %T} %k"
 PROMPT="
 ${EXIT_CD}${GIT_REPO_NAME}${GIT_BRANCH}
 ${GIT_WORKING_TREE}${GIT_STAGE}${GIT_LOCAL_REPO}${CURRENT_DIRECTORY}${CURRENT_DATETIME}
-${GIT_VCS_ACTION}%K{238} %# %k"
+${GIT_VCS_ACTION}%K{238}%# %k"
 

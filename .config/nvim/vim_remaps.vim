@@ -3,7 +3,6 @@
 " -----------------------------------------------------
 " 入力モード中に素早くjjと入力した場合はESCとみなす
 inoremap jj <Esc>
-inoremap kk <Esc>
 
 " 自分にとってはqで:recording開始のトリガーになるのは邪魔なので無効化。
 nnoremap q <Nop>
@@ -149,6 +148,13 @@ cnoremap <C-a> <Home>
 nnoremap <C-e> $
 inoremap <C-e> <End>
 cnoremap <C-e> <End>
+
+" カーソルの上下を、<C-p>、<C-n>にする。
+" コマンドモードのwildmenu表示中に、選択肢をカーソルキーで上下移動したい時がある。
+" この設定をしないと、wildmenu内で上下カーソルを押した時、wildmenuの選択状態が解除されてしまう。
+" wildmenu上での正しい上下移動は<C-p>、<C-n>。
+cnoremap <Up>   <C-p>
+cnoremap <Down> <C-n>
 
 " コード規約上120文字な言語があったりするので、その目安に線を引く
 let &colorcolumn=join(range(121,121),",")
