@@ -173,6 +173,9 @@ set incsearch
 " 検索結果をハイライト表示
 set hlsearch
 
+" インタラクティブな置換。vim-overのようなもの。
+set inccommand=split
+
 " --------------
 " マウス操作
 " --------------
