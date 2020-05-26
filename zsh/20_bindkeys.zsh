@@ -2,7 +2,7 @@
 bindkey -e
 
 function pick_git_branch() {
-  fixed="  --\n  -- ."
+  fixed="  --\n  -- .\n  -b\n"
   dynamic="$(git branch -a|sort)"
   candidates="${fixed}\n${dynamic}"
   echo ${candidates} \

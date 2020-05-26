@@ -79,6 +79,8 @@ hi markdownH5Delimiter guibg=#ff2299 guifg=#ffff00
 hi markdownCode          guibg=#333333 guifg=#cccccc
 hi markdownCodeDelimiter guibg=#222222 guifg=#cccccc
 
+hi markdownListMarker guibg=#456789 guifg=#ffff00 gui=bold
+
 "hi Function guifg=#ffff00 guibg=#444400
 hi Statement guifg=#ffff00
 
