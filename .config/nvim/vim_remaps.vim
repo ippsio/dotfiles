@@ -33,8 +33,10 @@ cnoremap <F4> <CR>gnmz:call <SID>hi_selected_and_grep(1)<CR>
 function s:hi_word()
   " （\<や\>は、単語の境界を示す特殊文字）
   silent normal "zyiw
-  let @/ = '\<' . @z . '\>'
+  let @z = '\<' . @z . '\>'
   call feedkeys(":set hlsearch\<CR>", "n")
+  " 今後、matchを使うのも面白そう。他のバッファはハイライトしないようにできるし。
+  " call feedkeys(":match vimCommand /\<C-r>z\/\<CR>", "n")
   silent normal `z
 endfunction
 
