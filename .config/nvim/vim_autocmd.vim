@@ -18,8 +18,9 @@ augroup FileTypeRuby
   " validate? のような末尾の?も、区切り文字ではなく単語として扱ってもらう。
   au FileType ruby setlocal iskeyword+=!
 
-  " hoge.map(&:fuga) の中身の &:fuga を、単語として扱ってもらう。
-  au FileType ruby setlocal iskeyword+=:
-  au FileType ruby setlocal iskeyword+=&
+  " これは無いほうが使いやすかったのでコメントアウト
+  " " hoge.map(&:fuga) の中身の &:fuga を、単語として扱ってもらう。
+  " " au FileType ruby setlocal iskeyword+=:
+  " " au FileType ruby setlocal iskeyword+=&
 
 augroup END

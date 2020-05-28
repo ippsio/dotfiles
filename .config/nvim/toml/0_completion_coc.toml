@@ -6,16 +6,16 @@ merge = 0
 hook_source = '''
   let extensions =[]
   let extensions = add(extensions,"coc-solargraph")
-  let extensions = add(extensions,"coc-python")
-  let extensions = add(extensions,"coc-pyls")
-  let extensions = add(extensions,"coc-json")
-  let extensions = add(extensions,"coc-snippets")
-  let extensions = add(extensions,"coc-todolist")
-  let extensions = add(extensions,"coc-translator")
-  let extensions = add(extensions,"coc-tsserver")
-  let extensions = add(extensions,"coc-yaml")
-  let extensions = add(extensions,"coc-yank")
-  let extensions = add(extensions,"coc-docker")
+  " let extensions = add(extensions,"coc-python")
+  " let extensions = add(extensions,"coc-pyls")
+  " let extensions = add(extensions,"coc-json")
+  " let extensions = add(extensions,"coc-snippets")
+  " let extensions = add(extensions,"coc-todolist")
+  " let extensions = add(extensions,"coc-translator")
+  " let extensions = add(extensions,"coc-tsserver")
+  " let extensions = add(extensions,"coc-yaml")
+  " let extensions = add(extensions,"coc-yank")
+  " let extensions = add(extensions,"coc-docker")
 
   let g:coc_global_extensions = extensions
 
@@ -84,6 +84,7 @@ hook_source = '''
   " Highlight symbol under cursor on CursorHold
   autocmd CursorHold * silent call CocActionAsync('highlight')
 
+  " autocmd FileType ruby let b:coc_additional_keywords = ["@-@"]
   " Remap for rename current word
   nmap <leader>rn <Plug>(coc-rename)
 

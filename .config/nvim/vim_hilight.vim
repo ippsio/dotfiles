@@ -39,8 +39,8 @@ hi PmenuSbar ctermbg=2 guibg=#222222
 hi PmenuThumb ctermbg=4 guibg=#ffffff
 
 " 検索単語
-hi IncSearch ctermbg=22 ctermfg=255 cterm=underline guibg=#882200 guifg=#ff22ff gui=underline
-hi Search ctermbg=22 ctermfg=255 guibg=#882200 guifg=#ff22ff
+"hi IncSearch guibg=#882200 guifg=#ff22ff
+hi Search    guibg=#882200 guifg=#ff22ff
 
 " フォーカスのないウインドウ
 hi NormalNC ctermbg=0 ctermfg=240
