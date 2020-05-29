@@ -2,7 +2,7 @@ function _fzf_with_preview_git_diff() {
   merge_base="$(git merge-base ${mbb} HEAD)...HEAD"
   preview="git diff --stat ${merge_base} {}"
   preview="${preview};echo"
-  preview="${preview};[ -e {} ] && git diff --color=always ${merge_base} {}| diff-highlight| less"
+  preview="${preview};[ -e {} ] && git diff -w --color=always ${merge_base} {}| diff-highlight| less"
   echo "$(git diff --name-only ${merge_base}| fzf --preview "${preview}" --preview-window=right:60%:wrap)"
 }
 
@@ -31,13 +31,52 @@ function review_current_git_branch() {
     printf "\e[33m\"git merge-base ${mbb} HEAD\" = ${mb}\e[m\n\n"
 
     # git log
+    # See https://git-scm.com/docs/git-log for more details!
+    # git log options
+    #   %H  コミットのハッシュ
+    #   %h  コミットのハッシュ (短縮版)
+    #   %T  ツリーのハッシュ
+    #   %t  ツリーのハッシュ (短縮版)
+    #   %P  親のハッシュ
+    #   %p  親のハッシュ (短縮版)
+    #   %an Author の名前
+    #   %ae Author のメールアドレス
+    #   %ad Author の日付 (-date= オプションに従った形式)
+    #   %ar Author の相対日付
+    #   %cn Committer の名前
+    #   %ce Committer のメールアドレス
+    #   %cd Committer の日付
+    #   %cr Committer の相対日付
+    #   %s  件名
+    #
+    # git log date formats
+    #   --date=iso       # ISO 8601フォーマット
+    #   --date=relative  # 相対時間 (3 days ago)
+    #   --date=local     # ローカルタイムゾーン
+    #   --date=iso       # ISO 8601 フォーマット
+    #   --date=rfc       # RFC 2822 フォーマット
+    #   --date=short     # YYYY-MM-DD
+    #   --date=raw       # %s %z
+    #   --date=default   # 標準
+    #   --date=format:'%Y/%m/%d %H:%M:%S'       # 任意のフォーマット
+    #   --date=format-local:'%Y/%m/%d %H:%M:%S' # 任意のフォーマットをローカルタイムゾーンで
+
+    local commit_hash="%Cred%h%Creset"
+    local author="%C(bold blue)%an%Creset"
+    local subject="%s"
+    local commit_date="%Cgreen(%cd)%Creset"
+    local ref_names="%C(yellow)%d%Creset"
+
+    local CMD="git --no-pager log"
+    local CMD="${CMD} $(git merge-base ${mb} HEAD)...HEAD"
+    local CMD="${CMD} --reverse"
+    local CMD="${CMD} --oneline"
+    local CMD="${CMD} --color=always"
+    local CMD="${CMD} --date=format-local:'%Y/%m/%d %H:%M:%S'"
+    local CMD="${CMD} --pretty=format:'${commit_hash}${commit_date} ${author}${ref_names} ${subject}'"
+    local CMD="${CMD} --abbrev-commit"
+
     printf "\e[33;7m[git log]\e[m\n"
-    CMD="git --no-pager log $(git merge-base ${mb} HEAD)...HEAD \
-      --reverse \
-      --oneline \
-      --date=local \
-      --pretty=format:'%Cred%h%Creset %Cgreen(%cr) %C(yellow)%d%Creset %s %C(bold blue)<%an>%Creset' \
-      --abbrev-commit"
     echo "${CMD}\n"| sed -e "s/  //g"| sed -e "s@${mb}@\$(git merge-base ${mbb} HEAD)@"
     bash -c $CMD
     printf "\e[33m- $(git --no-pager log --oneline ${mb}...HEAD| wc -l| sed -e 's/ //g') commits\n\n\e[m"
