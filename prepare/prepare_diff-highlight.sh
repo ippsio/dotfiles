@@ -3,12 +3,17 @@ function log_exist() { echo "[o] exist! '$1'" }
 function log_not_exist() { echo "------------\n[x] not found! '$1' " }
 
 N="diff-highlight"
-DIFF_HL_PATH=/usr/local/share/git-core/contrib/diff-highlight
-D=${DIFF_HL_PATH}
+DIFF_HIGHLIGHT_DIR=/usr/local/share/git-core/contrib/diff-highlight
+D=${DIFF_HIGHLIGHT_DIR}
 if [ ! -e ${D} ]; then
   log_not_exist $N $D
   echo "手動でコピーして。"
 else
   log_exist $N $D
 fi
-[ -e ${DIFF_HL}/diff-highlight ] && export PATH=${PATH}:${DIFF_HL_PATH}
+if [ -e ${DIFF_HIGHLIGHT_DIR}/diff-highlight ]; then
+  export PATH=${PATH}:${DIFF_HIGHLIGHT_DIR}
+  echo "${DIFF_HIGHLIGHT_DIR}/diff-highlight is added into PATH"
+else
+  echo "${DIFF_HIGHLIGHT_DIR}/diff-highlight is not added into PATH"
+fi
