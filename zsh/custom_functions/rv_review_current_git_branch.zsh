@@ -1,5 +1,9 @@
 function _fzf_with_preview_git_diff() {
-  echo "$(git diff --name-only $(git merge-base ${mbb} HEAD)...HEAD| fzf --preview "git diff --stat $(git merge-base ${mbb} HEAD)...HEAD {}; echo "";[ -e {} ] && git diff --color=always $(git merge-base ${mbb} HEAD)...HEAD {}" --preview-window=right:60%:wrap)"
+  merge_base="$(git merge-base ${mbb} HEAD)...HEAD"
+  preview="git diff --stat ${merge_base} {}"
+  preview="${preview};echo"
+  preview="${preview};[ -e {} ] && git diff --color=always ${merge_base} {}| diff-highlight| less"
+  echo "$(git diff --name-only ${merge_base}| fzf --preview "${preview}" --preview-window=right:60%:wrap)"
 }
 
 function _fzf_git_log() {
