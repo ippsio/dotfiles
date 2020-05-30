@@ -17,7 +17,7 @@ color title-focus       234     250
 color title-blur        234     250
 color author 79 default
 
-color diff-stat         45      18      bold reverse
+color diff-stat         190      18      bold reverse
 color diff-index        25      17      reverse
 color "+++ "            25      17      reverse
 color "--- "            25      17      reverse

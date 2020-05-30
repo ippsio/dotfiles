@@ -1,5 +1,6 @@
 [core]
   excludesfile = ~/.gitignore_global
+  attributesfile = ~/.gitattributes_global
 
 [color]
   ui = auto
@@ -19,7 +20,9 @@
   #func = 7 250
 [diff]
   compactionHeuristic = true
+
 [pager]
-  log = diff-highlight | less
-  show = diff-highlight | less
-  diff = diff-highlight | less
+  # diff-highlight が PATHに追加されてないと、diff-highlightは使えないよ。
+  log =  (type diff-highlight >/dev/null 2>&1) && (diff-highlight | less) || less
+  show = (type diff-highlight >/dev/null 2>&1) && (diff-highlight | less) || less
+  diff = (type diff-highlight >/dev/null 2>&1) && (diff-highlight | less) || less
