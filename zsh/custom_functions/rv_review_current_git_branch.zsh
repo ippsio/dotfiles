@@ -1,22 +1,31 @@
 function _fzf_with_preview_git_diff() {
-  merge_base="$(git merge-base ${mbb} HEAD)...HEAD"
-  preview="git diff --stat ${merge_base} {}"
-  preview="${preview};echo"
-  preview="${preview};[ -e {} ] && git diff -w --color=always ${merge_base} {}| diff-highlight| less"
-  echo "$(git diff --name-only ${merge_base}| fzf --preview "${preview}" --preview-window=right:60%:wrap)"
-}
+  merge_base="$(git merge-base ${1:-origin/develop} HEAD)"
+  local commit_hash="%Cred%h%Creset"
+  local author="%C(bold blue)%an%Creset"
+  local subject="%s"
+  local commit_date="%Cgreen(%cd)%Creset"
+  local ref_names="%C(yellow)%d%Creset"
 
-function _fzf_git_log() {
-  mbb=${1:-origin/develop}
-  mb=$(git merge-base ${mbb} HEAD)
-  CMD="git --no-pager log $(git merge-base ${mb} HEAD)...HEAD \
-    --oneline \
-    --decorate=full \
-    --date=iso \
-    --pretty=format:'%Cred%h%Creset %Cgreen(%cd) %C(yellow)%d%Creset %s %C(bold blue)<%an>%Creset' \
-    --abbrev-commit"
-
-  echo "$(git diff --name-only $(git merge-base ${mbb} HEAD)...HEAD| fzf --preview "echo '[ファイル]\n{}\n'; [ -e {} ] && echo '\n----------------\n[commits]' && ${CMD} {}" --preview-window=right:60%:wrap)"
+  local CMD="${CMD} --pretty=format:'${commit_hash}${commit_date} ${author}${ref_names} ${subject}'"
+  echo $(\
+    git diff --numstat ${merge_base}...HEAD \
+    | awk '\
+      {printf "%+5s" , "+" $1} \
+      {printf "%+5s" , "-" $2} \
+      {printf "%s\n", ", " $3} \
+    ' \
+    | fzf --bind change:top \
+    --preview " \
+      echo {} | sed -e 's/.*, //g'|xargs git log ${merge_base}...HEAD --oneline| wc -l| tr -d ' ' | sed -e 's/$/ total commits on this branch./'; \
+      echo {} | sed -e 's/.*, //g'|xargs git log ${merge_base}...HEAD --oneline -3 --color=always --decorate=full --date=format-local:'%Y/%m/%d %H:%M:%S' --pretty=format:'${commit_hash}${commit_date} ${author}${ref_names} ${subject}' --abbrev-commit; \
+      echo; \
+      echo; \
+      echo {} | sed -e 's/.*, //g'|xargs git diff --color=always --stat ${merge_base}...HEAD; \
+      echo; \
+      echo {} | sed -e 's/.*, //g'|xargs git diff --color=always ${merge_base}...HEAD| diff-highlight| less \
+    " \
+    --preview-window=right:60%:wrap \
+  )
 }
 
 # rv[enter]で現在のgitブランチのレビューを開始
@@ -100,7 +109,7 @@ function review_current_git_branch() {
     case "${REPLY}" in
       1 ) git diff $(git merge-base ${mbb} HEAD)...HEAD ;;
       3 | v | vim ) f=$(_fzf_with_preview_git_diff) && [ ! -z $f ] && vim $f ;;
-      4 | t )       f=$(_fzf_git_log) && [ ! -z $f ] && tig -w --reverse $(git merge-base ${mbb} HEAD)...HEAD $f ;;
+      4 | t )       f=$(_fzf_with_preview_git_diff) && [ ! -z $f ] && tig -w --reverse $(git merge-base ${mbb} HEAD)...HEAD $f ;;
       5 | tig | t ) tig -w --reverse $(git merge-base ${mbb} HEAD)...HEAD ;;
       5 | tigall | t ) tig -w --reverse $(git merge-base ${mbb} HEAD)...HEAD ;;
       9 | q | ctrl-c ) break ;;
