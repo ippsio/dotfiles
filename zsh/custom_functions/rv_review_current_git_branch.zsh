@@ -6,7 +6,6 @@ function _fzf_with_preview_git_diff() {
   local commit_date="%Cgreen(%cd)%Creset"
   local ref_names="%C(yellow)%d%Creset"
 
-  local CMD="${CMD} --pretty=format:'${commit_hash}${commit_date} ${author}${ref_names} ${subject}'"
   echo $(\
     git diff --numstat ${merge_base}...HEAD \
     | awk '\
@@ -16,15 +15,32 @@ function _fzf_with_preview_git_diff() {
     ' \
     | fzf --bind change:top \
     --preview " \
-      echo {} | sed -e 's/.*, //g'|xargs git log ${merge_base}...HEAD --oneline| wc -l| tr -d ' ' | sed -e 's/$/ total commits on this branch./'; \
-      echo {} | sed -e 's/.*, //g'|xargs git log ${merge_base}...HEAD --oneline -3 --color=always --decorate=full --date=format-local:'%Y/%m/%d %H:%M:%S' --pretty=format:'${commit_hash}${commit_date} ${author}${ref_names} ${subject}' --abbrev-commit; \
-      echo; \
-      echo; \
-      echo {} | sed -e 's/.*, //g'|xargs git diff --color=always --stat ${merge_base}...HEAD; \
-      echo; \
-      echo {} | sed -e 's/.*, //g'|xargs git diff --color=always ${merge_base}...HEAD| diff-highlight| less \
+      # 全コミット数
+      echo {} | sed -e 's/.*, //g' \
+        | xargs git log ${merge_base}...HEAD --oneline \
+        | wc -l \
+        | tr -d ' ' \
+        | sed -e 's/$/ total commits on this branch./' \
+      # 直近3コミット
+      ;echo {} | sed -e 's/.*, //g' | \
+        xargs git log ${merge_base}...HEAD --oneline -3 \
+        --color=always --decorate=full \
+        --date=format-local:'%Y/%m/%d %H:%M:%S' \
+        --pretty=format:'${commit_hash}${commit_date} ${author}${ref_names} ${subject}' \
+        --abbrev-commit \
+      # 改行
+      ;echo \
+      ;echo \
+      # そのファイルのdiffstat
+      ;echo {} | sed -e 's/.*, //g' \
+        |xargs git diff --color=always --stat ${merge_base}...HEAD \
+      # 改行
+      ;echo \
+      # そのファイルのdiff
+      ;echo {} | sed -e 's/.*, //g'|xargs git diff --color=always ${merge_base}...HEAD| diff-highlight| less \
     " \
     --preview-window=right:60%:wrap \
+    | sed -e 's/.*, //g' \
   )
 }
 
@@ -39,67 +55,28 @@ function review_current_git_branch() {
     printf "\e[33mMERGE-BASE=${mbb}\e[m\n"
     printf "\e[33m\"git merge-base ${mbb} HEAD\" = ${mb}\e[m\n\n"
 
-    # git log
-    # See https://git-scm.com/docs/git-log for more details!
-    # git log options
-    #   %H  コミットのハッシュ
-    #   %h  コミットのハッシュ (短縮版)
-    #   %T  ツリーのハッシュ
-    #   %t  ツリーのハッシュ (短縮版)
-    #   %P  親のハッシュ
-    #   %p  親のハッシュ (短縮版)
-    #   %an Author の名前
-    #   %ae Author のメールアドレス
-    #   %ad Author の日付 (-date= オプションに従った形式)
-    #   %ar Author の相対日付
-    #   %cn Committer の名前
-    #   %ce Committer のメールアドレス
-    #   %cd Committer の日付
-    #   %cr Committer の相対日付
-    #   %s  件名
-    #
-    # git log date formats
-    #   --date=iso       # ISO 8601フォーマット
-    #   --date=relative  # 相対時間 (3 days ago)
-    #   --date=local     # ローカルタイムゾーン
-    #   --date=iso       # ISO 8601 フォーマット
-    #   --date=rfc       # RFC 2822 フォーマット
-    #   --date=short     # YYYY-MM-DD
-    #   --date=raw       # %s %z
-    #   --date=default   # 標準
-    #   --date=format:'%Y/%m/%d %H:%M:%S'       # 任意のフォーマット
-    #   --date=format-local:'%Y/%m/%d %H:%M:%S' # 任意のフォーマットをローカルタイムゾーンで
-
     local commit_hash="%Cred%h%Creset"
     local author="%C(bold blue)%an%Creset"
     local subject="%s"
     local commit_date="%Cgreen(%cd)%Creset"
     local ref_names="%C(yellow)%d%Creset"
 
-    local CMD="git --no-pager log"
-    local CMD="${CMD} $(git merge-base ${mb} HEAD)...HEAD"
-    local CMD="${CMD} --reverse"
-    local CMD="${CMD} --oneline"
-    local CMD="${CMD} --color=always"
-    local CMD="${CMD} --date=format-local:'%Y/%m/%d %H:%M:%S'"
-    local CMD="${CMD} --pretty=format:'${commit_hash}${commit_date} ${author}${ref_names} ${subject}'"
-    local CMD="${CMD} --abbrev-commit"
-
+    # git log
     printf "\e[33;7m[git log]\e[m\n"
-    echo "${CMD}\n"| sed -e "s/  //g"| sed -e "s@${mb}@\$(git merge-base ${mbb} HEAD)@"
-    bash -c $CMD
-    printf "\e[33m- $(git --no-pager log --oneline ${mb}...HEAD| wc -l| sed -e 's/ //g') commits\n\n\e[m"
+    git --no-pager log $(git merge-base ${mb} HEAD)...HEAD --reverse --oneline -5 --color=always \
+      --date=format-local:'%Y/%m/%d %H:%M:%S' \
+      --pretty=format:"${commit_hash}${commit_date} ${author}${ref_names} ${subject}" \
+      --abbrev-commit
+    printf "\n\e[33m- total commit count $(git --no-pager log --oneline ${mb}...HEAD| wc -l| sed -e 's/ //g'). \n\n\e[m"
 
     # File changed
     printf "\e[33;7m[file changed]\e[m\n"
-    echo "git diff --no-pager --stat $(git merge-base ${mb} HEAD) HEAD\n"| sed -e "s@${mb}@\$(git merge-base ${mbb} HEAD)@"
-    git diff --no-pager --stat $(git merge-base ${mb} HEAD) HEAD
+    git diff --stat $(git merge-base ${mb} HEAD)...HEAD
     printf "\e[33m- $(git diff --name-only ${mb}...HEAD| wc -l| sed -e 's/ //g') files\n\n\e[m"
 
     # Command
     printf "\e[33;7m[Command]\e[m\n"
     echo "1 | git diff ) git diff \$(git merge-base ${mbb} HEAD)...HEAD"
-    echo "2 | rubocop ) rubocop + reviewdog"
     echo "3 | v | vim | [enter] ) vim"
     echo "4 | t ) tig file"
     echo "5 | tig ) tig -w --reverse \$(git merge-base ${mbb} HEAD)...HEAD"
