@@ -4,6 +4,7 @@
 
 [color]
   ui = auto
+
 [color "diff"]
   meta = 45 18 bold reverse
   frag = 190 17
@@ -18,6 +19,7 @@
   context = 250
   commit = 246 024
   #func = 7 250
+
 [diff]
   compactionHeuristic = true
 
