@@ -1,6 +1,6 @@
 function _fzf_with_preview_git_diff() {
   merge_base_branch=${1:-origin/develop}
-  merge_base_commit=$(git merge-base ${merge_base_branch} HEAD)
+  merge_base_commit=$(git rev-parse --short $(git merge-base ${merge_base_branch} HEAD))
   local commit_hash="%Cred%h%Creset"
   local author="%C(bold blue)%an%Creset"
   local subject="%s"
@@ -48,7 +48,7 @@ function _fzf_with_preview_git_diff() {
 # rv[enter]で現在のgitブランチのレビューを開始
 function review_current_git_branch() {
   merge_base_branch=${1:-origin/develop}
-  merge_base_commit=$(git merge-base ${merge_base_branch} HEAD)
+  merge_base_commit=$(git rev-parse --short $(git merge-base ${merge_base_branch} HEAD))
 
   while true; do
     clear
@@ -64,7 +64,7 @@ function review_current_git_branch() {
 
     # git log
     printf "\e[33;7m[git log]\e[m\n"
-    git --no-pager log $(git merge-base ${merge_base_commit} HEAD)...HEAD --reverse --oneline -5 --color=always \
+    git --no-pager log ${merge_base_commit}...HEAD --reverse --oneline -5 --color=always \
       --date=format-local:'%Y/%m/%d %H:%M:%S' \
       --pretty=format:"${commit_hash}${commit_date} ${author}${ref_names} ${subject}" \
       --abbrev-commit
@@ -72,23 +72,22 @@ function review_current_git_branch() {
 
     # File changed
     printf "\e[33;7m[file changed]\e[m\n"
-    git diff --stat $(git merge-base ${merge_base_commit} HEAD)...HEAD
+    git diff --stat ${merge_base_commit}...HEAD
     printf "\e[33m- $(git diff --name-only ${merge_base_commit}...HEAD| wc -l| sed -e 's/ //g') files\n\n\e[m"
 
     # Command
     printf "\e[33;7m[Command]\e[m\n"
-    echo "1 | d | diff ) git diff \$(git merge-base ${merge_base_branch} HEAD)...HEAD"
-    echo "2 | v ) open file with vim"
-    echo "3 | t ) open file with tig"
-    echo "4 | tig ) tig -w --reverse \$(git merge-base ${merge_base_branch} HEAD)...HEAD"
+    echo "1 | d   ) git diff ${merge_base_commit}...HEAD | vim -R"
+    echo "2 | v   ) open file with vim"
+    echo "3 | t   ) open file with tig"
+    echo "4 | tig ) tig -w --reverse ${merge_base_commit}...HEAD"
     echo -n " > "
     read REPLY
     case "${REPLY}" in
-      1 | d | diff) git diff $(git merge-base ${merge_base_branch} HEAD)...HEAD | vim -R;;
-      2 | v       ) file=$(_fzf_with_preview_git_diff) && [ ! -z $file ] && vim $file ;;
-      3 | t       ) file=$(_fzf_with_preview_git_diff) && [ ! -z $file ] && tig -w --reverse $(git merge-base ${merge_base_branch} HEAD)...HEAD $file ;;
-      4 | tig     ) tig -w --reverse $(git merge-base ${merge_base_branch} HEAD)...HEAD ;;
-
+          1 | d   ) git diff ${merge_base_commit}...HEAD | vim -R ;;
+          2 | v   ) file=$(_fzf_with_preview_git_diff) && [ ! -z $file ] && vim $file ;;
+          3 | t   ) file=$(_fzf_with_preview_git_diff) && [ ! -z $file ] && tig -w --reverse ${merge_base_commit}...HEAD $file ;;
+          4 | tig ) tig -w --reverse ${merge_base_commit}...HEAD ;;
     esac
   done
 }
