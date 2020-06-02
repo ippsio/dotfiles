@@ -14,7 +14,8 @@ _fzf_with_preview_git_diff() {
       {printf "%+5s" , "-" $2} \
       {printf "%s\n", ", " $3} \
     ' \
-    | fzf --bind change:top \
+    | fzf \
+    --bind change:top \
     --preview " \
       # 全コミット数
       echo {} | sed -e 's/.*, //g' \
@@ -23,22 +24,26 @@ _fzf_with_preview_git_diff() {
         | tr -d ' ' \
         | sed -e 's/$/ total commits on this branch./' \
       # 直近3コミット
-      ;echo {} | sed -e 's/.*, //g' | \
+      ; echo {} | sed -e 's/.*, //g' | \
         xargs git log ${merge_base_commit}...HEAD --oneline -3 \
         --color=always --decorate=full \
         --date=format-local:'%Y/%m/%d %H:%M:%S' \
         --pretty=format:'${commit_hash}${commit_date} ${author}${ref_names} ${subject}' \
         --abbrev-commit \
       # 改行
-      ;echo \
-      ;echo \
+      ; echo \
+      ; echo \
       # そのファイルのdiffstat
-      ;echo {} | sed -e 's/.*, //g' \
+      ; echo {} | sed -e 's/.*, //g' \
         |xargs git diff --color=always --stat ${merge_base_commit}...HEAD \
       # 改行
-      ;echo \
+      ; echo \
       # そのファイルのdiff
-      ;echo {} | sed -e 's/.*, //g'|xargs git diff --color=always ${merge_base_commit}...HEAD| diff-highlight| less \
+      ;echo {} \
+        | sed -e 's/.*, //g' \
+        | xargs git diff --color=always ${merge_base_commit}...HEAD \
+        | diff-highlight \
+        | less \
     " \
     --preview-window=bottom:60%:wrap \
     | sed -e 's/.*, //g' \
@@ -92,7 +97,7 @@ review_current_git_branch() {
     case "${REPLY}" in
           1 | d   ) git diff ${merge_base_commit}...HEAD | vim -R ;;
           2 | v   ) file=$(_fzf_with_preview_git_diff) && [ ! -z $file ] && vim $file ;;
-          3 | t   ) file=$(_fzf_with_preview_git_diff) && [ ! -z $file ] && tig -w --reverse ${merge_base_commit}...HEAD $file ;;
+          3 | t   ) file=$(_fzf_with_preview_git_diff) && [ ! -z $file ] && tig $file -w --reverse ${merge_base_commit}...HEAD ;;
           4 | tig ) tig -w --reverse ${merge_base_commit}...HEAD ;;
     esac
   done
