@@ -10,10 +10,11 @@ export FZF_DEFAULT_OPTS="\
   --cycle \
   --reverse \
   --border \
+  --expect=ctrl-d \
   --color \
-  fg:248,hl:202,fg+:214,bg+:92,hl+:231 \
+    fg:248,hl:202,fg+:214,bg+:92,hl+:231 \
   --color \
-  info:44,prompt:67,spinner:209,pointer:103,marker:173 \
+    info:44,prompt:67,spinner:209,pointer:103,marker:173 \
   --bind 'ctrl-v:execute(vim {})' \
   "
 
