@@ -1,9 +1,3 @@
-with_tig() {
-  local merge_base_commit=$(git rev-parse --short $(git merge-base ${merge_base_branch} HEAD))
-  tig $merge_base_commit...HEAD $1
-
-}
-
 _fzf_with_preview_git_diff() {
   merge_base_branch=${1:-origin/develop}
   local merge_base_commit=$(git rev-parse --short $(git merge-base ${merge_base_branch} HEAD))
@@ -20,37 +14,24 @@ _fzf_with_preview_git_diff() {
     | fzf \
     --bind change:top \
     --bind '?:toggle-preview' \
-    --bind "T:execute(tig $merge_base_commit...HEAD {3} < /dev/tty > /dev/tty)" \
-    --bind "enter:execute(echo {}| perl -pe 's/^.*, //g'| xargs nvim > /dev/tty)" \
-    --preview " \
+    --bind "ctrl-b:execute(tig $merge_base_commit...HEAD {3} < /dev/tty > /dev/tty)" \
+    --bind "enter:execute(nvim {3} < /dev/tty > /dev/tty)" \
+    --preview "
       # 全コミット数
-      echo {} | sed -e 's/.*, //g' \
-        | xargs git log ${merge_base_commit}...HEAD --oneline \
-        | wc -l \
-        | tr -d ' ' \
-        | sed -e 's/$/ total commits on this branch./' \
+      git log ${merge_base_commit}...HEAD --oneline {3} | wc -l| tr -d ' '| sed -e 's/$/ total commits on this branch./'
       # 直近3コミット
-      ; echo {} | sed -e 's/.*, //g' | \
-        xargs git log ${merge_base_commit}...HEAD --oneline -3 \
-        --color=always --decorate=full \
+      ;git log ${merge_base_commit}...HEAD --oneline -3 --color=always --decorate=full \
         --date=format-local:'%Y/%m/%d %H:%M:%S' \
         --pretty=format:'${commit_hash}${commit_date} ${author}${ref_names} ${subject}' \
-        --abbrev-commit \
+        --abbrev-commit {3}
       # 改行
-      ; echo \
-      ; echo \
+      ; echo ; echo
       # そのファイルのdiffstat
-      ; echo {} | sed -e 's/.*, //g' \
-        |xargs git diff --color=always --stat ${merge_base_commit}...HEAD \
+      ;git diff --color=always --stat ${merge_base_commit}...HEAD {3}
       # 改行
-      ; echo \
+      ; echo
       # そのファイルのdiff
-      ;echo {} \
-        | sed -e 's/.*, //g' \
-        | xargs git diff --color=always ${merge_base_commit}...HEAD \
-        | diff-highlight \
-        | less \
-    " \
+      ;git diff --color=always ${merge_base_commit}...HEAD {3}| diff-highlight | less" \
     --preview-window=bottom:60%:wrap
   )
 }
