@@ -3,6 +3,7 @@ with_tig() {
   tig $merge_base_commit...HEAD $1
 
 }
+
 _fzf_with_preview_git_diff() {
   merge_base_branch=${1:-origin/develop}
   local merge_base_commit=$(git rev-parse --short $(git merge-base ${merge_base_branch} HEAD))
@@ -11,20 +12,15 @@ _fzf_with_preview_git_diff() {
   local subject="%s"
   local commit_date="%Cgreen(%cd)%Creset"
   local ref_names="%C(yellow)%d%Creset"
-#  local cmd="tig $(echo {} | awk '{print $3}' < /dev/tty > /dev/tty;"
 
-    #--bind "f1:execute(set -x; echo {}| perl -pe 's/^//g'|perl -pe 's/^.*, //g'| xargs -L1 tig $merge_base_commit...HEAD)+abort" \
-  echo $(\
-    git diff --numstat ${merge_base_commit}...HEAD \
-    | awk '\
-      {printf "%+5s" , "+" $1} \
-      {printf "%+5s" , "-" $2} \
-      {printf "%s\n", ", " $3} \
-    ' \
+  files=$(git diff --numstat ${merge_base_commit}...HEAD | awk '{printf "%+5s" , "+" $1} {printf "%+5s" , "-" $2} {printf "%s\n", ", " $3} ') || return
+
+  target=$(
+    (echo "$files") \
     | fzf \
     --bind change:top \
     --bind '?:toggle-preview' \
-    --bind "f1:execute(echo {}| perl -pe 's/^.*, //g'| xargs tig $merge_base_commit...HEAD > /dev/tty)" \
+    --bind "T:execute(tig $merge_base_commit...HEAD {3} < /dev/tty > /dev/tty)" \
     --bind "enter:execute(echo {}| perl -pe 's/^.*, //g'| xargs nvim > /dev/tty)" \
     --preview " \
       # 全コミット数
@@ -55,8 +51,7 @@ _fzf_with_preview_git_diff() {
         | diff-highlight \
         | less \
     " \
-    --preview-window=bottom:60%:wrap \
-    | sed -e 's/.*, //g' \
+    --preview-window=bottom:60%:wrap
   )
 }
 
@@ -101,14 +96,14 @@ review_current_git_branch() {
     echo " 1 | d   ) git diff ${merge_base_commit}...HEAD | vim -R"
     echo " 2 | v   ) open file with vim"
     echo " 3 | t   ) open file with tig"
-    echo " 4 | tig ) tig -w --reverse ${merge_base_commit}...HEAD"
+    echo " 4 | tig ) tig -w ${merge_base_commit}...HEAD"
     echo -n " > "
     read REPLY
     case "${REPLY}" in
           1 | d   ) git diff ${merge_base_commit}...HEAD | vim -R ;;
           2 | v   ) file=$(_fzf_with_preview_git_diff) && [ ! -z $file ] && vim $file ;;
-          3 | t   ) file=$(_fzf_with_preview_git_diff) && [ ! -z $file ] && tig -w --reverse ${merge_base_commit}...HEAD $file  ;;
-          4 | tig ) tig -w --reverse ${merge_base_commit}...HEAD ;;
+          3 | t   ) file=$(_fzf_with_preview_git_diff) && [ ! -z $file ] && tig -w ${merge_base_commit}...HEAD $file  ;;
+          4 | tig ) tig -w ${merge_base_commit}...HEAD ;;
     esac
   done
 }

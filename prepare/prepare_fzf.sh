@@ -10,7 +10,6 @@ export FZF_DEFAULT_OPTS="\
   --cycle \
   --reverse \
   --border \
-  --expect=ctrl-d \
   --color \
     fg:248,hl:202,fg+:214,bg+:92,hl+:231 \
   --color \
