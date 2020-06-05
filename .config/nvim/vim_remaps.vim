@@ -23,6 +23,9 @@ vnoremap v $h
 " space2度押しで文字をハイライト
 nnoremap <silent> <Space><Space> mz:call <SID>hi_word()<CR>
 xnoremap <silent> <Space><Space> mz:call <SID>hi_selected()<CR>
+" mでも同様に、文字をハイライト
+nnoremap <silent> m mz:call <SID>hi_word()<CR>
+xnoremap <silent> m mz:call <SID>hi_selected()<CR>
 
 " F4で、ハイライト＋Ripgrep検索(要ripgrepコマンド)
 nnoremap <F4>       mz:call <SID>hi_word_and_grep(1)<CR>

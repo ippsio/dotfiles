@@ -32,7 +32,7 @@ _fzf_with_preview_git_diff() {
       ; echo
       # そのファイルのdiff
       ;git diff --color=always ${merge_base_commit}...HEAD {3}| diff-highlight | less" \
-    --preview-window=bottom:60%:wrap
+    --preview-window=right:60%:wrap
   )
 }
 
@@ -74,17 +74,15 @@ review_current_git_branch() {
 
     # Command
     printf "\n\e[33;7m[Command]\e[m\n"
-    echo " 1 | d   ) git diff ${merge_base_commit}...HEAD | vim -R"
-    echo " 2 | v   ) open file with vim"
-    echo " 3 | t   ) open file with tig"
-    echo " 4 | tig ) tig -w ${merge_base_commit}...HEAD"
+    echo " 0 | v | ) open file with vim or tig."
+    echo " 1 | t )   tig -w ${merge_base_commit}...HEAD"
+    echo " 2 | d )   git diff ${merge_base_commit}...HEAD | vim -R"
     echo -n " > "
     read REPLY
     case "${REPLY}" in
-          1 | d   ) git diff ${merge_base_commit}...HEAD | vim -R ;;
-          2 | v   ) file=$(_fzf_with_preview_git_diff) && [ ! -z $file ] && vim $file ;;
-          3 | t   ) file=$(_fzf_with_preview_git_diff) && [ ! -z $file ] && tig -w ${merge_base_commit}...HEAD $file  ;;
-          4 | tig ) tig -w ${merge_base_commit}...HEAD ;;
+          0 | v | ) _fzf_with_preview_git_diff "$@";;
+          1 | t   ) tig -w ${merge_base_commit}...HEAD ;;
+          2 | d   ) git diff ${merge_base_commit}...HEAD | vim -R ;;
     esac
   done
 }
