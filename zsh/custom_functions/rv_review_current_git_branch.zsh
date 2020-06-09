@@ -1,5 +1,6 @@
-_fzf_with_preview_git_diff() {
+fzf_preview_diff_files() {
   merge_base_branch=${1:-origin/develop}
+  nvim_bind=${2:-ctrl-v}
   local merge_base_commit=$(git rev-parse --short $(git merge-base ${merge_base_branch} HEAD))
   local commit_hash="%Cred%h%Creset"
   local author="%C(bold blue)%an%Creset"
@@ -8,32 +9,19 @@ _fzf_with_preview_git_diff() {
   local ref_names="%C(yellow)%d%Creset"
 
   files=$(git diff --numstat ${merge_base_commit}...HEAD | awk '{printf "%+5s" , "+" $1} {printf "%+5s" , "-" $2} {printf "%s\n", ", " $3} ') || return
-
-  target=$(
-    (echo "$files") \
-    | fzf \
-    --bind change:top \
-    --bind '?:toggle-preview' \
-    --bind "ctrl-b:execute(tig $merge_base_commit...HEAD {3} < /dev/tty > /dev/tty)" \
-    --bind "enter:execute(nvim {3} < /dev/tty > /dev/tty)" \
-    --preview "
-      # 全コミット数
+  target=$(echo "$files" | fzf --bind change:top --bind '?:toggle-preview' \
+    --bind "right:execute(tig $merge_base_commit...HEAD {3} < /dev/tty > /dev/tty)" \
+    --bind "ctrl-l:execute(tig $merge_base_commit...HEAD {3} < /dev/tty > /dev/tty)" \
+    --bind "tab:execute(tig $merge_base_commit...HEAD {3} < /dev/tty > /dev/tty)" \
+    --bind "${nvim_bind}:execute(nvim {3} < /dev/tty > /dev/tty)" --preview "
       git log ${merge_base_commit}...HEAD --oneline {3} | wc -l| tr -d ' '| sed -e 's/$/ total commits on this branch./'
-      # 直近3コミット
-      ;git log ${merge_base_commit}...HEAD --oneline -3 --color=always --decorate=full \
-        --date=format-local:'%Y/%m/%d %H:%M:%S' \
-        --pretty=format:'${commit_hash}${commit_date} ${author}${ref_names} ${subject}' \
-        --abbrev-commit {3}
-      # 改行
+      ;git log ${merge_base_commit}...HEAD --oneline -3 --color=always --decorate=full --date=format-local:'%Y/%m/%d %H:%M:%S' \
+        --pretty=format:'${commit_hash}${commit_date} ${author}${ref_names} ${subject}' --abbrev-commit {3}
       ; echo ; echo
-      # そのファイルのdiffstat
       ;git diff --color=always --stat ${merge_base_commit}...HEAD {3}
-      # 改行
       ; echo
-      # そのファイルのdiff
-      ;git diff --color=always ${merge_base_commit}...HEAD {3}| diff-highlight | less" \
-    --preview-window=right:60%:wrap
-  )
+      ;git diff --color=always ${merge_base_commit}...HEAD {3}| diff-highlight | less" --preview-window=right:60%:wrap)
+      echo $target | awk '{print $3}'
 }
 
 # rv[enter]で現在のgitブランチのレビューを開始
@@ -80,9 +68,9 @@ review_current_git_branch() {
     echo -n " > "
     read REPLY
     case "${REPLY}" in
-          0 | v | ) _fzf_with_preview_git_diff "$@";;
-          1 | t   ) tig -w ${merge_base_commit}...HEAD ;;
-          2 | d   ) git diff ${merge_base_commit}...HEAD | vim -R ;;
+          0 | v | ) fzf_preview_diff_files "${merge_base_branch}" "enter" ;;
+          2 | t   ) tig -w ${merge_base_commit}...HEAD ;;
+          3 | d   ) git diff ${merge_base_commit}...HEAD | vim -R ;;
     esac
   done
 }

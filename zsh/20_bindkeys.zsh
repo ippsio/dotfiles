@@ -2,39 +2,9 @@
 bindkey -e
 
 fzf_pick_git_branch() {
-  fixed="-- \n-- .\n-b "
-  dynamic="$(git branch -a| sed -e 's/^[\* ]*//' | sed -e 's/^[ ]*//g'| sort)"
-  candidates="${fixed}\n${dynamic}"
-
-  # See https://git-scm.com/docs/git-log for more details!
-  # git log options
-  #   %H  コミットのハッシュ
-  #   %h  コミットのハッシュ (短縮版)
-  #   %T  ツリーのハッシュ
-  #   %t  ツリーのハッシュ (短縮版)
-  #   %P  親のハッシュ
-  #   %p  親のハッシュ (短縮版)
-  #   %an Author の名前
-  #   %ae Author のメールアドレス
-  #   %ad Author の日付 (-date= オプションに従った形式)
-  #   %ar Author の相対日付
-  #   %cn Committer の名前
-  #   %ce Committer のメールアドレス
-  #   %cd Committer の日付
-  #   %cr Committer の相対日付
-  #   %s  件名
-  #
-  # git log date formats
-  #   --date=iso       # ISO 8601フォーマット
-  #   --date=relative  # 相対時間 (3 days ago)
-  #   --date=local     # ローカルタイムゾーン
-  #   --date=iso       # ISO 8601 フォーマット
-  #   --date=rfc       # RFC 2822 フォーマット
-  #   --date=short     # YYYY-MM-DD
-  #   --date=raw       # %s %z
-  #   --date=default   # 標準
-  #   --date=format:'%Y/%m/%d %H:%M:%S'       # 任意のフォーマット
-  #   --date=format-local:'%Y/%m/%d %H:%M:%S' # 任意のフォーマットをローカルタイムゾーンで
+  local fixed="-- \n-- .\n-b "
+  local dynamic="$(git branch -a| sed -e 's/^[\* ]*//' | sed -e 's/^[ ]*//g'| sort)"
+  local candidates="${fixed}\n${dynamic}"
 
   local commit_hash="%Cred%h%Creset"
   local author="%C(bold blue)%an%Creset"
@@ -42,19 +12,41 @@ fzf_pick_git_branch() {
   local commit_date="%Cgreen(%cd)%Creset"
   local ref_names="%C(yellow)%d%Creset"
 
-  local CMD="git log"
-  local CMD="${CMD} --graph"
-  local CMD="${CMD} --color=always"
-  local CMD="${CMD} --date=format-local:'%Y/%m/%d %H:%M:%S'"
-  local CMD="${CMD} --pretty=format:'${commit_hash}${commit_date} ${author}${ref_names} ${subject}'"
-  local CMD="${CMD} --abbrev-commit"
-  local CMD="${CMD} {}"
-  echo ${candidates} \
-    | fzf --prompt='git checkout> ' \
-    --preview "echo {}; echo; ${CMD}" \
+  local git_log="git log
+    --graph
+    --color=always
+    --date=format-local:'%Y/%m/%d %H:%M:%S'
+    --pretty=format:'${commit_hash}${commit_date} ${author}${ref_names} ${subject}'
+    --abbrev-commit
+    {}"
+  echo ${candidates} | fzf \
+    --prompt='git checkout> ' \
+    --preview "echo {}; echo; ${git_log}" \
     --preview-window=right:70%:wrap \
     | sed -e "s/^[\* ]*//" \
     | sed -e "s/^remotes\/origin\///"
+}
+
+fzf_rake_files() {
+  merge_base_branch=${1:-origin/develop}
+  local merge_base_commit=$(git rev-parse --short $(git merge-base ${merge_base_branch} HEAD))
+  local commit_hash="%Cred%h%Creset"
+  local author="%C(bold blue)%an%Creset"
+  local subject="%s"
+  local commit_date="%Cgreen(%cd)%Creset"
+  local ref_names="%C(yellow)%d%Creset"
+
+  files=$(find . -name vendor -prune -o -name '*.rake' -print) || return
+  target=$(
+    echo "$files" \
+    | fzf \
+    --bind change:top \
+    --bind '?:toggle-preview' \
+    --bind "ctrl-v:execute(nvim {} < /dev/tty > /dev/tty)" \
+    --preview "bat --color=always {}" \
+    --preview-window=right:60%:wrap
+  )
+  echo "${target}" | perl -pe 's#.*/##g' | perl -pe 's#\.rake$/##g'
 }
 
 # スペースでよく使うコマンドを展開
@@ -90,7 +82,9 @@ function _space_extraction() {
   # bundle exec rails c for short
   [[ $BUFFER =~ '^c+$' ]]    && BUFFER="bundle exec rails c" && zle end-of-line && return
   [[ $BUFFER =~ '^rc+$' ]]   && BUFFER="bundle exec rails c" && zle end-of-line && return
-  [[ $BUFFER =~ '^berc+$' ]] && BUFFER="bundle exec rails c" && zle end-of-line && return
+  [[ $BUFFER =~ '^rails+$' ]]   && BUFFER="bundle exec rails " && zle end-of-line && return
+  [[ $BUFFER =~ '^rake+$' ]] && BUFFER="bundle exec rake $(fzf_rake_files)" && zle end-of-line && return
+
   # bundle exec rails s for short
   [[ $BUFFER =~ '^rs+$' ]]   && BUFFER="bundle exec rails s -b 0.0.0.0" && zle end-of-line && return
   [[ $BUFFER =~ '^bers+$' ]] && BUFFER="bundle exec rails s -b 0.0.0.0" && zle end-of-line && return
