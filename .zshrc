@@ -23,12 +23,10 @@ source ~/dotfiles/zsh/00_alias.zsh
 source ~/dotfiles/zsh/10_prompt.zsh
 source ~/dotfiles/zsh/20_bindkeys.zsh
 source ~/dotfiles/zsh/30_color_to_man.zsh
-source ~/dotfiles/zsh/40_cdr.zsh
 # custom functions
-source ~/dotfiles/zsh/custom_functions/rgg_search_with_rg_then_open_with_vim.zsh
-source ~/dotfiles/zsh/custom_functions/rv_review_current_git_branch.zsh
+for file in $(ls ~/dotfiles/zsh/custom_functions/*.zsh); { source $file }
 # custom completion
-source ~/dotfiles/zsh/custom_completions/ssh_completion.zsh
+for file in $(ls ~/dotfiles/zsh/custom_completions/*.zsh); { source $file }
 
 # history
 HISTFILE=~/.zsh_history

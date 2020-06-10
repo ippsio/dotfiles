@@ -1,5 +1,6 @@
-# rgの結果をfzfで絞り込み選択するとvimで開く
-function search_with_rg_then_open_with_vim() {
+# rgの検索結果を選択I/Fを表示する。
+# さらに、選択したファイルはvimで開く
+function fzf_rg_then_vim() {
   [ -z "$1" ] && echo 'Usage: rgg PATTERN' && return 0
   result=`rg --line-number $1 | fzf`
   line=`echo "$result" | awk -F ':' '{print $2}'`
@@ -7,7 +8,6 @@ function search_with_rg_then_open_with_vim() {
   if [ -n "$file" ]; then
     vim $file +$line
   fi
-  echo "search_with_rg_then_open_with_vim done."
 }
 
-alias rgg="search_with_rg_then_open_with_vim"
+alias rgg="fzf_rg_then_vim"
