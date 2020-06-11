@@ -35,15 +35,15 @@ review_current_git_branch() {
 
     # Command
     printf "\n\e[33;7m[Command]\e[m\n"
-    echo " 0 | v | ) show diff then open with tig/vim."
-    echo " 1 | t )   tig -w ${merge_base_commit}...HEAD"
-    echo " 2 | d )   git diff ${merge_base_commit}...HEAD | vim -R"
+    echo " 1 | v | ) show diff then open with tig/vim."
+    echo " 2 | t )   tig -w ${merge_base_commit}...HEAD"
+    echo " 3 | d )   git diff ${merge_base_commit}...HEAD | vim -R"
     echo -n " > "
     read REPLY
     case "${REPLY}" in
-          0 | v | ) fzf_git_diff "${merge_base_branch}" "enter" ;;
-          1 | t   ) tig -w ${merge_base_commit}...HEAD ;;
-          2 | d   ) git diff ${merge_base_commit}...HEAD | vim -R ;;
+          1 | v | ) fzf_git_diff "${merge_base_branch}" "enter" ;;
+          2 | t   ) tig -w ${merge_base_commit}...HEAD ;;
+          3 | d   ) git diff ${merge_base_commit}...HEAD | vim -R ;;
     esac
   done
 }

@@ -18,10 +18,11 @@ fzf_git_branch() {
     --pretty=format:'${commit_hash}${commit_date} ${author}${ref_names} ${subject}'
     --abbrev-commit
     {}"
-  echo ${candidates} | fzf \
+  target=$(echo ${candidates} | fzf \
     --prompt='git checkout> ' \
     --preview "echo {}; echo; ${git_log}" \
     --preview-window=right:70%:wrap \
     | sed -e "s/^[\* ]*//" \
-    | sed -e "s/^remotes\/origin\///"
+    | sed -e "s/^remotes\/origin\///")
+  echo "${target}"
 }
