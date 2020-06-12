@@ -18,7 +18,7 @@ color 'Date: '          041     default
 
 color date              039     017
 color graph-commit      161     default
-color cursor            052     202     bold
+color cursor            052     202
 color main-tracked      105     default bold
 color title-focus       234     250
 color title-blur        234     250
@@ -49,7 +49,8 @@ color diff-stat        017      190      bold
 #----------------------
 # diff old系(赤系)
 #----------------------
-color diff-del           203    053
+#color diff-del           203    053
+color diff-del           009   052
 color diff-del-highlight 211    124
 #color "-"             203     053
 #color " -"            203     053
@@ -57,7 +58,8 @@ color diff-del-highlight 211    124
 #----------------------
 # new系(緑系)
 #----------------------
-color diff-add           047     024
+color diff-add           010     022
+#color diff-add           047     024
 color diff-add-highlight 082     034
 #color "+"             047     024
 #color " +"            047     024
