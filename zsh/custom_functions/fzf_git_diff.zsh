@@ -13,11 +13,16 @@ fzf_git_diff() {
   local ref_names="%C(yellow)%d%Creset"
 
   files=$(git diff --numstat ${merge_base_commit}...HEAD | awk '{printf "%+5s" , "+" $1} {printf "%+5s" , "-" $2} {printf "%s\n", ", " $3} ') || return
-  target=$(echo "$files" | fzf --bind change:top --bind '?:toggle-preview' \
+  target=$(echo "$files" | \
+    fzf \
+    --header="(<${nvim_bind}>: open nvim)/ (<right>,ctrl-l,tab: open tig)/ (?: toggle preview)" \
+    --bind change:top \
+    --bind "${nvim_bind}:execute(nvim {3} < /dev/tty > /dev/tty)" \
     --bind "right:execute(tig $merge_base_commit...HEAD {3} < /dev/tty > /dev/tty)" \
     --bind "ctrl-l:execute(tig $merge_base_commit...HEAD {3} < /dev/tty > /dev/tty)" \
     --bind "tab:execute(tig $merge_base_commit...HEAD {3} < /dev/tty > /dev/tty)" \
-    --bind "${nvim_bind}:execute(nvim {3} < /dev/tty > /dev/tty)" --preview "
+    --bind '?:toggle-preview' \
+    --preview "
       git log ${merge_base_commit}...HEAD --oneline {3} | wc -l| tr -d ' '| sed -e 's/$/ total commits on this branch./'
       ;git log ${merge_base_commit}...HEAD --oneline -3 --color=always --decorate=full --date=format-local:'%Y/%m/%d %H:%M:%S' \
         --pretty=format:'${commit_hash}${commit_date} ${author}${ref_names} ${subject}' --abbrev-commit {3}
