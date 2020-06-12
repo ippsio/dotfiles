@@ -2,4 +2,4 @@
 *.py diff=python
 *.rake diff=ruby
 *.java diff=java
-*.js diff=java.
+*.js diff=java

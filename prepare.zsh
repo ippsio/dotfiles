@@ -37,6 +37,7 @@ source ~/dotfiles/prepare/prepare_tig.sh
 source ~/dotfiles/prepare/prepare_diff-highlight.sh
 source ~/dotfiles/prepare/prepare_fzf.sh
 source ~/dotfiles/prepare/prepare_zplug.sh
+source ~/dotfiles/prepare/prepare_bat.sh
 
 # -----------------------------------------------------
 # Generate link fot real file, directory in this repo.
@@ -44,11 +45,16 @@ source ~/dotfiles/prepare/prepare_zplug.sh
 function generate_symlink_f() { [ ! -f $1 ] && ln -s $2 && echo "Symlink generated ($1<-$2)" }
 function generate_symlink_d() { [ ! -d $1 ] && ln -s $2 && echo "Symlink generated ($1<-$2)" }
 echo "[PREPARING(generate_symlink)] start"
-generate_symlink_f ~/.zshrc ~/dotfiles/.zshrc
+
+generate_symlink_d ~/.config/nvim ~/dotfiles/.config/nvim
+
+generate_symlink_f ~/.gitattributes_global ~/dotfiles/.gitattributes_global
+generate_symlink_f ~/.gitconfig ~/dotfiles/.gitconfig
+generate_symlink_f ~/.gitignore_global ~/dotfiles/.gitignore_global
+generate_symlink_f ~/.pryrc ~/dotfiles/.pryrc
 generate_symlink_f ~/.tigrc ~/dotfiles/.tigrc
 generate_symlink_f ~/.tmux.conf ~/dotfiles/.tmux.conf
-generate_symlink_f ~/.gitconfig ~/dotfiles/.gitconfig
-generate_symlink_d ~/.config/nvim ~/dotfiles/.config/nvim
+generate_symlink_f ~/.zshrc ~/dotfiles/.zshrc
 
 # その他、karabiner等の設定
 [ ! -d ~/setting_box ] && git clone https://github.com/ippsio/setting_box.git ~/setting_box

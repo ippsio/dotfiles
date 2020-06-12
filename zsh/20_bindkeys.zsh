@@ -2,7 +2,7 @@
 bindkey -e
 
 # スペースでよく使うコマンドを展開
-function _space_extraction() {
+function my_space_extraction() {
   #printf "BUFFER=[${BUFFER}] LBUFFER=[${LBUFFER}] RBUFFER=[${RBUFFER}]\n"
 
   # globalaliasの展開
@@ -37,8 +37,10 @@ function _space_extraction() {
   || $BUFFER =~ '^git checkout+$' \
   ]] \
   && zle autosuggest-clear \
-  && BUFFER="git checkout $(fzf_git_branch)" \
-  && zle end-of-line && return
+  && git_branch="$(fzf_git_branch)" \
+  && BUFFER="git checkout ${git_branch}" \
+  && zle end-of-line \
+  && return
 
   # git fetch origin --prune
   [[ $BUFFER =~ '^gfo+$' \
@@ -101,11 +103,11 @@ function _space_extraction() {
 
   zle self-insert
 }
-zle -N _space_extraction
-bindkey " " _space_extraction
+zle -N my_space_extraction
+bindkey " " my_space_extraction
 
 # TAB(=CTRL+I)補完
-function _tab_completion() {
+function my_tab_completion() {
   # cd にfzfで補完候補を付ける
   [[ $BUFFER =~ '^cd *$' \
   ]] \
@@ -133,8 +135,8 @@ function _tab_completion() {
 }
 
 # TAB(=CTRL+I)補完
-zle -N _tab_completion
-bindkey "^I" _tab_completion
+zle -N my_tab_completion
+bindkey "^I" my_tab_completion
 
 # ^で一つ上のフォルダへ移動
 function hat_cdup () { [[ ${BUFFER} == "" ]] && cd .. && zle accept-line && zle reset-prompt && return || zle self-insert }
