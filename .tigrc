@@ -175,7 +175,14 @@ bind diff    [      :?^@@
 # vimでは、'o' で何かを開く操作がバインドされてることが多い。
 bind main o enter
 bind diff o none
-#--------------
+
+#-----------------
+# view-control
+#-----------------
+bind generic ? view-help
+bind generic <Left> view-close
+bind main <Right> enter
+
 # grep
 #--------------
 bind generic E      view-grep
