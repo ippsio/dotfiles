@@ -6,19 +6,60 @@
   ui = auto
 
 [color "diff"]
-  meta = 45 18 bold reverse
-  frag = 190 17
-  old = 203 53
-  oldMoved = 203 53
-  #oldMovedAlternative = 203 53
-  #oldMovedAlternativeDimmed = 203 53
-  new = 47 24
-  newMoved = 47 24
-  #newMovedAlternative = 47 24
-  #newMovedAlternativeDimmed = 47 24
-  context = 250
-  commit = 246 024
-  #func = 7 250
+  #------------------------------------------------------------
+  # `diff --git a/xxxx b/xxxx`
+  # `index acbd5f297b..4a56929e4e 100644`
+  # `a/xxxx`
+  # `b/xxxx`
+  # みたいな箇所(青地に濃い青文字)
+  #----------------------------------------
+  meta =                       018 045 bold
+
+  #----------------------------------------------------------------------
+  # `@@ -518,9 +518,7 @@` みたいな箇所(青地に黄色文字)
+  # その右隣のメソッド名やクラス名が表示されるところ(黄色地に濃い青文字)
+  #----------------------------------------------------------------------
+  frag =                       190 017
+
+  #----------------------
+  # diff old系(赤系)
+  #----------------------
+  old =                        "#ff7766 #440000"
+  oldMoved =                   "#aaaa00 #666600"
+  #oldMovedAlternative =       203 053
+  #oldMovedAlternativeDimmed = 203 053
+
+  #----------------------
+  # new系(緑系)
+  #----------------------
+  new =                        "#00ff33 #004433"
+  newMoved =                   047 024
+  #newMovedAlternative =       047 024
+  #newMovedAlternativeDimmed = 047 024
+
+  #--------------------------
+  # 変更なし部分の文字色
+  #--------------------------
+  context =                    253
+
+  #--------------------------
+  # これら、何だったかな....
+  #--------------------------
+  commit =                     246 024
+  #func =                      007 250
+
+[color "diff-highlight"]
+  #----------------------
+  # diff old系(赤系)
+  #----------------------
+  oldNormal =                  "#ff7766 #440000"
+  oldHighlight =               211 124 # 単語差分ハイライト部分
+
+  #----------------------
+  # new系(緑系)
+  #----------------------
+  newNormal =                  "#00ff33 #004433"
+  newHighlight =               082 034 # 単語差分ハイライト部分
 
 [diff]
   compactionHeuristic = true

@@ -4,36 +4,70 @@
 
 # NOTE https://github.com/jonas/tig/blob/master/tigrc
 # color part text-color background-color  style
+
+# .gitconfig の color設定は引き継がない
+set git-colors = no
+
 color default           default default
 color 'Author: '        241     default
 color 'AuthorDate: '    241     default
 color 'Commit: '        241     default
 color 'CommitDate: '    241     default
-color 'Merge: '          45     default bold
-color 'Date: '          241     default
+color 'Merge: '         045     default bold
+color 'Date: '          041     default
 
-color date              39      17
+color date              039     017
 color graph-commit      161     default
-color cursor            52     202     bold
+color cursor            052     202     bold
 color main-tracked      105     default bold
 color title-focus       234     250
 color title-blur        234     250
-color author 79 default
+color author            079     default
 
-color diff-stat        190      18      bold reverse
-color diff-index        25      17      reverse
-color "+++ "            25      17      reverse
-color "--- "            25      17      reverse
-color "+"               47      24
-color " +"              47      24
-color "-"              203      53
-color " -"             203      53
-color diff-header       45      18      bold reverse
-color diff-chunk       190      17
+#------------------------------------------------------------
+# `diff --git a/xxxx b/xxxx`みたいな箇所(水色地に濃い青文字)
+#------------------------------------------------------------
+color diff-header      018     045      bold
 
-# delimiterは、set wrap-lines = yesの時に、1画面に収まりきらなかった文字を次の行に表示する際
+#----------------------------------------
+# `index acbd5f297b..4a56929e4e 100644`
+# `a/xxxx`
+# `b/xxxx`
+# みたいな箇所(青地に濃い青文字)
+#----------------------------------------
+color diff-index       017     025
+color "+++ "           017     025
+color "--- "           017     025
+
+#----------------------------------------------------------------------
+# `@@ -518,9 +518,7 @@` みたいな箇所(青地に黄色文字)
+# その右隣のメソッド名やクラス名が表示されるところ(黄色地に濃い青文字)
+#----------------------------------------------------------------------
+color diff-chunk       190      017
+color diff-stat        017      190      bold
+
+#----------------------
+# diff old系(赤系)
+#----------------------
+color diff-del           203    053
+color diff-del-highlight 211    124
+#color "-"             203     053
+#color " -"            203     053
+
+#----------------------
+# new系(緑系)
+#----------------------
+color diff-add           047     024
+color diff-add-highlight 082     034
+#color "+"             047     024
+#color " +"            047     024
+
+#-------------------------------------------------------
+# delimiterは、set wrap-lines = yesの時に、
+# 1画面に収まりきらなかった文字を次の行に表示する際
 # 前の行からの続きであることを意味する「+」マークの事。
-color delimiter        8     247
+#-------------------------------------------------------
+color delimiter       008     247
 
 # ======================
 # 単語単位で差分をハイライトできるように
