@@ -79,8 +79,10 @@ local GIT_CAUTION="%K{red}${_stash}${_more_such_as_rebase}%k"
 local CURRENT_DIRECTORY="%K{237}[%~] %k"
 local CURRENT_DATETIME="%K{237}%D{%m/%d %T} %k"
 
+local NUMBER_OF_JOBS="%(1j|%F{226}BackgroundJobs(%j)%f|)"
+
 PROMPT="
 ${EXIT_CD}${GIT_REPO_NAME}${GIT_CAUTION}${GIT_BRANCH}
 ${GIT_WORKING_TREE}${GIT_STAGE}${GIT_LOCAL_REPO}${CURRENT_DIRECTORY}${CURRENT_DATETIME}
-${GIT_VCS_ACTION}%K{238}%# %k"
+${NUMBER_OF_JOBS}%K{238}%# %k"
 
