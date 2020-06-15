@@ -71,7 +71,7 @@ local _behind="%(8v| ${_mark_behind}%8v]|)"
 local GIT_LOCAL_REPO="%K{88}${_ahead}${_behind}%k"
 
 local _stash="%(9v| ${_mark_stash}%9v |)"
-# たぶんもっといいやり方あるんだろうけど、調べるのが面倒臭かったんです..
+# 10v,11v,12v,13vって....。たぶんもっといいやり方あるんだろうけど、調べるのが面倒臭かったんです..
 local _more_such_as_rebase="%(10v| %10v |)%(11v| %11v |)%(12v| %12v |)%(13v| %13v |)"
 local GIT_CAUTION="%K{red}${_stash}${_more_such_as_rebase}%k"
 
