@@ -1,7 +1,8 @@
 # zsh起動時にtmux起動
 if (type "tmux" > /dev/null 2>&1) ; then
-  [[ -z "$TMUX" && ! -z "$PS1" ]] &&  tmux \
-    && echo "$(date +'%Y/%m/%d %H:%M:%S')\nbyebye from tmux.\n(Closed after 1 sec.)" && sleep 1 && exit
+  [[ -z "$TMUX" && ! -z "$PS1" ]] && tmux \
+    && echo "$(date +'%Y/%m/%d %H:%M:%S')\nbyebye from tmux.\n(Closed after 1 sec.)" && sleep 2 && exit
+   #&& echo "$(date +'%Y/%m/%d %H:%M:%S')\nbyebye from tmux.\n(Closed after 1 sec.)" && sleep 1
 fi
 
 # ------------------

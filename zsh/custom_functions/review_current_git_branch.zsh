@@ -1,5 +1,13 @@
 review_current_git_branch() {
+  if [ ! $(git rev-parse --is-inside-work-tree 2>/dev/null) ]; then
+    echo "Not a git repository."
+    return
+  fi
+
   merge_base_branch=${1:-origin/develop}
+  if [ ! $(git branch -a --format="%(refname:short)" | grep -e ^${merge_base_branch}$) ]; then
+    merge_base_branch="origin/$(fzf_git_branch)"
+  fi
   merge_base_commit=$(git rev-parse --short $(git merge-base ${merge_base_branch} HEAD))
 
   while true; do
@@ -30,20 +38,34 @@ review_current_git_branch() {
 
     # File changed
     printf "\n\n\e[33;7m[file changed]\e[m"
-    printf "\e[33m - $(git diff --name-only ${merge_base_commit}...HEAD| wc -l| sed -e 's/ //g') files\n\e[m"
-    git diff --stat ${merge_base_commit}...HEAD
+    # (A)(B),どちらがしっくり来るか、体感中
+    # (A)
+    # printf "\e[33m - $(git diff --name-only ${merge_base_commit}...HEAD| wc -l| sed -e 's/ //g') files\n\e[m"
+    # git diff --stat ${merge_base_commit}...HEAD
+    # (B)
+    printf "\e[33m - $(git diff --name-only ${merge_base_commit}| wc -l| sed -e 's/ //g') files\n\e[m"
+    git diff --stat ${merge_base_commit}
 
     # Command
     printf "\n\e[33;7m[Command]\e[m\n"
     echo " 1 | v | ) show diff then open with tig/vim."
     echo " 2 | t )   tig -w ${merge_base_commit}...HEAD"
-    echo " 3 | d )   git diff ${merge_base_commit}...HEAD | vim -R"
+
+    # (A)(B),どちらがしっくり来るか、体感中
+    # (A)
+    #echo " 3 | d )   git diff ${merge_base_commit}...HEAD | vim -R"
+    # (B)
+    echo " 3 | d )   git diff ${merge_base_commit} | vim -R"
     echo -n " > "
     read REPLY
     case "${REPLY}" in
-          1 | v | ) fzf_git_diff "${merge_base_branch}" "enter" ;;
+          1 | v | ) fzf_git_diff "${merge_base_commit}" "enter" ;;
           2 | t   ) tig -w ${merge_base_commit}...HEAD ;;
-          3 | d   ) git diff ${merge_base_commit}...HEAD | vim -R ;;
+          # (A)(B),どちらがしっくり来るか、体感中
+    # (A)
+    #      3 | d   ) git diff ${merge_base_commit}...HEAD | vim -R ;;
+    # (B)
+          3 | d   ) git diff ${merge_base_commit} | vim -R ;;
     esac
   done
 }

@@ -10,11 +10,13 @@ fzf_git_branch() {
   local subject="%s"
   local commit_date="%Cgreen(%cd)%Creset"
   local ref_names="%C(yellow)%d%Creset"
-  target=$(echo ${candidates} | fzf \
+  target=$(echo ${candidates} \
+    |fzf \
     --prompt='git checkout> ' \
     --preview "echo \[{}\]; echo; [[ {} =~ '^(-- |-- .|-b)' ]] && echo 'not a branch.' || git log --graph --color=always --date=format-local:'%Y/%m/%d %H:%M:%S' --pretty=format:'${commit_hash}${commit_date} ${author}${ref_names} ${subject}' --abbrev-commit {}" \
     --preview-window=right:70%:wrap \
     | sed -e "s/^[\* ]*//" \
-    | sed -e "s/^remotes\/origin\///")
+    | sed -e "s/^remotes\/origin\///" \
+    || echo "")
   echo "${target}"
 }
