@@ -9,7 +9,7 @@ fzf_git_diff() {
   files=$(git diff --numstat ${merge_base_commit} | awk '{printf "%+5s" , "+" $1} {printf "%+5s" , "-" $2} {printf "%s\n", ", " $3} ') || return
   target=$(echo "$files" | \
     fzf \
-    --header="(${nvim_bind}=> nvim)/ (right,ctrl-l,tab=> tig)/ (?=> toggle preview)" \
+    --header="(${nvim_bind}=> nvim)  (right,ctrl-l,tab=> tig)  (?=> toggle preview)" \
     --bind change:top \
     --bind "${nvim_bind}:execute(nvim {3} < /dev/tty > /dev/tty)" \
     --bind "right:execute(tig $merge_base_commit {3} < /dev/tty > /dev/tty)" \
