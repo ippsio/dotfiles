@@ -2,18 +2,22 @@
 # プレビューとして、ブランチのgit logを表示する。
 fzf_git_branch() {
   local fixed="-- \n-- .\n-b "
-  local dynamic="$(git branch -a| sed -e 's/^[\* ]*//' | sed -e 's/^[ ]*//g'| sort)"
+  #local dynamic="$(git branch -a --format="%(refname:short)"| sed -e 's/^[\* ]*//' | sed -e 's/^[ ]*//g'| sort)"
+  local dynamic="$(git branch -a --format="%(refname:short)"| sed -e 's/^origin\///g'| uniq| sort)"
   local candidates="${fixed}\n${dynamic}"
 
-  local commit_hash="%Cred%h%Creset"
-  local author="%C(bold blue)%an%Creset"
-  local subject="%s"
-  local commit_date="%Cgreen(%cd)%Creset"
-  local ref_names="%C(yellow)%d%Creset"
   target=$(echo ${candidates} \
     |fzf \
     --prompt='git checkout> ' \
-    --preview "echo \[{}\]; echo; [[ {} =~ '^(-- |-- .|-b)' ]] && echo 'not a branch.' || git log --graph --color=always --date=format-local:'%Y/%m/%d %H:%M:%S' --pretty=format:'${commit_hash}${commit_date} ${author}${ref_names} ${subject}' --abbrev-commit {}" \
+    --preview "\
+    echo \[{}\]; echo; [[ {} =~ '^(-- |-- .|-b)' ]] && echo 'not a branch.' \
+      || git log  \
+        --graph \
+        --color=always \
+        --date=format-local:'%Y/%m/%d %H:%M:%S' \
+        --pretty=format:'%C(010 022)%h%C(reset) %C(039 017)(%cd)%C(reset) %C(079)%an%C(reset) %C(226 021)%d%C(reset)%s' \
+        --abbrev-commit {} \
+    " \
     --preview-window=right:70%:wrap \
     | sed -e "s/^[\* ]*//" \
     | sed -e "s/^remotes\/origin\///" \

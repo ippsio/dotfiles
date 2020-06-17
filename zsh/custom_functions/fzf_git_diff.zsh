@@ -5,16 +5,11 @@
 fzf_git_diff() {
   local merge_base_commit=$1
   local nvim_bind=${2:-ctrl-v}
-  local commit_hash="%Cred%h%Creset"
-  local author="%C(bold blue)%an%Creset"
-  local subject="%s"
-  local commit_date="%Cgreen(%cd)%Creset"
-  local ref_names="%C(yellow)%d%Creset"
 
   files=$(git diff --numstat ${merge_base_commit} | awk '{printf "%+5s" , "+" $1} {printf "%+5s" , "-" $2} {printf "%s\n", ", " $3} ') || return
   target=$(echo "$files" | \
     fzf \
-    --header="(<${nvim_bind}>: open nvim)/ (<right>,ctrl-l,tab: open tig)/ (?: toggle preview)" \
+    --header="(${nvim_bind}=> nvim)/ (right,ctrl-l,tab=> tig)/ (?=> toggle preview)" \
     --bind change:top \
     --bind "${nvim_bind}:execute(nvim {3} < /dev/tty > /dev/tty)" \
     --bind "right:execute(tig $merge_base_commit {3} < /dev/tty > /dev/tty)" \
@@ -24,7 +19,7 @@ fzf_git_diff() {
     --preview "
       git log ${merge_base_commit} --oneline {3} | wc -l| tr -d ' '| sed -e 's/$/ total commits on this branch./'
       ;git log ${merge_base_commit} --oneline -3 --color=always --decorate=full --date=format-local:'%Y/%m/%d %H:%M:%S' \
-        --pretty=format:'${commit_hash}${commit_date} ${author}${ref_names} ${subject}' --abbrev-commit {3}
+        --pretty=format:'%C(010 022)%h%C(reset) %C(039 017)(%cd)%C(reset) %C(079)%an%C(reset) %C(226 021)%d%C(reset)%s' --abbrev-commit {3}
       ; echo ; echo
       ;git diff --color=always --stat ${merge_base_commit} {3}
       ; echo

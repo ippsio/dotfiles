@@ -9,13 +9,15 @@
 set git-colors = no
 
 color default           default default
-color 'Author: '        241     default
-color 'AuthorDate: '    241     default
-color 'Commit: '        241     default
-color 'CommitDate: '    241     default
+color 'Refs: '          226     021
+color 'Author: '        140     default
+color 'AuthorDate: '    140     default
+color 'Commit: '        140     default
+color 'CommitDate: '    140     default
 color 'Merge: '         045     default bold
 color 'Date: '          041     default
 
+color id                010     022
 color date              039     017
 color graph-commit      161     default
 color cursor            052     202
@@ -79,7 +81,7 @@ set diff-highlight = true
 # ======================
 # 各viewの表示
 # ======================
-set main-view   = date id author:email-user commit-title:graph=yes,refs=yes
+set main-view   = id date author:email-user commit-title:graph=yes,refs=yes
 set blame-view  = date:default author:email-user id:yes,color line-number:yes,interval=1 text
 set pager-view  = line-number:yes,interval=1 text
 set stage-view  = line-number:yes,interval=1 text

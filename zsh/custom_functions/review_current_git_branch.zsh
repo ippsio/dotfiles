@@ -6,14 +6,25 @@ review_current_git_branch() {
 
   merge_base_branch=${1:-origin/develop}
   if [ ! $(git branch -a --format="%(refname:short)" | grep -e ^${merge_base_branch}$) ]; then
-    merge_base_branch="origin/$(fzf_git_branch)"
+    merge_base_branch=$(fzf_git_branch)
+    [[ -z ${merge_base_branch} ]] && echo "Bye." && return
+  fi
+
+  if [ ! $(git branch -a --format="%(refname:short)" | grep -e ^${merge_base_branch}$) ]; then
+    echo "Branch [${merge_base_branch}] not found. Bye." && return
+  fi
+
+  if [[ ! ${merge_base_branch} =~ '^origin/' ]]; then
+    merge_base_branch="origin/${merge_base_branch}"
   fi
   merge_base_commit=$(git rev-parse --short $(git merge-base ${merge_base_branch} HEAD))
 
   while true; do
-    clear
+    # clear
     # git merge-base
-    printf "\e[33mMERGE-BASE=${merge_base_branch}\e[m  \e[33m \"git merge-base ${merge_base_branch} HEAD\" = ${merge_base_commit}\e[m\n\n"
+    printf "----------------------------------------------------------------------------------------------------------\n"
+    printf "\e[33mmerge_base_branch=${merge_base_branch}\e[m\n"
+    printf "\e[33mgit merge-base ${merge_base_branch} HEAD =>${merge_base_commit}\e[m\n\n"
 
     local commit_hash="%Cred%h%Creset"
     local author="%C(bold blue)%an%Creset"
