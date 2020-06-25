@@ -1,7 +1,7 @@
 # フォルダの選択I/Fを表示する。
 # プレビュー：そのフォルダ内のファイル一覧。
 fzf_list_dir() {
-  find $1 \
+  find ${1/'~'/${HOME}} \
     -path '*/\.' -prune -o \
     -path '*/\.git' -prune -o \
     -type d \
@@ -16,7 +16,7 @@ fzf_list_dir() {
 # ファイルの選択I/Fをする。
 # プレビュー：ファイル内の内容。
 fzf_list_file() {
-  find $1 \
+  find ${1/'~'/${HOME}} \
     -path '*/\.' -prune -o \
     -path '*/\.git' -prune -o \
     -type f \

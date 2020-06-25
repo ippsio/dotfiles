@@ -1,0 +1,10 @@
+current_win=$(tmux display-message -p '#I') # #I: Window index
+for info in $(tmux lsw -F "#{window_active},#{window_index},#{window_panes}");
+do
+  ar=(${info//,/ })
+  if [ ${ar[0]} == "1" ]; then # window_active: 1 if window active.
+    printf "[${ar[1]}:${ar[2]}]"
+  else
+    printf " ${ar[1]}:${ar[2]} "
+  fi
+done

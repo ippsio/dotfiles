@@ -11,7 +11,7 @@ hook_add = '''
   let g:any_jump_references_enabled = 1
 
   " Auto group results by filename
-  let g:any_jump_grouping_enabled = 1
+  let g:any_jump_grouping_enabled = 0
 
   " Amount of preview lines for each search result
   let g:any_jump_preview_lines_count = 5
