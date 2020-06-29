@@ -6,15 +6,16 @@ fzf_git_diff() {
   local merge_base_commit=$1
   local nvim_bind=${2:-ctrl-v}
 
+  #--bind "tab:execute(git diff --color=always $merge_base_commit {3} < /dev/tty |less -eR > /dev/tty)" \
   files=$(git diff --numstat ${merge_base_commit} | awk '{printf "%+5s" , "+" $1} {printf "%+5s" , "-" $2} {printf "%s\n", ", " $3} ') || return
   target=$(echo "$files" | \
     fzf \
     --header="(${nvim_bind}=> nvim)  (right,ctrl-l,tab=> tig)  (?=> toggle preview)" \
     --bind change:top \
     --bind "${nvim_bind}:execute(nvim {3} < /dev/tty > /dev/tty)" \
-    --bind "right:execute(tig $merge_base_commit {3} < /dev/tty > /dev/tty)" \
-    --bind "ctrl-l:execute(tig $merge_base_commit {3} < /dev/tty > /dev/tty)" \
-    --bind "tab:execute(tig $merge_base_commit {3} < /dev/tty > /dev/tty)" \
+    --bind "right:execute(tig $merge_base_commit...HEAD {3} < /dev/tty > /dev/tty)" \
+    --bind "ctrl-l:execute(tig $merge_base_commit {3}...HEAD < /dev/tty > /dev/tty)" \
+    --bind "tab:execute(git diff --color=auto $merge_base_commit {3}< /dev/tty  |nvim -R > /dev/tty)" \
     --bind '?:toggle-preview' \
     --preview "
       git log ${merge_base_commit} --oneline {3} | wc -l| tr -d ' '| sed -e 's/$/ total commits on this branch./'
