@@ -84,12 +84,25 @@ hook_add = '''
     \ }
 
   function! FPath()
-    " 文字列的に長いな、と思う場合はこちらを使用(ファイル名のみ表示する)
-    " ファイル名のみ
-    " let s:str = fnamemodify(expand("%:p"), ":t")
-
-    " フルパス
     let s:str = substitute(expand("%:p"), $HOME, "~", "g")
+
+    """" " フォルダ名を短縮しない場合はここをコメントアウト
+    """" " ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓
+    """" let s:dir = substitute(expand("%:p"), $HOME, "~", "g")
+    """" " スラッシュで分割
+    """" let s:dir_ar = split(s:dir, '/')
+
+    """" " フルパスファイル名の末尾の要素（ファイル名要素）を削除
+    """" call remove(s:dir_ar, len(s:dir_ar) - 1)
+
+    """" " 各階層のフォルダ名の、先頭1文字から最大3文字目（ドットで始まるフォルダ名は最大4文字目）までとする。
+    """" call map(s:dir_ar, 'matchstr(v:val, "^[\.]\\{0,1}.\\{1,3}")')
+
+    """" " スラッシュで結合
+    """" let s:dir = join(s:dir_ar, "/")
+    """" let s:str = s:dir . '/' . fnamemodify(expand("%:p"), ":t")
+    """" " ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑
+
     if &modified
       let s:str = s:str . '|+'
     endif
