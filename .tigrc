@@ -234,6 +234,12 @@ bind generic P      none
 # <Hash>とは、#(シャープ)キーのこと。
 bind generic <Hash> none
 bind generic <Hash> @sh -c "echo %(commit) | pbcopy"
-bind main L         !sh -c "echo %(commit) | pbcopy"
+bind main L         !sh -c "hash=$(git rev-parse --short %(commit)); \
+                            echo \"Copied=> commit=[${hash}]\"; \
+                            printf \"${hash}\" | pbcopy; \
+                            echo '-------------------------------------------------'; \
+                            git log --color=always ${hash}| head -7; \
+                            echo '-------------------------------------------------'; \
+                            echo"
 bind diff L         !sh -c "echo %(commit) | pbcopy"
 

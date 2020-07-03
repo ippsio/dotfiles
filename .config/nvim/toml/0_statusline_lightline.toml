@@ -59,7 +59,7 @@ hook_add = '''
     \            ]
     \  },
     \  'component': {
-    \    'lineinfo': '%l[%L]:%v'
+    \    'lineinfo': '%l/%L(%p%%):%v'
     \  },
     \  'mode_map': {
     \    'n': 'N',
