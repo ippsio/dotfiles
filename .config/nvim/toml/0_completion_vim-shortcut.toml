@@ -1,0 +1,14 @@
+[[plugins]]
+repo="sunaku/vim-shortcut"
+hook_add ='''
+  noremap <silent>  s :Shortcuts<Return>
+  noremap <silent> ss :Shortcuts<Return>
+
+  Shortcut! :NERDTreeFind<CR> NERDTree Find
+
+  Shortcut! :tabNext<CR> Tab: Next tab
+  Shortcut! :tabPrev<CR> Tab: Previous tab
+
+
+'''
+
