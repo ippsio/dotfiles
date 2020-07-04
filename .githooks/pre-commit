@@ -22,7 +22,7 @@ allownonascii=$(git config --bool hooks.allownonascii)
 exec 1>&2
 
 echo "-------------"
-git diff --cached --name-only --diff-filter=A -z $against
+git diff --cached --name-only --diff-filter=A -z
 echo "-------------"
 
 # Cross platform projects tend to avoid non-ASCII filenames; prevent
