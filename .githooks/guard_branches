@@ -1,5 +1,6 @@
 #!/bin/sh
-OPERATION=$1
+BRANCH=$1
+OPERATION=$2
 # 保護対象のブランチでない場合、このgit操作を許可(exit 0)
 [[ "${BRANCH}" != "master" \
 && "${BRANCH}" != "develop" \
