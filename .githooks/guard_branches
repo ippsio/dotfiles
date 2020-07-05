@@ -1,0 +1,22 @@
+#!/bin/sh
+  OPERATION=$1
+  # 保護対象のブランチでない場合、このgit操作を許可(exit 0)
+  [[ "${BRANCH}" != "master" \
+  && "${BRANCH}" != "develop" \
+  && "${BRANCH}" != "dotfiles" \
+  ]] && exit 0
+
+  echo "[${BRANCH}] ブランチに ${OPERATION} しようとしています。"
+
+  # ttyを取得できない場合、中止(exit 1)。その後のブランチ名入力が出来ないから。
+  exec < /dev/tty || (echo "tty取得できないgitクライアントです。CUIから操作して下さい。中止します。" && exit 1)
+
+  # ブランチ名を入力させる。入力が正しく無い場合は中止(exit 1)
+  echo "${OPERATION} するには ${BRANCH} と入力して下さい。"; read ANSWER;
+  [[ "${ANSWER}" != "${BRANCH}" ]] && echo "一致しません。中止します。" && exit 1
+
+  # 10秒待たせる。その間、CTRL+Cで処理中止できる。
+  T=10; while [[ $T -gt 0 ]]; do echo "$T 秒後に実行します。止めるにはCTRL+C"; sleep 1; T=$(($T - 1)); done
+
+  # このgit操作を許可(exit 0)
+  exit 1
