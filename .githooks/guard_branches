@@ -1,4 +1,5 @@
 #!/bin/sh
+function guard_branches() {
   OPERATION=$1
   # 保護対象のブランチでない場合、このgit操作を許可(exit 0)
   [[ "${BRANCH}" != "master" \
@@ -20,3 +21,4 @@
 
   # このgit操作を許可(exit 0)
   exit 1
+}
