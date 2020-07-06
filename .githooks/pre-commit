@@ -1,11 +1,8 @@
 #!/bin/sh
+BRANCH=$(git branch --format="%(refname:short)" --contains)
+CMD="commit"
 
-# Redirect output to stderr.
-exec 1>&2
+# ブランチ保護用sh起動
+DIR=$(cd $(dirname $0); pwd)
+${DIR}/guard_branches ${BRANCH} ${CMD}
 
-echo "-------------"
-echo "Will be comitted."
-git diff --cached --name-only --diff-filter=d
-echo "-------------"
-
-exit 1

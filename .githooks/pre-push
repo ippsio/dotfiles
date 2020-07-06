@@ -1,23 +1,8 @@
 #!/bin/sh
-while read local_ref local_sha1 remote_ref remote_sha1
-do
-  set -x
-  echo "q"
-  remote_branch="${remote_ref##refs/heads/}"
-  echo  "remote_branch=${remote_branch}"
-  if [[ "${remote_branch}" == "dotfiles" ]]; then
+while read local_ref local_sha1 remote_ref remote_sha1; do BRANCH="${remote_ref##refs/heads/}"; done
+CMD="push"
 
-    echo "[${remote_branch}] ブランチにpushしようとしています。"
-    echo "続けて良ければ ${remote_branch} と入力して下さい。"
+# ブランチ保護用sh起動
+DIR=$(cd $(dirname $0); pwd)
+${DIR}/guard_branches ${BRANCH} ${CMD}
 
-#    exec < /dev/tty
-#    read ANSWER
-#
-#    case $ANSWER in
-#      "${remote_branch}" ) echo "push します。";;
-#      * ) echo "push を中止します。";exit 1;;
-#    esac
-  fi
-echo "Gooooo ${remote_branch}"
-done
-exit 1
