@@ -3,7 +3,7 @@
 fzf_git_branch() {
   local fixed="-- \n-- .\n-b "
   #local dynamic="$(git branch -a --format="%(refname:short)"| sed -e 's/^[\* ]*//' | sed -e 's/^[ ]*//g'| sort)"
-  local dynamic="$(git branch -a --format="%(refname:short)"| sed -e 's/^origin\///g'| uniq| sort)"
+  local dynamic="$(git branch -a --format="%(refname:short)"| sed -e 's/^origin\///g'| sort| uniq)"
   local candidates="${fixed}\n${dynamic}"
 
   target=$(echo ${candidates} \
