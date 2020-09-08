@@ -8,6 +8,7 @@ export ZPLUG_HOME=~/.cache/zplug
 export TMUX_PLUGINS=~/.cache/tmux/plugins
 export PYENV_ROOT=$HOME/.pyenv
 export RBENV_ROOT=$HOME/.rbenv
+export NODENV_ROOT=$HOME/.nodenv
 export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
 export PATH=${PATH}:$PYENV_ROOT/bin:$RBENV_ROOT/bin
 
@@ -38,6 +39,7 @@ source ~/dotfiles/prepare/prepare_diff-highlight.sh
 source ~/dotfiles/prepare/prepare_fzf.sh
 source ~/dotfiles/prepare/prepare_zplug.sh
 source ~/dotfiles/prepare/prepare_bat.sh
+source ~/dotfiles/prepare/prepare_nodenv.sh
 
 # -----------------------------------------------------
 # Generate link fot real file, directory in this repo.

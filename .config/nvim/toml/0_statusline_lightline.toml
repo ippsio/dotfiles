@@ -112,19 +112,24 @@ hook_add = '''
   " GitGutterの情報
   " 現在のHEADのmerge-baseにするブランチとそのコミットハッシュ
   function! GitGutterDiffBase()
-    if g:my_git_repo == ""
-      return ""
-    endif
-    " ex) '[Git(develop)]'[5] ==> 'develop)]'
-    " ex) '[Git(develop)]'[5:-3] ==> 'develop'
-    let s:curr_branch = fugitive#statusline()[5:-3]
-    " 文字列的に長いので、少し簡略な表現で表示するようにする
-    "return g:my_git_repo . '(' . g:my_diff_base_hash . ':' . g:my_diff_base_branch . ' <= ' . s:curr_branch . ')'
-    return g:my_diff_base_branch . ' <= ' . s:curr_branch
+    return ""
+
+   " 画面上のスペースをすごく使うので、GitGutterの情報は表示しないこととします。
+   """  if g:my_git_repo == ""
+   """    return ""
+   """  endif
+   """  " ex) '[Git(develop)]'[5] ==> 'develop)]'
+   """  " ex) '[Git(develop)]'[5:-3] ==> 'develop'
+   """  let s:curr_branch = fugitive#statusline()[5:-3]
+   """  " 文字列的に長いので、少し簡略な表現で表示するようにする
+   """  "return g:my_git_repo . '(' . g:my_diff_base_hash . ':' . g:my_diff_base_branch . ' <= ' . s:curr_branch . ')'
+   """  return g:my_diff_base_branch . ' <= ' . s:curr_branch
   endfunction
 
   function! FileInfo()
-    return &fileformat . '|' . &fileencoding . '|' . &filetype
+    " ファイルタイプはあって便利という事が特に無いので、表示しないこととします。
+    return &fileformat . '|' . &fileencoding
+    " return &fileformat . '|' . &fileencoding . '|' . &filetype
   endfunction
 
   function! GitRepoInfo()

@@ -4,7 +4,8 @@ review_current_git_branch() {
     return
   fi
 
-  merge_base_branch=${1:-origin/develop}
+  #merge_base_branch=${1:-origin/develop}
+  merge_base_branch=${1:-origin/$(fzf_git_branch)}
   if [ ! $(git branch -a --format="%(refname:short)" | grep -e ^${merge_base_branch}$) ]; then
     merge_base_branch=$(fzf_git_branch)
     [[ -z ${merge_base_branch} ]] && echo "Bye." && return

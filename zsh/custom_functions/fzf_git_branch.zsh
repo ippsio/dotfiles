@@ -1,7 +1,7 @@
 # git checkout用の選択候補を表示する。
 # プレビューとして、ブランチのgit logを表示する。
 fzf_git_branch() {
-  local fixed="-- \n-- .\n-b "
+  local fixed="develop\n-- \n-- .\n-b "
   #local dynamic="$(git branch -a --format="%(refname:short)"| sed -e 's/^[\* ]*//' | sed -e 's/^[ ]*//g'| sort)"
   local dynamic="$(git branch -a --format="%(refname:short)"| sed -e 's/^origin\///g'| sort| uniq)"
   local candidates="${fixed}\n${dynamic}"
