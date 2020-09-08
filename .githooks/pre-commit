@@ -1,8 +1,5 @@
 #!/bin/sh
 BRANCH=$(git branch --format="%(refname:short)" --contains)
-CMD="commit"
-
-# ブランチ保護用sh起動
 DIR=$(cd $(dirname $0); pwd)
-${DIR}/guard_branches ${BRANCH} ${CMD}
+${DIR}/guard_branches ${BRANCH} commit
 

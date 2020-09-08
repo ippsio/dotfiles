@@ -1,8 +1,8 @@
 #!/bin/sh
-while read local_ref local_sha1 remote_ref remote_sha1; do BRANCH="${remote_ref##refs/heads/}"; done
-CMD="push"
-
-# ブランチ保護用sh起動
-DIR=$(cd $(dirname $0); pwd)
-${DIR}/guard_branches ${BRANCH} ${CMD}
+while read local_ref local_sha1 remote_ref remote_sha1
+do
+  BRANCH="${remote_ref##refs/heads/}"
+  DIR=$(cd $(dirname $0); pwd)
+  ${DIR}/guard_branches ${BRANCH} push
+done
 
