@@ -46,6 +46,7 @@ hook_add = '''
         break
       endif
     endfor
+    GitGutter
   endfunction
 
   " 現在の比較対象(diff_base)を表示するコマンド

@@ -18,8 +18,8 @@ fzf_git_diff() {
     --bind "tab:execute(git diff --color=auto $merge_base_commit {3}< /dev/tty  |nvim -R > /dev/tty)" \
     --bind '?:toggle-preview' \
     --preview "
-      git log ${merge_base_commit} --oneline {3} | wc -l| tr -d ' '| sed -e 's/$/ total commits on this branch./'
-      ;git log ${merge_base_commit} --oneline -3 --color=always --decorate=full --date=format-local:'%Y/%m/%d %H:%M:%S' \
+      git log ${merge_base_commit}.. --oneline {3} | wc -l| tr -d ' '| sed -e 's/$/ total commits on this branch(merge_base_commit=${merge_base_commit})./'
+      ;git log ${merge_base_commit}.. --oneline -3 --color=always --decorate=full --date=format-local:'%Y/%m/%d %H:%M:%S' \
         --pretty=format:'%C(010 022)%h%C(reset) %C(039 017)(%cd)%C(reset) %C(079)%an%C(reset) %C(226 021)%d%C(reset)%s' --abbrev-commit {3}
       ; echo ; echo
       ;git diff --color=always --stat ${merge_base_commit} {3}

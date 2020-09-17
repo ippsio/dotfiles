@@ -7,7 +7,6 @@ review_current_git_branch() {
   #merge_base_branch=${1:-origin/develop}
   merge_base_branch=${1:-origin/$(fzf_git_branch)}
   if [ ! $(git branch -a --format="%(refname:short)" | grep -e ^${merge_base_branch}$) ]; then
-    merge_base_branch=$(fzf_git_branch)
     [[ -z ${merge_base_branch} ]] && echo "Bye." && return
   fi
 
@@ -24,8 +23,10 @@ review_current_git_branch() {
     # clear
     # git merge-base
     printf "----------------------------------------------------------------------------------------------------------\n"
+    printf "\e[33;7m[merge base]\e[m\n"
     printf "\e[33mmerge_base_branch=${merge_base_branch}\e[m\n"
-    printf "\e[33mgit merge-base ${merge_base_branch} HEAD =>${merge_base_commit}\e[m\n\n"
+    printf "\e[33;7mgit rev-parse --short \$(git merge-base ${merge_base_branch} HEAD)\e[m "
+    printf "\e[33m=>${merge_base_commit}\e[m\n\n"
 
     local commit_hash="%Cred%h%Creset"
     local author="%C(bold blue)%an%Creset"
@@ -36,7 +37,8 @@ review_current_git_branch() {
     # git log
     local commits_count_last=3
     local commits_count_total=$(git --no-pager log --oneline ${merge_base_commit}...HEAD| wc -l| tr -d ' ')
-    printf "\e[33;7m[git log]\e[m"
+    printf "\e[33;7m[git log]\e[m\n"
+    printf "\e[33;7mgit --no-pager log --oneline ${merge_base_commit}...HEAD\e[m"
     printf "\e[33m - total commit count ${commits_count_total}. \n\e[m"
     if [[ ${commits_count_total} -gt ${commits_count_last} ]]; then
       printf "\e[33m      :\n\e[m"
@@ -75,7 +77,7 @@ review_current_git_branch() {
           2 | t   ) tig -w ${merge_base_commit}...HEAD ;;
           # (A)(B),どちらがしっくり来るか、体感中
     # (A)
-    #      3 | d   ) git diff ${merge_base_commit}...HEAD | vim -R ;;
+    #     3 | d   ) git diff ${merge_base_commit}...HEAD | vim -R ;;
     # (B)
           3 | d   ) git diff ${merge_base_commit} | vim -R ;;
     esac

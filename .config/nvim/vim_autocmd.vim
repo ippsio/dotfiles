@@ -7,6 +7,19 @@ augroup QfAutoCommands
   au BufLeave * if &filetype == 'qf' | ccl | endif
 augroup END
 
+" augroup AuEventVisualize
+"   autocmd!
+"   autocmd FocusGained * :echo 'FocusGained'
+"   autocmd FocusLost * :echo 'FocusLost'
+"   autocmd WinEnter * :echo 'WinEnter'
+"   autocmd BufNew * :echo 'BufNew'
+"   autocmd BufRead * :echo 'BufNew'
+"   autocmd BufEnter * :echo 'BufEnter'
+"   autocmd BufLeave * :echo 'BufLeave'
+"   autocmd BufWinEnter * :echo 'BufWinEnter'
+"   autocmd BufWinLeave * :echo 'BufWinLeave'
+" augroup END
+
 augroup FileTypeRuby
   autocmd!
   " @hoge のような変数に対し、先頭の@も単語として扱ってもらう。
@@ -22,5 +35,4 @@ augroup FileTypeRuby
   " " hoge.map(&:fuga) の中身の &:fuga を、単語として扱ってもらう。
   " " au FileType ruby setlocal iskeyword+=:
   " " au FileType ruby setlocal iskeyword+=&
-
 augroup END
