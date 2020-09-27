@@ -17,7 +17,7 @@ if dein#load_state('~/.cache/dein')
   call dein#add('~/.cache/dein/repos/github.com/Shougo/dein.vim')
 
   " お試し
-  call dein#load_toml('~/.config/nvim/toml/0_completion_vim-shortcut.toml', {'lazy': 0})
+  call dein#load_toml('~/.config/nvim/toml/0_tasting_now.toml', {'lazy': 0})
 
   " lazy0: どんなfiletypeでも動く
   " 一軍

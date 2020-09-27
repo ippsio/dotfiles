@@ -23,9 +23,6 @@ vnoremap v $h
 " space2度押しで文字をハイライト
 nnoremap <silent> <Space><Space> mz:call <SID>hi_word()<CR>
 xnoremap <silent> <Space><Space> mz:call <SID>hi_selected()<CR>
-" mでも同様に、文字をハイライト
-nnoremap <silent> m mz:call <SID>hi_word()<CR>
-xnoremap <silent> m mz:call <SID>hi_selected()<CR>
 
 " F4で、ハイライト＋Ripgrep検索(要ripgrepコマンド)
 nnoremap <F4>       mz:call <SID>hi_word_and_grep(1)<CR>
@@ -51,7 +48,8 @@ function s:hi_word_and_grep(range_cd)
   if a:range_cd == 0
     call s:vimgrep_current_buf_z_register()
   else
-    call s:grep_z_register()
+    " call s:grep_z_register()
+    call s:fixedgrep_z_register()
   endif
 endfunction
 
@@ -70,18 +68,36 @@ function s:hi_selected_and_grep(range_cd)
   if a:range_cd == 0
     call s:vimgrep_current_buf_z_register()
   else
-    call s:grep_z_register()
+    " call s:grep_z_register()
+    call s:fixedgrep_z_register()
   endif
 endfunction
 
+""" " Zレジスタの内容をgrep(可能ならripgrep)
+""" function s:grep_z_register()
+"""   let @z = escape(@z, '\()[]{}|^&#$%*+?')
+"""   let @z = substitute(@z, '\\', '\\\\', 'g')
+"""   let @z = substitute(@z, '"', '\\"', 'g')
+"""   let @z = substitute(@z, '`', '\\`', 'g')
+"""   if executable('rg')
+"""     " call feedkeys(":Rg \<C-r>z\<CR>", "n")
+"""     call feedkeys(":Rg \"\<C-r>z\"\<CR>", "n")
+"""   else
+"""     "call feedkeys(":grep \"\<C-r>z\"\<CR>", "n")
+"""     call feedkeys(":grep \"\<C-r>z\"", "n")
+"""   endif
+""" endfunction
+
 " Zレジスタの内容をgrep(可能ならripgrep)
-function s:grep_z_register()
+function s:fixedgrep_z_register()
   let @z = escape(@z, '\()[]{}|^&#$%*+?')
-  let @z = substitute(@z, '\\', '\\\\', 'g')
+  let @z = substitute(@z, '\', '\\\', 'g')
   let @z = substitute(@z, '"', '\\"', 'g')
-  let @z = substitute(@z, '`', '\\`', 'g')
   if executable('rg')
-    call feedkeys(":Rg \<C-r>z\<CR>", "n")
+    let s:rg_command = g:rg_command
+    let g:rg_command = 'rg --vimgrep --fixed-strings'
+    call feedkeys(":Rg \"\<C-r>z\"\<CR>", "n")
+    let g:rg_command = s:rg_command
   else
     "call feedkeys(":grep \"\<C-r>z\"\<CR>", "n")
     call feedkeys(":grep \"\<C-r>z\"", "n")
@@ -172,5 +188,7 @@ hi ColorColumn ctermbg=235 guibg=#2c2d27
 " ノーマルモード中にQ、または素早くqqと入力した場合は:q<CR>とみなす
 nnoremap qq :q<CR>
 nnoremap Q :<C-u>:q<CR>
+nnoremap <C-q> :<C-u>:q<CR>
 nnoremap <silent> W :<C-u>:w<CR>:echo 'SAVED! ' . strftime("%Y/%m/%d %H:%M:%S") . '[' . substitute(expand("%:p"), $HOME, "~", "g") . ']'<CR>
+nnoremap <silent> <C-s> :<C-u>:w<CR>:echo 'SAVED! ' . strftime("%Y/%m/%d %H:%M:%S") . '[' . substitute(expand("%:p"), $HOME, "~", "g") . ']'<CR>
 

@@ -1,0 +1,39 @@
+ [[plugins]]
+# repo="sunaku/vim-shortcut"
+# hook_add ='''
+#   noremap <silent>  <space>s :Shortcuts<Return>
+#
+#   "Shortcut! :NERDTreeFind<CR> NERDTreeFindする
+#   "Shortcut! :tabNext<CR> Tab: Nexttab
+# '''
+
+
+# [[plugins]]
+# repo='vimtaku/hl_matchit.vim'
+# hook_add='''
+#   let g:hl_matchit_enable_on_vim_startup = 1
+# '''
+
+[[plugins]]
+repo='t9md/vim-quickhl'
+hook_add='''
+  " カーソル下のハイライトをトグルする
+  map <Space>m <Plug>(quickhl-manual-this)
+  " ハイライトをすべて消す
+  map <Space>M <Plug>(quickhl-manual-reset)
+'''
+
+# [[plugins]]
+# repo="preservim/tagbar"
+# hook_add='''
+#   let g:tagbar_type_ruby = {
+#       \ 'kinds' : [
+#           \ 'm:modules',
+#           \ 'c:classes',
+#           \ 'd:describes',
+#           \ 'C:contexts',
+#           \ 'f:methods',
+#           \ 'F:singleton methods'
+#       \ ]
+#   \ }
+# '''

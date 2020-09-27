@@ -1,2 +1,11 @@
 [[plugins]]
 repo = 'jremmen/vim-ripgrep'
+hook_add='''
+  "let g:rg_binary = 'rg'
+  "let g:rg_format = "%f:%l:%c:%m"
+  "let g:rg_command = g:rg_binary . ' --vimgrep'
+  "let g:rg_command = g:rg_binary . ' --vimgrep --fixed-strings'
+  "let g:rg_highlight = false
+  "let g:rg_root_types = ['.git']
+  "let g:rg_window_location = 'botright'
+'''
