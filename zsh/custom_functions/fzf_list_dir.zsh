@@ -1,5 +1,6 @@
 # フォルダの選択I/Fを表示する。
 # プレビュー：そのフォルダ内のファイル一覧。
+SH_NAME=$(basename $0)
 fzf_list_dir() {
   # find $1 \
   find ${1/'~'/${HOME}} \
@@ -9,7 +10,7 @@ fzf_list_dir() {
     | sed -e 's#$#/#g' \
     | sed -e 's#\/\/*#\/#g' \
     | fzf +m \
-    --prompt=${1/${HOME}/'~'} \
+    --prompt="${SH_NAME}> " \
     --preview 'echo -n $(cd {}; pwd); echo '/'; echo; ls -UlaFG {}' \
     --preview-window=right:60%:wrap || echo $1
 }
@@ -24,7 +25,7 @@ fzf_list_file() {
     -type f \
     | sed -e 's#\/\/*#\/#g' \
     | fzf +m \
-    --prompt=${1/${HOME}/'~'} \
+    --prompt="${SH_NAME}> " \
     --preview 'bat --color=always --style=header,grid --line-range :100 {}' \
     --preview-window=right:60%:wrap || echo $1
 }
