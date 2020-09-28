@@ -23,7 +23,6 @@ if dein#load_state('~/.cache/dein')
   " 一軍
   call dein#load_toml('~/.config/nvim/toml/0_command_altercmd.toml', {'lazy': 0})
   call dein#load_toml('~/.config/nvim/toml/0_format_sqlutilities.toml', {'lazy': 0})
-  call dein#load_toml('~/.config/nvim/toml/0_search_any_jump.toml', {'lazy': 0})
   call dein#load_toml('~/.config/nvim/toml/0_search_fzf.toml', {'lazy': 0})
   call dein#load_toml('~/.config/nvim/toml/0_search_qfixgrep.toml', {'lazy': 0})
   call dein#load_toml('~/.config/nvim/toml/0_search_vim-anzu.toml', {'lazy': 0})
@@ -68,6 +67,7 @@ if dein#load_state('~/.cache/dein')
   " vim-endwise" cocの保管時に暴発
   " call dein#load_toml('~/.config/nvim/toml/0_completion_vim-endwise.toml', {'lazy': 0})
   " call dein#load_toml('~/.config/nvim/toml/0_git_tig-explorer.toml', {'lazy': 0})
+  " call dein#load_toml('~/.config/nvim/toml/0_search_any_jump.toml', {'lazy': 0})
 
   " lazy1: 特定のfiletypeでのみ動く
   " 一軍

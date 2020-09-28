@@ -131,7 +131,7 @@ nnoremap <space>= <C-w>=
 " xnoremap = VISUALモードのmapを定義(再マップ無し)
 " 左辺 <expr> p
 "   = <expr> 右辺を指揮として評価する
-" 右辺 'pgv"'.v:register.'y`>' 
+" 右辺 'pgv"'.v:register.'y`>'
 "   = １(p) ペースト
 "    + ２(gv) さっき選択していた範囲を
 "    + ３([v:registerの結果]y) *レジスタを使用してヤンク
