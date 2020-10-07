@@ -8,7 +8,7 @@ function fzf_rg_then_vim() {
     | fzf -m \
       --prompt="${SH_NAME}> " \
       --bind "enter:execute(nvim {1} +{2} < /dev/tty > /dev/tty)" \
-      --preview "bat --color=always --style=numbers,header,grid --line-range :65535 {1}"
+      --preview "bat --color=always --style=numbers,header,grid --line-range {2}: --highlight-line {2} {1}"
   )
 }
 

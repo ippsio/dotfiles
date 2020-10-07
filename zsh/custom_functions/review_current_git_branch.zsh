@@ -5,7 +5,8 @@ review_current_git_branch() {
   fi
 
   #merge_base_branch=${1:-origin/develop}
-  merge_base_branch=${1:-origin/$(fzf_git_branch)}
+  #merge_base_branch=${1:-origin/$(fzf_git_branch)}
+  merge_base_branch=$(fzf_git_branch)
   if [ ! $(git branch -a --format="%(refname:short)" | grep -e ^${merge_base_branch}$) ]; then
     [[ -z ${merge_base_branch} ]] && echo "Bye." && return
   fi
@@ -14,9 +15,9 @@ review_current_git_branch() {
     echo "Branch [${merge_base_branch}] not found. Bye." && return
   fi
 
-  if [[ ! ${merge_base_branch} =~ '^origin/' ]]; then
-    merge_base_branch="origin/${merge_base_branch}"
-  fi
+  #if [[ ! ${merge_base_branch} =~ '^origin/' ]]; then
+  #  merge_base_branch="origin/${merge_base_branch}"
+  #fi
   merge_base_commit=$(git rev-parse --short $(git merge-base ${merge_base_branch} HEAD))
 
   while true; do

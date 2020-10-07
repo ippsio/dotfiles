@@ -1,5 +1,6 @@
 # git checkout用の選択候補を表示する。
 # プレビューとして、ブランチのgit logを表示する。
+SH_NAME=$(basename $0)
 fzf_git_branch() {
   local fixed="develop\n-- \n-- .\n-b "
   #local dynamic="$(git branch -a --format="%(refname:short)"| sed -e 's/^[\* ]*//' | sed -e 's/^[ ]*//g'| sort)"
@@ -9,7 +10,7 @@ fzf_git_branch() {
   # git logのプレビュー表示が不要な場合はこちら。
   target=$(echo ${candidates} \
     |fzf \
-    --prompt='BRANCH> ' \
+    --prompt="${SH_NAME} > " \
     | sed -e "s/^[\* ]*//" \
     | sed -e "s/^remotes\/origin\///" \
     || echo "")
@@ -30,5 +31,6 @@ fzf_git_branch() {
   #  | sed -e "s/^[\* ]*//" \
   #  | sed -e "s/^remotes\/origin\///" \
   #  || echo "")
+  target=$(echo "origin/${target}\n${target}" | fzf --prompt="REMOTE BRANCH? LOCAL BRANCH? > ")
   echo "${target}"
 }

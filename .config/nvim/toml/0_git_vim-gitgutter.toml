@@ -20,6 +20,9 @@ hook_add = '''
   "" 起動時に差分行の行ハイライトを自動的に有効にする
   "" let g:gitgutter_highlight_lines = 1
 
+  " 行番号のハイライト
+  let g:gitgutter_highlight_linenrs = 1
+
   " git diff元ブランチの候補一覧
   let s:my_diff_base_list = ['origin/develop', 'origin/master']
 
