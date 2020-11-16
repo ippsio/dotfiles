@@ -37,7 +37,7 @@ function my_space_extraction() {
   || $BUFFER =~ '^git checkout+$' \
   ]] \
   && zle autosuggest-clear \
-  && git_branch="$(fzf_git_branch)" \
+  && git_branch="$(fzf_git_branch local_first_origin_last)" \
   && BUFFER="git checkout ${git_branch}" \
   && zle end-of-line \
   && return

@@ -1,5 +1,6 @@
 #!/bin/sh
-BRANCH=$(git branch --format="%(refname:short)" --contains)
+#BRANCH=$(git branch --format="%(refname:short)" --contains)
+BRANCH=$(git symbolic-ref --short HEAD)
 DIR=$(cd $(dirname $0); pwd)
 ${DIR}/guard_branches ${BRANCH} commit
 
