@@ -8,7 +8,7 @@ function fzf_rg_then_vim() {
     | fzf -m \
       --prompt="${SH_NAME}> " \
       --bind "enter:execute(nvim {1} +{2} < /dev/tty > /dev/tty)" \
-      --preview "bat --color=always --style=numbers,header,grid --line-range {2}: --highlight-line {2} {1}"
+      --preview 'decide_from() { echo $(( $1 - 5 > 0 ? $1 - 5 : 1)) }; bat --color=always --style=numbers,header,grid --line-range $(decide_from {2}): --highlight-line {2} {1}'
   )
 }
 

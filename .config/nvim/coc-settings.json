@@ -22,7 +22,10 @@
                     "hlintOn": true
                 }
             }
-        }
+        },
     },
-    "python.jediEnabled": false
+    "python.jediEnabled": false,
+    "solargraph.useBundler": true,
+    "solargraph.bundlerPath": "~/.rbenv/shims/bundle",
+    "solargraph.commandPath": "~/.rbenv/shims/solargraph"
 }
