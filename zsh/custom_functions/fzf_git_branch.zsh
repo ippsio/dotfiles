@@ -3,7 +3,7 @@
 SH_NAME=$(basename $0)
 fzf_git_branch() {
   local origin_local=$1
-  local fixed="develop\n-- \n-- .\n-b "
+  local fixed="develop\n-- .\n-- \n-b "
   #local dynamic="$(git branch -a --format="%(refname:short)"| sed -e 's/^[\* ]*//' | sed -e 's/^[ ]*//g'| sort)"
   local dynamic="$(git branch -a --format="%(refname:short)"| sed -e 's/^origin\///g'| sort| uniq)"
   local candidates="${fixed}\n${dynamic}"
