@@ -32,12 +32,14 @@ fzf_git_branch() {
   #  | sed -e "s/^[\* ]*//" \
   #  | sed -e "s/^remotes\/origin\///" \
   #  || echo "")
-  if [[ "${target}" == "-- " ||  "${target}" == "-- ." ]]; then
-    target=$(echo ${target})
-  elif [[ "${origin_local}" == "" || "${origin_local}" == "origin_first_local_last" ]]; then
-    target=$(echo "(REMOTE) origin/${target}\n(LOCAL)  ${target}" | fzf --prompt="LOCAL OR REMOTE? > "| awk '{print $2}')
-  elif [[ "${origin_local}" == "local_first_origin_last" ]]; then
-    target=$(echo "(LOCAL)  ${target}\n(REMOTE) origin/${target}" | fzf --prompt="LOCAL OR REMOTE? > "| awk '{print $2}')
+  if [[ "${target}" != "" ]]; then
+    if [[ "${target}" == "-- " ||  "${target}" == "-- ." ]]; then
+      target=$(echo ${target})
+    elif [[ "${origin_local}" == "" || "${origin_local}" == "origin_first_local_last" ]]; then
+      target=$(echo "(REMOTE) origin/${target}\n(LOCAL)  ${target}" | fzf --prompt="LOCAL OR REMOTE? > "| awk '{print $2}')
+    elif [[ "${origin_local}" == "local_first_origin_last" ]]; then
+      target=$(echo "(LOCAL)  ${target}\n(REMOTE) origin/${target}" | fzf --prompt="LOCAL OR REMOTE? > "| awk '{print $2}')
+    fi
   fi
   echo "${target}"
 }

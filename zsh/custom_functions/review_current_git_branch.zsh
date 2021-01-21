@@ -19,15 +19,16 @@ review_current_git_branch() {
   #  merge_base_branch="origin/${merge_base_branch}"
   #fi
   merge_base_commit=$(git rev-parse --short $(git merge-base ${merge_base_branch} HEAD))
+  current_branch=$(git branch --contains| tr -d "* ")
 
   while true; do
     # clear
     # git merge-base
-    printf "----------------------------------------------------------------------------------------------------------\n"
-    printf "\e[33;7m[merge base]\e[m\n"
-    printf "\e[33mmerge_base_branch=${merge_base_branch}\e[m\n"
-    printf "\e[33;7mgit rev-parse --short \$(git merge-base ${merge_base_branch} HEAD)\e[m "
-    printf "\e[33m=>${merge_base_commit}\e[m\n\n"
+    printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
+    printf "\e[33;7m[branches]\e[m\n"
+    printf " [${merge_base_branch}] <= [${current_branch}]\n"
+    printf "\e[33;7mgit rev-parse --short \$(git merge-base ${merge_base_branch} HEAD)\e[m\n"
+    printf " ${merge_base_commit}\n"
 
     local commit_hash="%Cred%h%Creset"
     local author="%C(bold blue)%an%Creset"
@@ -38,13 +39,10 @@ review_current_git_branch() {
     # git log
     local commits_count_last=3
     local commits_count_total=$(git --no-pager log --oneline ${merge_base_commit}...HEAD| wc -l| tr -d ' ')
-    printf "\e[33;7m[git log]\e[m\n"
     printf "\e[33;7mgit --no-pager log --oneline ${merge_base_commit}...HEAD\e[m"
-    printf "\e[33m - total commit count ${commits_count_total}. \n\e[m"
+    printf "\e[33m\n (total commit count ${commits_count_total})\n\e[m"
     if [[ ${commits_count_total} -gt ${commits_count_last} ]]; then
-      printf "\e[33m      :\n\e[m"
       printf "\e[33m ($(( ${commits_count_total} - ${commits_count_last} )) commits here)  \n\e[m"
-      printf "\e[33m      :\e\n[m"
     fi
     git --no-pager log ${merge_base_commit}...HEAD --reverse --oneline -${commits_count_last} --color=always \
       --date=format-local:'%Y/%m/%d %H:%M:%S' \
@@ -58,30 +56,34 @@ review_current_git_branch() {
     # printf "\e[33m - $(git diff --name-only ${merge_base_commit}...HEAD| wc -l| sed -e 's/ //g') files\n\e[m"
     # git diff --stat ${merge_base_commit}...HEAD
     # (B)
-    printf "\e[33m - $(git diff --name-only ${merge_base_commit}| wc -l| sed -e 's/ //g') files\n\e[m"
+    printf "\e[33m\n ($(git diff --name-only ${merge_base_commit}| wc -l| sed -e 's/ //g') files)\n\e[m"
     git diff --stat ${merge_base_commit}
 
+    printf '%*s' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
     # Command
     printf "\n\e[33;7m[Command]\e[m\n"
     echo " 1 | v | ) show diff then open with tig/vim."
-    echo " 2 | t )   tig -w ${merge_base_commit}...HEAD"
+    echo " 2 | t )   tig ${merge_base_commit}...HEAD"
+    echo " 3 | T )   tig -w ${merge_base_commit}...HEAD（tig＋空白無視オプション）"
 
     # (A)(B),どちらがしっくり来るか、体感中
     # (A)
-    #echo " 3 | d )   git diff ${merge_base_commit}...HEAD | vim -R"
+    echo " 4 | d )   git diff ${merge_base_commit} | vim -R"
     # (B)
-    echo " 3 | d )   git diff ${merge_base_commit} | vim -R"
+    echo " 5 | H )   git diff ${merge_base_commit}...HEAD | vim -R"
     echo -n " > "
     read REPLY
     case "${REPLY}" in
           1 | v | ) fzf_git_diff "${merge_base_commit}" "enter" ;;
-          2 | t   ) tig -w ${merge_base_commit}...HEAD ;;
+          2 | t   ) tig ${merge_base_commit}...HEAD ;;
+          3 | T   ) tig -w ${merge_base_commit}...HEAD ;;
           # (A)(B),どちらがしっくり来るか、体感中
-    # (A)
-    #     3 | d   ) git diff ${merge_base_commit}...HEAD | vim -R ;;
-    # (B)
-          3 | d   ) git diff ${merge_base_commit} | vim -R ;;
+          # (A)
+          4 | d   ) git diff ${merge_base_commit} | vim -R ;;
+          # (B)
+          5 | H   ) git diff ${merge_base_commit}...HEAD | vim -R ;;
     esac
+    clear
   done
 }
 
