@@ -1,6 +1,5 @@
 # フォルダの選択I/Fを表示する。
 # プレビュー：そのフォルダ内のファイル一覧。
-SH_NAME=$(basename $0)
 fzf_list_dir() {
   # find $1 \
   find ${1/'~'/${HOME}} \
@@ -9,9 +8,10 @@ fzf_list_dir() {
     -type d \
     | sed -e 's#$#/#g' \
     | sed -e 's#\/\/*#\/#g' \
+    | sed -e "s#^${HOME}#~#" \
     | fzf +m \
-    --prompt="${SH_NAME}> " \
-    --preview 'echo -n $(cd {}; pwd); echo '/'; echo; ls -UlaFG {}' \
+    --prompt="fzf_list_dir()> " \
+    --preview 'echo -n $(cd $(echo {}| sed -e "s#^~#${HOME}#"); pwd); echo '/'; echo; ls -UlaFG $(echo {}| sed -e "s#^~#${HOME}#")' \
     --preview-window=right:60%:wrap || echo $1
 }
 
@@ -24,9 +24,10 @@ fzf_list_file() {
     -path '*/\.git' -prune -o \
     -type f \
     | sed -e 's#\/\/*#\/#g' \
+    | sed -e "s#^${HOME}#~#" \
     | fzf +m \
-    --prompt="${SH_NAME}> " \
-    --preview 'bat --color=always --style=header,grid --line-range :100 {}' \
+    --prompt="fzf_list_file()> " \
+    --preview 'bat $(echo {}| sed -e "s#^~#${HOME}#") --color=always --style=header,grid --line-range :100' \
     --preview-window=right:60%:wrap || echo $1
 }
 
