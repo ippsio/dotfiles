@@ -75,6 +75,7 @@ if dein#load_state('~/.cache/dein')
   call dein#load_toml('~/.config/nvim/toml/1_rb.toml', {'lazy': 1})
   call dein#load_toml('~/.config/nvim/toml/1_md.toml', {'lazy': 1})
   call dein#load_toml('~/.config/nvim/toml/1_json.toml', {'lazy': 1})
+  call dein#load_toml('~/.config/nvim/toml/1_typescript.toml', {'lazy': 1})
   " 二軍
   "call dein#load_toml('~/.config/nvim/toml/1_py.toml', {'lazy': 1})
   "call dein#load_toml('~/.config/nvim/toml/1_git_vim-gf-diff.toml', {'lazy': 1})
