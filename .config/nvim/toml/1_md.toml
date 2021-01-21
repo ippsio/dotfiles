@@ -1,5 +1,8 @@
+# [[plugins]]
+# repo = 'tpope/vim-markdown'
+# on_ft = ['markdown']
 [[plugins]]
-repo = 'tpope/vim-markdown'
+repo = 'rcmdnk/vim-markdown'
 on_ft = ['markdown']
 
 [[plugins]]
