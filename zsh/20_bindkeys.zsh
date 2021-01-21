@@ -11,6 +11,16 @@ function my_space_extraction() {
   ]] \
   && zle _expand_alias
 
+  # ssh
+  [[ $BUFFER =~ '^ssh+$' ]] \
+  && BUFFER="ssh $(fgrep 'Host ' ~/.ssh/config | grep -v '*' |  awk '{print $2}' | sort | fzf)" \
+  && zle end-of-line && return
+
+  # scp
+  [[ $BUFFER =~ '^scp+$' ]] \
+  && BUFFER="scp $(fgrep 'Host ' ~/.ssh/config | grep -v '*' |  awk '{print $2}' | sort | fzf)" \
+  && zle end-of-line && return
+
   # git
   [[ $BUFFER =~ '^g+$' \
   ]] \
