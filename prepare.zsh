@@ -16,11 +16,17 @@ export PATH=${PATH}:$PYENV_ROOT/bin:$RBENV_ROOT/bin
 # Copy ~/dotfiles/bin/* into /usr/local/bin/*
 #  (For example, tmux status bar uses it)
 # --------------------------------------------
+printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
 sh ~/dotfiles/zsh/oneway_sync ~/dotfiles/prepare/usr/local/bin/ /usr/local/bin/
 
 # ----------------------------------
 # Install software if not installed.
 # ----------------------------------
+
+function log_exist() { echo -n "[o] exist! '$1'/ " }
+function log_not_exist() { echo "------------\n[x] not found! '$1' " }
+
+printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
 echo "[PREPARING] start"
 source ~/dotfiles/prepare/prepare_zsh.sh
 source ~/dotfiles/prepare/prepare_tmux.sh
@@ -40,6 +46,7 @@ source ~/dotfiles/prepare/prepare_fzf.sh
 source ~/dotfiles/prepare/prepare_zplug.sh
 source ~/dotfiles/prepare/prepare_bat.sh
 source ~/dotfiles/prepare/prepare_nodenv.sh
+echo
 
 # -----------------------------------------------------
 # Generate link fot real file, directory in this repo.
@@ -64,4 +71,5 @@ generate_symlink_f ~/.zshrc ~/dotfiles/.zshrc
 
 TURN_AROUND_TIME=$(($(date +%s) - START_TIME))
 echo "[PREPARING] finish in ${TURN_AROUND_TIME} sec"
+printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
 

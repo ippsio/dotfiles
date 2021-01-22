@@ -1,7 +1,4 @@
 #!/bin/sh
-function log_exist() { echo "[o] exist! '$1'" }
-function log_not_exist() { echo "------------\n[x] not found! '$1' " }
-
 # version5.8以上を期待
 EXPECTING_MAJOR_VER=5
 EXPECTING_MINOR_VER=8

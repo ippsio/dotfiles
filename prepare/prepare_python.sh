@@ -1,8 +1,5 @@
 #!/bin/sh
-function log_exist() { echo "[o] exist! '$1'" }
-function log_not_exist() { echo "------------\n[x] not found! '$1' " }
 PYTHON_VER="3.7.3"
-
 N="Python ${PYTHON_VER}"
 eval "$(pyenv init -)"
 if [ "$(pyenv version| awk '{print $1}')" != "${PYTHON_VER}" ]; then

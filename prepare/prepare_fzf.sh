@@ -1,7 +1,4 @@
 #!/bin/sh
-function log_exist() { echo "[o] exist! '$1'" }
-function log_not_exist() { echo "------------\n[x] not found! '$1' " }
-
 export FZF_DEFAULT_OPTS="\
   -e \
   --extended \

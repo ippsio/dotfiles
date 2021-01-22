@@ -12,7 +12,7 @@ function memo() {
     echo "FILE=$TODAYS_NOTE_FILE"
     mkdir -p ${NOTE_DIR}
     [ ! -f ${TODAYS_NOTE_FILE} ] && echo "# ${YMDA}\n${NOTE_TYPE}\n---\n" >> ${TODAYS_NOTE_FILE}
-    notefile=$(find ${ENV_ROOT_NOTES_DIR:-~/notes} -type f| fgrep "/${NOTE_TYPE}/" |sed -e "s#^${HOME}#~#"| sort -r | fzf --prompt="${NOTE_TYPE} >" --preview='bat $(echo {}| sed -e "s#^~#${HOME}#") --color=always')
+    notefile=$(find ${ENV_ROOT_NOTES_DIR:-~/notes} -type f| fgrep "/${NOTE_TYPE}/" |sed -e "s#^${HOME}#~#"| sort -r | fzf --prompt="${NOTE_TYPE} >" --preview='bat $(echo {}| sed -e "s#^~#${HOME}#") --color=always'| sed -e "s#^~#${HOME}#")
     if [[ "${notefile}" != "" ]]; then
       nvim ${notefile} +4
     fi
