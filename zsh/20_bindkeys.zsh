@@ -105,6 +105,13 @@ function my_space_extraction() {
   && BUFFER="bundle exec rails s -b 0.0.0.0" \
   && zle end-of-line && return
 
+  # docker exec
+  # docker exec -it `docker ps -a | fzf | awk '{print $1}'` /bin/bash --login
+  [[ $BUFFER =~ '^docker exec+$' ]] \
+  && BUFFER="docker exec -it $(docker ps -a | fzf | awk '{print $1}') /bin/bash --login" \
+  && zle end-of-line && return
+
+
   # dockero-compose
   [[ $BUFFER =~ '^dc+$' \
   ]] \

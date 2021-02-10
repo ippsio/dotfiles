@@ -15,16 +15,16 @@ if has('nvim')
 endif
 
 " 背景色
-hi Normal guibg=#222622
-hi NormalNC guibg=#000000
+"hi Normal guibg=#222622
+"hi NormalNC guibg=#000000
 
 " 背景色により、現在カーソルのあるウインドウをわかりやすくする。
-augroup ChangeBackground
-  autocmd!
-  "" 背景色(カレントウインドウ)
-  autocmd FocusGained * hi Normal guibg=#222622
-  autocmd FocusLost   * hi Normal guibg=default
-augroup END
+"augroup ChangeBackground
+"  autocmd!
+"  "" 背景色(カレントウインドウ)
+"  autocmd FocusGained * hi Normal guibg=#222622
+"  autocmd FocusLost   * hi Normal guibg=default
+"augroup END
 
 " カーソル行
 hi CursorLine term=reverse cterm=none ctermbg=237

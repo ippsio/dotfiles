@@ -7,10 +7,26 @@ build = './install --all --no-bash --no-fish --no-zsh'
 repo = 'junegunn/fzf.vim'
 hook_add = '''
   nnoremap <C-p> :FZFFileList<CR>
-  nnoremap <space>f :FZFFileList<CR>
+  xnoremap <F3> :FZFFileListQ<CR>
   nnoremap ; :Buffers<CR>
+  nnoremap <space>l :Lines<CR>
   command! FZFFileList
   \ call fzf#run(
   \   fzf#wrap({ 'source': 'find . -type d -name .git -prune -o ! -name .DS_Store', 'down': '40%'})
   \ )
+
+  function! FuncFZFFileListQ() range
+    let tmp = @@
+    silent normal gvy
+    let selected = @@
+    let selected = substitute(selected, '/', ' ', 'g')
+    echo selected
+    let @@ = tmp
+    call fzf#run(
+    \   fzf#wrap({ 'source': 'find . -type d -name .git -prune -o ! -name .DS_Store', 'down': '40%', 'options': '--query "' . selected . '"'})
+    \ )
+  endfunction
+
+  command! -range FZFFileListQ :call FuncFZFFileListQ()
 '''
+#a/b/c

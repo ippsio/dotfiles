@@ -10,7 +10,7 @@ else
 fi
 if [ -e ${DIFF_HIGHLIGHT_DIR}/diff-highlight ]; then
   export PATH=${PATH}:${DIFF_HIGHLIGHT_DIR}
-  echo "${DIFF_HIGHLIGHT_DIR}/diff-highlight is added into PATH"
+  log_exist $N
 else
   echo "${DIFF_HIGHLIGHT_DIR}/diff-highlight is not added into PATH"
 fi

@@ -33,6 +33,6 @@ fzf_git_diff() {
              ; echo
              ;git diff --color=always ${merge_base_commit} {3}| diff-highlight | less \
            ) \
-      " --preview-window=right:60%:wrap)
+      " --preview-window=bottom:60%:wrap)
       echo $target | awk '{print $3}'
 }

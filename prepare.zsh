@@ -23,7 +23,7 @@ sh ~/dotfiles/zsh/oneway_sync ~/dotfiles/prepare/usr/local/bin/ /usr/local/bin/
 # Install software if not installed.
 # ----------------------------------
 
-function log_exist() { echo -n "[o] exist! '$1'/ " }
+function log_exist() { echo -n "$1[ok], " }
 function log_not_exist() { echo "------------\n[x] not found! '$1' " }
 
 printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -

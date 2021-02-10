@@ -33,5 +33,6 @@ for abs_file in ${files[@]}; do
     echo "Copy ${abs_file} --> ${abs_binfile}"
     cp ${abs_file} ${abs_binfile}
   fi
-  echo "ls ${abs_binfile} => $(ls ${abs_binfile})";
+  printf "ls ${abs_binfile} => $(ls ${abs_binfile}), "
 done
+echo
