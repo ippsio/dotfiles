@@ -44,7 +44,6 @@ function my_space_extraction() {
   # git checkout + completion
   [[ $BUFFER =~ '^gco+$' \
   || $BUFFER =~ '^git co+$' \
-  || $BUFFER =~ '^git checkout+$' \
   ]] \
   && zle autosuggest-clear \
   && git_branch="$(fzf_git_branch local_first_origin_last)" \

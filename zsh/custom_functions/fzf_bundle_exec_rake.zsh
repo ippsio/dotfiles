@@ -1,13 +1,6 @@
 # bundle exec rakeで実行するタスクの候補を表示する。
 # プレビューとして、タスクのソースコードを表示する。
 fzf_bundle_exec_rake() {
-  merge_base_branch=${1:-origin/develop}
-  local merge_base_commit=$(git rev-parse --short $(git merge-base ${merge_base_branch} HEAD))
-  local commit_hash="%Cred%h%Creset"
-  local author="%C(bold blue)%an%Creset"
-  local subject="%s"
-  local commit_date="%Cgreen(%cd)%Creset"
-  local ref_names="%C(yellow)%d%Creset"
 
   files=$(find . -name vendor -prune -o -name '*.rake' -print) || return
   target=$(

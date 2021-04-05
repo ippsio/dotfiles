@@ -27,15 +27,15 @@ function log_exist() { echo -n "$1[ok], " }
 function log_not_exist() { echo "------------\n[x] not found! '$1' " }
 
 printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
-echo "[PREPARING] start"
+echo -n "[PREPARING] "
+source ~/dotfiles/prepare/prepare_neovim.sh
+source ~/dotfiles/prepare/prepare_pynvim.sh
 source ~/dotfiles/prepare/prepare_zsh.sh
 source ~/dotfiles/prepare/prepare_tmux.sh
-source ~/dotfiles/prepare/prepare_neovim.sh
 source ~/dotfiles/prepare/prepare_pyenv.sh
 source ~/dotfiles/prepare/prepare_virtualenv.sh
 source ~/dotfiles/prepare/prepare_python.sh
 source ~/dotfiles/prepare/prepare_direnv.sh
-source ~/dotfiles/prepare/prepare_pynvim.sh
 source ~/dotfiles/prepare/prepare_rbenv.sh
 source ~/dotfiles/prepare/prepare_tpm.sh
 source ~/dotfiles/prepare/prepare_nvm.sh
@@ -53,7 +53,7 @@ echo
 # -----------------------------------------------------
 function generate_symlink_f() { [ ! -f $1 ] && ln -s $2 && echo "Symlink generated ($1<-$2)" }
 function generate_symlink_d() { [ ! -d $1 ] && ln -s $2 && echo "Symlink generated ($1<-$2)" }
-echo "[PREPARING(generate_symlink)] start"
+echo -n "(generate_symlink) "
 
 generate_symlink_d ~/.config/nvim ~/dotfiles/.config/nvim
 
