@@ -34,4 +34,4 @@ function fzf_git_grep_then_vim() {
           --highlight-line {2} {1}'
   )
 }
-alias ggv="fzf_git_grep_then_vim"
+alias git_vgrep="fzf_git_grep_then_vim"
