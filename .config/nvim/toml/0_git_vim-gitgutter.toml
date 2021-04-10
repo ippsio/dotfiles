@@ -10,16 +10,15 @@ hook_add = '''
   let g:gitgutter_sign_modified_removed   = '~R'
 
   " 変更マークのハイライト
-  hi SignColumn guibg=none
-  hi GitGutterAdd           guifg=#00ff33 guibg=#004433 " an added line
-  hi GitGutterChange        guifg=#aaaa00 guibg=#666600 " a changed line
-  hi GitGutterDelete        guifg=#666666 guibg=#000000 " at least one removed line
-  hi GitGutterChangeDelete  guifg=#666666 guibg=#000000 " a changed line followed by at least one removed line
+  hi SignColumn guibg=none ctermbg=none
+  hi GitGutterAdd           guifg=#00ff33 guibg=#004433 ctermfg=118 ctermbg=23 cterm=bold " an added line
+  hi GitGutterChange        guifg=#aaaa00 guibg=#666600 ctermfg=11 ctermbg=100 cterm=bold " a changed line
+  hi GitGutterDelete        guifg=#666666 guibg=#000000 ctermfg=8 ctermbg=232 cterm=bold " at least one removed line
+  hi GitGutterChangeDelete  guifg=#666666 guibg=#000000 ctermfg=8 ctermbg=232 cterm=bold " a changed line followed by at least one removed line
 
   " 行ハイライトは結構見にくいと感じたので、コメントアウト
   "" 起動時に差分行の行ハイライトを自動的に有効にする
   "" let g:gitgutter_highlight_lines = 1
-
   " 行番号のハイライト
   let g:gitgutter_highlight_linenrs = 1
 

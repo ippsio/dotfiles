@@ -48,7 +48,7 @@ local _mark_unstaged="-"
 local _mark_staged="+"
 local _mark_ahead="^"
 local _mark_behind="v"
-local _mark_stash="*"
+local _mark_stash="stash"
 
 # exit status and git basic infomations.
 local EXIT_CD="%K{red}%(?.. [EXIT_CD=%?])%k"
@@ -70,7 +70,7 @@ local _ahead="%(7v| %7v${_mark_ahead}|)"
 local _behind="%(8v| ${_mark_behind}%8v]|)"
 local GIT_LOCAL_REPO="%K{88}${_ahead}${_behind}%k"
 
-local _stash="%(9v| ${_mark_stash}%9v |)"
+local _stash="%(9v| ${_mark_stash}(%9v) |)"
 # 10v,11v,12v,13vって....。たぶんもっといいやり方あるんだろうけど、調べるのが面倒臭かったんです..
 local _more_such_as_rebase="%(10v| %10v |)%(11v| %11v |)%(12v| %12v |)%(13v| %13v |)"
 local GIT_CAUTION="%K{red}${_stash}${_more_such_as_rebase}%k"
