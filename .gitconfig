@@ -1,7 +1,7 @@
 [core]
   excludesfile = ~/.gitignore_global
   attributesfile = ~/.gitattributes_global
-	hooksPath = .githooks
+  hooksPath = .githooks
 
 [color]
   ui = auto
@@ -26,16 +26,16 @@
   #----------------------
   # diff old系(赤系)
   #----------------------
-  old =                        "#ff7766 #440000"
-  oldMoved =                   "#aaaa00 #666600"
+  old =                        210 052 # "#ff7766 #440000"
+  oldMoved =                   210 052 #"#aaaa00 #666600"
   #oldMovedAlternative =       203 053
   #oldMovedAlternativeDimmed = 203 053
 
   #----------------------
   # new系(緑系)
   #----------------------
-  new =                        "#00ff33 #004433"
-  newMoved =                   047 024
+  new =                        123 023 # "#00ff33 #004433"
+  newMoved =                   123 023
   #newMovedAlternative =       047 024
   #newMovedAlternativeDimmed = 047 024
 
@@ -47,21 +47,21 @@
   #----------------------------------
   # git log時のcommit hashの色(緑系)
   #----------------------------------
-  commit =                     "#00ff33 #004433"
+  commit =                     123 023 # "#00ff33 #004433"
   func =                       017 190 bold # tig の diff-statに相当
 
 [color "diff-highlight"]
   #----------------------
   # diff old系(赤系)
   #----------------------
-  oldNormal =                  "#ff7766 #440000"
+  oldNormal =                  210 052 # "#ff7766 #440000"
   oldHighlight =               211 124 # 単語差分ハイライト部分
 
   #----------------------
   # new系(緑系)
   #----------------------
-  newNormal =                  "#00ff33 #004433"
-  newHighlight =               082 034 # 単語差分ハイライト部分
+  newNormal =                  123 023 # "#00ff33 #004433"
+  newHighlight =               118 028 # 単語差分ハイライト部分
 
 [diff]
   compactionHeuristic = true

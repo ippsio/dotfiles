@@ -36,3 +36,10 @@ augroup FileTypeRuby
   " " au FileType ruby setlocal iskeyword+=:
   " " au FileType ruby setlocal iskeyword+=&
 augroup END
+
+if has('mac')
+  augroup MyIMEGroup
+    autocmd!
+    " IMEをOFFにする(102=英数key)（インサートモード抜け時とフォーカス取得／開放時）
+    au InsertLeave,FocusGained,FocusLost * :call system('osascript -e "tell application \"System Events\" to key code 102"')
+endif

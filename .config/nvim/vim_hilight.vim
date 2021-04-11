@@ -45,7 +45,7 @@ hi Search guibg=#882200 guifg=#ff22ff ctermbg=89 ctermfg=201
 hi NormalNC ctermbg=0 ctermfg=240
 
 " コメント
-hi Comment guifg=#00ddff guibg=#004a4a ctermbg=18 ctermfg=123
+hi Comment guifg=#00ddff guibg=#004a4a ctermbg=23 ctermfg=123
 
 " 変数、文字列
 hi Constant guifg=#ffaaaa guibg=#330000 ctermfg=168 cterm=bold
@@ -67,16 +67,16 @@ hi Type guibg=#004433 guifg=#00ff33 ctermbg=16 ctermfg=118 cterm=bold
 hi Visual guibg=#2211aa ctermbg=18
 
 " markdown
-hi markdownH1          guibg=#cc2299 guifg=#ffff66
-hi markdownH1Delimiter guibg=#ff2299 guifg=#ffff00
-hi markdownH2          guibg=#cc2299 guifg=#ffff66
-hi markdownH2Delimiter guibg=#ff2299 guifg=#ffff00
-hi markdownH3          guibg=#cc2299 guifg=#ffff66
-hi markdownH3Delimiter guibg=#ff2299 guifg=#ffff00
-hi markdownH4          guibg=#cc2299 guifg=#ffff66
-hi markdownH4Delimiter guibg=#ff2299 guifg=#ffff00
-hi markdownH5          guibg=#cc2299 guifg=#ffff66
-hi markdownH5Delimiter guibg=#ff2299 guifg=#ffff00
+" hi markdownH1          guibg=#cc2299 guifg=#ffff66
+" hi markdownH1Delimiter guibg=#ff2299 guifg=#ffff00
+" hi markdownH2          guibg=#cc2299 guifg=#ffff66
+" hi markdownH2Delimiter guibg=#ff2299 guifg=#ffff00
+" hi markdownH3          guibg=#cc2299 guifg=#ffff66
+" hi markdownH3Delimiter guibg=#ff2299 guifg=#ffff00
+" hi markdownH4          guibg=#cc2299 guifg=#ffff66
+" hi markdownH4Delimiter guibg=#ff2299 guifg=#ffff00
+" hi markdownH5          guibg=#cc2299 guifg=#ffff66
+" hi markdownH5Delimiter guibg=#ff2299 guifg=#ffff00
 hi markdownCode          guibg=#333333 guifg=#cccccc ctermbg=236 ctermfg=255
 hi markdownCodeDelimiter guibg=#222222 guifg=#cccccc ctermbg=88 ctermfg=211
 
@@ -124,5 +124,6 @@ function! s:syn_info()
   endfor
 endfunction
 
+command! Hi call s:syn_info()
 command! Hiinfo call s:syn_info()
 
