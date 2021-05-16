@@ -1,8 +1,8 @@
 #!/bin/sh
-N="xv"
-if ! (type "xv" > /dev/null 2>&1) ; then
+N="xz"
+if ! (type "xz" > /dev/null 2>&1) ; then
   log_not_exist $N
-  brew install xv
+  brew install xz
 else
   log_exist $N
 fi
