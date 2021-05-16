@@ -1,4 +1,10 @@
+#[[plugins]]
+#repo = 'vim-scripts/SQLUtilities'
+#[[plugins]]
+#repo= 'vim-scripts/Align'
 [[plugins]]
-repo = 'vim-scripts/SQLUtilities'
+repo = 'b4b4r07/vim-sqlfmt'
 [[plugins]]
-repo= 'vim-scripts/Align'
+repo = 'jackc/sqlfmt'
+[[plugins]]
+repo = 'andialbrecht/sqlparse'
