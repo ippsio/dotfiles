@@ -29,7 +29,7 @@ function log_not_exist() { echo "------------\n[x] not found! '$1' " }
 
 printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
 echo -n "[PREPARING] "
-source ~/dotfiles/prepare/prepare_xv.sh
+source ~/dotfiles/prepare/prepare_xz.sh
 source ~/dotfiles/prepare/prepare_neovim.sh
 source ~/dotfiles/prepare/prepare_pynvim.sh
 source ~/dotfiles/prepare/prepare_zsh.sh
