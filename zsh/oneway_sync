@@ -3,6 +3,7 @@
 echo "[$(cd $(dirname $0); pwd)/$(basename $0)]"
 src=${1%/}
 dest=${2%/}
+_sudo=$3
 
 # ---------------------------------------------------------------------------------------------------------------------
 echo "(src->dest)=(${src}->${dest})"
@@ -15,7 +16,7 @@ for abs_file in ${files[@]}; do
   if [[ ! -e ${abs_binfile} ]]; then
     echo "${abs_binfile} not found."
     echo "Copy ${abs_file} --> ${abs_binfile}"
-    cp ${abs_file} ${abs_binfile}
+    ${_sudo} cp ${abs_file} ${abs_binfile}
   fi
 
   # dest にファイルがあっても、md5が異なればバックアップを取りつつコピー
@@ -29,9 +30,9 @@ for abs_file in ${files[@]}; do
     # ex) Nov 26 19:52:00 2019 => Nov_26_195200_2019
     ts=$(stat -f "%Sm" ${abs_binfile}| sed -e "s/[ ]/_/g"| sed -e "s/://g")
     echo "Backup ${abs_binfile} --> ${abs_binfile}_${ts}"
-    cp ${abs_binfile} ${abs_binfile}_${ts}
+    ${_sudo}cp ${abs_binfile} ${abs_binfile}_${ts}
     echo "Copy ${abs_file} --> ${abs_binfile}"
-    cp ${abs_file} ${abs_binfile}
+    ${_sudo}cp ${abs_file} ${abs_binfile}
   fi
   printf "ls ${abs_binfile} => $(ls ${abs_binfile}), "
 done

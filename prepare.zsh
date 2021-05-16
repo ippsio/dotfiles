@@ -17,7 +17,8 @@ export PATH=${PATH}:$PYENV_ROOT/bin:$RBENV_ROOT/bin
 #  (For example, tmux status bar uses it)
 # --------------------------------------------
 printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
-sh ~/dotfiles/zsh/oneway_sync ~/dotfiles/prepare/usr/local/bin/ /usr/local/bin/
+[ ! -d /usr/local/bin ] && sudo mkdir /usr/local/bin
+sh ~/dotfiles/zsh/oneway_sync ~/dotfiles/prepare/usr/local/bin/ /usr/local/bin/ "sudo"
 
 # ----------------------------------
 # Install software if not installed.

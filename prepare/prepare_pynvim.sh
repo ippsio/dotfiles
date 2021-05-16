@@ -1,8 +1,8 @@
 #!/bin/sh
 N="pynvim"
-if [[ $(pip freeze| grep -c pynvim) -eq 0 ]]; then
+if [[ $(python3 -m pip freeze| grep -c pynvim) -eq 0 ]]; then
   log_not_exist $N
-  pip3 install pynvim
+  python3 -m pip3 install pynvim --user
 else
   log_exist $N
 fi

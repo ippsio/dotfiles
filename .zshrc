@@ -11,7 +11,8 @@ fi
 # prepare essential utility/middle/environmental softwares.
 source ~/dotfiles/prepare.zsh
 ### pyenv/rbenv/direnv/node
-eval "$(pyenv init -)"
+# 'pyenv init -' is no longer needed.
+#eval "$(pyenv init -)"
 eval "$(rbenv init -)"
 eval "$(direnv hook zsh)"
 eval "$(nodenv init -)"
