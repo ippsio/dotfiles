@@ -13,5 +13,6 @@ hook_add = '''
   xmap N <Esc>NgN
   nmap * <Plug>(anzu-star)
   "nmap # <Plug>(anzu-sharp)
-  nmap <silent> <ESC> :<C-u>nohlsearch<CR><Plug>(anzu-clear-search-status)
+  " IMEをOFFにする(102=英数key)（インサートモード抜け時とフォーカス取得／開放時）
+  nmap <silent> <ESC> :<C-u>nohlsearch<CR><Plug>(anzu-clear-search-status):call system('osascript -e "tell application \"System Events\" to key code 102"')<CR>
 '''

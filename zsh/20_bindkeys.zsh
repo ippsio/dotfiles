@@ -22,9 +22,9 @@ function my_space_extraction() {
   && zle end-of-line && return
 
   # git
-  [[ $BUFFER =~ '^git vgrep+$' \
+  [[ $BUFFER =~ '^git grep+$' \
   ]] \
-  && BUFFER="git_vgrep " \
+  && BUFFER="git_grep_fzf " \
   && zle end-of-line && return
 
   # git diff
