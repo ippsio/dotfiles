@@ -42,38 +42,41 @@ function _precmd_vcs_info_msg() {
 add-zsh-hook precmd _precmd_vcs_info_msg
 
 # MARK DEFINITIONS
+local _text_unstaged="UNSTAGED:"
 local _mark_deleted="x"
 local _mark_untracked="?"
 local _mark_unstaged="-"
+local _text_staged="STAGED:"
 local _mark_staged="+"
+local _text_repo="REPO:"
 local _mark_ahead="^"
 local _mark_behind="v"
 local _mark_stash="stash"
 
 # exit status and git basic infomations.
 local EXIT_CD="%K{red}%(?.. [EXIT_CD=%?])%k"
-local GIT_REPO_NAME="%K{24}%(1v|[%1v |)%k"
-local GIT_BRANCH="%K{28}%(2v| %2v]|)%k"
+local GIT_REPO_NAME="%K{24}%(1v|[%1v|)%k"
+local GIT_BRANCH="%K{24}%(2v|(%2v)]|)%k"
 
 # git working_tree
-local _deleted="%(3v|[${_mark_deleted}%3v|)"
+local _deleted="%(3v|[${_text_unstaged}${_mark_deleted}%3v|)"
 local _untracked="%(4v| ${_mark_untracked}%4v|)"
-local _unstaged="%(5v| ${_mark_unstaged}%5v |)"
-local GIT_WORKING_TREE="%K{172}${_deleted}${_untracked}${_unstaged}%k"
+local _unstaged="%(5v| ${_mark_unstaged}%5v] |)"
+local GIT_WORKING_TREE="%K{94}${_deleted}${_untracked}${_unstaged}%k"
 
 # git stage
-local _staged="%(6v|%K{196} ${_mark_staged}%6v |)%k"
-local GIT_STAGE="%K{196}${_staged}%k"
+local _staged="%(6v| [${_text_staged}${_mark_staged}%6v] |)%k"
+local GIT_STAGE="%K{88}${_staged}%k"
 
 # git local repositry
-local _ahead="%(7v| %7v${_mark_ahead}|)"
-local _behind="%(8v| ${_mark_behind}%8v]|)"
-local GIT_LOCAL_REPO="%K{88}${_ahead}${_behind}%k"
+local _ahead="%(7v| [${_text_repo}%7v${_mark_ahead}|)"
+local _behind="%(8v| ${_mark_behind}%8v] |)"
+local GIT_LOCAL_REPO="%K{1}${_ahead}${_behind}%k"
 
 local _stash="%(9v| ${_mark_stash}(%9v) |)"
 # 10v,11v,12v,13vって....。たぶんもっといいやり方あるんだろうけど、調べるのが面倒臭かったんです..
 local _more_such_as_rebase="%(10v| %10v |)%(11v| %11v |)%(12v| %12v |)%(13v| %13v |)"
-local GIT_CAUTION="%K{red}${_stash}${_more_such_as_rebase}%k"
+local GIT_CAUTION="%K{18}${_stash}${_more_such_as_rebase}%k"
 
 # others
 local CURRENT_DIRECTORY="%K{237}[%~] %k"
@@ -81,8 +84,14 @@ local CURRENT_DATETIME="%K{237}%D{%m/%d %T} %k"
 
 local NUMBER_OF_JOBS="%(1j|%F{226}BackgroundJobs(%j)%f|)"
 
-PROMPT="
-${EXIT_CD}${GIT_REPO_NAME}${GIT_CAUTION}${GIT_BRANCH}
-${GIT_WORKING_TREE}${GIT_STAGE}${GIT_LOCAL_REPO}${CURRENT_DIRECTORY}${CURRENT_DATETIME}
-${NUMBER_OF_JOBS}%K{238}%# %k"
+local LINE1="${EXIT_CD}${GIT_REPO_NAME}${GIT_BRANCH}${GIT_CAUTION}"
+local LINE2="${GIT_WORKING_TREE}${GIT_STAGE}${GIT_LOCAL_REPO}${CURRENT_DIRECTORY}${CURRENT_DATETIME}"
+local LINE3="${NUMBER_OF_JOBS}%K{238}%# %k"
+local LINE_FEED="
+"
+PROMPT=""
+[[ "${LINE1}" != "" ]] && PROMPT="${PROMPT}${LINE_FEED}${LINE1}"
+[[ "${LINE2}" != "" ]] && PROMPT="${PROMPT}${LINE_FEED}${LINE2}"
+[[ "${LINE3}" != "" ]] && PROMPT="${PROMPT}${LINE_FEED}${LINE3}"
 
+#echo "${PROMPT}"

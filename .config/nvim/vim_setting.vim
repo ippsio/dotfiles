@@ -174,7 +174,9 @@ set incsearch
 set hlsearch
 
 " インタラクティブな置換。vim-overのようなもの。
-set inccommand=split
+"set inccommand=
+set inccommand=nosplit
+"set inccommand=split
 
 " --------------
 " マウス操作

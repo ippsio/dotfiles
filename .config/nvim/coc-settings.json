@@ -1,13 +1,14 @@
 {
-  "suggest.autoTrigger": "trigger",
-  "suggest.noselect": true,
-  "suggest.preferCompleteThanJumpPlaceholder": true,
-  "python.jediEnabled": false,
+  "#suggest.autoTrigger": "trigger",
+  "#suggest.noselect": true,
+  "#suggest.preferCompleteThanJumpPlaceholder": true,
+  "#python.jediEnabled": false,
 
-  "tsserver.tsdk": ".yarn/sdks/typescript/lib",
-  "eslint.packageManager": "yarn",
-  "eslint.nodePath": ".yarn/sdks",
+  "#tsserver.tsdk": ".yarn/sdks/typescript/lib",
+  "#eslint.packageManager": "yarn",
+  "#eslint.nodePath": ".yarn/sdks",
 
+  "suggest.enablePreselect": true,
   "solargraph.bundlerPath": "~/.rbenv/shims/bundle",
   "solargraph.commandPath": "~/.rbenv/shims/solargraph"
 }

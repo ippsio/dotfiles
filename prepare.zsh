@@ -10,7 +10,16 @@ export PYENV_ROOT=$HOME/.pyenv
 export RBENV_ROOT=$HOME/.rbenv
 export NODENV_ROOT=$HOME/.nodenv
 export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
-export PATH=${PATH}:$PYENV_ROOT/bin:$RBENV_ROOT/bin
+export PATH=~/dotfiles/zsh/bin:${PATH}:$PYENV_ROOT/bin:$RBENV_ROOT/bin
+export LSCOLORS=gxfxcxdxbxegexabagacad
+export LANG="ja_JP.UTF-8"
+export LC_COLLATE="ja_JP.UTF-8"
+export LC_CTYPE="ja_JP.UTF-8"
+export LC_MESSAGES="ja_JP.UTF-8"
+export LC_MONETARY="ja_JP.UTF-8"
+export LC_NUMERIC="ja_JP.UTF-8"
+export LC_TIME="ja_JP.UTF-8"
+export LC_ALL=
 
 # --------------------------------------------
 # Copy ~/dotfiles/bin/* into /usr/local/bin/*

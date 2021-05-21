@@ -1,0 +1,53 @@
+#!/usr/bin/env zsh
+
+DIR=~/notes
+[ ! -d ${DIR} ] && mkdir -p ${DIR} && echo "maybe ${DIR} created."
+
+function exec_find() {
+  _DIR=$1
+  _TYPE=$2
+  cd ${DIR} && find ${_DIR} -type f \
+    | fgrep "/${_TYPE}/" \
+    | sed -e "s#^${HOME}#~#" \
+    | sort -r \
+    | fzf --prompt="${_TYPE} >"  \
+      --bind change:top \
+      --bind 'enter:execute(nvim $(echo {}| sed -e "s#^~#${HOME}#") < /dev/tty > /dev/tty)' \
+      --preview='bat $(echo {}| sed -e "s#^~#${HOME}#") --color=always' \
+    | sed -e "s#^~#${HOME}#"
+}
+
+while true;
+do
+  KIND=$(echo "memo,最新状況,検索する"| sed -e "s/,/\n/g"| fzf --prompt="notes in [${DIR/${HOME}/~}] ")
+
+  [[ ${KIND} == "" ]] && return
+
+  if [[ "${KIND}" == "検索する" ]]; then
+    cd ${DIR} && fzf_git_grep_then_vim "$(echo ''|fzf --prompt='検索文字を入力> ' --print-query)"
+    continue
+
+  elif [[ "${KIND}" == "最新状況" ]]; then
+    NOTE_DIR=${DIR}/${KIND}
+    NEW_NOTE=note.md
+    BEGINNING="# ${KIND}\n---\n"
+  else
+    NOTE_DIR=${DIR}/${KIND}/$(LC_ALL=C date '+%Y_%m')
+    NEW_NOTE=$(LC_ALL=C date '+%Y_%m%d_%a').md
+    BEGINNING="# $(LC_ALL=C date '+%Y/%m/%d(%a)')\n${KIND}\n---\n"
+  fi
+
+  mkdir -p ${NOTE_DIR}
+  [ ! -f ${NOTE_DIR}/${NEW_NOTE} ] && echo "${BEGINNING}" >> ${NOTE_DIR}/${NEW_NOTE}
+  exec_find "${DIR}" "${KIND}"
+
+  if ( ! (cd ${DIR} && [ -d .git ] || git rev-parse --git-dir > /dev/null 2>&1) ); then
+    echo "Consider 'git init' on [${DIR}]"
+  else
+    if [ $(cd ${DIR} && git status --porcelain 2>&1 > /dev/null | wc -l| tr -d ' ') -gt 0 ]; then
+      echo "変更有り。"
+      echo $(cd ${DIR} && git add -A && echo $(git commit -m "$(date '+%Y/%m/%d(%a) %H時%M分%S秒')"))
+    fi
+  fi
+done
+

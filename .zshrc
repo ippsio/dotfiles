@@ -27,7 +27,7 @@ source ~/dotfiles/zsh/10_prompt.zsh
 source ~/dotfiles/zsh/20_bindkeys.zsh
 source ~/dotfiles/zsh/30_color_to_man.zsh
 # custom functions
-for file in $(ls ~/dotfiles/zsh/custom_functions/*.zsh); { source $file }
+#for file in $(ls ~/dotfiles/zsh/custom_functions/*.zsh); { source $file }
 # custom completion
 # for file in $(ls ~/dotfiles/zsh/custom_completions/*.zsh); { source $file }
 

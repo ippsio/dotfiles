@@ -6,4 +6,4 @@ if ! (type "bat" > /dev/null 2>&1) ; then
 else
   log_exist $N
 fi
-export BAT_THEME="base16-256"
+export BAT_THEME="Monokai Extended Bright"

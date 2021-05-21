@@ -24,10 +24,13 @@ vnoremap v $h
 nnoremap <silent> <Space><Space> mz:call <SID>hi_word()<CR>
 xnoremap <silent> <Space><Space> mz:call <SID>hi_selected()<CR>
 
-" F4で、ハイライト＋Ripgrep検索(要ripgrepコマンド)
-nnoremap <F4>       mz:call <SID>hi_word_and_grep(1)<CR>
-xnoremap <F4>       mz:call <SID>hi_selected_and_grep(1)<CR>
-cnoremap <F4> <CR>gnmz:call <SID>hi_selected_and_grep(1)<CR>
+"""" F4で、ハイライト＋Ripgrep検索(要ripgrepコマンド)
+"""nnoremap <F4>       mz:call <SID>hi_word_and_grep(1)<CR>
+"""xnoremap <F4>       mz:call <SID>hi_selected_and_grep(1)<CR>
+"""cnoremap <F4> <CR>gnmz:call <SID>hi_selected_and_grep(1)<CR>
+
+" ESCでハイライト解除
+nmap <silent> <Esc> :<C-u>nohlsearch<CR>
 
 " カーソル下にある単語をハイライト
 function s:hi_word()
@@ -40,17 +43,17 @@ function s:hi_word()
   silent normal `z
 endfunction
 
-" カーソル下にある単語をgrep(可能ならripgrep)
-" range_cd: 0=カレントバッファ内を検索、1=全体を検索..という意味として定義
-function s:hi_word_and_grep(range_cd)
-  call s:hi_word()
-  silent normal gn"zy
-  if a:range_cd == 0
-    call s:vimgrep_current_buf_z_register()
-  else
-    call s:grep_z_register()
-  endif
-endfunction
+"""" カーソル下にある単語をgrep(可能ならripgrep)
+"""" range_cd: 0=カレントバッファ内を検索、1=全体を検索..という意味として定義
+"""function s:hi_word_and_grep(range_cd)
+"""  call s:hi_word()
+"""  silent normal gn"zy
+"""  if a:range_cd == 0
+"""    call s:vimgrep_current_buf_z_register()
+"""  else
+"""    call s:grep_z_register()
+"""  endif
+"""endfunction
 
 " ビジュアルモードで選択中の文字をハイライト
 function s:hi_selected()
@@ -60,39 +63,39 @@ function s:hi_selected()
   silent normal `z
 endfunction
 
-" ビジュアルモード選択中の文字をgrep(可能ならripgrep)
-function s:hi_selected_and_grep(range_cd)
-  call s:hi_selected()
-  silent normal gv"zy
-  if a:range_cd == 0
-    call s:vimgrep_current_buf_z_register()
-  else
-    call s:grep_z_register()
-  endif
-endfunction
+"""" ビジュアルモード選択中の文字をgrep(可能ならripgrep)
+"""function s:hi_selected_and_grep(range_cd)
+"""  call s:hi_selected()
+"""  silent normal gv"zy
+"""  if a:range_cd == 0
+"""    call s:vimgrep_current_buf_z_register()
+"""  else
+"""    call s:grep_z_register()
+"""  endif
+"""endfunction
 
-" Zレジスタの内容をgrep(可能ならripgrep)
-function s:grep_z_register()
-  let @z = escape(@z, '\()[]{}|^&#$%*+?')
-  let @z = substitute(@z, '\', '\\\', 'g')
-  let @z = substitute(@z, '"', '\\"', 'g')
-  let @z = substitute(@z, '`', '\\`', 'g')
-  if executable('rg')
-    call feedkeys(":Rg \"\<C-r>z\"\<CR>", "n")
-  else
-    call feedkeys(":grep \"\<C-r>z\"", "n")
-  endif
-endfunction
+"""" Zレジスタの内容をgrep(可能ならripgrep)
+"""function s:grep_z_register()
+"""  let @z = escape(@z, '\()[]{}|^&#$%*+?')
+"""  let @z = substitute(@z, '\', '\\\', 'g')
+"""  let @z = substitute(@z, '"', '\\"', 'g')
+"""  let @z = substitute(@z, '`', '\\`', 'g')
+"""  if executable('rg')
+"""    call feedkeys(":Rg \"\<C-r>z\"\<CR>", "n")
+"""  else
+"""    call feedkeys(":grep \"\<C-r>z\"", "n")
+"""  endif
+"""endfunction
 
-" Zレジスタの内容で、カレントバッファ内をvimgrep
-function s:vimgrep_current_buf_z_register()
-  let @z = escape(@z, '\()[]{}|^&#$%*+?')
-  let @z = substitute(@z, '\\', '\\\\', 'g')
-  let @z = substitute(@z, '"', '\\"', 'g')
-  let @z = substitute(@z, '`', '\\`', 'g')
-  " call feedkeys(":vimgrep \"\<C-r>z\" %\<CR>", "n")
-  call feedkeys(":vimgrep \"\<C-r>z\" %", "n")
-endfunction
+"""" Zレジスタの内容で、カレントバッファ内をvimgrep
+"""function s:vimgrep_current_buf_z_register()
+"""  let @z = escape(@z, '\()[]{}|^&#$%*+?')
+"""  let @z = substitute(@z, '\\', '\\\\', 'g')
+"""  let @z = substitute(@z, '"', '\\"', 'g')
+"""  let @z = substitute(@z, '`', '\\`', 'g')
+"""  " call feedkeys(":vimgrep \"\<C-r>z\" %\<CR>", "n")
+"""  call feedkeys(":vimgrep \"\<C-r>z\" %", "n")
+"""endfunction
 
 " /で検索モードに入った際、/{pattern}の入力中は「/」や「?」をタイプすると自動で\エスケープする。
 cnoremap <expr> / getcmdtype() == '/' ? '\/' : '/'

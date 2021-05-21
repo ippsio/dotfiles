@@ -6,14 +6,22 @@ build = './install --all --no-bash --no-fish --no-zsh'
 [[plugins]]
 repo = 'junegunn/fzf.vim'
 hook_add = '''
-  nnoremap <C-p> :FZFFileList<CR>
+  nnoremap <C-p> :call fzf#run( fzf#wrap({ 'source': 'find . -type d -name .git -prune -o ! -name .DS_Store', 'down': '40%'}))<CR>
   xnoremap <F3> :FZFFileListQ<CR>
-  nnoremap ; :Buffers<CR>
+  nnoremap ;b :Buffers<CR>
   nnoremap <space>l :Lines<CR>
-  command! FZFFileList
-  \ call fzf#run(
-  \   fzf#wrap({ 'source': 'find . -type d -name .git -prune -o ! -name .DS_Store', 'down': '40%'})
-  \ )
+  "command! FZFFileList call fzf#run( fzf#wrap({ 'source': 'find . -type d -name .git -prune -o ! -name .DS_Store', 'down': '40%'}))
+
+  " Filesコマンドにもプレビューを出す
+  "command! -bang -nargs=? -complete=dir Files call fzf#vim#files(<q-args>, {'options': ['--layout=reverse', '--info=inline', '--preview', 'bat --color=always {}']}, <bang>0)
+  command! -bang -nargs=? -complete=dir Files call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
+
+  function! s:find_git_root()
+    return system('git rev-parse --show-toplevel 2> /dev/null')[:-2]
+  endfunction
+
+  command! -bang -nargs=* Grep call fzf#vim#grep( 'rg --sortr path --column --ignore=.git '.shellescape(<q-args>), 1,
+  \   <bang>0 ? fzf#vim#with_preview('down:80%') : fzf#vim#with_preview({ 'dir': s:find_git_root() }), <bang>0)
 
   function! FuncFZFFileListQ() range
     let tmp = @@

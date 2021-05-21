@@ -7,59 +7,16 @@ hook_add = '''
   endif
 
   set laststatus=2
-  "let g:lightline_colorscheme = 'PaperColor_light'
-  "let g:lightline_colorscheme = '16color'
-  "let g:lightline_colorscheme = 'OldHope'
-  "let g:lightline_colorscheme = 'PaperColor'
-  "let g:lightline_colorscheme = 'PaperColor_dark'
-  "let g:lightline_colorscheme = 'PaperColor_light'
-  "let g:lightline_colorscheme = 'Tomorrow'
-  "let g:lightline_colorscheme = 'Tomorrow_Night'
-  "let g:lightline_colorscheme = 'Tomorrow_Night_Blue'
   let g:lightline_colorscheme = 'Tomorrow_Night_Bright'
-  "let g:lightline_colorscheme = 'Tomorrow_Night_Eighties'
-  "let g:lightline_colorscheme = 'ayu_mirage'
-  "let g:lightline_colorscheme = 'darcula'
-  "let g:lightline_colorscheme = 'default'
-  "let g:lightline_colorscheme = 'deus'
-  "let g:lightline_colorscheme = 'jellybeans'
-  "let g:lightline_colorscheme = 'landscape'
-  "let g:lightline_colorscheme = 'materia'
-  "let g:lightline_colorscheme = 'material'
-  "let g:lightline_colorscheme = 'molokai'
-  "let g:lightline_colorscheme = 'nord'
-  "let g:lightline_colorscheme = 'one'
-  "let g:lightline_colorscheme = 'powerline'
-  "let g:lightline_colorscheme = 'powerlineish'
-  "let g:lightline_colorscheme = 'selenized_dark'
-  "let g:lightline_colorscheme = 'seoul256'
-  "let g:lightline_colorscheme = 'solarized'
-  "let g:lightline_colorscheme = 'srcery_drk'
-  "let g:lightline_colorscheme = 'wombat'
   let g:lightline = {
     \  'colorscheme': g:lightline_colorscheme,
     \  'inactive': {
-    \    'left': [ ['mode', 'paste'],
-    \              ['readonly', 'filepath', 'anzu'],
-    \              ['timeinfo']
-    \            ],
-    \   'right': [ [ 'lineinfo' ],
-    \              [ 'gitrepoinfo', 'diff_base'],
-    \              [ 'fileinfo']
-    \            ]
+    \    'left': [ ['mode', 'paste'], ['readonly', 'filepath'], ['timeinfo'] ],
+    \    'right': [ [ 'lineinfo' ]]
     \  },
     \  'active': {
-    \    'left': [ ['mode', 'paste'],
-    \              ['readonly', 'filepath', 'anzu'],
-    \              ['timeinfo']
-    \            ],
-    \   'right': [ [ 'lineinfo' ],
-    \              [ 'gitrepoinfo', 'diff_base'],
-    \              [ 'fileinfo']
-    \            ]
-    \  },
-    \  'component': {
-    \    'lineinfo': '%l/%L(%p%%):%v'
+    \    'left': [ ['mode', 'paste'], ['readonly', 'filepath'], ['timeinfo'] ],
+    \    'right': [ [ 'lineinfo' ], ['info'], ['str_under_sursor'] ]
     \  },
     \  'mode_map': {
     \    'n': 'N',
@@ -74,66 +31,16 @@ hook_add = '''
     \    "\<C-s>": 'S',
     \    't': 'TERMINAL'
     \  },
-    \  'component_function': {
-    \     'anzu': 'anzu#search_status',
-    \     'filepath': 'FPath',
-    \     'diff_base': 'GitGutterDiffBase',
-    \     'fileinfo': 'FileInfo',
-    \     'cursorinfo': 'CursorInfo',
-    \   }
+    \  'component': { 'lineinfo': '%l/%L(%p%%):%v%<', 'info': '0x%B|' . &fileformat . '|' . &fileencoding . '%<'},
+    \  'component_function': { 'filepath': 'FileName', 'str_under_sursor': 'StrUnderCursor'}
     \ }
 
-  function! FPath()
-    let s:str = substitute(expand("%:p"), $HOME, "~", "g")
-
-    """" " フォルダ名を短縮しない場合はここをコメントアウト
-    """" " ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓
-    """" let s:dir = substitute(expand("%:p"), $HOME, "~", "g")
-    """" " スラッシュで分割
-    """" let s:dir_ar = split(s:dir, '/')
-
-    """" " フルパスファイル名の末尾の要素（ファイル名要素）を削除
-    """" call remove(s:dir_ar, len(s:dir_ar) - 1)
-
-    """" " 各階層のフォルダ名の、先頭1文字から最大3文字目（ドットで始まるフォルダ名は最大4文字目）までとする。
-    """" call map(s:dir_ar, 'matchstr(v:val, "^[\.]\\{0,1}.\\{1,3}")')
-
-    """" " スラッシュで結合
-    """" let s:dir = join(s:dir_ar, "/")
-    """" let s:str = s:dir . '/' . fnamemodify(expand("%:p"), ":t")
-    """" " ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑
-
-    if &modified
-      let s:str = s:str . '|+'
-    endif
-    return s:str
+  function! FileName()
+    return substitute(expand("%:p"), $HOME, "~", "g") . ( &modified ? '|+' : '')
   endfunction
 
-  " GitGutterの情報
-  " 現在のHEADのmerge-baseにするブランチとそのコミットハッシュ
-  function! GitGutterDiffBase()
-    return ""
-
-   " 画面上のスペースをすごく使うので、GitGutterの情報は表示しないこととします。
-   """  if g:my_git_repo == ""
-   """    return ""
-   """  endif
-   """  " ex) '[Git(develop)]'[5] ==> 'develop)]'
-   """  " ex) '[Git(develop)]'[5:-3] ==> 'develop'
-   """  let s:curr_branch = fugitive#statusline()[5:-3]
-   """  " 文字列的に長いので、少し簡略な表現で表示するようにする
-   """  "return g:my_git_repo . '(' . g:my_diff_base_hash . ':' . g:my_diff_base_branch . ' <= ' . s:curr_branch . ')'
-   """  return g:my_diff_base_branch . ' <= ' . s:curr_branch
-  endfunction
-
-  function! FileInfo()
-    " ファイルタイプはあって便利という事が特に無いので、表示しないこととします。
-    return &fileformat . '|' . &fileencoding
-    " return &fileformat . '|' . &fileencoding . '|' . &filetype
-  endfunction
-
-  function! GitRepoInfo()
-    return g:my_git_repo
+  function! StrUnderCursor()
+    return matchstr(getline('.'), '.', col('.')-1)
   endfunction
 '''
 

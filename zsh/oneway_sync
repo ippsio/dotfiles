@@ -1,39 +1,15 @@
 #!/bin/bash
-# src=$1 のファイルを dest=$2 に同期する。
-echo "[$(cd $(dirname $0); pwd)/$(basename $0)]"
-src=${1%/}
-dest=${2%/}
+# srcdir=$1 のファイルを dstdir=$2 に同期する。
+srcdir=${1%/}
+dstdir=${2%/}
 _sudo=$3
+echo "[$(cd $(dirname $0); pwd)/$(basename $0)], srcdir=${srcdir}, dstdir=${dstdir}"
 
-# ---------------------------------------------------------------------------------------------------------------------
-echo "(src->dest)=(${src}->${dest})"
-files=($(ls ${src}/*))
-for abs_file in ${files[@]}; do
-  file=$(basename ${abs_file})
-
-  # dest にファイルがなければコピー
-  abs_binfile=${dest}/${file}
-  if [[ ! -e ${abs_binfile} ]]; then
-    echo "${abs_binfile} not found."
-    echo "Copy ${abs_file} --> ${abs_binfile}"
-    ${_sudo} cp ${abs_file} ${abs_binfile}
+for src in $(ls ${srcdir}/*); do
+  dst=${dstdir}/$(basename ${src})
+  if [ "$(md5 -q ${src})" != "$(md5 -q ${dst})" ]; then
+    ts=$(stat -f "%Sm" ${dst}| sed -e "s/[ ]/_/g"| sed -e "s/://g") # ex) Nov 26 19:52:00 2019 => Nov_26_195200_2019
+    [[ -e ${dst} ]] && ${_sudo} cp ${dst} ${dst}_${ts}
+    ${_sudo} cp ${src} ${dst}
   fi
-
-  # dest にファイルがあっても、md5が異なればバックアップを取りつつコピー
-  md5_file=$(md5 -q ${abs_file})
-  md5_abs_binfile=$(md5 -q ${abs_binfile})
-  if [ "${md5_file}" != "${md5_abs_binfile}" ]; then
-    echo "md5 doesn't match."
-    echo "${abs_file}:${md5_file}"
-    echo "${abs_binfile}:${md5_abs_binfile}."
-
-    # ex) Nov 26 19:52:00 2019 => Nov_26_195200_2019
-    ts=$(stat -f "%Sm" ${abs_binfile}| sed -e "s/[ ]/_/g"| sed -e "s/://g")
-    echo "Backup ${abs_binfile} --> ${abs_binfile}_${ts}"
-    ${_sudo} cp ${abs_binfile} ${abs_binfile}_${ts}
-    echo "Copy ${abs_file} --> ${abs_binfile}"
-    ${_sudo} cp ${abs_file} ${abs_binfile}
-  fi
-  printf "ls ${abs_binfile} => $(ls ${abs_binfile}), "
 done
-echo

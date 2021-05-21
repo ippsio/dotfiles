@@ -66,14 +66,25 @@ battery_color_tmux() {
     local percentage
     percentage="${1:-$(get_battery)}"
 
+    local prefix="BAT"
     if is_charging; then
-        [[ -n $percentage ]] && echo -e "#[fg=colour46]${percentage}#[default]"
+        if [ "$(( $(date +'%s') % 2 ))" -eq "0" ]; then
+          [[ -n $percentage ]] && echo -e "#[fg=colour161,bg=colour149]${prefix}=${percentage}#[default]"
+        else
+          [[ -n $percentage ]] && echo -e "#[fg=colour161,bg=colour149]${prefix} ${percentage}#[default]"
+        fi
     else
         # percentage > BATTERY_DANGER
-        if [ "${percentage%%%*}" -ge "$BATTERY_DANGER" ]; then
-            echo -e "#[fg=colour50]${percentage}#[default]"
+        if [ "${percentage%%%*}" -ge "80" ]; then
+            echo -e "#[fg=colour231,bg=colour28]${prefix}=${percentage}#[default]"
+        elif [ "${percentage%%%*}" -ge "60" ]; then
+            echo -e "#[bg=colour58]${prefix}=${percentage}#[default]"
+        elif [ "${percentage%%%*}" -ge "40" ]; then
+            echo -e "#[bg=colour96]${prefix}=${percentage}#[default]"
+        elif [ "${percentage%%%*}" -ge "20" ]; then
+            echo -e "#[bg=colour89]${prefix}=${percentage}#[default]"
         else
-            echo -e "#[fg=red]${percentage}#[default]"
+            echo -e "#[bg=colour160]${prefix}=${percentage}#[default]"
         fi
     fi
 }
@@ -138,3 +149,4 @@ do
 done
 
 get_battery
+
