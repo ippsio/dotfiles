@@ -1,16 +1,25 @@
 #!/usr/bin/env zsh
 
+local PROMPT="$(basename $0)"
+local FIND_TARGET
+for i in "$@"
+do
+  case "$i" in
+    --PROMPT=* ) PROMPT=$PROMPT:$(echo $i| sed -e "s/^--PROMPT=//") ;;
+    * ) FIND_TARGET=$i ;;
+  esac
+done
+
 # ファイルの選択I/Fをする。
 # プレビュー：ファイル内の内容。
-#find $1 \
-find ${1/'~'/${HOME}} \
+find -s ${FIND_TARGET/'~'/${HOME}} \
   -path '*/\.' -prune -o \
   -path '*/\.git' -prune -o \
   -type f \
   | sed -e 's#\/\/*#\/#g' \
   | sed -e "s#^${HOME}#~#" \
   | fzf +m \
-  --prompt="fzf_list_file()> " \
+  --prompt="${PROMPT} > " \
   --preview 'bat $(echo $(cd $(dirname $(echo {}| sed -e "s#^~#${HOME}#")) && pwd)/$(echo {}| sed -e "s#^~#${HOME}#"| sed -e "s#^.*/##")) --color=always --style=header,grid --line-range :100' \
-  --preview-window=right:60%:wrap || echo $1
+  --preview-window=right:60%:wrap || echo $FIND_TARGET
 

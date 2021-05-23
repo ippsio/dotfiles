@@ -1,9 +1,17 @@
 #!/usr/bin/env zsh
+local PROMPT="$(basename $0)"
+local FIND_TARGET
+for i in "$@"
+do
+  case "$i" in
+    --PROMPT=* ) PROMPT=${PROMPT}:$(echo "$i"| sed -e "s/^--PROMPT=//") ;;
+    * ) FIND_TARGET="$i" ;;
+  esac
+done
 
 # フォルダの選択I/Fを表示する。
 # プレビュー：そのフォルダ内のファイル一覧。
-# find $1 \
-find ${1/'~'/${HOME}} \
+find -s ${FIND_TARGET/'~'/${HOME}} \
   -path '*/\.' -prune -o \
   -path '*/\.git' -prune -o \
   -type d \
@@ -11,7 +19,7 @@ find ${1/'~'/${HOME}} \
   | sed -e 's#\/\/*#\/#g' \
   | sed -e "s#^${HOME}#~#" \
   | fzf +m \
-  --prompt="fzf_list_dir()> " \
+  --prompt="${PROMPT} > " \
   --preview 'echo -n $(cd $(echo {}| sed -e "s#^~#${HOME}#"); pwd); echo '/'; echo; ls -UlaFG $(echo {}| sed -e "s#^~#${HOME}#")' \
-  --preview-window=right:60%:wrap || echo $1
+  --preview-window=right:60%:wrap || echo $FIND_TARGET
 

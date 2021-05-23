@@ -12,9 +12,8 @@ function exec_find() {
     | sort -r \
     | fzf --prompt="${_TYPE} >"  \
       --bind change:top \
-      --bind 'enter:execute(nvim $(echo {}| sed -e "s#^~#${HOME}#") < /dev/tty > /dev/tty)' \
-      --preview='bat $(echo {}| sed -e "s#^~#${HOME}#") --color=always' \
-    | sed -e "s#^~#${HOME}#"
+      --bind 'enter:execute(f=$(echo {}| sed -e "s#^~#${HOME}#"); nvim -c 4 $f < /dev/tty > /dev/tty)' \
+      --preview='f=$(echo {}| sed -e "s#^~#${HOME}#"); bat $f --color=always'
 }
 
 while true;

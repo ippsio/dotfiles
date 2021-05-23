@@ -7,8 +7,7 @@ function my_space_extraction() {
 
   # globalaliasの展開
   # NOTE: 一般的に大文字が使われるらしいので、ここでも大文字（と数字）でのみチェックしている。
-  [[ $LBUFFER =~ ' [A-Z0-9]+$' \
-  ]] \
+  [[ $LBUFFER =~ ' [A-Z0-9]+$' ]] \
   && zle _expand_alias
 
   # ssh
@@ -21,87 +20,70 @@ function my_space_extraction() {
   && BUFFER="scp $(fgrep 'Host ' ~/.ssh/config | grep -v '*' |  awk '{print $2}' | sort | fzf)" \
   && zle end-of-line && return
 
-  # git
-  [[ $BUFFER =~ '^git grep+$' \
-  ]] \
+  # git grep
+  [[ $BUFFER =~ '^gg+$' || $BUFFER =~ '^git grep+$' ]] \
   && BUFFER="git_grep_fzf " \
   && zle end-of-line && return
 
   # git diff
-  [[ $BUFFER =~ '^git di+$' \
-  ]] \
+  [[ $BUFFER =~ '^git di+$' ]] \
   && BUFFER="git diff " \
   && zle end-of-line && return
 
   # git status
-  [[ $BUFFER =~ '^gs+$' \
-  || $BUFFER =~ '^gst+$' \
-  || $BUFFER =~ '^git st+$' \
-  ]] \
+  [[ $BUFFER =~ '^gs+$' || $BUFFER =~ '^gst+$' || $BUFFER =~ '^git st+$' ]] \
   && BUFFER="git status " \
   && zle end-of-line && return
 
   # git checkout + completion
-  [[ $BUFFER =~ '^gco+$' \
-  || $BUFFER =~ '^git co+$' \
-  ]] \
+  [[ $BUFFER =~ '^gco+$' || $BUFFER =~ '^git co+$' || $BUFFER =~ '^git checkout+$' ]] \
   && zle autosuggest-clear \
-  && git_branch="$(fzf_git_branch local_first_origin_last)" \
-  && BUFFER="git checkout ${git_branch}" \
-  && zle end-of-line \
-  && return
+  && BUFFER="git checkout $(fzf_git_branch local_first_origin_last)" \
+  && zle end-of-line && return
 
   # git fetch origin --prune
-  [[ $BUFFER =~ '^gfo+$' \
-  || $BUFFER =~ '^git fo+$' \
-  ]] \
+  [[ $BUFFER =~ '^gfo+$' || $BUFFER =~ '^git fo+$' ]] \
   && BUFFER="git fetch origin --prune " \
   && zle end-of-line && return
 
   # git merge
-  [[ $BUFFER =~ '^gme+$' \
-  || $BUFFER =~ '^git me+$' \
-  ]] \
+  [[ $BUFFER =~ '^gme+$' || $BUFFER =~ '^git me+$' ]] \
   && BUFFER="git merge " \
   && zle end-of-line && return
 
   # git push origin HEAD
-  [[ $BUFFER =~ '^gps+$' \
-  || $BUFFER =~ '^git ps+$' \
-  ]] \
+  [[ $BUFFER =~ '^gps+$' || $BUFFER =~ '^git ps+$' ]] \
   && BUFFER="git push origin HEAD " \
   && zle end-of-line && return
 
   # bundle exec
-  [[ $BUFFER =~ '^be+$' \
-  ]] \
+  [[ $BUFFER =~ '^be+$' ]] \
   && BUFFER="bundle exec " \
   && zle end-of-line && return
 
   # bundle exec rails
-  [[ $BUFFER =~ '^rails+$' \
-  ]] \
+  [[ $BUFFER =~ '^rails+$' ]] \
   && BUFFER="bundle exec rails " \
   && zle end-of-line && return
 
   # bundle exec rails c
-  [[ $BUFFER =~ '^c+$' \
-  || $BUFFER =~ '^rc+$' \
-  ]] \
+  [[ $BUFFER =~ '^c+$' || $BUFFER =~ '^rc+$' ]] \
   && BUFFER="bundle exec rails c" \
   && zle end-of-line && return
 
   #  bundle exec rake + completion
-  [[ $BUFFER =~ '^rake+$' \
-  ]] \
+  [[ $BUFFER =~ '^rake+$' ]] \
   && BUFFER="bundle exec rake $(fzf_bundle_exec_rake)" \
   && zle end-of-line && return
 
   # bundle exec rails s
-  [[ $BUFFER =~ '^rs+$' \
-  || $BUFFER =~ '^bers+$' \
-  ]] \
+  [[ $BUFFER =~ '^rs+$' || $BUFFER =~ '^bers+$' ]] \
   && BUFFER="bundle exec rails s -b 0.0.0.0" \
+  && zle end-of-line && return
+
+  # rg
+  [[ $BUFFER =~ '^rgg+$' ]] \
+  && BUFFER="fzf_rg_then_vim " \
   && zle end-of-line && return
 
   # docker exec
@@ -110,10 +92,8 @@ function my_space_extraction() {
   && BUFFER="docker exec -it $(docker ps -a | fzf | awk '{print $1}') /bin/bash --login" \
   && zle end-of-line && return
 
-
   # dockero-compose
-  [[ $BUFFER =~ '^dc+$' \
-  ]] \
+  [[ $BUFFER =~ '^dc+$' ]] \
   && BUFFER="docker-compose " \
   && zle end-of-line && return
 
@@ -124,27 +104,19 @@ bindkey " " my_space_extraction
 
 # TAB(=CTRL+I)補完
 function my_tab_completion() {
-  # cd にfzfで補完候補を付ける
-  [[ $BUFFER =~ '^cd *$' \
-  ]] \
-  && BUFFER="cd ./" \
-  && zle end-of-line # zle end-of-lineの後に && returnしないのは意図的
+  # Directory completion
+  local -a cmds=("cd" "find")
+  for c in $cmds; do
+    [[ $BUFFER =~ "^${c} *$" ]] && BUFFER="${c} ./" && zle end-of-line # complete first './'.
+    [[ $BUFFER =~ "^${c} *.+/+$" ]] && BUFFER="${c} $(fzf_list_dir ${${BUFFER#${c} }:-.} --PROMPT=${c})" && zle end-of-line && return
+  done
 
-  [[ $BUFFER =~ '^cd *.+/+$' \
-  ]] \
-  && BUFFER="cd $(fzf_list_dir ${${BUFFER#cd }:-.})" \
-  && zle end-of-line && return
-
-  # vim にfzfで補完候補を付ける
-  [[ $BUFFER =~ '^vim *$' \
-  ]] \
-  && BUFFER="vim ./" \
-  && zle end-of-line # zle end-of-lineの後に && returnしないのは意図的
-
-  [[ $BUFFER =~ '^vim *.+/+$' \
-  ]] \
-  && BUFFER="vim $(fzf_list_file ${${BUFFER#vim }:-.})" \
-  && zle end-of-line && return
+  # File name completion
+  local -a cmds=("vim" "nvim" "source" "ls" "ll")
+  for c in $cmds; do
+    [[ $BUFFER =~ "^${c} *$" ]] && BUFFER="${c} ./" && zle end-of-line # complete first './'.
+    [[ $BUFFER =~ "^${c} *.+/+$" ]] && BUFFER="${c} $(fzf_list_file ${${BUFFER#${c} }:-.} --PROMPT=${c})" && zle end-of-line && return
+  done
 
   # 上記にヒットしなかたら、普通っぽい挙動にする
   zle expand-or-complete
@@ -153,11 +125,6 @@ function my_tab_completion() {
 # TAB(=CTRL+I)補完
 zle -N my_tab_completion
 bindkey "^I" my_tab_completion
-
-# ^で一つ上のフォルダへ移動
-function hat_cdup () { [[ ${BUFFER} == "" ]] && cd .. && zle accept-line && zle reset-prompt && return || zle self-insert }
-zle -N hat_cdup
-bindkey "\^" hat_cdup
 
 # CTRL-D,DELで前方削除
 bindkey "^[[3~" delete-char

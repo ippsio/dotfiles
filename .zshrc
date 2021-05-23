@@ -5,6 +5,9 @@ if (type "tmux" > /dev/null 2>&1) ; then
    #&& echo "$(date +'%Y/%m/%d %H:%M:%S')\nbyebye from tmux.\n(Closed after 1 sec.)" && sleep 1
 fi
 
+# CTRL-D でログアウトしないようにする
+setopt ignore_eof
+
 # ------------------
 # preparing section
 # ------------------
