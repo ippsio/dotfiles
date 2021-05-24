@@ -1,6 +1,0 @@
-# # インデントを可視化
-[[plugins]]
-repo = 'Yggdroot/indentLine'
-hook_add = '''
-  let g:indentLine_enabled = 1
-'''

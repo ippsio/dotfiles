@@ -66,12 +66,12 @@ local GIT_WORKING_TREE="%K{94}${_deleted}${_untracked}${_unstaged}%k"
 
 # git stage
 local _staged="%(6v| [${_text_staged}${_mark_staged}%6v] |)%k"
-local GIT_STAGE="%K{88}${_staged}%k"
+local GIT_STAGE="%K{90}%F{255}${_staged}%f%k"
 
 # git local repositry
-local _ahead="%(7v| [${_text_repo}%7v${_mark_ahead}|)"
+local _ahead="%(7v|[${_text_repo}%7v${_mark_ahead}|)"
 local _behind="%(8v| ${_mark_behind}%8v] |)"
-local GIT_LOCAL_REPO="%K{1}${_ahead}${_behind}%k"
+local GIT_LOCAL_REPO="%K{88}%F{255}${_ahead}${_behind}%f%k"
 
 local _stash="%(9v| ${_mark_stash}(%9v) |)"
 # 10v,11v,12v,13vって....。たぶんもっといいやり方あるんだろうけど、調べるのが面倒臭かったんです..

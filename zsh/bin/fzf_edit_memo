@@ -12,7 +12,7 @@ function exec_find() {
     | sort -r \
     | fzf --prompt="${_TYPE} >"  \
       --bind change:top \
-      --bind 'enter:execute(f=$(echo {}| sed -e "s#^~#${HOME}#"); nvim -c 4 $f < /dev/tty > /dev/tty)' \
+      --bind 'enter:execute(f=$(echo {}| sed -e "s#^~#${HOME}#"); nvim -c 5 $f < /dev/tty > /dev/tty)' \
       --preview='f=$(echo {}| sed -e "s#^~#${HOME}#"); bat $f --color=always'
 }
 
@@ -29,14 +29,14 @@ do
   elif [[ "${KIND}" == "最新状況" ]]; then
     NOTE_DIR=${DIR}/${KIND}
     NEW_NOTE=note.md
-    BEGINNING="# ${KIND}\n---\n"
+    BEGINNING="# ${KIND}\n\n---\n"
   else
     NOTE_DIR=${DIR}/${KIND}/$(LC_ALL=C date '+%Y_%m')
     NEW_NOTE=$(LC_ALL=C date '+%Y_%m%d_%a').md
-    BEGINNING="# $(LC_ALL=C date '+%Y/%m/%d(%a)')\n${KIND}\n---\n"
+    BEGINNING="# ${KIND} $(LC_ALL=C date '+%Y/%m/%d(%a)')\n\n---\n"
   fi
 
-  mkdir -p ${NOTE_DIR}
+  [ ! -d ${NOTE_DIR} ] && mkdir -p ${NOTE_DIR}
   [ ! -f ${NOTE_DIR}/${NEW_NOTE} ] && echo "${BEGINNING}" >> ${NOTE_DIR}/${NEW_NOTE}
   exec_find "${DIR}" "${KIND}"
 

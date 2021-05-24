@@ -7,11 +7,12 @@ on_ft = ['markdown']
 hook_add = '''
   hi mkdListBlock0 guifg=#55ccff guibg=none ctermfg=14 cterm=bold
   hi mkdListBlock1 guifg=#55ccff guibg=none ctermfg=14 cterm=bold
-  hi htmlH1 guifg=#ffffff guibg=#ff1000 ctermbg=196
-  hi htmlH2 guifg=#ffffff guibg=#ff3000 ctermbg=165
-  hi htmlH3 guifg=#ffffff guibg=#ff6000 ctermbg=90
-  hi htmlH4 guifg=#ffffff guibg=#ff9000 ctermbg=100
-  hi htmlH5 guifg=#ffffff guibg=#ffb000 ctermbg=131
+
+  hi htmlH1 ctermbg=61
+  hi htmlH2 ctermbg=126
+  hi htmlH3 ctermbg=90
+  hi htmlH4 ctermbg=131
+  hi htmlH5 ctermbg=94
 
   "hi markdownCode          guibg=#333333 guifg=#cccccc ctermbg=236 ctermfg=255
   "hi markdownCodeDelimiter guibg=#222222 guifg=#cccccc ctermbg=88 ctermfg=211

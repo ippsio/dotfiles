@@ -1,5 +1,0 @@
-[[plugins]]
-repo = 'reireias/vim-cheatsheet'
-hook_add = '''
-  let g:cheatsheet#cheat_file = '~/dotfiles/nvim/cheatsheet.md'
-'''

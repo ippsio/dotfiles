@@ -1,9 +1,0 @@
-# たぶんこれがcocの補完決定時に暴発するやつ
-# 終了タグ等の自動補完
-[[plugins]]
-repo = 'tpope/vim-endwise'
-hook_add='''
-   let g:endwise_no_mappings = v:true
-   inoremap <expr> <Plug>CustomCocCR pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
-   imap <CR> <Plug>CustomCocCR<Plug>DiscretionaryEnd
-'''
