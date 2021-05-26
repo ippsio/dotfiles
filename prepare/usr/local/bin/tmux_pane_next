@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# tmuxの現在のウインドウ上の、次のペインのインデックスを返す。
+pane_indexes_all=$(tmux lsp -F "#{pane_index}"| sort)
+pane_index_min=$(echo "$pane_indexes_all"| head -n 1)
+pane_index_max=$(echo "$pane_indexes_all"| tail -n 1)
+pane_index_active=$(tmux lsp -F "#{pane_index}" -f "#{==:#{pane_active},1}")
+
+# echo "active=$pane_index_active, min=$pane_index_min, max=$pane_index_max"
+if [[ $pane_index_active -eq $pane_index_max ]]; then
+  tmux select-pane -t $pane_index_min
+else
+  for pane_index in $pane_indexes_all; do
+    # echo "pane_index=$pane_index, pane_index_active=$pane_index_active"
+    if [[ $pane_index -gt $pane_index_active ]]; then
+      tmux select-pane -t $pane_index
+      break
+    fi
+  done
+fi
+

@@ -1,3 +1,5 @@
+#!/bin/bash
+
 current_session=$(tmux display-message -p '#S')
 tmux ls \
   | sed -e 's/://g' \

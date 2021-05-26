@@ -1,8 +1,11 @@
 # zsh起動時にtmux起動
 if (type "tmux" > /dev/null 2>&1) ; then
-  [[ -z "$TMUX" && ! -z "$PS1" ]] && tmux \
-    && echo "$(date +'%Y/%m/%d %H:%M:%S')\nbyebye from tmux.\n(Closed after 1 sec.)" && sleep 2 && exit
-   #&& echo "$(date +'%Y/%m/%d %H:%M:%S')\nbyebye from tmux.\n(Closed after 1 sec.)" && sleep 1
+  if [[ -z "$TMUX" && ! -z "$PS1" ]]; then
+    for i in {0..128}; do
+      [[ -z $(tmux ls -f "#{==:#{session_name},${i}}") ]] \
+        && tmux new-session -s ${i} && echo "bye." && sleep 1 && exit
+    done
+  fi
 fi
 
 # CTRL-D でログアウトしないようにする
