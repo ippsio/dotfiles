@@ -93,7 +93,7 @@ set diff-view   = line-number:yes,interval=1 text:yes,commit-title-overflow=no
 # main-viewの表示設定
 # ======================
 set main-view-date-display = custom
-set main-view-date-format = "%m-%d %H:%M"
+set main-view-date-format = "%Y-%m-%d %H:%M"
 
 # ======================
 # ビューの分割

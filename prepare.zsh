@@ -11,7 +11,29 @@ export RBENV_ROOT=$HOME/.rbenv
 export NODENV_ROOT=$HOME/.nodenv
 export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
 export PATH=~/dotfiles/zsh/bin:${PATH}:$PYENV_ROOT/bin:$RBENV_ROOT/bin
-export LSCOLORS=gxfxcxdxbxegexabagacad
+
+# LSCOLORS
+# a black      , b red      , c green      , d brown      , e blue      , f magenta      , g cyan      , h light grey
+# A black(BOLD), B red(BOLD), C green(BOLD), D brown(BOLD), E blue(BOLD), F magenta(BOLD), G cyan(BOLD), H light grey(BOLD)
+# x default foreground or background
+#
+#   (A bold black, usually shows up as dark grey)
+#   (D bold brown, usually shows up as yellow)
+#   (H bold light grey; looks like bright white)
+#
+_C1=gx # 1. directory
+_C2=fx # 2. symbolic link
+_C3=cx # 3. socket
+_C4=dx # 4. pipe
+_C5=bx # 5. executable
+_C6=dg # 6. block special
+_C7=dx # 7. character special
+_C8=ab # 8. executable with setuid bit set
+_C9=ag # 9. executable with setgid bit set
+_C10=ac # 10. directory writable to others, with sticky bit
+_C11=ad # 11. directory writable to others, without sticky bit
+export LSCOLORS=${_C1}${_C2}${_C3}${_C4}${_C5}${_C6}${_C7}${_C8}${_C9}${_C10}${_C11}
+
 export LANG="ja_JP.UTF-8"
 export LC_COLLATE="ja_JP.UTF-8"
 export LC_CTYPE="ja_JP.UTF-8"

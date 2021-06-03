@@ -1,5 +1,5 @@
 [core]
-  excludesfile = ~/.gitignore_global
+	excludesfile = /Users/i/.gitignore_global
   attributesfile = ~/.gitattributes_global
   # quotepathをfalseに設定するとgit diffでのファイル名(全角)も正しく表示できる。
   quotepath = false
@@ -74,3 +74,14 @@
   diff = (type diff-highlight >/dev/null 2>&1) && (diff-highlight | less) || less
 [pull]
   ff = only
+[difftool "sourcetree"]
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path = 
+[mergetool "sourcetree"]
+	cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true
+[user]
+	name = 
+	email = 
+[commit]
+	template = /Users/i/.stCommitMsg
