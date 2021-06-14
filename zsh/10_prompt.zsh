@@ -54,7 +54,7 @@ local _mark_behind="v"
 local _mark_stash="stash"
 
 # exit status and git basic infomations.
-local EXIT_CD="%K{red}%(?.. [EXIT_CD=%?])%k"
+local EXIT_CD="%K{red}%(?.. [\$?=%?])%k"
 local GIT_REPO_NAME="%K{24}%F{255}%(1v|[%1v|)%f%k"
 local GIT_BRANCH="%K{24}%F{255}%(2v|(%2v)]|)%f%k"
 

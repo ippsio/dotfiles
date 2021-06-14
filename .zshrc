@@ -63,6 +63,9 @@ zplug "junegunn/fzf", use:shell/key-bindings.zsh
 zplug "junegunn/fzf", use:shell/completion.zsh
 zplug "zsh-users/zsh-syntax-highlighting", defer:2
 
+# 標準のファイル名、ディレクトリ名補完にfzfをつかってくれるようになる
+zplug "Aloxaf/fzf-tab"
+
 zplug check || zplug install
 zplug load --verbose
 

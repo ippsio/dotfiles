@@ -4,9 +4,11 @@ export FZF_DEFAULT_OPTS="\
   --extended \
   --reverse \
   --border \
-  --bind change:top \
   --bind 'ctrl-v:execute(vim {})' \
+  --preview-window=bottom:80%:wrap
   "
+  # --bind change:top \
+
 # export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'
 # --color=dark
 # --color=fg:-1,bg:-1,hl:#5fff87,fg+:#ffff00,bg+:#666655,hl+:#a3be8c

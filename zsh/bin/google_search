@@ -1,0 +1,5 @@
+#!/bin/bash
+( ! type "nkf" > /dev/null 2>&1 ) && echo "Please install nkf first. bye" && return
+open -a /Applications/Google\ Chrome.app \
+  "https://www.google.com/search?q=$(echo "$@" | nkf -WwMQ | sed 's/=$//g' | tr = % | tr -d '\n')"
+

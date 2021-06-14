@@ -3,6 +3,7 @@
   attributesfile = ~/.gitattributes_global
   # quotepathをfalseに設定するとgit diffでのファイル名(全角)も正しく表示できる。
   quotepath = false
+  editor = nvim
 
 [color]
   ui = auto

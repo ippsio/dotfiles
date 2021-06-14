@@ -29,11 +29,11 @@ do
   elif [[ "${KIND}" == "最新状況" ]]; then
     NOTE_DIR=${DIR}/${KIND}
     NEW_NOTE=note.md
-    BEGINNING="# ${KIND}\n\n---\n"
+    BEGINNING="\n# ${KIND}\n\n---\n"
   else
     NOTE_DIR=${DIR}/${KIND}/$(LC_ALL=C date '+%Y_%m')
     NEW_NOTE=$(LC_ALL=C date '+%Y_%m%d_%a').md
-    BEGINNING="# ${KIND} $(LC_ALL=C date '+%Y/%m/%d(%a)')\n\n---\n"
+    BEGINNING="\n# ${KIND} $(LC_ALL=C date '+%Y/%m/%d(%a)')\n\n---\n"
   fi
 
   [ ! -d ${NOTE_DIR} ] && mkdir -p ${NOTE_DIR}

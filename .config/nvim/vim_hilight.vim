@@ -87,12 +87,12 @@ hi markdownError guibg=#222622
 hi Statement guifg=#ffff00 ctermfg=226 cterm=bold
 
 " vimdiffの色設定
-hi DiffAdd     guifg=#00ff33 guibg=#004433
-hi DiffAdded   guifg=#00ffdd guibg=#004433
-hi DiffRemoved guifg=#ff7766 guibg=#440000
-hi DiffChange  guifg=#aaaa00 guibg=#666600
-hi DiffText    guifg=#ff9999 guibg=#660000
-hi DiffDelete  guifg=#666666 guibg=#000000
+hi DiffAdd     guifg=#00ff33 guibg=#004433 ctermfg=123 ctermbg=023
+hi DiffAdded   guifg=#00ffdd guibg=#004433 ctermfg=123 ctermbg=023
+hi DiffRemoved guifg=#ff7766 guibg=#440000 ctermfg=210 ctermbg=052
+hi DiffChange  guifg=#aaaa00 guibg=#666600 ctermfg=210 ctermbg=052
+hi DiffText    guifg=#ff9999 guibg=#660000 ctermfg=168 ctermbg=125
+hi DiffDelete  guifg=#666666 guibg=#000000 ctermfg=238 ctermbg=234
 
 " qfixgrep
 hi qfFileName guifg=#00fff3 guibg=#004433 ctermfg=36 ctermbg=16

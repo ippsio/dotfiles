@@ -14,13 +14,10 @@ local target=$(\
         echo 'not a branch.'
       else
         set -x
-        git log \
-          --graph \
-          --color=always --date=format-local:'%Y/%m/%d %H:%M:%S' \
+        git log --graph --color=always --date=format-local:'%Y/%m/%d %H:%M:%S' \
           --pretty=format:'%C(010 022)%h%C(reset)%C(039 017)(%cd)%C(reset) %C(079)%an%C(reset) %C(226 021)%d%C(reset)%s' \
           --abbrev-commit origin/{}
       fi" \
-    --preview-window=bottom:70%:wrap \
   || echo "")
 [[ "${target}" == "" ]] && return
 

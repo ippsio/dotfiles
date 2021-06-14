@@ -6,18 +6,49 @@ build = './install --all --no-bash --no-fish --no-zsh'
 [[plugins]]
 repo = 'junegunn/fzf.vim'
 hook_add = '''
-  " バッファ一覧から
-  nnoremap fb :Buffers<CR>
+  nnoremap [fzf] <Nop>
+  nmap ; [fzf]
+
+  " バッファ一覧をfzfで絞り込む
+  nnoremap [fzf]; :Buffers<CR>
 
   " 現在のファイル内の文字を探す
-  nnoremap fl :Lines<CR>
+  nnoremap [fzf]l :Lines<CR>
 
-  " ファイル名で探す
-  nnoremap ff :Files<CR>
-  nnoremap <C-p> :Files<CR>
-  command! -bang -nargs=? -complete=dir Files call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
+  " 現在開いてるファイルがgit管理下ならそのディレクトリを、そうでなければ現在のパスを返す。
+  function! s:GetDir(args0)
+    if a:args0 != ''
+      if isdirectory(a:args0)
+        return a:args0
+      else
+        throw 'ディレクトリ ['.a:args0.'] っつうのが見つからない。'
+      endif
+    else
+      let s:git_root = system('cd ' . expand('%:p:h') . '; git rev-parse --show-toplevel 2> /dev/null')[:-2]
+      return s:git_root != '' ? s:git_root : expand('%:p:h')
+    endif
+  endfunction
+
+  " ファイル名の一覧をfzfで絞り込む
+  nnoremap <C-p> :FzfFiles<CR>
+  nnoremap [fzf]f :FzfFiles
+  command! -bang -nargs=? -complete=dir FzfFiles
+        \ call fzf#run(fzf#vim#with_preview(fzf#wrap({
+        \   'source': 'find . -type d -name .git -prune -o ! -name .DS_Store -type f',
+        \   'dir': s:GetDir(<q-args>),
+        \   'window': 'enew'
+        \ })))
 
   " ファイルの内容をripgrepで検索して、さらにfzfで絞り込む
-  nnoremap fg :Grep<CR>
-  command! -bang -nargs=* Grep call fzf#vim#grep('rg --sortr path --column --ignore=.git '.shellescape(<q-args>), 1, <bang>0 ? fzf#vim#with_preview('down:80%') : fzf#vim#with_preview({ 'dir': system('git rev-parse --show-toplevel 2> /dev/null')[:-2] }), <bang>0)
+  nnoremap <C-h> :FzfGrep
+  nnoremap [fzf]g :FzfGrep<CR>
+  command! -bang -nargs=* FzfGrep
+        \ call fzf#vim#grep(
+        \   'rg --hidden --sortr path --column --ignore=.git ' . shellescape(<q-args>),
+        \   1,
+        \   <bang>0
+        \     ? fzf#vim#with_preview({'window:enew'})
+        \     : fzf#vim#with_preview({'window':'enew' ,'dir': s:GetDir('')}),
+        \   <bang>0
+        \ )
 '''
