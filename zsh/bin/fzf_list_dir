@@ -11,9 +11,7 @@ done
 
 # フォルダの選択I/Fを表示する。
 # プレビュー：そのフォルダ内のファイル一覧。
-find -s ${FIND_TARGET/'~'/${HOME}} \
-  -path '*/\.' -prune -o \
-  -path '*/\.git' -prune -o \
+find -s -E ${FIND_TARGET/'~'/${HOME}} -not -regex '.*(\.DS_Store|/*.git/).*' -and \
   -type d \
   | sed -e 's#$#/#g' \
   | sed -e 's#\/\/*#\/#g' \

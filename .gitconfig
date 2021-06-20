@@ -1,5 +1,5 @@
 [core]
-	excludesfile = /Users/i/.gitignore_global
+  excludesfile = ~/.gitignore_global
   attributesfile = ~/.gitattributes_global
   # quotepathをfalseに設定するとgit diffでのファイル名(全角)も正しく表示できる。
   quotepath = false
@@ -36,8 +36,8 @@
   #----------------------
   # new系(緑系)
   #----------------------
-  new =                        123 023 # "#00ff33 #004433"
-  newMoved =                   123 023
+  new =                        051 023 # "#00ff33 #004433"
+  newMoved =                   051 023
   #newMovedAlternative =       047 024
   #newMovedAlternativeDimmed = 047 024
 
@@ -62,8 +62,8 @@
   #----------------------
   # new系(緑系)
   #----------------------
-  newNormal =                  123 023 # "#00ff33 #004433"
-  newHighlight =               118 028 # 単語差分ハイライト部分
+  newNormal =                  051 023 # "#00ff33 #004433"
+  newHighlight =               159 30  # 単語差分ハイライト部分
 
 [diff]
   compactionHeuristic = true
@@ -85,4 +85,4 @@
 	name = 
 	email = 
 [commit]
-	template = /Users/i/.stCommitMsg
+	template = ~/.stCommitMsg

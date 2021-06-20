@@ -34,7 +34,7 @@ hook_add = '''
   nnoremap [fzf]f :FzfFiles
   command! -bang -nargs=? -complete=dir FzfFiles
         \ call fzf#run(fzf#vim#with_preview(fzf#wrap({
-        \   'source': 'find . -type d -name .git -prune -o ! -name .DS_Store -type f',
+        \   'source': 'find -s -E . -not -regex ".*(\.DS_Store|/*.git/).*" -and -type f',
         \   'dir': s:GetDir(<q-args>),
         \   'window': 'enew'
         \ })))
