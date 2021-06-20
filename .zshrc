@@ -31,7 +31,7 @@ eval "$(nodenv init -)"
 source ~/dotfiles/zsh/00_alias.zsh
 source ~/dotfiles/zsh/10_prompt.zsh
 source ~/dotfiles/zsh/20_bindkeys.zsh
-source ~/dotfiles/zsh/30_color_to_man.zsh
+source ~/dotfiles/zsh/30_man.zsh
 # custom functions
 #for file in $(ls ~/dotfiles/zsh/custom_functions/*.zsh); { source $file }
 # custom completion

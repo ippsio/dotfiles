@@ -62,7 +62,7 @@ color diff-del-highlight 211   124
 #----------------------
 color diff-add           123    023
 #color diff-add          047    024
-color diff-add-highlight 118    028
+color diff-add-highlight 159    030
 #color "+"             047     024
 #color " +"            047     024
 
