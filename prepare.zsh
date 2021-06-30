@@ -7,10 +7,11 @@ export EDITOR=nvim
 export ZPLUG_HOME=~/.cache/zplug
 export TMUX_PLUGINS=~/.cache/tmux/plugins
 export PYENV_ROOT=$HOME/.pyenv
+export GOENV_ROOT=$HOME/.goenv
 export RBENV_ROOT=$HOME/.rbenv
 export NODENV_ROOT=$HOME/.nodenv
 export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
-export PATH=~/dotfiles/zsh/bin:${PATH}:$PYENV_ROOT/bin:$RBENV_ROOT/bin
+export PATH=~/dotfiles/zsh/bin:$PYENV_ROOT/bin:$GOENV_ROOT/bin:$RBENV_ROOT/bin:${PATH}
 
 # LSCOLORS
 # a black      , b red      , c green      , d brown      , e blue      , f magenta      , g cyan      , h light grey
@@ -66,6 +67,7 @@ source ~/dotfiles/prepare/prepare_pynvim.sh
 source ~/dotfiles/prepare/prepare_zsh.sh
 source ~/dotfiles/prepare/prepare_tmux.sh
 source ~/dotfiles/prepare/prepare_pyenv.sh
+source ~/dotfiles/prepare/prepare_goenv.sh
 source ~/dotfiles/prepare/prepare_virtualenv.sh
 source ~/dotfiles/prepare/prepare_python.sh
 source ~/dotfiles/prepare/prepare_direnv.sh

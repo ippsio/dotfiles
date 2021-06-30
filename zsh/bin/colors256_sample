@@ -1,14 +1,32 @@
 #!/usr/bin/env zsh
 
-for type in {0..1}; do for color in {0..3}; do
-  [ $type -eq 0 ] && printf "|\e[38;5;%sm%3s\e[0m" $color $color
-  [ $type -eq 1 ] && printf "|\e[48;5;%sm%3s\e[0m" $color $color
-done; done; echo; idx=$(($color + 1))
 
-while [ $idx -lt 255 ]
-do
-  for type in {0..1}; do for color in {$idx..$(($idx + 5))}; do
-    [ $type -eq 0 ] && printf "|\e[38;5;%sm%3s\e[0m" $color $color
-    [ $type -eq 1 ] && printf "|\e[48;5;%sm%3s\e[0m" $color $color
-  done; done; echo; idx=$(($color + 1))
+label() {
+  printf "\e[38;5;$1m\e[48;5;$2mfg%3s bg%3s\e[0m " $1 $2
+}
+
+show_color_sample() {
+  echo
+  for bg in {0..255}; do
+    label $1 $bg
+    [[ $(( $((bg + 3)) % 12 )) -eq 0 ]] && echo && echo
+  done;
+  echo
+}
+
+local key_input=j
+local fg=${1:-7}
+while true; do
+  clear
+  echo "256色カラーサンプル表示"
+  echo "・現在の文字色=[${fg}]"
+  echo "・j：文字色を-1します。"
+  echo "・k：文字色を+1します。"
+  show_color_sample ${fg}
+  read -k 1 key_input
+  [[ "${key_input}" != "j" && "${key_input}" != "k" ]] && break
+  [[ ${key_input} == "j" ]] && fg=$(($fg - 1))
+  [[ ${key_input} == "k" ]] && fg=$(($fg + 1))
+  [[ ${fg} -le 0 ]] && fg=0
+  [[ ${fg} -ge 255 ]] && fg=255
 done

@@ -1,35 +1,31 @@
 #!/usr/bin/env zsh
 # git のブランチ選択インターフェースを提供する。
 
-local branches_candidates="develop\n-- .\n-- \n-b\n$(LC_ALL=C git branch -a --format="%(refname:short)" \
-  | grep -v '^develop$'| sed -e 's#^origin/##g'| sort| uniq)"
-
-local target=$(\
-  echo ${branches_candidates} \
-  | fzf \
-    --prompt='SELECT A BRANCH> ' \
-    --preview "echo \[{}\];
-      if [[ {} =~ '^(-- |-- .|-b)' ]]; then
-        echo
-        echo 'not a branch.'
-      else
-        set -x
-        git log --graph --color=always --date=format-local:'%Y/%m/%d %H:%M:%S' \
-          --pretty=format:'%C(010 022)%h%C(reset)%C(039 017)(%cd)%C(reset) %C(079)%an%C(reset) %C(226 021)%d%C(reset)%s' \
-          --abbrev-commit origin/{}
-      fi" \
-  || echo "")
-[[ "${target}" == "" ]] && return
-
-if [[ "${target}" == "-- " || "${target}" == "-- ." || "${target}" == "-b"  ]]; then
-  echo ${target}
-else
-  local origin_local=${1:-origin_first_local_last}
-  if [[ "${origin_local}" == "origin_first_local_last" ]]; then
-    order="(REMOTE) origin/${target}\n(LOCAL) ${target}"
+add_origin() {
+  if [[ "$3" == "origin_first_local_last" ]]; then
+    echo "$1\norigin/$2\n$2"
   else
-    order="(LOCAL)  ${target}\n(REMOTE) origin/${target}"
+    echo "$1\n$2\norigin/$2"
   fi
-  echo "${order}"| fzf --prompt="LOCAL OR REMOTE? > "| awk '{print $2}'
-fi
+}
 
+local origin_local=${1:-origin_first_local_last}
+local branches_candidates=""
+branches_candidates=$(add_origin "${branches_candidates}" "develop" "${origin_local}")
+branches_candidates=$(echo "${branches_candidates}\n--\n-- .\n-b")
+for branch in $(LC_ALL=C git branch -a --format="%(refname:short)"| sed -e 's#^origin/##g'| egrep -v '^develop$'| sort| uniq)
+do
+  branches_candidates=$(add_origin "${branches_candidates}" "${branch}" "${origin_local}")
+done
+
+echo ${branches_candidates}|egrep -v '^\s*$'| fzf --prompt='SELECT A BRANCH> ' \
+  --preview "echo \[{}\];
+    if [[ {} =~ '^(-- |-- .|-b)' ]]; then
+      echo
+      echo 'not a branch.'
+    else
+      set -x
+      git log --graph --color=always --date=format-local:'%Y/%m/%d %H:%M:%S' \
+        --pretty=format:'%C(010 022)%h%C(reset)%C(039 017)(%cd)%C(reset) %C(079)%an%C(reset) %C(226 021)%d%C(reset)%s' \
+        --abbrev-commit {}
+    fi"
