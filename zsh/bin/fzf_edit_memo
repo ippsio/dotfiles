@@ -45,7 +45,8 @@ do
   else
     if [ $(cd ${DIR} && git status --porcelain 2>&1 > /dev/null | wc -l| tr -d ' ') -gt 0 ]; then
       echo "変更有り。"
-      echo $(cd ${DIR} && git add -A && echo $(git commit -m "$(date '+%Y/%m/%d(%a) %H時%M分%S秒')"))
+      # echo $(cd ${DIR} && git add -A && echo $(git commit -m "$(date '+%Y/%m/%d(%a) %H時%M分%S秒')"))
+      cd ${DIR} && git add -A && git commit -m "$(date '+%Y/%m/%d(%a) %H時%M分%S秒')" && git log --oneline -1
     fi
   fi
 done

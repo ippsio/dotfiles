@@ -1,0 +1,75 @@
+#!/bin/bash
+merge_base_commit=$1
+nvim_bind=${2:-enter}
+
+_prepend_filename_and_line() {
+  esc=$'\033'
+  path=
+  line=
+  while read; do
+    if [[ $REPLY =~ ---\ (a/)?.* ]]; then
+      continue
+    elif [[ $REPLY =~ \+\+\+\ (b/)?([^[:blank:]]+).* ]]; then
+      path=${BASH_REMATCH[2]}
+    elif [[ $REPLY =~ @@\ -[0-9]+(,[0-9]+)?\ \+([0-9]+)(,[0-9]+)?\ @@.* ]]; then
+      line=${BASH_REMATCH[2]}
+    elif [[ $REPLY =~ ^($esc\[[0-9;]+m)*([\ +-]) ]]; then
+      echo "$path $line :$REPLY"
+      if [[ ${BASH_REMATCH[2]} != - ]]; then
+        ((line++))
+      fi
+    fi
+  done
+}
+
+target=$(git diff $1 --unified=0| _prepend_filename_and_line \
+  | fzf --prompt="fzf_git_diff_lines> " \
+  --header="(${nvim_bind}=> nvim)  (tab=> git diff)  (?=> toggle preview)" \
+  --bind change:top \
+  --bind "${nvim_bind}:execute(nvim {1} +{2} < /dev/tty > /dev/tty)" \
+  --bind "tab:execute(git diff --color=auto $merge_base_commit {1}< /dev/tty  |nvim -R > /dev/tty)" \
+  --bind '?:toggle-preview' \
+  --preview '
+     decide_range_from() { echo $(( $1 - 5 > 0 ? $1 - 5 : 1)) };
+     bat --color=always --style=numbers,header,grid \
+       --line-range $(decide_range_from {2}): --highlight-line {2} {1}' \
+  --preview-window=bottom:40%:wrap)
+    echo $target | awk '{print $1}'
+
+
+
+
+# 
+# # 指定ブランチとのgit diffをfzfで表示する。
+# # プレビューとして、該当ファイルの差分を表示する。
+# # TAB、CTRL-L、カーソルキー右でtigを開く。
+# # enterで、たぶんvimが開く。
+# 
+# #--bind "tab:execute(git diff --color=always $merge_base_commit {3} < /dev/tty |less -eR > /dev/tty)" \
+# files=$(git diff --numstat ${merge_base_commit} | awk '{printf "%+5s" , "+" $1} {printf "%+5s" , "-" $2} {printf "%s\n", ", " $3} ') || return
+# target=$(echo "$files" | \
+#   fzf \
+#   --prompt="fzf_git_diff>" \
+#   --header="(${nvim_bind}=> nvim)  (right,ctrl-l) (tab=> git diff)  (?=> toggle preview)" \
+#   --bind change:top \
+#   --bind "${nvim_bind}:execute(nvim {3} < /dev/tty > /dev/tty)" \
+#   --bind "right:execute(tig $merge_base_commit...HEAD {3} < /dev/tty > /dev/tty)" \
+#   --bind "ctrl-l:execute(tig $merge_base_commit {3}...HEAD < /dev/tty > /dev/tty)" \
+#   --bind "tab:execute(git diff --color=auto $merge_base_commit {3}< /dev/tty  |nvim -R > /dev/tty)" \
+#   --bind '?:toggle-preview' \
+#   --preview "
+#     [ ! -e {3} ] \
+#       && ( \
+#            echo 'NOT FOUND: {3}' \
+#          ) \
+#       || ( \
+#            git log ${merge_base_commit}.. --oneline {3} | wc -l| tr -d ' '| sed -e 's/$/ total commits on this branch(merge_base_commit=${merge_base_commit})./'
+#            ;git log ${merge_base_commit}.. --oneline -3 --color=always --decorate=full --date=format-local:'%Y/%m/%d %H:%M:%S' \
+#              --pretty=format:'%C(010 022)%h%C(reset) %C(039 017)(%cd)%C(reset) %C(079)%an%C(reset) %C(226 021)%d%C(reset)%s' --abbrev-commit {3}
+#            ; echo ; echo
+#            ;git diff --color=always --stat ${merge_base_commit} {3}
+#            ; echo
+#            ;git diff --color=always ${merge_base_commit} {3}| diff-highlight | less \
+#          ) \
+#     " --preview-window=right:70%:wrap)
+#     echo $target | awk '{print $3}'

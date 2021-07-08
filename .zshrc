@@ -11,6 +11,10 @@ fi
 # CTRL-D でログアウトしないようにする
 setopt ignore_eof
 
+# cdコマンド補完時に鳴るBeep音を消す。
+# unsetopt BEEP # Turn off all beeps
+unsetopt LIST_BEEP # Turn off autocomplete beeps
+
 # ------------------
 # preparing section
 # ------------------

@@ -18,7 +18,7 @@ function triggered_by_space() {
   && zle end-of-line && return
 
   # git grep
-  [[ $BUFFER =~ '^gg+$' || $BUFFER =~ '^git grep+$' ]] \
+  [[ $BUFFER =~ '^gg+$' ]] \
   && BUFFER="git_grep_fzf " \
   && zle end-of-line && return
 
