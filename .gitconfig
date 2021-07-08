@@ -69,9 +69,9 @@
 
 [pager]
   # diff-highlight が PATHに追加されてないと、diff-highlightは使えないよ。
-  log =  (type diff-highlight >/dev/null 2>&1) && (diff-highlight | less) || less
-  show = (type diff-highlight >/dev/null 2>&1) && (diff-highlight | less) || less
-  diff = (type diff-highlight >/dev/null 2>&1) && (diff-highlight | less) || less
+  log =  (type diff-highlight >/dev/null 2>&1) && (diff-highlight | less --quiet) || less --quiet
+  show = (type diff-highlight >/dev/null 2>&1) && (diff-highlight | less --quiet) || less --quiet
+  diff = (type diff-highlight >/dev/null 2>&1) && (diff-highlight | less --quiet) || less --quiet
 [pull]
   ff = only
 [difftool "sourcetree"]
