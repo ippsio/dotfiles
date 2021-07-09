@@ -1,31 +1,12 @@
 #!/usr/bin/env zsh
 # git のブランチ選択インターフェースを提供する。
 
-add_origin() {
-  if [[ "$3" == "origin_first_local_last" ]]; then
-    echo "$1\norigin/$2\n$2"
-  else
-    echo "$1\n$2\norigin/$2"
-  fi
-}
+HASH="%(color:blue)%(objectname:short)%(color:reset)"
+DATE="%(color:red)%(authordate:format:%Y-%m-%d %H:%M:%S)%(color:reset)"
+BRANCH_NAME="%(color:123)%(refname:short)%(color:reset)"
+AUTHOR_NAME="%(color:cyan)[%(authorname)]%(color:reset)"
+SUBJECT="%(subject)"
 
-local origin_local=${1:-origin_first_local_last}
-local branches_candidates=""
-branches_candidates=$(add_origin "${branches_candidates}" "develop" "${origin_local}")
-branches_candidates=$(echo "${branches_candidates}\n--\n-- .\n-b")
-for branch in $(LC_ALL=C git branch -a --format="%(refname:short)"| sed -e 's#^origin/##g'| egrep -v '^develop$'| sort| uniq)
-do
-  branches_candidates=$(add_origin "${branches_candidates}" "${branch}" "${origin_local}")
-done
+branches_candidates=$(git branch -a --sort=-authordate --format="${HASH} ${DATE} ${BRANCH_NAME} ${AUTHOR_NAME}	${SUBJECT}")
 
-echo ${branches_candidates}|egrep -v '^\s*$'| fzf --prompt='SELECT A BRANCH> ' \
-  --preview "echo \[{}\];
-    if [[ {} =~ '^(-- |-- .|-b)' ]]; then
-      echo
-      echo 'not a branch.'
-    else
-      set -x
-      git log --graph --color=always --date=format-local:'%Y/%m/%d %H:%M:%S' \
-        --pretty=format:'%C(010 022)%h%C(reset)%C(039 017)(%cd)%C(reset) %C(079)%an%C(reset) %C(226 021)%d%C(reset)%s' \
-        --abbrev-commit {}
-    fi"
+echo ${branches_candidates}|egrep -v '^\s*$'| fzf --prompt='SELECT A BRANCH> ' --delimiter "\t" --nth 1| awk '{print $4}'
