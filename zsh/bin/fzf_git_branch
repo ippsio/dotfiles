@@ -1,12 +1,12 @@
 #!/usr/bin/env zsh
 # git のブランチ選択インターフェースを提供する。
-
-HASH="%(color:blue)%(objectname:short)%(color:reset)"
-DATE="%(color:red)%(authordate:format:%Y-%m-%d %H:%M:%S)%(color:reset)"
-BRANCH_NAME="%(color:123)%(refname:short)%(color:reset)"
-AUTHOR_NAME="%(color:cyan)[%(authorname)]%(color:reset)"
+HASH="%(color:051)%(objectname:short)%(color:reset)"
+DATE="%(color:169)%(authordate:format:%Y-%m-%d %H:%M:%S)%(color:reset)"
+BRANCH="%(color:051)%(refname:short)%(color:reset)"
+AUTHOR="%(color:33)%(authorname)%(color:reset)"
 SUBJECT="%(subject)"
 
-branches_candidates=$(git branch -a --sort=-authordate --format="${HASH} ${DATE} ${BRANCH_NAME} ${AUTHOR_NAME}	${SUBJECT}")
-
-echo ${branches_candidates}|egrep -v '^\s*$'| fzf --prompt='SELECT A BRANCH> ' --delimiter "\t" --nth 1| awk '{print $4}'
+git branch --color=always -a --sort=-authordate --format="[${HASH} ${DATE} ${AUTHOR} ${BRANCH}]	${SUBJECT}" \
+  | egrep -v '^\s*$' \
+  | fzf --ansi --prompt='SELECT A BRANCH> ' --delimiter "\t" --nth 1 \
+  | sed -e 's/\]\t.*//' | awk '{print $NF}'| sed 's/\]$//'

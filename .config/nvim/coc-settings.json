@@ -2,7 +2,7 @@
   "#suggest.autoTrigger": "trigger",
   "#suggest.noselect": true,
   "#suggest.preferCompleteThanJumpPlaceholder": true,
-  "#python.jediEnabled": false,
+  "python.jediEnabled": false,
 
   "#tsserver.tsdk": ".yarn/sdks/typescript/lib",
   "#eslint.packageManager": "yarn",
