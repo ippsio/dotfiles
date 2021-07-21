@@ -127,6 +127,8 @@ set number
 " これをyesにしておくと、git-gutter.vimなどで変更が検知された時に、行番号あたりの所がガタガタせず、目が疲れない。
 set signcolumn=yes
 
+set cursorline
+
 " ウィンドウの幅より長い行は折り返され、次の行に続けて表示される
 set wrap
 
@@ -138,7 +140,7 @@ set list
 set listchars=tab:»-,trail:-,extends:»,precedes:«,nbsp:%
 
 " ◆や○文字が崩れる問題を解決"
-"set ambiwidth=double
+set ambiwidth=double
 
 " シンタックスハイライトの最大行数
 set synmaxcol=2048

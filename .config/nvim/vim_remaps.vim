@@ -169,8 +169,8 @@ hi ColorColumn ctermbg=235 guibg=#2c2d27
 " -----------------------------------------------------
 " 終了
 " ノーマルモード中にQ、または素早くqqと入力した場合は:q<CR>とみなす
-nnoremap qq :q<CR>
-nnoremap Q :<C-u>:q<CR>
+nnoremap qq    :<C-u>:q<CR>
+nnoremap Q     :<C-u>:q<CR>
 nnoremap <C-q> :<C-u>:q<CR>
 nnoremap <silent> W :<C-u>:w<CR>:echo 'SAVED! ' . strftime("%Y/%m/%d %H:%M:%S") . '[' . substitute(expand("%:p"), $HOME, "~", "g") . ']'<CR>
 nnoremap <silent> <C-s> :<C-u>:w<CR>:echo 'SAVED! ' . strftime("%Y/%m/%d %H:%M:%S") . '[' . substitute(expand("%:p"), $HOME, "~", "g") . ']'<CR>

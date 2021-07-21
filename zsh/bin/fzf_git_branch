@@ -1,12 +1,18 @@
-#!/usr/bin/env zsh
+#!/bin/bash
 # git のブランチ選択インターフェースを提供する。
-HASH="%(color:051)%(objectname:short)%(color:reset)"
-DATE="%(color:169)%(authordate:format:%Y-%m-%d %H:%M:%S)%(color:reset)"
-BRANCH="%(color:051)%(refname:short)%(color:reset)"
-AUTHOR="%(color:33)%(authorname)%(color:reset)"
-SUBJECT="%(subject)"
+readonly HASH="%(color:051)%(objectname:short)%(color:reset)"
+readonly DATE="%(color:169)%(authordate:format:%Y-%m-%d %H:%M:%S)%(color:reset)"
+readonly BRANCH="%(color:051)[%(refname:short)]%(color:reset)"
+readonly AUTHOR="%(color:33)%(authorname)%(color:reset)"
+readonly SUBJECT="%(subject)"
 
-git branch --color=always -a --sort=-authordate --format="[${HASH} ${DATE} ${AUTHOR} ${BRANCH}]	${SUBJECT}" \
-  | egrep -v '^\s*$' \
-  | fzf --ansi --prompt='SELECT A BRANCH> ' --delimiter "\t" --nth 1 \
-  | sed -e 's/\]\t.*//' | awk '{print $NF}'| sed 's/\]$//'
+readonly HELPER1="[xxxxxxxxxx xxxx-xx-xx xx:xx:xx xxxxxx],[-- ]	現在の変更を取り消す。"
+readonly HELPER2="[xxxxxxxxxx xxxx-xx-xx xx:xx:xx xxxxxx],[-- .]	現在の変更を全て取り消す。"
+readonly HELPER3="[xxxxxxxxxx xxxx-xx-xx xx:xx:xx xxxxxx],[-b ]	ブランチを作る。"
+
+CMD="git branch --color=always -a --format=\"[${HASH} ${DATE} ${AUTHOR}],${BRANCH}	${SUBJECT}\""
+DEVEL_BRANCHS=$(eval "${CMD} --sort=upstream --list develop origin/develop")
+OTHER_BRANCHS=$(eval "${CMD} --sort=-authordate" | grep -Ev "\[(develop|origin/develop)\]")
+
+printf '%s\n%s\n%s\n%s\n%s' "${DEVEL_BRANCHS}" "${HELPER1}" "${HELPER2}" "${HELPER3}" "${OTHER_BRANCHS}" \
+  | fzf --ansi --prompt='SELECT A BRANCH> ' --delimiter "\t" --nth 1 | sed -e 's/^\[.*\],\[//' | sed -e 's/\].*//'

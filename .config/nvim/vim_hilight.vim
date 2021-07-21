@@ -27,7 +27,7 @@
 "augroup END
 
 " カーソル行
-hi CursorLine term=reverse cterm=none ctermbg=237
+hi CursorLine cterm=underline ctermfg=NONE ctermbg=NONE
 " カーソル自体の色は、iTerm2等のターミナルの設定であるため、コメントアウト
 " hi Cursor ctermbg=1 ctermfg=240
 
@@ -42,7 +42,7 @@ hi PmenuThumb ctermbg=4 guibg=#ffffff
 hi Search guibg=#882200 guifg=#ff22ff ctermbg=89 ctermfg=201
 
 " フォーカスのないウインドウ
-hi NormalNC ctermbg=0 ctermfg=240
+hi NormalNC ctermfg=251
 
 " コメント
 hi Comment guifg=#00ddff guibg=#004a4a ctermbg=23 ctermfg=123
@@ -64,7 +64,7 @@ hi LineNr guifg=#006666 ctermfg=30
 hi Directory guifg=#88ccff guibg=#000055 ctermbg=16 ctermfg=75 cterm=bold
 
 hi Type guibg=#004433 guifg=#00ff33 ctermbg=16 ctermfg=118 cterm=bold
-hi Visual guibg=#2211aa ctermbg=18
+hi Visual ctermbg=21
 
 " markdown
 " hi markdownH1          guibg=#cc2299 guifg=#ffff66

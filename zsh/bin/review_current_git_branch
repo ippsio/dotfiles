@@ -54,16 +54,18 @@ while true; do
 
   # command
   _echo "[command]" "${_COLOR_LABEL}"
-  _echo " 1 [enter]: with fzf + nvim." "$(_fg 49)"
+  _echo " 1 (enter): with fzf + nvim." "$(_fg 49)"
   _echo " 2 (t)ig  : tig ${MERGE_BASE_HASH}...HEAD" "$(_fg 49)"
   _echo " 3 (d)iff : git diff ${MERGE_BASE_HASH} | nvim -R" "$(_fg 49)"
-  _echo " 4 (d)iff : git diff ${MERGE_BASE_HASH} --unified=0| nvim -R" "$(_fg 49)"
+  _echo " 4 diff : git diff ${MERGE_BASE_HASH} --unified=0| nvim -R" "$(_fg 49)"
+  _echo " 5 fetch && merge : git fetch origin --prune && git merge" "$(_fg 49)"
   echo -n " > "
   read REPLY
   case "${REPLY}" in
     1|v|vim|) fzf_git_diff "${MERGE_BASE_HASH}" "enter" ;;
     2|t|tig ) tig ${MERGE_BASE_HASH}...HEAD ;;
     3|d|diff) git diff ${MERGE_BASE_HASH} | nvim -R ;;
-    4|d|diff) git diff ${MERGE_BASE_HASH} --unified=0 | nvim -R ;;
+    4       ) git diff ${MERGE_BASE_HASH} --unified=0 | nvim -R ;;
+    5       ) set -x; git fetch origin --prune ; git merge ; set +x; echo "enter to continue."; read ;;
   esac
 done
