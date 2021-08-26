@@ -1,0 +1,55 @@
+#!/bin/bash # caution: unix only
+epoc() { date -j -f "%Y-%m-%d %H:%M:%S %z" "$1" "+%s" || return $?; }
+epoc_to_local() { date -r $1 +'%Y-%m-%d %H:%M:%S %z' || return $?; }
+epoc_to_utc() { date -u -r $1 +'%Y-%m-%d %H:%M:%S %z' || return $?; }
+approx() { printf "%.02f" $(bc -l <<< "scale=2; $1"| sed -e 's/^\./0\./') || return $?; }
+canonicalize() {
+  ymd=$(echo "$1"| awk '{ print $1 }'| sed -e 's#/#-#g')
+  hms=$(echo "$1"| awk '{ print $2 }')
+  z=$(echo "$1"| awk '{ print $3 }'| sed -e "s/://g")
+  [[ -z "${hms}" ]] && hms="00:00:00"
+  [[ -z "${z}" ]] && z="$(date +'%z')"
+  echo "${ymd} ${hms} ${z}"
+}
+explore() {
+  for i in {0..1024}; do # 1024 is 適当
+    date_wk=$(date -v+${i}$1 -r $2 +'%s') || return $?
+    [[ $date_wk -gt $3 ]] && echo "$(( i - 1 ))" && return 0
+  done || echo "overflow.."
+}
+distance() {
+  epoc_wk=$1
+  declare -a queue=()
+  for period in $(echo "y m d H M S"); do
+    i=$(explore "${period}" "$epoc_wk" "$2") || return $?
+    epoc_wk=$(date -v+${i}${period} -r ${epoc_wk} +'%s') || return $?
+    queue+=(${i})
+  done && queue+=($(($2 - $1))) && echo "${queue[@]}"
+}
+usage() {
+  echo "Usage:\n    date_diff \"<datetime1>\" \"<datetime2 (optional)>\""
+  echo "  Samples of available datetime format.\n    - 2021-01-12, or 2021-01-12 01:23:45, or 2021-01-12 01:23:45 +0900" && exit
+}
+
+[[ -z "$1" ]] && usage
+now=$(date +'%s')
+as1=$(canonicalize "$1")
+as2=$(canonicalize "${2:-$(epoc_to_local $now)}")
+
+if [ $(epoc "$as1") -ge $(epoc "$as2") ];
+  then res=( $(distance $(epoc "$as1") $(epoc "$as2")) ) || exit
+  else res=( $(distance $(epoc "$as1") $(epoc "$as2")) ) || exit
+fi
+
+cat << EOF
+{ "in": {
+    "as1": "$as1", "raw1": "$1",
+    "as2": "$as2", "raw2": "$2"
+  }, "distance": {
+    "human": "$(printf '%d年%02dヶ月%02d日 %02d時間%02d分%02d秒' ${res[0]} ${res[1]} ${res[2]} ${res[3]} ${res[4]} ${res[5]})",
+    "days": "$(approx "${res[6]} / 86400")", "hours": "$(approx "${res[6]} / 3600")", "minutes": "$(approx "${res[6]} / 60")", "seconds": "${res[6]}"
+  }, "execution_date": {
+    "$(date +'%Z'| awk '{ print tolower($0) }')": "$(epoc_to_local $now)", "utc": "$(epoc_to_utc $now)", "epoc": "$now"
+  }
+}
+EOF
