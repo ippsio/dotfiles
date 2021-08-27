@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh
+#!/bin/bash
 #
 # rg(ripgrep)の検索結果を選択I/Fを表示する。
 # さらに、選択したファイルをvimで開く

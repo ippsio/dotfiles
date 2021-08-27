@@ -13,7 +13,13 @@ hook_add = '''
   nnoremap [fzf]; :Buffers<CR>
 
   " 現在のファイル内の文字を探す
-  nnoremap [fzf]l :Lines<CR>
+  nnoremap [fzf]l :Lines 
+
+  " grep
+  nnoremap [fzf]g :Grep 
+
+  " ファイル検索
+  nnoremap [fzf]f :FzfFiles 
 
   " 現在開いてるファイルがgit管理下ならそのディレクトリを、そうでなければ現在のパスを返す。
   function! s:GetDir(args0)
@@ -29,9 +35,22 @@ hook_add = '''
     endif
   endfunction
 
+  "function! GetJumps()
+  "  redir => cout
+  "  silent jumps
+  "  redir END
+  "  return reverse(split(cout, "\n")[1:])
+  "endfunction
+  "function! GoToJump(jump)
+  "    let jumpnumber = split(a:jump, '\s\+')[0]
+  "    execute "normal " . jumpnumber . "\<c-o>"
+  "endfunction
+  "command! Jumps call fzf#run(fzf#wrap({
+  "        \ 'source': GetJumps(),
+  "        \ 'sink': function('GoToJump')}))
+
   " ファイル名の一覧をfzfで絞り込む
   nnoremap <C-p> :FzfFiles<CR>
-  nnoremap [fzf]f :FzfFiles
   command! -bang -nargs=? -complete=dir FzfFiles
         \ call fzf#run(fzf#vim#with_preview(fzf#wrap({
         \   'source': 'find -s -E . -not -regex ".*(\.DS_Store|/*.git/).*" -and -type f',
@@ -40,9 +59,7 @@ hook_add = '''
         \ })))
 
   " ファイルの内容をripgrepで検索して、さらにfzfで絞り込む
-  nnoremap <C-h> :FzfGrep
-  nnoremap [fzf]g :FzfGrep<CR>
-  command! -bang -nargs=* FzfGrep
+  command! -bang -nargs=* Grep
         \ call fzf#vim#grep(
         \   'rg --hidden --sortr path --column --ignore=.git ' . shellescape(<q-args>),
         \   1,

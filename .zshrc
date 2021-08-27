@@ -20,9 +20,8 @@ unsetopt LIST_BEEP # Turn off autocomplete beeps
 # ------------------
 # prepare essential utility/middle/environmental softwares.
 source ~/dotfiles/prepare.zsh
-### pyenv/rbenv/direnv/node
-# 'pyenv init -' is no longer needed.
-#eval "$(pyenv init -)"
+### pyenv/rbenv/direnv/nodenv/goenv
+eval "$(pyenv init --path)"
 eval "$(rbenv init -)"
 eval "$(direnv hook zsh)"
 eval "$(nodenv init -)"
@@ -63,7 +62,7 @@ zplug 'zsh-users/zsh-completions'
 zplug "mollifier/anyframe"
 zplug "zsh-users/zsh-history-substring-search", hook-build:"__zsh_version 4.3"
 zplug "junegunn/fzf-bin", as:command, from:gh-r, rename-to:fzf
-zplug "junegunn/fzf", as:command, use:bin/fzf-tmux
+#zplug "junegunn/fzf", as:command, use:bin/fzf-tmux
 zplug "junegunn/fzf", use:shell/key-bindings.zsh
 zplug "junegunn/fzf", use:shell/completion.zsh
 zplug "zsh-users/zsh-syntax-highlighting", defer:2

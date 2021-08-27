@@ -7,6 +7,32 @@ augroup QfAutoCommands
   """ au BufLeave * if &filetype == 'qf' | ccl | endif
 augroup END
 
+augroup vimrc-highlight
+  " 大きなファイルだったら先頭の100行位でファイルタイプを解析する。
+  autocmd!
+  autocmd Syntax conf if 10000 < line('$') | syntax sync minlines=100 | endif
+
+  autocmd BufRead,BufEnter,BufWinEnter * call DoWellByFileType()
+  fun DoWellByFileType()
+    if &ft == ""
+      let &colorcolumn=join(range(0, 0), ",")
+
+    elseif match(["ruby", "python"], &ft) >= 0
+        " ファイルタイプによって、コード規約遵守のための縦線を引く(120桁目位に）。
+        let &colorcolumn=join(range(121, 121), ",")
+
+    elseif match(["yaml"], &ft) >= 0
+      let &colorcolumn=join(range(0, 0), ",")
+      " setlocal nosmartindent
+      " setlocal noautoindent
+      setlocal indentkeys-=0#
+
+    else
+      let &colorcolumn=join(range(0, 0), ",")
+    endif
+  endfun
+augroup END
+
 augroup FileTypeRuby
   autocmd!
   " @hoge のような変数に対し、先頭の@も単語として扱ってもらう。
@@ -22,7 +48,23 @@ augroup FileTypeRuby
   " " hoge.map(&:fuga) の中身の &:fuga を、単語として扱ってもらう。
   " " au FileType ruby setlocal iskeyword+=:
   " " au FileType ruby setlocal iskeyword+=&
+
+  " 言語ごとのインデントを無効化
+  " 例えばerb編集中に、以下のspanとidの間に改行を入れると、fugaまで勝手にインデントが効いてしまうのを防ぎたい。
+  " [改行前]
+  " <p>
+  "   fuga: <span id="hoge">
+  " </p>
+  "
+  " [改行後] fugaまでインデントされてしまう。
+  " <p>
+  " fuga: <span
+  " id="hoge">
+  " </p>
+  au FileType eruby setlocal indentexpr=
 augroup END
+
+
 
 if has('mac')
   augroup MyIMEGroup

@@ -1,21 +1,19 @@
-#!/usr/bin/env zsh
-
-
+#!/bin/bash
 label() {
-  printf "\e[38;5;$1m\e[48;5;$2mfg%3s bg%3s\e[0m " $1 $2
+  #printf "\e[38;5;$1m\e[48;5;$2mfg%3s bg%3s\e[0m " $1 $2
+  printf "\e[38;5;$2m\e[48;5;$1mfg%3s bg%3s\e[0m " $1 $2
 }
 
 show_color_sample() {
   echo
   for bg in {0..255}; do
     label $1 $bg
-    [[ $(( $((bg + 3)) % 12 )) -eq 0 ]] && echo && echo
+    [[ $(( $((bg + 3)) % 12 )) -eq 0 ]] && echo #&& echo
   done;
   echo
 }
 
-local key_input=j
-local fg=${1:-7}
+fg=${1:-0}
 while true; do
   clear
   echo "256色カラーサンプル表示"
@@ -23,7 +21,7 @@ while true; do
   echo "・j：文字色を-1します。"
   echo "・k：文字色を+1します。"
   show_color_sample ${fg}
-  read -k 1 key_input
+  read -n1 key_input
   [[ "${key_input}" != "j" && "${key_input}" != "k" ]] && break
   [[ ${key_input} == "j" ]] && fg=$(($fg - 1))
   [[ ${key_input} == "k" ]] && fg=$(($fg + 1))

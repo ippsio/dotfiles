@@ -4,11 +4,11 @@
 
 [[plugins]]
 repo = 'tpope/vim-rails'
-on_ft = ['ruby']
+on_ft = ['ruby', 'eruby', 'slim']
 
 [[plugins]]
 repo = 'vim-scripts/ruby-matchit'
-on_ft = ['ruby']
+on_ft = ['ruby', 'eruby', 'slim']
 
 #[[plugins]]
 #repo = 'fishbullet/deoplete-ruby'

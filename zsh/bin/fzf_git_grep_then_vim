@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh
+#!/bin/bash
 
 # git grepの検索結果を選択I/Fを表示する。
 # さらに、選択したファイルをvimで開く
@@ -7,10 +7,12 @@
 result=$(git grep --line-number $1 \
   | perl -pe 's/(^.*):(\d+):(.*)$/\1 \2 \3/' \
   | fzf -m \
-    --prompt="fzf_git_grep_then_vim> " \
+    --prompt="fzf_git_grep_then_vim(\"$1\")> " \
     --bind "enter:execute(nvim {1} +{2} < /dev/tty > /dev/tty)" \
     --preview '
       decide_range_from() { echo $(( $1 - 5 > 0 ? $1 - 5 : 1)) };
       bat --color=always --style=numbers,header,grid \
         --line-range $(decide_range_from {2}): \
         --highlight-line {2} {1}')
+
+      #bat --color=always --style=numbers,header,grid \

@@ -35,6 +35,9 @@ set autoindent
 " 改行時に入力された行の末尾に合わせて次の行のインデントを増減する
 set smartindent
 
+" yamlファイル等、#（シャープ）が深すぎるオートインデントをしてしまう事があるため、#はオートインデントしないようにする。
+set indentkeys-=0#
+
 " インデントをshiftwidthの倍数に丸める
 set shiftround
 
@@ -107,8 +110,8 @@ set matchpairs& matchpairs+=<:>
 " 対応括弧をハイライト表示する
 set showmatch
 
-" 対応括弧の表示秒数を3秒にする
-set matchtime=3
+" 対応括弧の表示秒数を1秒にする
+set matchtime=1
 
 " --------------
 "  折りたたみ
@@ -128,6 +131,12 @@ set number
 set signcolumn=yes
 
 set cursorline
+" 'gui'となっているが256色環境(xterm-256colorな環境)でも機能する。
+" hihlight はgui,guibg,guifgなどは24bitカラーな環境の設定を表すような気がするが、
+" guicursorはxterm-256colorな環境にも機能してくれる)。
+"
+" デフォルトでは n-v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor20
+set guicursor=
 
 " ウィンドウの幅より長い行は折り返され、次の行に続けて表示される
 set wrap
@@ -140,7 +149,10 @@ set list
 set listchars=tab:»-,trail:-,extends:»,precedes:«,nbsp:%
 
 " ◆や○文字が崩れる問題を解決"
-set ambiwidth=double
+" set ambiwidth=double
+set ambiwidth=single
+
+" ①②③
 
 " シンタックスハイライトの最大行数
 set synmaxcol=2048

@@ -1,7 +1,6 @@
-#!/usr/bin/env zsh
+#!/bin/bash
 
-local PROMPT="$(basename $0)"
-local FIND_TARGET
+PROMPT="$(basename $0)"
 for i in "$@"
 do
   case "$i" in

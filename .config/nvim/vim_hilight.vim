@@ -27,7 +27,7 @@
 "augroup END
 
 " カーソル行
-hi CursorLine cterm=underline ctermfg=NONE ctermbg=NONE
+hi CursorLine cterm=NONE ctermfg=NONE ctermbg=NONE
 " カーソル自体の色は、iTerm2等のターミナルの設定であるため、コメントアウト
 " hi Cursor ctermbg=1 ctermfg=240
 
@@ -36,6 +36,10 @@ hi Pmenu ctermbg=7 guibg=#333333 ctermfg=255 ctermbg=235
 hi PmenuSel ctermbg=255 guibg=#aaaaaa guifg=#333333 ctermbg=241 ctermfg=229 cterm=bold
 hi PmenuSbar ctermbg=2 guibg=#222222
 hi PmenuThumb ctermbg=4 guibg=#ffffff
+
+" コード規約上120文字な言語があったりするので、その目安に線を引く
+" let &colorcolumn=join(range(121,121),",")
+hi ColorColumn ctermbg=235
 
 " 検索単語
 "hi IncSearch guibg=#882200 guifg=#ff22ff
@@ -64,7 +68,7 @@ hi LineNr guifg=#006666 ctermfg=30
 hi Directory guifg=#88ccff guibg=#000055 ctermbg=16 ctermfg=75 cterm=bold
 
 hi Type guibg=#004433 guifg=#00ff33 ctermbg=16 ctermfg=118 cterm=bold
-hi Visual ctermbg=21
+hi Visual ctermbg=136
 
 " markdown
 " hi markdownH1          guibg=#cc2299 guifg=#ffff66

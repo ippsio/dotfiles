@@ -4,20 +4,25 @@ build = 'coc#util#install()'
 rev = 'release'
 merge = 0
 hook_source = '''
-  let extensions =[]
-  let extensions = add(extensions,"coc-solargraph")
-  let extensions = add(extensions,"coc-python")
-  let extensions = add(extensions,"coc-pyls")
-  let extensions = add(extensions,"coc-json")
-  let extensions = add(extensions,"coc-snippets")
-  let extensions = add(extensions,"coc-todolist")
-  let extensions = add(extensions,"coc-translator")
-  let extensions = add(extensions,"coc-tsserver")
-  let extensions = add(extensions,"coc-yaml")
-  let extensions = add(extensions,"coc-yank")
-  let extensions = add(extensions,"coc-docker")
-  let extensions = add(extensions,"coc-sh")
-  let extensions = add(extensions,"coc-java")
+  let g:coc_global_extensions =[]
+  let g:coc_global_extensions = add(g:coc_global_extensions,"coc-solargraph")
+  let g:coc_global_extensions = add(g:coc_global_extensions,"coc-python")
+  let g:coc_global_extensions = add(g:coc_global_extensions,"coc-pyls")
+  let g:coc_global_extensions = add(g:coc_global_extensions,"coc-json")
+  " let g:coc_global_extensions = add(g:coc_global_extensions,"coc-snippets")
+  let g:coc_global_extensions = add(g:coc_global_extensions,"coc-todolist")
+  " let g:coc_global_extensions = add(g:coc_global_extensions,"coc-translator")
+  let g:coc_global_extensions = add(g:coc_global_extensions,"coc-tsserver")
+  let g:coc_global_extensions = add(g:coc_global_extensions,"coc-yaml")
+  " let g:coc_global_extensions = add(g:coc_global_extensions,"coc-yank")
+  let g:coc_global_extensions = add(g:coc_global_extensions,"coc-docker")
+  let g:coc_global_extensions = add(g:coc_global_extensions,"coc-sh")
+  let g:coc_global_extensions = add(g:coc_global_extensions,"coc-java")
+
+  " Extension> coc-yank
+  hi HighlightedyankRegion cterm=bold ctermfg=123 ctermbg=75
+  " show yank list
+  nnoremap <silent> <space>p :<C-u>CocList -A --normal yank<cr>
 
   " Set internal encoding of vim, not needed on neovim, since coc.nvim using some
   " unicode characters in the file autoload/float.vim

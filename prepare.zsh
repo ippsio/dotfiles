@@ -1,5 +1,6 @@
 #!/usr/bin/env zsh
-START_TIME=`date +%s`
+function epoc_ms() { perl -MTime::HiRes -e 'printf("%.0f\n",Time::HiRes::time()*1000)'; }
+START_TIME=$(epoc_ms)
 # ----------------------------------
 # export environmental variables.
 # ----------------------------------
@@ -58,29 +59,30 @@ sh ~/dotfiles/zsh/oneway_sync ~/dotfiles/prepare/usr/local/bin/ /usr/local/bin/ 
 
 function log_exist() { echo -n "$1[ok], " }
 function log_not_exist() { echo "------------\n[x] not found! '$1' " }
+function source_with_tat { start=$(epoc_ms); source $1; finish=$(epoc_ms); echo "([$(( $finish - $start ))ms] ${1##*/})"}
 
 printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
 echo -n "[PREPARING] "
-source ~/dotfiles/prepare/prepare_xz.sh
-source ~/dotfiles/prepare/prepare_neovim.sh
-source ~/dotfiles/prepare/prepare_pynvim.sh
-source ~/dotfiles/prepare/prepare_zsh.sh
-source ~/dotfiles/prepare/prepare_tmux.sh
-source ~/dotfiles/prepare/prepare_pyenv.sh
-source ~/dotfiles/prepare/prepare_goenv.sh
-source ~/dotfiles/prepare/prepare_virtualenv.sh
-source ~/dotfiles/prepare/prepare_python.sh
-source ~/dotfiles/prepare/prepare_direnv.sh
-source ~/dotfiles/prepare/prepare_rbenv.sh
-source ~/dotfiles/prepare/prepare_tpm.sh
-source ~/dotfiles/prepare/prepare_nvm.sh
-source ~/dotfiles/prepare/prepare_rg.sh
-source ~/dotfiles/prepare/prepare_tig.sh
-source ~/dotfiles/prepare/prepare_diff-highlight.sh
-source ~/dotfiles/prepare/prepare_fzf.sh
-source ~/dotfiles/prepare/prepare_zplug.sh
-source ~/dotfiles/prepare/prepare_bat.sh
-source ~/dotfiles/prepare/prepare_nodenv.sh
+source_with_tat ~/dotfiles/prepare/prepare_xz.sh
+source_with_tat ~/dotfiles/prepare/prepare_neovim.sh
+source_with_tat ~/dotfiles/prepare/prepare_pynvim.sh
+source_with_tat ~/dotfiles/prepare/prepare_zsh.sh
+source_with_tat ~/dotfiles/prepare/prepare_tmux.sh
+source_with_tat ~/dotfiles/prepare/prepare_pyenv.sh
+source_with_tat ~/dotfiles/prepare/prepare_goenv.sh
+source_with_tat ~/dotfiles/prepare/prepare_virtualenv.sh
+source_with_tat ~/dotfiles/prepare/prepare_python.sh
+source_with_tat ~/dotfiles/prepare/prepare_direnv.sh
+source_with_tat ~/dotfiles/prepare/prepare_rbenv.sh
+source_with_tat ~/dotfiles/prepare/prepare_tpm.sh
+source_with_tat ~/dotfiles/prepare/prepare_nvm.sh
+source_with_tat ~/dotfiles/prepare/prepare_rg.sh
+source_with_tat ~/dotfiles/prepare/prepare_tig.sh
+source_with_tat ~/dotfiles/prepare/prepare_diff-highlight.sh
+source_with_tat ~/dotfiles/prepare/prepare_fzf.sh
+source_with_tat ~/dotfiles/prepare/prepare_zplug.sh
+source_with_tat ~/dotfiles/prepare/prepare_bat.sh
+source_with_tat ~/dotfiles/prepare/prepare_nodenv.sh
 echo
 
 # -----------------------------------------------------
@@ -104,7 +106,7 @@ generate_symlink_f ~/.zshrc ~/dotfiles/.zshrc
 [ ! -d ~/setting_box ] && git clone https://github.com/ippsio/setting_box.git ~/setting_box
 [ ! -d ~/.config/karabiner ] && ln -s ~/setting_box/karabiner ~/.config/karabiner
 
-TURN_AROUND_TIME=$(($(date +%s) - START_TIME))
-echo "[PREPARING] finish in ${TURN_AROUND_TIME} sec"
+TURN_AROUND_TIME=$(($(epoc_ms) - START_TIME))
+echo "[PREPARING] finished in [${TURN_AROUND_TIME}ms]"
 printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
 

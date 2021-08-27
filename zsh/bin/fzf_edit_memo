@@ -1,5 +1,4 @@
-#!/usr/bin/env zsh
-
+#!/bin/bash
 DIR=~/notes
 [ ! -d ${DIR} ] && mkdir -p ${DIR} && echo "maybe ${DIR} created."
 
@@ -12,6 +11,8 @@ function exec_find() {
     | sort -r \
     | fzf --prompt="${_TYPE} >"  \
       --bind change:top \
+      --bind k:up \
+      --bind j:down \
       --bind 'enter:execute(f=$(echo {}| sed -e "s#^~#${HOME}#"); nvim -c 5 $f < /dev/tty > /dev/tty)' \
       --preview='f=$(echo {}| sed -e "s#^~#${HOME}#"); bat $f --color=always'
 }
@@ -20,7 +21,7 @@ while true;
 do
   KIND=$(echo "memo,最新状況,検索する"| sed -e "s/,/\n/g"| fzf --prompt="notes in [${DIR/${HOME}/~}] ")
 
-  [[ ${KIND} == "" ]] && return
+  [[ ${KIND} == "" ]] && exit 1
 
   if [[ "${KIND}" == "検索する" ]]; then
     cd ${DIR} && fzf_git_grep_then_vim "$(echo ''|fzf --prompt='検索文字を入力> ' --print-query)"
@@ -37,7 +38,8 @@ do
   fi
 
   [ ! -d ${NOTE_DIR} ] && mkdir -p ${NOTE_DIR}
-  [ ! -f ${NOTE_DIR}/${NEW_NOTE} ] && echo "${BEGINNING}" >> ${NOTE_DIR}/${NEW_NOTE}
+  echo "${BEGINNING}"
+  [ ! -f ${NOTE_DIR}/${NEW_NOTE} ] && echo -e "${BEGINNING}" >> ${NOTE_DIR}/${NEW_NOTE}
   exec_find "${DIR}" "${KIND}"
 
   if ( ! (cd ${DIR} && [ -d .git ] || git rev-parse --git-dir > /dev/null 2>&1) ); then

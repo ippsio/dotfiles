@@ -160,17 +160,13 @@ cnoremap <C-e> <End>
 cnoremap <Up>   <C-p>
 cnoremap <Down> <C-n>
 
-" コード規約上120文字な言語があったりするので、その目安に線を引く
-let &colorcolumn=join(range(121,121),",")
-hi ColorColumn ctermbg=235 guibg=#2c2d27
-
 " -----------------------------------------------------
 " 保存、終了系
 " -----------------------------------------------------
 " 終了
 " ノーマルモード中にQ、または素早くqqと入力した場合は:q<CR>とみなす
 nnoremap qq    :<C-u>:q<CR>
-nnoremap Q     :<C-u>:q<CR>
+nnoremap Q     :<C-u>q<CR>
 nnoremap <C-q> :<C-u>:q<CR>
 nnoremap <silent> W :<C-u>:w<CR>:echo 'SAVED! ' . strftime("%Y/%m/%d %H:%M:%S") . '[' . substitute(expand("%:p"), $HOME, "~", "g") . ']'<CR>
 nnoremap <silent> <C-s> :<C-u>:w<CR>:echo 'SAVED! ' . strftime("%Y/%m/%d %H:%M:%S") . '[' . substitute(expand("%:p"), $HOME, "~", "g") . ']'<CR>
