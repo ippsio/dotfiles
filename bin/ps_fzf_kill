@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# フォルダの選択I/Fを表示する。
+# プレビュー：そのフォルダ内のファイル一覧。
+(date; ps -ef) |
+  fzf --bind='ctrl-r:reload(date; ps -ef)' \
+      --header=$'Press CTRL-R to reload,\n Press Enter to kill -9 {PID}.\n\n' \
+      --header-lines=2 \
+      --layout=reverse --height=80% | awk '{print $2}' | xargs kill -9
+
+
+

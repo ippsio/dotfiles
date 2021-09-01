@@ -1,5 +1,4 @@
 #!/usr/bin/env zsh
-function epoc_ms() { perl -MTime::HiRes -e 'printf("%.0f\n",Time::HiRes::time()*1000)'; }
 START_TIME=$(epoc_ms)
 # ----------------------------------
 # export environmental variables.
@@ -11,8 +10,8 @@ export PYENV_ROOT=$HOME/.pyenv
 export GOENV_ROOT=$HOME/.goenv
 export RBENV_ROOT=$HOME/.rbenv
 export NODENV_ROOT=$HOME/.nodenv
-export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
-export PATH=~/dotfiles/zsh/bin:$PYENV_ROOT/bin:$GOENV_ROOT/bin:$RBENV_ROOT/bin:${PATH}
+#export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+export PATH=~/dotfiles/bin:$PYENV_ROOT/bin:$GOENV_ROOT/bin:$RBENV_ROOT/bin:${PATH}
 
 # LSCOLORS
 # a black      , b red      , c green      , d brown      , e blue      , f magenta      , g cyan      , h light grey
@@ -57,12 +56,13 @@ sh ~/dotfiles/zsh/oneway_sync ~/dotfiles/prepare/usr/local/bin/ /usr/local/bin/ 
 # Install software if not installed.
 # ----------------------------------
 
-function log_exist() { echo -n "$1[ok], " }
-function log_not_exist() { echo "------------\n[x] not found! '$1' " }
-function source_with_tat { start=$(epoc_ms); source $1; finish=$(epoc_ms); echo "([$(( $finish - $start ))ms] ${1##*/})"}
+function log_exist() { echo -n "$1[ok], "; }
+function log_not_exist() { echo "------------\n[x] not found! '$1' "; }
+function source_with_tat { start=$(epoc_ms); source $1 && printf "[ok] %s %dms, " ${1##*/} $(( $(epoc_ms) - $start )) || printf "[xxx RETCD=$?] %s %dms, " ${1##*/} $(( $(epoc_ms) - $start ))ms; }
 
 printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
 echo -n "[PREPARING] "
+
 source_with_tat ~/dotfiles/prepare/prepare_xz.sh
 source_with_tat ~/dotfiles/prepare/prepare_neovim.sh
 source_with_tat ~/dotfiles/prepare/prepare_pynvim.sh
@@ -75,7 +75,7 @@ source_with_tat ~/dotfiles/prepare/prepare_python.sh
 source_with_tat ~/dotfiles/prepare/prepare_direnv.sh
 source_with_tat ~/dotfiles/prepare/prepare_rbenv.sh
 source_with_tat ~/dotfiles/prepare/prepare_tpm.sh
-source_with_tat ~/dotfiles/prepare/prepare_nvm.sh
+#source_with_tat ~/dotfiles/prepare/prepare_nvm.sh
 source_with_tat ~/dotfiles/prepare/prepare_rg.sh
 source_with_tat ~/dotfiles/prepare/prepare_tig.sh
 source_with_tat ~/dotfiles/prepare/prepare_diff-highlight.sh
@@ -88,9 +88,8 @@ echo
 # -----------------------------------------------------
 # Generate link fot real file, directory in this repo.
 # -----------------------------------------------------
-function generate_symlink_f() { [ ! -f $1 ] && ln -s $2 $1 && echo "Symlink generated ($1<-$2)" }
-function generate_symlink_d() { [ ! -d $1 ] && ln -s $2 $1 && echo "Symlink generated ($1<-$2)" }
-echo -n "(generate_symlink) "
+function generate_symlink_f() { [ ! -f $1 ] && ln -s $2 $1 && echo "Symlink generated ($1<-$2)" ; }
+function generate_symlink_d() { [ ! -d $1 ] && ln -s $2 $1 && echo "Symlink generated ($1<-$2)" ; }
 
 generate_symlink_d ~/.config/nvim ~/dotfiles/.config/nvim
 
@@ -106,7 +105,5 @@ generate_symlink_f ~/.zshrc ~/dotfiles/.zshrc
 [ ! -d ~/setting_box ] && git clone https://github.com/ippsio/setting_box.git ~/setting_box
 [ ! -d ~/.config/karabiner ] && ln -s ~/setting_box/karabiner ~/.config/karabiner
 
-TURN_AROUND_TIME=$(($(epoc_ms) - START_TIME))
-echo "[PREPARING] finished in [${TURN_AROUND_TIME}ms]"
 printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
 

@@ -8,6 +8,8 @@ if (type "tmux" > /dev/null 2>&1) ; then
   fi
 fi
 
+epoc_ms() { perl -MTime::HiRes -e 'printf("%.0f\n",Time::HiRes::time()*1000)'; }
+
 # CTRL-D でログアウトしないようにする
 setopt ignore_eof
 
@@ -19,6 +21,7 @@ unsetopt LIST_BEEP # Turn off autocomplete beeps
 # preparing section
 # ------------------
 # prepare essential utility/middle/environmental softwares.
+START=$(epoc_ms)
 source ~/dotfiles/prepare.zsh
 ### pyenv/rbenv/direnv/nodenv/goenv
 eval "$(pyenv init --path)"
@@ -28,10 +31,12 @@ eval "$(nodenv init -)"
 eval "$(goenv init -)"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+echo "preparing section end in $(( $(epoc_ms) - $START ))ms."
 
 # -------------------------------
 # Authentic zsh settings section
 # -------------------------------
+START=$(epoc_ms)
 source ~/dotfiles/zsh/00_alias.zsh
 source ~/dotfiles/zsh/10_prompt.zsh
 source ~/dotfiles/zsh/20_bindkeys.zsh
@@ -51,10 +56,12 @@ setopt share_history # 異なるウィンドウでコマンドヒストリを共
 setopt hist_no_store # historyコマンドは履歴に登録しない
 setopt hist_reduce_blanks # 余分な空白は詰めて記録
 setopt hist_verify # `!!`を実行したときにいきなり実行せずコマンドを見せる
+echo "Authentic zsh section end in $(( $(epoc_ms) - $START ))ms."
 
 # ------------------
 # zplug
 # ------------------
+START=$(epoc_ms)
 source ${ZPLUG_HOME}/init.zsh
 # zplug 'zsh-users/zsh-autosuggestions'
 zplug "zsh-users/zsh-autosuggestions", hook-load: "ZSH_AUTOSUGGEST_CLEAR_WIDGETS=(my_space_extraction my_tab_completion end-of-line $ZSH_AUTOSUGGEST_CLEAR_WIDGETS)"
@@ -71,5 +78,5 @@ zplug "zsh-users/zsh-syntax-highlighting", defer:2
 zplug "Aloxaf/fzf-tab"
 
 zplug check || zplug install
-zplug load --verbose
-
+zplug load #--verbose
+echo "zplug section end in $(( $(epoc_ms) - $START ))ms."

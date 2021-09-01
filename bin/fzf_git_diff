@@ -6,6 +6,7 @@
 # enterで、たぶんvimが開く。
 merge_base_hash=$1
 nvim_bind=${2:-ctrl-v}
+_harf_term_cols=$(( $(tput cols) / 3 ))
 
 #--bind "tab:execute(git diff --color=always $merge_base_hash {3} < /dev/tty |less -eR > /dev/tty)" \
 files=$(git diff --numstat ${merge_base_hash} | awk '{printf "%+5s" , "+" $1} {printf "%+5s" , "-" $2} {printf "%s\n", ", " $3} ') || return
@@ -29,7 +30,7 @@ target=$(echo "$files" | \
            ;git log --oneline -3 ${merge_base_hash}.. --color=always --decorate=full --date=format-local:'%Y/%m/%d %H:%M:%S' \
              --pretty=format:'%C(010 022)%h%C(reset) %C(039 017)(%cd)%C(reset) %C(079)%an%C(reset) %C(226 021)%d%C(reset)%s' --abbrev-commit {3}
            ; echo ; echo
-           ;git diff --color=always --stat ${merge_base_hash} {3}
+           ;git diff --color=always --stat=${_harf_term_cols} ${merge_base_hash} {3}
            ; echo
            ;git diff --color=always ${merge_base_hash} {3}| diff-highlight | less \
          ) \

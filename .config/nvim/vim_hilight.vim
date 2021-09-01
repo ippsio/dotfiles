@@ -43,7 +43,7 @@ hi ColorColumn ctermbg=235
 
 " 検索単語
 "hi IncSearch guibg=#882200 guifg=#ff22ff
-hi Search guibg=#882200 guifg=#ff22ff ctermbg=89 ctermfg=201
+hi Search ctermbg=89 ctermfg=201
 
 " フォーカスのないウインドウ
 hi NormalNC ctermfg=251

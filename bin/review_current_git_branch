@@ -11,13 +11,13 @@ _fg() { printf "\e[38;5;%dm" "$1"; }
 _bg() { printf "\e[48;5;%dm" "$1"; }
 _verbose() { [[ ! -z "${arg_verbose}" ]] && return 0 || return 1; }
 _echo() { ARG_COLOR=$2; printf "\e[m%s" "${ARG_COLOR}"; echo -n "$1"; printf "\e[m\n"; }
+_echon() { ARG_COLOR=$2; printf "\e[m%s" "${ARG_COLOR}"; echo -n "$1"; printf "\e[m"; }
 
 _mergebase() {
   local mergebase
   if "${SELECT_BRANCH}"; then
-    merge_base_branch=$(fzf_git_branch origin_first_local_last)
-  else
-    # github apiのauthorizationトークンを ~/.config/hub ファイルから読む。
+    merge_base_branch=$(fzf_git_branch)
+  else # github apiのauthorizationトークンを ~/.config/hub ファイルから読む。
     local AUTHZ_TOKEN=$(cat ~/.config/hub| grep "oauth_token:"| awk '{ print $2 }')
     # gitのリポジトリ名を取得。
     local REPO=$(git remote get-url origin 2> /dev/null| egrep -o "([a-zA-Z0-9+-]+)\/([a-zA-Z0-9+-]+)")
@@ -26,20 +26,21 @@ _mergebase() {
     if [[ ! -z "${PR_NO}" ]]; then
       # PRの情報を取得し、現在のブランチとマージ先ブランチを取得。
       local PR_INFO=$(curl -s -H "Authorization: token ${AUTHZ_TOKEN}" "https://api.github.com/repos/${REPO}/pulls/${PR_NO}"| jq -r '.head.ref, .base.ref')
-      if [[ $(echo $PR_INFO| wc -l| tr -d ' ') -eq 2 ]]; then
+      if [[ $(echo -e "$PR_INFO"| wc -l| tr -d ' ') -eq 2 ]]; then
         # PRの情報からマージ先ブランチを取得（成功）。
-        merge_base_branch=$(echo ${PR_INFO}| tail -n 1)
+        merge_base_branch=$(echo -e "${PR_INFO}"| tail -n 1)
       else
-        merge_base_branch=$(fzf_git_branch origin_first_local_last)
+        merge_base_branch=$(fzf_git_branch)
       fi
     else
-      merge_base_branch=$(fzf_git_branch origin_first_local_last)
+      merge_base_branch=$(fzf_git_branch)
     fi
   fi
   echo "${merge_base_branch}"
 }
 
 MERGE_BASE_BRANCH=$(_mergebase)
+echo $MERGE_BASE_BRANCH
 MERGE_BASE_LONG_HASH="$(git merge-base ${MERGE_BASE_BRANCH} HEAD)"
 MERGE_BASE_HASH=$(git rev-parse --short "${MERGE_BASE_LONG_HASH}")
 
@@ -48,21 +49,31 @@ _COLOR_COMMAND="$(_fg 245)$(_bg 234)"
 while true; do
   clear
   # branchs
-  _echo "[branches]" "${_COLOR_LABEL}"
-  _echo " '${MERGE_BASE_BRANCH}'<='${CURRENT_BRANCH}'"
+  _echon "[branches]" "${_COLOR_LABEL}"
+  _echon " '"
+  _echon "${MERGE_BASE_BRANCH}" $(_fg 220)$(_bg 237)
+  _echon "'<='"
+  _echon "${CURRENT_BRANCH}" $(_fg 220)$(_bg 237)
+  _echo  "'"
 
   # merge-base
-  _echo "[merge-base-hash]" "${_COLOR_LABEL}"
+  _echon "[merge-base-hash]" "${_COLOR_LABEL}"
   _verbose && _echo " git rev-parse --short \$(git merge-base ${MERGE_BASE_BRANCH} HEAD)" "${_COLOR_COMMAND}"
   _echo " ${MERGE_BASE_HASH}"
 
   # git log
+  # (total commit count)
+  _CMD="git --no-pager log --oneline ${MERGE_BASE_HASH}...HEAD| wc -l| tr -d ' '"
+  _verbose && _echo " ${_CMD}" "${_COLOR_COMMAND}"
+  _TOTAL_COMMITS=$(eval "${_CMD}")
+
   HASH="%C($(git config --get color.diff.commit))%h%Creset"
   COMMIT_DATE="%cd"
   AUTHOR="%C(187 17)%an%Creset"
   SUBJECT="%s"
   COMMITS_COUNT_LAST=3
-  _echo "[git log]" "${_COLOR_LABEL}"
+
+  _echon "[git log]" "${_COLOR_LABEL}" && echo " (${_TOTAL_COMMITS} commits in total.)"
   _CMD="git --no-pager log --oneline ${MERGE_BASE_HASH}...HEAD --reverse --oneline -${COMMITS_COUNT_LAST}"
   _CMD+=" --date=format-local:'%Y/%m/%d %H:%M'"
   _CMD+=" --pretty=format:\" ${HASH} ${COMMIT_DATE} ${AUTHOR} ${SUBJECT}\""
@@ -70,31 +81,29 @@ while true; do
   _verbose && _echo " ${_CMD}" "${_COLOR_COMMAND}"
   eval "${_CMD}"; echo
 
-  # (total commit count)
-  _CMD="git --no-pager log --oneline ${MERGE_BASE_HASH}...HEAD| wc -l| tr -d ' '"
-  _verbose && _echo " ${_CMD}" "${_COLOR_COMMAND}"
-  eval "${_CMD}"| xargs -I {} echo '({} commits in total.)'
-
   # git diff --stat
   _echo "[git diff --stat]" "${_COLOR_LABEL}"
-  _CMD="git diff --stat ${MERGE_BASE_HASH}"
+  _STAT_GRAPH_WIDTH_COLS=$(( $(tput cols) / 4 ))
+  _CMD="git diff --stat-graph-width=${_STAT_GRAPH_WIDTH_COLS} ${MERGE_BASE_HASH}"
   _verbose && _echo " ${_CMD}" "${_COLOR_COMMAND}"
   eval "${_CMD}"
 
   # command
-  _echo "[command]" "${_COLOR_LABEL}"
-  _echo " 1 (enter): with fzf + nvim." "$(_fg 49)"
-  _echo " 2 (t)ig  : tig ${MERGE_BASE_HASH}...HEAD" "$(_fg 49)"
-  _echo " 3 (d)iff : git diff ${MERGE_BASE_HASH} | nvim -R" "$(_fg 49)"
-  _echo " 4 diff : git diff ${MERGE_BASE_HASH} --unified=0| nvim -R" "$(_fg 49)"
-  _echo " 5 fetch && merge : git fetch origin --prune && git merge" "$(_fg 49)"
-  echo -n " > "
-  read REPLY
+  list=()
+  list+=("1, edit (neovim)          - (fzf_git_diff \"${MERGE_BASE_HASH}\" \"enter\")")
+  list+=("2, show tig               - (tig ${MERGE_BASE_HASH}...HEAD)")
+  list+=("3, show git diff          - (git diff ${MERGE_BASE_HASH} | nvim -R)")
+  list+=("4, show git diff(compact) - (git diff ${MERGE_BASE_HASH} --unified=0| nvim -R)")
+  list+=("5, pull git branch        - (git fetch origin --prune; git merge)")
+  REPLY=$(for element in "${list[@]}"; do printf "${element}\n"; done \
+    | fzf --info=hidden --height=8 --prompt="COMMAND> " --bind "j:down" --bind "k:up" \
+    | awk -F ',' '{ print $1 }')
   case "${REPLY}" in
-    1|v|vim|"") fzf_git_diff "${MERGE_BASE_HASH}" "enter" ;;
-    2|t|tig ) tig ${MERGE_BASE_HASH}...HEAD ;;
-    3|d|diff) git diff ${MERGE_BASE_HASH} | nvim -R ;;
-    4       ) git diff ${MERGE_BASE_HASH} --unified=0 | nvim -R ;;
-    5       ) set -x; git fetch origin --prune ; git merge ; set +x; echo "enter to continue."; read ;;
+    1) fzf_git_diff "${MERGE_BASE_HASH}" "enter" ;;
+    2) tig ${MERGE_BASE_HASH}...HEAD ;;
+    3) git diff ${MERGE_BASE_HASH} | nvim -R ;;
+    4) git diff ${MERGE_BASE_HASH} --unified=0 | nvim -R ;;
+    5) set -x; git fetch origin --prune ; git merge ; set +x; echo "enter to continue."; read ;;
+    *) break
   esac
 done

@@ -6,20 +6,10 @@ build = './install --all --no-bash --no-fish --no-zsh'
 [[plugins]]
 repo = 'junegunn/fzf.vim'
 hook_add = '''
-  nnoremap [fzf] <Nop>
-  nmap ; [fzf]
+  let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.9 } }
 
   " バッファ一覧をfzfで絞り込む
-  nnoremap [fzf]; :Buffers<CR>
-
-  " 現在のファイル内の文字を探す
-  nnoremap [fzf]l :Lines 
-
-  " grep
-  nnoremap [fzf]g :Grep 
-
-  " ファイル検索
-  nnoremap [fzf]f :FzfFiles 
+  nnoremap ; :Buffers<CR>
 
   " 現在開いてるファイルがgit管理下ならそのディレクトリを、そうでなければ現在のパスを返す。
   function! s:GetDir(args0)
@@ -35,19 +25,13 @@ hook_add = '''
     endif
   endfunction
 
-  "function! GetJumps()
-  "  redir => cout
-  "  silent jumps
-  "  redir END
-  "  return reverse(split(cout, "\n")[1:])
-  "endfunction
-  "function! GoToJump(jump)
-  "    let jumpnumber = split(a:jump, '\s\+')[0]
-  "    execute "normal " . jumpnumber . "\<c-o>"
-  "endfunction
-  "command! Jumps call fzf#run(fzf#wrap({
-  "        \ 'source': GetJumps(),
-  "        \ 'sink': function('GoToJump')}))
+  "nnoremap <space>m :BLines module\ \\|class\ \\|\ def\ \\|before_action\ \\|protect_from_forgery\ \\|helper_method\ <CR>
+  nnoremap <space>m :<C-u>:BLinesWithPreview module \| class \| def \| before_action \| protect_from_forgery \| helper_method <CR>
+
+  command! -bang -nargs=* BLinesWithPreview
+    \ call fzf#vim#grep(
+    \   'rg --with-filename --line-number --no-heading --smart-case . '.fnameescape(expand('%:p')), 1,
+    \   fzf#vim#with_preview({'options': '--layout reverse --query '.shellescape(<q-args>).' --with-nth=2.. --delimiter=":"'}, 'down:50%'))
 
   " ファイル名の一覧をfzfで絞り込む
   nnoremap <C-p> :FzfFiles<CR>
@@ -55,7 +39,6 @@ hook_add = '''
         \ call fzf#run(fzf#vim#with_preview(fzf#wrap({
         \   'source': 'find -s -E . -not -regex ".*(\.DS_Store|/*.git/).*" -and -type f',
         \   'dir': s:GetDir(<q-args>),
-        \   'window': 'enew'
         \ })))
 
   " ファイルの内容をripgrepで検索して、さらにfzfで絞り込む

@@ -5,8 +5,6 @@ D=${ZPLUG_HOME}
 if [ ! -d ${D} ]; then
   log_not_exist $N $D
   mkdir -p ${ZPLUG_HOME}
-  curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh | zsh
+  curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh | zsh || return 1
   sleep 5
-else
-  log_exist $N $D
 fi
