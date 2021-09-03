@@ -1,0 +1,33 @@
+[[plugins]]
+repo = 'nathanaelkane/vim-indent-guides'
+hook_add = '''
+  let g:indent_guides_enable_on_vim_startup = 1
+  let g:indent_guides_auto_colors = 0
+  autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=#323232 ctermbg=235
+  autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#373739 ctermbg=237
+'''
+
+[[plugins]]
+repo = 'luochen1990/rainbow'
+hook_add='''
+let g:rainbow_active = 1 "set to 0 if you want to enable it later via :RainbowToggle
+'''
+
+# インサートモードで行番号をハイライトONし、状態をわかりやすくする
+[[plugins]]
+repo = 'cohama/vim-insert-linenr'
+
+# 無駄な空白をハイライト
+[[plugins]]
+repo = 'bronson/vim-trailing-whitespace'
+hook_add='''
+  "" defxを開いた時にハイライトされるのを防ぐ。
+  "let g:extra_whitespace_ignored_filetypes = ['defx']
+  "autocmd FileType defx match ExtraWhitespace /^^/
+
+  " defxを開いた時にハイライトされるのを防ぐ。
+  augroup trailing-whitespace-vs-defx
+    autocmd!
+    autocmd BufRead,BufEnter,BufWinEnter * if match(["defx"], &ft) >= 0|match ExtraWhitespace /^^/ |endif
+  augroup END
+'''

@@ -32,10 +32,10 @@ hi CursorLine cterm=NONE ctermfg=NONE ctermbg=NONE
 " hi Cursor ctermbg=1 ctermfg=240
 
 " 補完ポップアップ
-hi Pmenu ctermbg=7 guibg=#333333 ctermfg=255 ctermbg=235
-hi PmenuSel ctermbg=255 guibg=#aaaaaa guifg=#333333 ctermbg=241 ctermfg=229 cterm=bold
-hi PmenuSbar ctermbg=2 guibg=#222222
-hi PmenuThumb ctermbg=4 guibg=#ffffff
+hi Pmenu ctermfg=195 ctermbg=236
+hi PmenuSel ctermfg=255 ctermbg=33
+hi PmenuSbar ctermbg=190
+hi PmenuThumb ctermbg=27
 
 " コード規約上120文字な言語があったりするので、その目安に線を引く
 " let &colorcolumn=join(range(121,121),",")
@@ -49,25 +49,25 @@ hi Search ctermbg=89 ctermfg=201
 hi NormalNC ctermfg=251
 
 " コメント
-hi Comment guifg=#00ddff guibg=#004a4a ctermbg=23 ctermfg=123
+hi Comment ctermbg=23 ctermfg=123
 
 " 変数、文字列
-hi Constant guifg=#ffaaaa guibg=#330000 ctermfg=168 cterm=bold
+hi Constant ctermfg=168 cterm=bold
 
 hi PreProc ctermfg=170
 
 " ruby
-hi rubySymbol guifg=#ff5555 guibg=#440000 ctermbg=52 ctermfg=196
-hi rubyString guifg=#7777ff guibg=#000044 ctermbg=232 ctermfg=69
-hi rubyTodo guibg=#663300 ctermbg=94
+hi rubySymbol ctermbg=52 ctermfg=196
+hi rubyString ctermbg=232 ctermfg=69
+hi rubyTodo ctermbg=94
 
 " 行番号
-hi LineNr guifg=#006666 ctermfg=30
+hi LineNr guifg=#006666 ctermfg=23
 
 " directory
-hi Directory guifg=#88ccff guibg=#000055 ctermbg=16 ctermfg=75 cterm=bold
+hi Directory ctermbg=16 ctermfg=75 cterm=bold
 
-hi Type guibg=#004433 guifg=#00ff33 ctermbg=16 ctermfg=118 cterm=bold
+hi Type ctermbg=16 ctermfg=118 cterm=bold
 hi Visual ctermbg=136
 
 " markdown
@@ -91,16 +91,16 @@ hi markdownError guibg=#222622
 hi Statement guifg=#ffff00 ctermfg=226 cterm=bold
 
 " vimdiffの色設定
-hi DiffAdd     guifg=#00ff33 guibg=#004433 ctermfg=123 ctermbg=023
-hi DiffAdded   guifg=#00ffdd guibg=#004433 ctermfg=123 ctermbg=023
-hi DiffRemoved guifg=#ff7766 guibg=#440000 ctermfg=210 ctermbg=052
-hi DiffChange  guifg=#aaaa00 guibg=#666600 ctermfg=210 ctermbg=052
-hi DiffText    guifg=#ff9999 guibg=#660000 ctermfg=168 ctermbg=125
-hi DiffDelete  guifg=#666666 guibg=#000000 ctermfg=238 ctermbg=234
+hi DiffAdd     ctermfg=123 ctermbg=023
+hi DiffAdded   ctermfg=123 ctermbg=023
+hi DiffRemoved ctermfg=210 ctermbg=052
+hi DiffChange  ctermfg=210 ctermbg=052
+hi DiffText    ctermfg=168 ctermbg=125
+hi DiffDelete  ctermfg=238 ctermbg=234
 
 " qfixgrep
-hi qfFileName guifg=#00fff3 guibg=#004433 ctermfg=36 ctermbg=16
-hi QuickFixLine guibg=#002240 guifg=#099999 ctermfg=36 ctermbg=16
+hi qfFileName ctermfg=36 ctermbg=16
+hi QuickFixLine ctermfg=36 ctermbg=16
 " hi qfLineNr   guifg=#00ff33 guibg=#004433
 
 " カーソル下のhighlight情報を表示する

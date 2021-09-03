@@ -1,0 +1,47 @@
+[[plugins]]
+repo = 'Shougo/deoplete.nvim'
+on_event = 'InsertEnter'
+hook_add = '''
+  " Use deoplete.
+  let g:deoplete#enable_at_startup = 1
+  let g:deoplete#enable_ignore_case = 1
+  inoremap <expr><tab> pumvisible() ? "\<C-n>" :
+        \ neosnippet#expandable_or_jumpable() ?
+        \    "\<Plug>(neosnippet_expand_or_jump)" : "\<tab>"
+
+  inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+  inoremap <expr><C-g>   deoplete#undo_completion()
+
+  " <CR>: close popup and save indent.
+  inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+  function! s:my_cr_function() abort
+    return deoplete#close_popup() . "\<CR>"
+  endfunction
+
+  set completeopt+=noinsert
+
+  " Pass a dictionary to set multiple options
+  call deoplete#custom#option({
+  \ 'auto_complete_delay': 5,
+  \ 'smart_case': v:true,
+  \ '#auto_complete': v:false,
+  \ 'on_insert_enter': v:false,
+  \ 'on_text_changed_i': v:true,
+  \ })
+'''
+[[plugins]]
+repo = 'Shougo/neosnippet.vim'
+
+[[plugins]]
+repo = 'Shougo/neosnippet-snippets'
+
+#[[plugins]]
+#repo = 'Shougo/neco-vim'
+
+[[plugins]]
+repo = 'ujihisa/neco-look'
+
+[[plugins]]
+repo = 'Townk/vim-autoclose'
+
+

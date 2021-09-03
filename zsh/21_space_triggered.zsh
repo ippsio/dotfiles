@@ -81,7 +81,7 @@ function triggered_by_space() {
 
   # rg
   [[ $BUFFER =~ '^rgg+$' ]] \
-  && BUFFER="fzf_rg_then_vim " \
+  && BUFFER="rg_fzf_vim " \
   && zle end-of-line && return
 
   # docker exec

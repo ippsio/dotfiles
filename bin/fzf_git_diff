@@ -34,5 +34,5 @@ target=$(echo "$files" | \
            ; echo
            ;git diff --color=always ${merge_base_hash} {3}| diff-highlight | less \
          ) \
-    " --preview-window=right:70%:wrap)
+    " --preview-window=right)
     echo $target | awk '{print $3}'

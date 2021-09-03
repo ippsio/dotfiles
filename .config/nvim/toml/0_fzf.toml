@@ -11,6 +11,7 @@ hook_add = '''
   " バッファ一覧をfzfで絞り込む
   nnoremap ; :Buffers<CR>
 
+
   " 現在開いてるファイルがgit管理下ならそのディレクトリを、そうでなければ現在のパスを返す。
   function! s:GetDir(args0)
     if a:args0 != ''
@@ -25,9 +26,9 @@ hook_add = '''
     endif
   endfunction
 
+  nnoremap <silent> // :BLinesWithPreview<CR>
   "nnoremap <space>m :BLines module\ \\|class\ \\|\ def\ \\|before_action\ \\|protect_from_forgery\ \\|helper_method\ <CR>
-  nnoremap <space>m :<C-u>:BLinesWithPreview module \| class \| def \| before_action \| protect_from_forgery \| helper_method <CR>
-
+  "nnoremap <space>m :<C-u>:BLinesWithPreview module \| class \| def \| before_action \| protect_from_forgery \| helper_method <CR>
   command! -bang -nargs=* BLinesWithPreview
     \ call fzf#vim#grep(
     \   'rg --with-filename --line-number --no-heading --smart-case . '.fnameescape(expand('%:p')), 1,

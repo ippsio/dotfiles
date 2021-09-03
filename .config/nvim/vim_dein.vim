@@ -15,25 +15,20 @@ set runtimepath+=~/.cache/dein/repos/github.com/Shougo/dein.vim
 if dein#load_state('~/.cache/dein')
   call dein#begin('~/.cache/dein')
   call dein#add('~/.cache/dein/repos/github.com/Shougo/dein.vim')
-
+  " お試し中
+  call dein#load_toml('~/.config/nvim/toml/0_tasting_now.toml', {'lazy': 0})
   " lazy0: どんなfiletypeでも動く
-  "  call dein#load_toml('~/.config/nvim/toml/0_format_sqlutilities.toml', {'lazy': 0})
-  call dein#load_toml('~/.config/nvim/toml/0_search_fzf.toml', {'lazy': 0})
-  call dein#load_toml('~/.config/nvim/toml/0_search_vim-easymotion.toml', {'lazy': 0})
-  call dein#load_toml('~/.config/nvim/toml/0_visual_vim-indent-guides.toml', {'lazy': 0})
-  call dein#load_toml('~/.config/nvim/toml/0_visual_rainbow.toml', {'lazy': 0})
-  call dein#load_toml('~/.config/nvim/toml/0_visual_vim-insert-linenr.toml', {'lazy': 0})
-  call dein#load_toml('~/.config/nvim/toml/0_visual_vim-trailing-whitespace.toml', {'lazy': 0})
-  call dein#load_toml('~/.config/nvim/toml/0_statusline_lightline.toml', {'lazy': 0})
-  call dein#load_toml('~/.config/nvim/toml/0_completion_coc.toml', {'lazy': 0})
+  call dein#load_toml('~/.config/nvim/toml/0_fzf.toml', {'lazy': 0})
+  call dein#load_toml('~/.config/nvim/toml/0_jump.toml', {'lazy': 0})
+  call dein#load_toml('~/.config/nvim/toml/0_visual.toml', {'lazy': 0})
+  call dein#load_toml('~/.config/nvim/toml/0_statusline.toml', {'lazy': 0})
+  "call dein#load_toml('~/.config/nvim/toml/0_completion_coc.toml', {'lazy': 0})
   call dein#load_toml('~/.config/nvim/toml/0_completion_vim-surround.toml', {'lazy': 0})
-  call dein#load_toml('~/.config/nvim/toml/0_git_vim-fugitive.toml', {'lazy': 0})
-  call dein#load_toml('~/.config/nvim/toml/0_git_vim-gitgutter.toml', {'lazy': 0})
-  call dein#load_toml('~/.config/nvim/toml/0_diff_clip_diff.toml', {'lazy': 0})
-  call dein#load_toml('~/.config/nvim/toml/0_vimdoc_vimdoc-ja.toml', {'lazy': 0})
-  call dein#load_toml('~/.config/nvim/toml/0_filer_defx.toml', {'lazy': 0})
+  call dein#load_toml('~/.config/nvim/toml/0_git.toml', {'lazy': 0})
+  call dein#load_toml('~/.config/nvim/toml/0_diff.toml', {'lazy': 0})
+  call dein#load_toml('~/.config/nvim/toml/0_vimdoc.toml', {'lazy': 0})
+  call dein#load_toml('~/.config/nvim/toml/0_filemanage.toml', {'lazy': 0})
   call dein#load_toml('~/.config/nvim/toml/0_syntax_context_filetype.toml', {'lazy': 0})
-  " call dein#load_toml('~/.config/nvim/toml/0_filemanage_denite.toml', {'lazy': 0})
 
   " lazy1: 特定のfiletypeでのみ動く
   call dein#load_toml('~/.config/nvim/toml/1_toml.toml', {'lazy': 1})
@@ -54,3 +49,4 @@ endif
 if dein#check_install()
   call dein#install()
 endif
+

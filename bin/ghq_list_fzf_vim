@@ -1,4 +1,4 @@
 #!/bin/bash
 project=$(ghq list | fzf --prompt='Project >')
 [[ -z $project ]] && return 1
-cd $(ghq root)/${project} && fzf_rg_then_vim .
+cd $(ghq root)/${project} && fzf_list_file .

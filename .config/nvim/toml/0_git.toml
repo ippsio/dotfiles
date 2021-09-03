@@ -1,4 +1,10 @@
 [[plugins]]
+repo = 'tpope/vim-fugitive'
+hook_add = '''
+  nnoremap <silent> <space>a :Git blame<CR>
+'''
+
+[[plugins]]
 repo = 'airblade/vim-gitgutter'
 hook_add = '''
   set signcolumn=yes
