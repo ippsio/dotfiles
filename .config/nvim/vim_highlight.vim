@@ -52,7 +52,8 @@ hi NormalNC ctermfg=251
 hi Comment ctermbg=23 ctermfg=123
 
 " 変数、文字列
-hi Constant ctermfg=168 cterm=bold
+"hi Constant ctermfg=168 cterm=bold
+hi Constant ctermfg=168
 
 hi PreProc ctermfg=170
 
@@ -65,9 +66,12 @@ hi rubyTodo ctermbg=94
 hi LineNr guifg=#006666 ctermfg=23
 
 " directory
-hi Directory ctermbg=16 ctermfg=75 cterm=bold
+"hi Directory ctermbg=16 ctermfg=75 cterm=bold
+hi Directory ctermbg=16 ctermfg=75
 
-hi Type ctermbg=16 ctermfg=118 cterm=bold
+"hi Type ctermbg=16 ctermfg=118 cterm=bold
+"hi Type ctermbg=16 ctermfg=118
+hi Type ctermbg=16 ctermfg=48
 hi Visual ctermbg=136
 
 " markdown
@@ -88,7 +92,8 @@ hi markdownListMarker guibg=#456789 guifg=#ffff00 gui=bold
 hi markdownError guibg=#222622
 
 "hi Function guifg=#ffff00 guibg=#444400
-hi Statement guifg=#ffff00 ctermfg=226 cterm=bold
+" hi Statement guifg=#ffff00 ctermfg=226 cterm=bold
+hi Statement ctermfg=226
 
 " vimdiffの色設定
 hi DiffAdd     ctermfg=123 ctermbg=023

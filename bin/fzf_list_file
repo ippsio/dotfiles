@@ -1,28 +1,24 @@
 #!/bin/bash
 # ファイルの選択I/Fをする。
 # プレビュー：ファイル内の内容。
-PROMPT="$(basename $0)"
-for i in "$@"
-do
-  case "$i" in
-    --PROMPT=* ) PROMPT=$PROMPT:$(echo $i| sed -e "s/^--PROMPT=//") ;;
-    * ) FIND_TARGET=$i ;;
-  esac
-done
+_FZF_PROMPT="$(basename $0)"
+_FZF_HEADER="?: Toggle-preview, Tab(or CTRL-f): ripgrep"
+FIND_TARGET=$1
+
 READABLE_PATH=$(echo ${FIND_TARGET}| sed "s#~#${HOME}#"| xargs realpath| sed -e "s#^${HOME}#~#")
 SELECTED=$(find -s -E ${FIND_TARGET/'~'/${HOME}} -not -regex '.*(\.DS_Store|/*.git/).*' -and \
   | sed -e 's#\/\/*#\/#g' \
   | sed -e "s#^${HOME}#~#" \
   | fzf +m \
-  --prompt="${PROMPT} (${READABLE_PATH}) > " \
+  --prompt="${_FZF_PROMPT} (DIR=${READABLE_PATH}) > " \
   --bind "?:toggle-preview" \
   --bind "tab:execute(rg_fzf_vim . {} < /dev/tty > /dev/tty)" \
+  --bind "ctrl-f:execute(rg_fzf_vim . ${FIND_TARGET} < /dev/tty > /dev/tty)" \
   --preview '
     _dir=$(echo $(cd $(dirname $(echo {}| sed -e "s#^~#${HOME}#")) && pwd));
     _file=$(echo {}| sed -e "s#^~#${HOME}#"| sed -e "s#^.*/##");
-    bat ${_dir}/${_file} --color=always --style=header,grid --line-range :100
-  ' \
-  --preview-window=down:60%:wrap)
+    bat ${_dir}/${_file} --color=always --style=numbers --line-range :100
+  ')
 
 if [[ ! -z "${SELECTED}" ]]; then
   if [[ -d $(echo ${SELECTED}| sed -e "s#~#${HOME}#") ]]; then
@@ -32,6 +28,6 @@ if [[ ! -z "${SELECTED}" ]]; then
     echo -n "${SELECTED}"
   fi
 else
-  echo -n "$1"
+  echo -n "$1" && exit 1
 fi
 

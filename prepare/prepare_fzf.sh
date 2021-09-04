@@ -18,7 +18,8 @@ export FZF_DEFAULT_OPTS="\
   --bind 'F12:up' \
   --bind 'ctrl-v:execute(vim {})' \
   --bind change:top \
-  --preview-window=bottom:60%:wrap"
+  --preview-window=bottom:60%"
+  #--preview-window=bottom:60%:wrap"
 
 ### export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'
 ### --color fg:-1,bg:-1,hl:226,fg+:226,bg+:239,hl+:226

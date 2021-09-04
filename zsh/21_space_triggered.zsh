@@ -36,7 +36,7 @@ function triggered_by_space() {
   #[[ $BUFFER =~ '^gco+$' || $BUFFER =~ '^git co+$' || $BUFFER =~ '^git checkout+$' ]] \
   [[ $BUFFER =~ '^gco+$' || $BUFFER =~ '^git co+$' ]] \
   && zle autosuggest-clear \
-  && BUFFER="git checkout $(fzf_git_branch| sed -e 's#^origin/##')" \
+  && BUFFER="git checkout $(git_branch_fzf| sed -e 's#^origin/##')" \
   && zle end-of-line && return
 
   # git fetch origin --prune

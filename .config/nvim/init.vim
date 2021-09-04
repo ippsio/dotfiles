@@ -10,5 +10,5 @@ filetype plugin indent on
 syntax enable
 runtime! vim_autocmd.vim
 
-runtime! vim_hilight.vim
+runtime! vim_highlight.vim
 

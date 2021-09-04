@@ -1,5 +1,8 @@
 #!/bin/bash
 DIR=~/notes
+_ME=$( [ -L $0 ] && basename $(readlink $0) || basename $0)
+_FZF_PROMPT1="${_ME} (${DIR/${HOME}/~}) > "
+_FZF_PROMPT2="${_ME} 検索文字を入力 > "
 [ ! -d ${DIR} ] && mkdir -p ${DIR} && echo "maybe ${DIR} created."
 
 function exec_find() {
@@ -9,7 +12,7 @@ function exec_find() {
     | fgrep "/${_TYPE}/" \
     | sed -e "s#^${HOME}#~#" \
     | sort -r \
-    | fzf --prompt="${_TYPE} >"  \
+    | fzf --prompt="${_FZF_PROMPT1}"  \
       --bind change:top \
       --bind k:up \
       --bind j:down \
@@ -19,12 +22,12 @@ function exec_find() {
 
 while true;
 do
-  KIND=$(echo "memo,最新状況,検索する"| sed -e "s/,/\n/g"| fzf --prompt="notes in [${DIR/${HOME}/~}] ")
+  KIND=$(echo "memo,最新状況,検索する"| sed -e "s/,/\n/g"| fzf --prompt="${_FZF_PROMPT1}")
 
   [[ ${KIND} == "" ]] && exit 1
 
   if [[ "${KIND}" == "検索する" ]]; then
-    cd ${DIR} && fzf_git_grep_then_vim "$(echo ''|fzf --prompt='検索文字を入力> ' --print-query)"
+    cd ${DIR} && fzf_git_grep_then_vim "$(echo ''|fzf --prompt=\"${_FZF_PROMPT2}\" --print-query)"
     continue
 
   elif [[ "${KIND}" == "最新状況" ]]; then

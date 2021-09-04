@@ -4,57 +4,57 @@ hook_add = '''
   nnoremap <silent> <space>a :Git blame<CR>
 '''
 
-[[plugins]]
-repo = 'airblade/vim-gitgutter'
-hook_add = '''
-  set signcolumn=yes
-  " 変更マーク
-  let g:gitgutter_sign_added              = '+'
-  let g:gitgutter_sign_modified           = '~'
-  let g:gitgutter_sign_removed            = 'X'
-  let g:gitgutter_sign_removed_first_line = '_^'
-  let g:gitgutter_sign_modified_removed   = '~R'
-
-  " 変更マークのハイライト
-  hi SignColumn guibg=none ctermbg=none
-  hi GitGutterAdd           guifg=#00ff33 guibg=#004433 ctermfg=118 ctermbg=23 cterm=bold " an added line
-  hi GitGutterChange        guifg=#aaaa00 guibg=#666600 ctermfg=11 ctermbg=100 cterm=bold " a changed line
-  hi GitGutterDelete        guifg=#666666 guibg=#000000 ctermfg=8 ctermbg=232 cterm=bold " at least one removed line
-  hi GitGutterChangeDelete  guifg=#666666 guibg=#000000 ctermfg=8 ctermbg=232 cterm=bold " a changed line followed by at least one removed line
-
-  " 行ハイライトは結構見にくいと感じたので、コメントアウト
-  "" 起動時に差分行の行ハイライトを自動的に有効にする
-  "" let g:gitgutter_highlight_lines = 1
-  " 行番号のハイライト
-  let g:gitgutter_highlight_linenrs = 1
-
-  augroup GitGutter
-    autocmd!
-    " 何かバッファを開いたら、gitgutterのサイン表示に利用するgitの比較元ハッシュを更新する
-    autocmd BufEnter * call s:UpdateMergeBase()
-    function! s:UpdateMergeBase()
-      if $GIT_MERGE_BASE_HASH != ""
-        let g:gitgutter_diff_base = $GIT_MERGE_BASE_HASH
-        GitGutter
-      else
-        for diff_base in ['origin/develop', 'origin/master']
-          let s:merge_base = system('cd '. expand("%:h") . ' && git merge-base ' . diff_base . ' HEAD')
-          if v:shell_error == 0
-            let g:gitgutter_diff_base = s:merge_base
-            GitGutter
-            break
-          endif
-        endfor
-      endif
-    endfunction
-  augroup END
-
-  " 比較対象(diff_base)を変更するコマンド
-  " 使い方:
-  "   :GGCB develop[enter] など
-  command! -nargs=1 GGCB call s:change_base(<f-args>)
-  function! s:change_base(diff_base)
-    let g:gitgutter_diff_base = a:diff_base
-    GitGutter
-  endfunction
-'''
+### [[plugins]]
+### repo = 'airblade/vim-gitgutter'
+### hook_add = '''
+###   set signcolumn=yes
+###   " 変更マーク
+###   let g:gitgutter_sign_added              = '+'
+###   let g:gitgutter_sign_modified           = '~'
+###   let g:gitgutter_sign_removed            = 'X'
+###   let g:gitgutter_sign_removed_first_line = '_^'
+###   let g:gitgutter_sign_modified_removed   = '~R'
+### 
+###   " 変更マークのハイライト
+###   hi SignColumn guibg=none ctermbg=none
+###   hi GitGutterAdd           guifg=#00ff33 guibg=#004433 ctermfg=118 ctermbg=23 cterm=bold " an added line
+###   hi GitGutterChange        guifg=#aaaa00 guibg=#666600 ctermfg=11 ctermbg=100 cterm=bold " a changed line
+###   hi GitGutterDelete        guifg=#666666 guibg=#000000 ctermfg=8 ctermbg=232 cterm=bold " at least one removed line
+###   hi GitGutterChangeDelete  guifg=#666666 guibg=#000000 ctermfg=8 ctermbg=232 cterm=bold " a changed line followed by at least one removed line
+### 
+###   " 行ハイライトは結構見にくいと感じたので、コメントアウト
+###   "" 起動時に差分行の行ハイライトを自動的に有効にする
+###   "" let g:gitgutter_highlight_lines = 1
+###   " 行番号のハイライト
+###   let g:gitgutter_highlight_linenrs = 1
+### 
+###   augroup GitGutter
+###     autocmd!
+###     " 何かバッファを開いたら、gitgutterのサイン表示に利用するgitの比較元ハッシュを更新する
+###     autocmd BufEnter * call s:UpdateMergeBase()
+###     function! s:UpdateMergeBase()
+###       if $GIT_MERGE_BASE_HASH != ""
+###         let g:gitgutter_diff_base = $GIT_MERGE_BASE_HASH
+###         GitGutter
+###       else
+###         for diff_base in ['origin/develop', 'origin/master']
+###           let s:merge_base = system('cd '. expand("%:h") . ' && git merge-base ' . diff_base . ' HEAD')
+###           if v:shell_error == 0
+###             let g:gitgutter_diff_base = s:merge_base
+###             GitGutter
+###             break
+###           endif
+###         endfor
+###       endif
+###     endfunction
+###   augroup END
+### 
+###   " 比較対象(diff_base)を変更するコマンド
+###   " 使い方:
+###   "   :GGCB develop[enter] など
+###   command! -nargs=1 GGCB call s:change_base(<f-args>)
+###   function! s:change_base(diff_base)
+###     let g:gitgutter_diff_base = a:diff_base
+###     GitGutter
+###   endfunction
+### '''

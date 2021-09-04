@@ -1,24 +1,63 @@
 [[plugins]]
+repo = 'uplus/deoplete-solargraph'
+
+[[plugins]]
+repo = 'Shougo/echodoc.vim'
+hook_add = '''
+  set cmdheight=2
+  " Option 4:
+  " Or, you could use neovim's floating text feature.
+  "
+  let g:echodoc#enable_at_startup = 1
+  let g:echodoc#type = 'floating'
+  " To use a custom highlight for the float window,
+  " change Pmenu to your highlight group
+  highlight link EchoDocFloat Constant
+
+  " Option 5:
+  " Or, you could use vim's popup window feature.
+  let g:echodoc#enable_at_startup = 1
+  let g:echodoc#type = 'popup'
+  " To use a custom highlight for the popup window,
+  " change Pmenu to your highlight group
+  highlight link EchoDocPopup Pmenu
+'''
+
+[[plugins]]
+repo = 'zchee/deoplete-jedi'
+
+[[plugins]]
+repo = 'davidhalter/jedi-vim'
+on_ft = 'python'
+
+
+[[plugins]]
 repo = 'Shougo/deoplete.nvim'
 on_event = 'InsertEnter'
 hook_add = '''
-  " Use deoplete.
-  let g:deoplete#enable_at_startup = 1
+  " Enable deoplete when InsertEnter.
+  let g:deoplete#enable_at_startup = 0
+  autocmd InsertEnter * call deoplete#enable()
+
   let g:deoplete#enable_ignore_case = 1
-  inoremap <expr><tab> pumvisible() ? "\<C-n>" :
-        \ neosnippet#expandable_or_jumpable() ?
-        \    "\<Plug>(neosnippet_expand_or_jump)" : "\<tab>"
 
   inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
   inoremap <expr><C-g>   deoplete#undo_completion()
 
+  " When I press enter, neovim closes the popup instead of inserting new line.
   " <CR>: close popup and save indent.
-  inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-  function! s:my_cr_function() abort
-    return deoplete#close_popup() . "\<CR>"
-  endfunction
+  " inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+  " function! s:my_cr_function() abort
+  "   return deoplete#close_popup() . "\<CR>"
+  " endfunction
 
   set completeopt+=noinsert
+
+  " I want to close the preview window after completion is done.
+  autocmd CompleteDone * silent! pclose!
+
+  " I want to disable the preview window feature.
+  "set completeopt-=preview
 
   " Pass a dictionary to set multiple options
   call deoplete#custom#option({
@@ -29,19 +68,36 @@ hook_add = '''
   \ 'on_text_changed_i': v:true,
   \ })
 '''
+
 [[plugins]]
 repo = 'Shougo/neosnippet.vim'
+hook_add = '''
+imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+xmap <C-k>     <Plug>(neosnippet_expand_target)
+imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+      \ "\<Plug>(neosnippet_expand_or_jump)"
+      \: pumvisible() ? "\<C-n>" : "\<TAB>"
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+      \ "\<Plug>(neosnippet_expand_or_jump)"
+      \: "\<TAB>"
+if has('conceal')
+  set conceallevel=2 concealcursor=i
+endif
+'''
 
 [[plugins]]
 repo = 'Shougo/neosnippet-snippets'
 
-#[[plugins]]
-#repo = 'Shougo/neco-vim'
+
+[[plugins]]
+repo = 'Shougo/neco-vim'
 
 [[plugins]]
 repo = 'ujihisa/neco-look'
 
-[[plugins]]
-repo = 'Townk/vim-autoclose'
+# inoremap <esc>でコンフリクト。escで補完を抜けた後一発でノーマルモードに戻れなくなるためコメントアウト。
+#[[plugins]]
+#repo = 'Townk/vim-autoclose'
 
 

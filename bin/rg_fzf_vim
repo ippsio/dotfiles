@@ -6,6 +6,9 @@
 ARG=${1:-.}
 EXEC_DIR_OR_FILE=$(echo ${2:-$(pwd)}| sed -e "s#~#${HOME}#"| xargs realpath)
 PWD_TO_SHOW=$(echo ${EXEC_DIR_OR_FILE}| sed -e "s#^${HOME}#~#")
+
+_ME=$( [ -L $0 ] && basename $(readlink $0) || basename $0)
+_FZF_PROMPT="${_ME} (dir=${PWD_TO_SHOW}) (q=$ARG)> "
 if [ -d ${EXEC_DIR_OR_FILE} ]; then
   EXEC_DIR=${EXEC_DIR_OR_FILE}
   GLOB=""
@@ -18,7 +21,7 @@ cd ${EXEC_DIR} && \
   rg --hidden --line-number ${GLOB} ${ARG} \
   | perl -pe 's/(^.*):(\d+):(.*)$/\1 \2 \3/' \
   | fzf -m \
-    --prompt="rg_fzf_vim(DIR=${PWD_TO_SHOW}) (KEYWORD=$ARG)> " \
+    --prompt="${_FZF_PROMPT}" \
     --bind "enter:execute(nvim {1} +{2} < /dev/tty > /dev/tty)" \
     --preview '
       decide_range_from() { echo $(( $1 - 5 > 0 ? $1 - 5 : 1)) };

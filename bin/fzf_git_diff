@@ -7,12 +7,15 @@
 merge_base_hash=$1
 nvim_bind=${2:-ctrl-v}
 _harf_term_cols=$(( $(tput cols) / 3 ))
+#_ME=$(basename $(readlink $0 || $0))
+_ME=$( [ -L $0 ] && basename $(readlink $0) || basename $0)
+_FZF_PROMPT="${_ME} (merge_base_hash=${merge_base_hash}) > "
 
 #--bind "tab:execute(git diff --color=always $merge_base_hash {3} < /dev/tty |less -eR > /dev/tty)" \
 files=$(git diff --numstat ${merge_base_hash} | awk '{printf "%+5s" , "+" $1} {printf "%+5s" , "-" $2} {printf "%s\n", ", " $3} ') || return
 target=$(echo "$files" | \
   fzf \
-  --prompt="fzf_git_diff(merge_base_hash=${merge_base_hash}) >" \
+  --prompt="${_FZF_PROMPT}" \
   --header="(${nvim_bind}=> nvim)  (right,ctrl-l) (tab=> git diff)  (?=> toggle preview)" \
   --bind change:top \
   --bind "${nvim_bind}:execute(env GIT_MERGE_BASE_HASH=${merge_base_hash} nvim {3} < /dev/tty > /dev/tty)" \

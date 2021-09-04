@@ -10,9 +10,9 @@ on_ft = ['ruby', 'eruby', 'slim']
 repo = 'vim-scripts/ruby-matchit'
 on_ft = ['ruby', 'eruby', 'slim']
 
-# [[plugins]]
-# repo = 'fishbullet/deoplete-ruby'
-# on_ft = ['ruby']
+[[plugins]]
+repo = 'fishbullet/deoplete-ruby'
+on_ft = ['ruby']
 
 [[plugins]]
 repo = 'slim-template/vim-slim'

@@ -66,7 +66,7 @@ set switchbuf=useopen
 "  移動
 " --------------
 " スクロールする時に下が見えるようにする
-set scrolloff=15
+set scrolloff=10
 
 " 移動コマンドを使ったとき、行頭に移動しない
 set nostartofline

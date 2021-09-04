@@ -15,4 +15,8 @@ DEVEL_BRANCHS=$(eval "${CMD} --sort=upstream --list develop origin/develop")
 OTHER_BRANCHS=$(eval "${CMD} --sort=-authordate" | grep -Ev "\[(develop|origin/develop)\]")
 
 printf '%s\n%s\n%s\n%s\n%s' "${DEVEL_BRANCHS}" "${HELPER1}" "${HELPER2}" "${HELPER3}" "${OTHER_BRANCHS}" \
-  | fzf --ansi --prompt='SELECT A BRANCH> ' --delimiter "\t" --nth 1 | sed -e 's/^\[.*\],\[//' | sed -e 's/\].*//'
+  | fzf --ansi \
+    --prompt="$(basename $0) > " \
+    --delimiter "\t" \
+    --nth 1 \
+  | sed -e 's/^\[.*\],\[//' | sed -e 's/\].*//'

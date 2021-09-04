@@ -1,0 +1,794 @@
+
+	SpecialKey	SpecialKey
+
+	TermCursor	TermCursor
+
+	NonText	NonText EndOfBuffer Whitespace
+
+	Directory	Directory netrwDir
+
+	ErrorMsg	ErrorMsg NvimInvalidSpacing
+
+	IncSearch	IncSearch
+
+	Search	Search Substitute
+
+	MoreMsg	MoreMsg
+
+	ModeMsg	ModeMsg
+
+	LineNr	LineNr
+
+	CursorLineNr	CursorLineNr
+
+	Question	Question netrwSymLink
+
+	StatusLine	StatusLine MsgSeparator
+
+	StatusLineNC	StatusLineNC
+
+	VertSplit	VertSplit FloatBorder
+
+	Title	Title
+
+	Visual	Visual
+
+	WarningMsg	WarningMsg netrwCoreDump vimWarn vimBufnrWarn
+
+	WildMenu	WildMenu
+
+	Folded	Folded netrwData netrwGray netrwCompress
+	netrwSpecFile netrwObj netrwTags netrwTilde netrwTmp netrwBak
+	vimFold
+
+	FoldColumn	FoldColumn
+
+	DiffAdd	DiffAdd
+
+	DiffChange	DiffChange netrwLib netrwMakefile
+
+	DiffDelete	DiffDelete
+
+	DiffText	DiffText
+
+	SignColumn	SignColumn
+
+	Conceal	Conceal
+
+	SpellBad	SpellBad
+
+	SpellCap	SpellCap
+
+	SpellRare	SpellRare
+
+	SpellLocal	SpellLocal
+
+	Pmenu	Pmenu NormalFloat EchoDocPopup
+
+	PmenuSel	PmenuSel
+
+	PmenuSbar	PmenuSbar
+
+	PmenuThumb	PmenuThumb
+
+	TabLine	TabLine
+
+	TabLineSel	TabLineSel netrwMarkFile
+
+	TabLineFill	TabLineFill
+
+	CursorColumn	CursorColumn
+
+	CursorLine	CursorLine
+
+	ColorColumn	ColorColumn
+
+	QuickFixLine	QuickFixLine
+
+	NormalNC	NormalNC
+
+	RedrawDebugNormal	RedrawDebugNormal
+
+	RedrawDebugClear	RedrawDebugClear
+
+	RedrawDebugComposed	RedrawDebugComposed
+
+	RedrawDebugRecompose	RedrawDebugRecompose
+
+	Cursor	Cursor
+
+	lCursor	lCursor
+
+	FloatShadow	FloatShadow
+
+	FloatShadowThrough	FloatShadowThrough
+
+	MatchParen	MatchParen
+
+	NvimInternalError	NvimInternalError NvimFigureBrace
+	NvimSingleQuotedUnknownEscape
+	NvimInvalidSingleQuotedUnknownEscape
+
+	Identifier	Identifier NvimIdentifier NvimIdentifierScope
+	NvimIdentifierScopeDelimiter NvimIdentifierName
+	NvimIdentifierKey NvimOptionName NvimOptionScope
+	NvimOptionScopeDelimiter NvimEnvironmentName Function
+	helpHyperTextJump helpVim helpIdentifier helpFunction
+	Defx_icon_root_icon Defx_filename_root netrwVersion
+	netrwClassify netrwHelpCmd vimVar vimFBVar vimFuncName
+	vimSpecFile vimFuncVar vimSpecFileMod luaFunction luaFunc
+	vimKeyCode
+
+	Type	Type NvimNumberPrefix NvimOptionSigil
+	NvimEnvironmentSigil StorageClass Structure Typedef helpOption
+	helpType helpStorageClass helpStructure helpTypedef
+	Defx_type_image vimGroup vimHLGroup nvimHLGroup vimPattern
+	vimAutoEvent nvimAutoEvent vimEchoHLNone vimSynCase vimGroupName
+	vimSynReg vimSyncC vimSyncGroupName vimSyncKey vimSyncGroup
+	vimSyncNone vimHiGroup vimHiTerm vimHiCTerm vimHiStartStop
+	vimHiCtermFgBg vimHiCtermul vimHiGui vimHiGuiFont vimHiGuiFgBg
+	vimHiBlend luaTable vimSpecial vimUserAttrb vimUserAttrbCmplt
+	vimSynType vimFTOption
+
+	Error	Error NvimInvalid NvimInvalidAssignment
+	NvimInvalidPlainAssignment NvimInvalidAugmentedAssignment
+	NvimInvalidAssignmentWithAddition
+	NvimInvalidAssignmentWithSubtraction
+	NvimInvalidAssignmentWithConcatenation NvimInvalidOperator
+	NvimInvalidUnaryOperator NvimInvalidUnaryPlus
+	NvimInvalidUnaryMinus NvimInvalidNot NvimInvalidBinaryOperator
+	NvimInvalidComparison NvimInvalidComparisonModifier
+	NvimInvalidBinaryPlus NvimInvalidBinaryMinus NvimInvalidConcat
+	NvimInvalidConcatOrSubscript NvimInvalidOr NvimInvalidAnd
+	NvimInvalidMultiplication NvimInvalidDivision NvimInvalidMod
+	NvimInvalidTernary NvimInvalidTernaryColon NvimInvalidDelimiter
+	NvimInvalidParenthesis NvimInvalidLambda
+	NvimInvalidNestingParenthesis NvimInvalidCallingParenthesis
+	NvimInvalidSubscript NvimInvalidSubscriptBracket
+	NvimInvalidSubscriptColon NvimInvalidCurly NvimInvalidContainer
+	NvimInvalidDict NvimInvalidList NvimInvalidValue
+	NvimInvalidIdentifier NvimInvalidIdentifierScope
+	NvimInvalidIdentifierScopeDelimiter NvimInvalidIdentifierName
+	NvimInvalidIdentifierKey NvimInvalidColon NvimInvalidComma
+	NvimInvalidArrow NvimInvalidRegister NvimInvalidNumber
+	NvimInvalidFloat NvimInvalidNumberPrefix NvimInvalidOptionSigil
+	NvimInvalidOptionName NvimInvalidOptionScope
+	NvimInvalidOptionScopeDelimiter NvimInvalidEnvironmentSigil
+	NvimInvalidEnvironmentName NvimInvalidString
+	NvimInvalidStringQuote NvimInvalidSingleQuote
+	NvimInvalidDoubleQuote NvimInvalidDoubleQuotedUnknownEscape
+	NvimInvalidFigureBrace NvimDoubleQuotedUnknownEscape helpError
+	vimOperError vimUserAttrbError vimUserCmdError vimElseIfErr
+	vimSynError vimSyncError luaParenError luaBraceError luaError
+	vimError vimKeyCodeError vimErrSetting vimBehaveError vimFTError
+	vimFunctionError vimAugroupError vimFunc vimPatSepErr
+	vimSubstFlagErr vimCollClassErr vimMapModErr vimSynCaseError
+	vimHiCtermError vimHiAttribList vimHiKeyError
+
+	mkdListBlock0	mkdListBlock0
+
+	mkdListBlock1	mkdListBlock1
+
+	htmlH1	htmlH1
+
+	htmlH2	htmlH2
+
+	htmlH3	htmlH3
+
+	htmlH4	htmlH4
+
+	htmlH5	htmlH5
+
+	mkdCode	mkdCode
+
+	mkdCodeDelimiter	mkdCodeDelimiter
+
+	mkdInlineCodeDelimiter	mkdInlineCodeDelimiter
+
+	mkdBlockquote	mkdBlockquote
+
+	Constant	Constant Number String EchoDocFloat Character
+	Boolean Float helpHyperTextEntry helpConstant helpString
+	helpCharacter helpNumber helpBoolean helpFloat helpURL
+	Defx_filename_root_marker Defx_type_text netrwQHTopic vimNumber
+	vimMark vimString vimLetHereDoc vimSearch vimSetString
+	vimCommentString vimPatSepZone vimNotPatSep vimStringEnd
+	vimStringCont vimSubstTwoBS vimMarkNumber vimPlainMark
+	vimAddress vimSynRegPat vimSynPatRange vimInsert
+	vimSynNotPatRange vimHiGuiRgb vimHiNmbr luaConstant luaString2
+	luaString NvimString NvimStringBody NvimStringQuote
+	NvimSingleQuote NvimSingleQuotedBody NvimDoubleQuote
+	NvimDoubleQuotedBody NvimInvalidStringBody
+	NvimInvalidSingleQuotedBody NvimInvalidDoubleQuotedBody
+	luaNumber NvimNumber NvimFloat
+
+	Comment	Comment helpExample helpCommand helpComment
+	Defx_mark_readonly netrwComment netrwHideSep netrwComma
+	netrwHide vimComment vim9Comment vimLineComment vimMtchComment
+	vim9LineComment luaComment vimScriptDelim
+
+	Special	Special Delimiter NvimColon NvimComma
+	NvimArrow SpecialChar NvimStringSpecial NvimSingleQuotedQuote
+	NvimDoubleQuotedEscape NvimInvalidStringSpecial
+	NvimInvalidSingleQuotedQuote NvimInvalidDoubleQuotedEscape Tag
+	SpecialComment Debug helpSpecial helpSpecialChar helpTag
+	helpDelimiter helpSpecialComment helpDebug
+	Defx_icon_directory_icon Defx_icon_opened_icon Defx_type_archive
+	netrwLink netrwDateSep netrwTreeBar netrwTimeSep netrwCmdSep
+	netrwPix vimRegister vimCmplxRepeat vimNotation vimCtrlChar
+	vimContinue vimParenSep vimSep vimFuncSID vimUserAttrbCmpltFunc
+	vimPatSep vimPatSepZ vimPatSepR vimSubstSubstr vimSubstDelim
+	vimSubstFlags vimPlainRegister vimLetHereDocStart
+	vimLetHereDocStop vimAutoCmdMod vimMapModKey vimBracket
+	vimMapMod vimMenuMod vimGroupSpecial vimIskSep NvimParenthesis
+	NvimLambda NvimNestingParenthesis NvimCallingParenthesis
+	NvimSubscript NvimSubscriptBracket NvimSubscriptColon NvimCurly
+	NvimContainer NvimDict NvimList luaSpecial NvimRegister
+	vimSynOption vimSynContains vimSynKeyContainedin vimSynNextgroup
+	vimGroupAdd vimGroupRem vimSynKeyOpt vimSynMtchOpt vimSynRegOpt
+	vimSynMtchGrp helpTransNote
+
+	Statement	Statement Operator NvimOperator
+	NvimUnaryOperator NvimUnaryPlus NvimUnaryMinus NvimNot
+	NvimBinaryOperator NvimComparison NvimComparisonModifier
+	NvimBinaryPlus NvimBinaryMinus NvimConcat NvimConcatOrSubscript
+	NvimOr NvimAnd NvimMultiplication NvimDivision NvimMod
+	NvimTernary NvimTernaryColon Conditional Repeat Label Keyword
+	Exception helpHeadline helpStatement helpConditional helpRepeat
+	helpLabel helpOperator helpKeyword helpException
+	Defx_mark_selected Defx_type_executable netrwHidePat netrwList
+	vimCommand vimSubst vimAutoCmd vimLet vimMap vimSyntax vimBehave
+	vimBehaveModel vimFTCmd vimNotFunc vimOper vimAugroupKey
+	vimoperStar vimFuncKey vimAbb vimEchoHL vimHighlight vimNorm
+	vimUnmap vimUserCommand vimSubst1 vimSetSep vimMapBang nvimMap
+	nvimUnmap vimHiClear vimSearchDelim luaElse luaIn luaStatement
+	luaCond luaRepeat luaLabel luaOperator NvimAssignment
+	NvimPlainAssignment NvimAugmentedAssignment
+	NvimAssignmentWithAddition NvimAssignmentWithSubtraction
+	NvimAssignmentWithConcatenation luaFor vimAuHighlight vimAutoSet
+	vimCondHL vimElseif vimKeyword vimStatement
+
+	PreProc	PreProc Include Define Macro PreCondit
+	helpSectionDelim helpHeader helpPreProc helpInclude helpDefine
+	helpMacro helpPreCondit Defx_filename_directory netrwExe
+	vimOption vimEnvvar vimUserAttrbKey vimSetMod vimMenuName
+	vimMenuNameMore vimHiAttrib vimFgBgAttrib vimCommentTitle
+	vimAutoCmdOpt vimHLMod
+
+	Underlined	Underlined helpUnderlined
+
+	Ignore	Ignore helpIgnore helpBar helpStar
+	helpBacktick
+
+	Todo	Todo helpNote helpWarning helpDeprecated
+	helpTodo vimTodo luaTodo
+
+	rubySymbol	rubySymbol
+
+	rubyString	rubyString
+
+	rubyTodo	rubyTodo
+
+	markdownCode	markdownCode
+
+	markdownCodeDelimiter	markdownCodeDelimiter
+
+	markdownListMarker	markdownListMarker
+
+	markdownError	markdownError
+
+	DiffAdded	DiffAdded
+
+	DiffRemoved	DiffRemoved
+
+	qfFileName	qfFileName
+
+	IndentGuidesOdd	IndentGuidesOdd
+
+	IndentGuidesEven	IndentGuidesEven
+
+	ExtraWhitespace	ExtraWhitespace
+
+	LightlineLeft_normal_0	LightlineLeft_normal_0
+
+	LightlineLeft_normal_0_1	LightlineLeft_normal_0_1
+
+	LightlineLeft_normal_0_tabsel
+	LightlineLeft_normal_0_tabsel
+
+	LightlineLeft_normal_1	LightlineLeft_normal_1
+
+	LightlineLeft_normal_1_2	LightlineLeft_normal_1_2
+
+	LightlineLeft_normal_1_tabsel
+	LightlineLeft_normal_1_tabsel
+
+	LightlineLeft_normal_2	LightlineLeft_normal_2
+
+	LightlineLeft_normal_2_3	LightlineLeft_normal_2_3
+
+	LightlineLeft_normal_2_tabsel
+	LightlineLeft_normal_2_tabsel
+
+	LightlineLeft_normal_tabsel	LightlineLeft_normal_tabsel
+
+	LightlineLeft_normal_tabsel_0
+	LightlineLeft_normal_tabsel_0
+
+	LightlineLeft_normal_tabsel_1
+	LightlineLeft_normal_tabsel_1
+
+	LightlineLeft_normal_tabsel_2
+	LightlineLeft_normal_tabsel_2
+
+	LightlineLeft_normal_tabsel_3
+	LightlineLeft_normal_tabsel_3
+
+	LightlineLeft_normal_tabsel_tabsel
+	LightlineLeft_normal_tabsel_tabsel
+
+	LightlineRight_normal_0	LightlineRight_normal_0
+
+	LightlineRight_normal_0_1	LightlineRight_normal_0_1
+
+	LightlineRight_normal_0_tabsel
+	LightlineRight_normal_0_tabsel
+
+	LightlineRight_normal_1	LightlineRight_normal_1
+
+	LightlineRight_normal_1_2	LightlineRight_normal_1_2
+
+	LightlineRight_normal_1_tabsel
+	LightlineRight_normal_1_tabsel
+
+	LightlineRight_normal_2	LightlineRight_normal_2
+
+	LightlineRight_normal_2_3	LightlineRight_normal_2_3
+
+	LightlineRight_normal_2_tabsel
+	LightlineRight_normal_2_tabsel
+
+	LightlineRight_normal_tabsel
+	LightlineRight_normal_tabsel
+
+	LightlineRight_normal_tabsel_0
+	LightlineRight_normal_tabsel_0
+
+	LightlineRight_normal_tabsel_1
+	LightlineRight_normal_tabsel_1
+
+	LightlineRight_normal_tabsel_2
+	LightlineRight_normal_tabsel_2
+
+	LightlineRight_normal_tabsel_3
+	LightlineRight_normal_tabsel_3
+
+	LightlineRight_normal_tabsel_tabsel
+	LightlineRight_normal_tabsel_tabsel
+
+	LightlineMiddle_normal	LightlineMiddle_normal
+
+	LightlineLeft_command_0	LightlineLeft_command_0
+	LightlineLeft_active_0
+
+	LightlineLeft_command_0_1	LightlineLeft_command_0_1
+	LightlineLeft_active_0_1
+
+	LightlineLeft_command_0_tabsel
+	LightlineLeft_command_0_tabsel LightlineLeft_active_0_tabsel
+
+	LightlineLeft_command_1	LightlineLeft_command_1
+	LightlineLeft_active_1
+
+	LightlineLeft_command_1_2	LightlineLeft_command_1_2
+	LightlineLeft_active_1_2
+
+	LightlineLeft_command_1_tabsel
+	LightlineLeft_command_1_tabsel LightlineLeft_active_1_tabsel
+
+	LightlineLeft_command_2	LightlineLeft_command_2
+	LightlineLeft_active_2
+
+	LightlineLeft_command_2_3	LightlineLeft_command_2_3
+	LightlineLeft_active_2_3
+
+	LightlineLeft_command_2_tabsel
+	LightlineLeft_command_2_tabsel LightlineLeft_active_2_tabsel
+
+	LightlineLeft_command_tabsel	LightlineLeft_command_tabsel
+	LightlineLeft_active_tabsel
+
+	LightlineLeft_command_tabsel_0
+	LightlineLeft_command_tabsel_0 LightlineLeft_active_tabsel_0
+
+	LightlineLeft_command_tabsel_1
+	LightlineLeft_command_tabsel_1 LightlineLeft_active_tabsel_1
+
+	LightlineLeft_command_tabsel_2
+	LightlineLeft_command_tabsel_2 LightlineLeft_active_tabsel_2
+
+	LightlineLeft_command_tabsel_3
+	LightlineLeft_command_tabsel_3 LightlineLeft_active_tabsel_3
+
+	LightlineLeft_command_tabsel_tabsel
+	LightlineLeft_command_tabsel_tabsel
+	LightlineLeft_active_tabsel_tabsel
+
+	LightlineRight_command_0	LightlineRight_command_0
+	LightlineRight_active_0
+
+	LightlineRight_command_0_1	LightlineRight_command_0_1
+	LightlineRight_active_0_1
+
+	LightlineRight_command_0_tabsel
+	LightlineRight_command_0_tabsel LightlineRight_active_0_tabsel
+
+	LightlineRight_command_1	LightlineRight_command_1
+	LightlineRight_active_1
+
+	LightlineRight_command_1_2	LightlineRight_command_1_2
+	LightlineRight_active_1_2
+
+	LightlineRight_command_1_tabsel
+	LightlineRight_command_1_tabsel LightlineRight_active_1_tabsel
+
+	LightlineRight_command_2	LightlineRight_command_2
+	LightlineRight_active_2
+
+	LightlineRight_command_2_3	LightlineRight_command_2_3
+	LightlineRight_active_2_3
+
+	LightlineRight_command_2_tabsel
+	LightlineRight_command_2_tabsel LightlineRight_active_2_tabsel
+
+	LightlineRight_command_tabsel
+	LightlineRight_command_tabsel LightlineRight_active_tabsel
+
+	LightlineRight_command_tabsel_0
+	LightlineRight_command_tabsel_0 LightlineRight_active_tabsel_0
+
+	LightlineRight_command_tabsel_1
+	LightlineRight_command_tabsel_1 LightlineRight_active_tabsel_1
+
+	LightlineRight_command_tabsel_2
+	LightlineRight_command_tabsel_2 LightlineRight_active_tabsel_2
+
+	LightlineRight_command_tabsel_3
+	LightlineRight_command_tabsel_3 LightlineRight_active_tabsel_3
+
+	LightlineRight_command_tabsel_tabsel
+	LightlineRight_command_tabsel_tabsel
+	LightlineRight_active_tabsel_tabsel
+
+	LightlineMiddle_command	LightlineMiddle_command
+	LightlineMiddle_active
+
+	LightlineLeft_inactive_0	LightlineLeft_inactive_0
+
+	LightlineLeft_inactive_0_1	LightlineLeft_inactive_0_1
+
+	LightlineLeft_inactive_0_tabsel
+	LightlineLeft_inactive_0_tabsel
+
+	LightlineLeft_inactive_1	LightlineLeft_inactive_1
+
+	LightlineLeft_inactive_1_2	LightlineLeft_inactive_1_2
+
+	LightlineLeft_inactive_1_tabsel
+	LightlineLeft_inactive_1_tabsel
+
+	LightlineLeft_inactive_2	LightlineLeft_inactive_2
+
+	LightlineLeft_inactive_2_3	LightlineLeft_inactive_2_3
+
+	LightlineLeft_inactive_2_tabsel
+	LightlineLeft_inactive_2_tabsel
+
+	LightlineLeft_inactive_tabsel
+	LightlineLeft_inactive_tabsel
+
+	LightlineLeft_inactive_tabsel_0
+	LightlineLeft_inactive_tabsel_0
+
+	LightlineLeft_inactive_tabsel_1
+	LightlineLeft_inactive_tabsel_1
+
+	LightlineLeft_inactive_tabsel_2
+	LightlineLeft_inactive_tabsel_2
+
+	LightlineLeft_inactive_tabsel_3
+	LightlineLeft_inactive_tabsel_3
+
+	LightlineLeft_inactive_tabsel_tabsel
+	LightlineLeft_inactive_tabsel_tabsel
+
+	LightlineRight_inactive_0	LightlineRight_inactive_0
+
+	LightlineRight_inactive_0_1	LightlineRight_inactive_0_1
+
+	LightlineRight_inactive_0_tabsel
+	LightlineRight_inactive_0_tabsel
+
+	LightlineRight_inactive_tabsel
+	LightlineRight_inactive_tabsel
+
+	LightlineRight_inactive_tabsel_0
+	LightlineRight_inactive_tabsel_0
+
+	LightlineRight_inactive_tabsel_1
+	LightlineRight_inactive_tabsel_1
+
+	LightlineRight_inactive_tabsel_tabsel
+	LightlineRight_inactive_tabsel_tabsel
+
+	LightlineMiddle_inactive	LightlineMiddle_inactive
+
+	helpRainbow_lv0_o0	helpRainbow_lv0_o0
+
+	helpRainbow_lv0_p0	helpRainbow_lv0_p0
+
+	helpRainbow_lv1_o0	helpRainbow_lv1_o0
+
+	helpRainbow_lv1_p0	helpRainbow_lv1_p0
+
+	helpRainbow_lv2_o0	helpRainbow_lv2_o0
+
+	helpRainbow_lv2_p0	helpRainbow_lv2_p0
+
+	helpRainbow_lv3_o0	helpRainbow_lv3_o0
+
+	helpRainbow_lv3_p0	helpRainbow_lv3_p0
+
+	helpRainbow_lv0_o1	helpRainbow_lv0_o1
+
+	helpRainbow_lv0_p1	helpRainbow_lv0_p1
+
+	helpRainbow_lv1_o1	helpRainbow_lv1_o1
+
+	helpRainbow_lv1_p1	helpRainbow_lv1_p1
+
+	helpRainbow_lv2_o1	helpRainbow_lv2_o1
+
+	helpRainbow_lv2_p1	helpRainbow_lv2_p1
+
+	helpRainbow_lv3_o1	helpRainbow_lv3_o1
+
+	helpRainbow_lv3_p1	helpRainbow_lv3_p1
+
+	helpRainbow_lv0_o2	helpRainbow_lv0_o2
+
+	helpRainbow_lv0_p2	helpRainbow_lv0_p2
+
+	helpRainbow_lv1_o2	helpRainbow_lv1_o2
+
+	helpRainbow_lv1_p2	helpRainbow_lv1_p2
+
+	helpRainbow_lv2_o2	helpRainbow_lv2_o2
+
+	helpRainbow_lv2_p2	helpRainbow_lv2_p2
+
+	helpRainbow_lv3_o2	helpRainbow_lv3_o2
+
+	helpRainbow_lv3_p2	helpRainbow_lv3_p2
+
+	defxRainbow_lv0_o0	defxRainbow_lv0_o0
+
+	defxRainbow_lv0_p0	defxRainbow_lv0_p0
+
+	defxRainbow_lv1_o0	defxRainbow_lv1_o0
+
+	defxRainbow_lv1_p0	defxRainbow_lv1_p0
+
+	defxRainbow_lv2_o0	defxRainbow_lv2_o0
+
+	defxRainbow_lv2_p0	defxRainbow_lv2_p0
+
+	defxRainbow_lv3_o0	defxRainbow_lv3_o0
+
+	defxRainbow_lv3_p0	defxRainbow_lv3_p0
+
+	defxRainbow_lv0_o1	defxRainbow_lv0_o1
+
+	defxRainbow_lv0_p1	defxRainbow_lv0_p1
+
+	defxRainbow_lv1_o1	defxRainbow_lv1_o1
+
+	defxRainbow_lv1_p1	defxRainbow_lv1_p1
+
+	defxRainbow_lv2_o1	defxRainbow_lv2_o1
+
+	defxRainbow_lv2_p1	defxRainbow_lv2_p1
+
+	defxRainbow_lv3_o1	defxRainbow_lv3_o1
+
+	defxRainbow_lv3_p1	defxRainbow_lv3_p1
+
+	defxRainbow_lv0_o2	defxRainbow_lv0_o2
+
+	defxRainbow_lv0_p2	defxRainbow_lv0_p2
+
+	defxRainbow_lv1_o2	defxRainbow_lv1_o2
+
+	defxRainbow_lv1_p2	defxRainbow_lv1_p2
+
+	defxRainbow_lv2_o2	defxRainbow_lv2_o2
+
+	defxRainbow_lv2_p2	defxRainbow_lv2_p2
+
+	defxRainbow_lv3_o2	defxRainbow_lv3_o2
+
+	defxRainbow_lv3_p2	defxRainbow_lv3_p2
+
+	netrwRainbow_lv0_o0	netrwRainbow_lv0_o0
+
+	netrwRainbow_lv0_p0	netrwRainbow_lv0_p0
+
+	netrwRainbow_lv1_o0	netrwRainbow_lv1_o0
+
+	netrwRainbow_lv1_p0	netrwRainbow_lv1_p0
+
+	netrwRainbow_lv2_o0	netrwRainbow_lv2_o0
+
+	netrwRainbow_lv2_p0	netrwRainbow_lv2_p0
+
+	netrwRainbow_lv3_o0	netrwRainbow_lv3_o0
+
+	netrwRainbow_lv3_p0	netrwRainbow_lv3_p0
+
+	netrwRainbow_lv0_o1	netrwRainbow_lv0_o1
+
+	netrwRainbow_lv0_p1	netrwRainbow_lv0_p1
+
+	netrwRainbow_lv1_o1	netrwRainbow_lv1_o1
+
+	netrwRainbow_lv1_p1	netrwRainbow_lv1_p1
+
+	netrwRainbow_lv2_o1	netrwRainbow_lv2_o1
+
+	netrwRainbow_lv2_p1	netrwRainbow_lv2_p1
+
+	netrwRainbow_lv3_o1	netrwRainbow_lv3_o1
+
+	netrwRainbow_lv3_p1	netrwRainbow_lv3_p1
+
+	netrwRainbow_lv0_o2	netrwRainbow_lv0_o2
+
+	netrwRainbow_lv0_p2	netrwRainbow_lv0_p2
+
+	netrwRainbow_lv1_o2	netrwRainbow_lv1_o2
+
+	netrwRainbow_lv1_p2	netrwRainbow_lv1_p2
+
+	netrwRainbow_lv2_o2	netrwRainbow_lv2_o2
+
+	netrwRainbow_lv2_p2	netrwRainbow_lv2_p2
+
+	netrwRainbow_lv3_o2	netrwRainbow_lv3_o2
+
+	netrwRainbow_lv3_p2	netrwRainbow_lv3_p2
+
+	vimRainbow_lv0_o0	vimRainbow_lv0_o0
+
+	vimRainbow_lv0_p0	vimRainbow_lv0_p0
+
+	vimRainbow_lv1_o0	vimRainbow_lv1_o0
+
+	vimRainbow_lv1_p0	vimRainbow_lv1_p0
+
+	vimRainbow_lv2_o0	vimRainbow_lv2_o0
+
+	vimRainbow_lv2_p0	vimRainbow_lv2_p0
+
+	vimRainbow_lv3_o0	vimRainbow_lv3_o0
+
+	vimRainbow_lv3_p0	vimRainbow_lv3_p0
+
+	vimRainbow_lv0_o1	vimRainbow_lv0_o1
+
+	vimRainbow_lv0_p1	vimRainbow_lv0_p1
+
+	vimRainbow_lv1_o1	vimRainbow_lv1_o1
+
+	vimRainbow_lv1_p1	vimRainbow_lv1_p1
+
+	vimRainbow_lv2_o1	vimRainbow_lv2_o1
+
+	vimRainbow_lv2_p1	vimRainbow_lv2_p1
+
+	vimRainbow_lv3_o1	vimRainbow_lv3_o1
+
+	vimRainbow_lv3_p1	vimRainbow_lv3_p1
+
+	vimRainbow_lv0_o2	vimRainbow_lv0_o2
+
+	vimRainbow_lv0_p2	vimRainbow_lv0_p2
+
+	vimRainbow_lv1_o2	vimRainbow_lv1_o2
+
+	vimRainbow_lv1_p2	vimRainbow_lv1_p2
+
+	vimRainbow_lv2_o2	vimRainbow_lv2_o2
+
+	vimRainbow_lv2_p2	vimRainbow_lv2_p2
+
+	vimRainbow_lv3_o2	vimRainbow_lv3_o2
+
+	vimRainbow_lv3_p2	vimRainbow_lv3_p2
+
+	LightlineLeft_visual_0	LightlineLeft_visual_0
+
+	LightlineLeft_visual_0_1	LightlineLeft_visual_0_1
+
+	LightlineLeft_visual_0_tabsel
+	LightlineLeft_visual_0_tabsel
+
+	LightlineLeft_visual_1	LightlineLeft_visual_1
+
+	LightlineLeft_visual_1_2	LightlineLeft_visual_1_2
+
+	LightlineLeft_visual_1_tabsel
+	LightlineLeft_visual_1_tabsel
+
+	LightlineLeft_visual_2	LightlineLeft_visual_2
+
+	LightlineLeft_visual_2_3	LightlineLeft_visual_2_3
+
+	LightlineLeft_visual_2_tabsel
+	LightlineLeft_visual_2_tabsel
+
+	LightlineLeft_visual_tabsel	LightlineLeft_visual_tabsel
+
+	LightlineLeft_visual_tabsel_0
+	LightlineLeft_visual_tabsel_0
+
+	LightlineLeft_visual_tabsel_1
+	LightlineLeft_visual_tabsel_1
+
+	LightlineLeft_visual_tabsel_2
+	LightlineLeft_visual_tabsel_2
+
+	LightlineLeft_visual_tabsel_3
+	LightlineLeft_visual_tabsel_3
+
+	LightlineLeft_visual_tabsel_tabsel
+	LightlineLeft_visual_tabsel_tabsel
+
+	LightlineRight_visual_0	LightlineRight_visual_0
+
+	LightlineRight_visual_0_1	LightlineRight_visual_0_1
+
+	LightlineRight_visual_0_tabsel
+	LightlineRight_visual_0_tabsel
+
+	LightlineRight_visual_1	LightlineRight_visual_1
+
+	LightlineRight_visual_1_2	LightlineRight_visual_1_2
+
+	LightlineRight_visual_1_tabsel
+	LightlineRight_visual_1_tabsel
+
+	LightlineRight_visual_2	LightlineRight_visual_2
+
+	LightlineRight_visual_2_3	LightlineRight_visual_2_3
+
+	LightlineRight_visual_2_tabsel
+	LightlineRight_visual_2_tabsel
+
+	LightlineRight_visual_tabsel
+	LightlineRight_visual_tabsel
+
+	LightlineRight_visual_tabsel_0
+	LightlineRight_visual_tabsel_0
+
+	LightlineRight_visual_tabsel_1
+	LightlineRight_visual_tabsel_1
+
+	LightlineRight_visual_tabsel_2
+	LightlineRight_visual_tabsel_2
+
+	LightlineRight_visual_tabsel_3
+	LightlineRight_visual_tabsel_3
+
+	LightlineRight_visual_tabsel_tabsel
+	LightlineRight_visual_tabsel_tabsel
+LightlineMiddle_visual	LightlineMiddle_visual

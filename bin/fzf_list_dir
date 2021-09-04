@@ -1,13 +1,7 @@
 #!/bin/bash
-PROMPT="$(basename $0)"
-FIND_TARGET
-for i in "$@"
-do
-  case "$i" in
-    --PROMPT=* ) PROMPT=${PROMPT}:$(echo "$i"| sed -e "s/^--PROMPT=//") ;;
-    * ) FIND_TARGET="$i" ;;
-  esac
-done
+_FZF_PROMPT="$(basename $0)"
+FIND_TARGET=$1
+READABLE_PATH=$(realpath ${FIND_TARGET/'~'/${HOME}}| sed -e "s#${HOME}#~#")
 
 # フォルダの選択I/Fを表示する。
 # プレビュー：そのフォルダ内のファイル一覧。
@@ -17,7 +11,7 @@ find -s -E ${FIND_TARGET/'~'/${HOME}} -not -regex '.*(\.DS_Store|/*.git/).*' -an
   | sed -e 's#\/\/*#\/#g' \
   | sed -e "s#^${HOME}#~#" \
   | fzf +m \
-  --prompt="${PROMPT} > " \
+  --prompt="${_FZF_PROMPT} (dir=${READABLE_PATH})> " \
   --preview 'echo -n $(cd $(echo {}| sed -e "s#^~#${HOME}#"); pwd); echo '/'; echo; ls -UlaFG $(echo {}| sed -e "s#^~#${HOME}#")' \
   --preview-window=right:60%:wrap || echo $FIND_TARGET
 

@@ -3,11 +3,13 @@
 # git grepの検索結果を選択I/Fを表示する。
 # さらに、選択したファイルをvimで開く
 # fzfのプレビューは、基本的に検索ヒットした行の5行前から表示する(decide_from)。
+
+_FZF_PROMPT="$(basename $0)"
 [ -z "$1" ] && echo 'Argument required' && return 0
-result=$(git grep --line-number $1 \
+result=$(git grep --line-number ${1:-.} \
   | perl -pe 's/(^.*):(\d+):(.*)$/\1 \2 \3/' \
   | fzf -m \
-    --prompt="fzf_git_grep_then_vim(\"$1\")> " \
+    --prompt="${_FZF_PROMPT} (keyword=$1)> " \
     --bind "enter:execute(nvim {1} +{2} < /dev/tty > /dev/tty)" \
     --preview '
       decide_range_from() { echo $(( $1 - 5 > 0 ? $1 - 5 : 1)) };

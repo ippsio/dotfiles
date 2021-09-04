@@ -1,5 +1,4 @@
 #!/usr/bin/env zsh
-START_TIME=$(epoc_ms)
 # ----------------------------------
 # export environmental variables.
 # ----------------------------------
@@ -48,9 +47,11 @@ export LC_ALL=
 # Copy ~/dotfiles/bin/* into /usr/local/bin/*
 #  (For example, tmux status bar uses it)
 # --------------------------------------------
-printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
-[ ! -d /usr/local/bin ] && sudo mkdir /usr/local/bin
-sh ~/dotfiles/zsh/oneway_sync ~/dotfiles/prepare/usr/local/bin/ /usr/local/bin/ "sudo"
+# start=$(epoc_ms);
+# printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
+# [ ! -d /usr/local/bin ] && sudo mkdir /usr/local/bin
+# sh ~/dotfiles/zsh/oneway_sync ~/dotfiles/prepare/usr/local/bin/ /usr/local/bin/ "sudo"
+# printf "[Copy ~/dotfiles/bin/* into /usr/local/bin/*] %s %dms, "$(( $(epoc_ms) - $start ))
 
 # ----------------------------------
 # Install software if not installed.
@@ -88,11 +89,10 @@ echo
 # -----------------------------------------------------
 # Generate link fot real file, directory in this repo.
 # -----------------------------------------------------
+start=$(epoc_ms);
 function generate_symlink_f() { [ ! -f $1 ] && ln -s $2 $1 && echo "Symlink generated ($1<-$2)" ; }
 function generate_symlink_d() { [ ! -d $1 ] && ln -s $2 $1 && echo "Symlink generated ($1<-$2)" ; }
-
 generate_symlink_d ~/.config/nvim ~/dotfiles/.config/nvim
-
 generate_symlink_f ~/.gitattributes_global ~/dotfiles/.gitattributes_global
 generate_symlink_f ~/.gitconfig ~/dotfiles/.gitconfig
 generate_symlink_f ~/.gitignore_global ~/dotfiles/.gitignore_global
@@ -100,6 +100,7 @@ generate_symlink_f ~/.pryrc ~/dotfiles/.pryrc
 generate_symlink_f ~/.tigrc ~/dotfiles/.tigrc
 generate_symlink_f ~/.tmux.conf ~/dotfiles/.tmux.conf
 generate_symlink_f ~/.zshrc ~/dotfiles/.zshrc
+printf "[Generate link fot real file, directory in this repo.] %s %dms, "$(( $(epoc_ms) - $start ))
 
 # その他、karabiner等の設定
 [ ! -d ~/setting_box ] && git clone https://github.com/ippsio/setting_box.git ~/setting_box

@@ -5,7 +5,7 @@ AUTHZ_TOKEN=$(cat ~/.config/hub| grep "oauth_token:"| awk '{ print $2 }')
 REPO=repo:$(git remote get-url origin 2> /dev/null| egrep -o "([a-zA-Z0-9+-]+)\/([a-zA-Z0-9+-]+)")
 TYPE=type:pr
 IS=is:open
-BRANCH=head:feature/inu_2nd_gen
+BRANCH=head:feature/upgrade-rails6
 
 Q="${REPO} ${TYPE} ${IS} ${BRANCH} $@"
 # 基本的にはURLエンコードする。
