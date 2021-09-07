@@ -1,57 +1,23 @@
 #!/usr/local/env zsh
-# ----------------------------------
-# Install software if not installed.
-# ----------------------------------
 type_or_inst() {
-  st=$(epoc_ms)
-  if ( type "$1" > /dev/null 2>&1 ); then
-    echo -n "$1 ok."
-  else
-    brew install ${2:-$1};
-    echo -n "$1 not found so tried to install."
-  fi
-  echo "($(( $(epoc_ms) - $st ))ms)."
+  ( type "$1" > /dev/null 2>&1 ) && echo -n "($1 ok) " && return 0
+  brew install ${2:-$1} && echo "$1 not found so tried to install."; return 1
 }
 nodir_then_gitclone() {
-  st=$(epoc_ms)
-  if [ -d $1 ]; then
-    echo -n "$2 ok."
-  else
-    git clone https://github.com/$2 $1
-    echo -n "$2 not found so tried to git clone."
-  fi
-  echo "($(( $(epoc_ms) - $st ))ms)."
+  [ -d $1 ] && echo -n "($2 ok) " && return 0
+  git clone https://github.com/$2 $1; echo "$2 not found so tried to git clone."; return 1
 }
 chk_pynvim_or_install() {
-  st=$(epoc_ms)
-  if $(echo 'import pynvim'| python3 > /dev/null 2>&1); then
-    echo -n "pynvim ok."
-  else
-    python3 -m pip install pynvim --user
-    echo -n "pynvim not found so tried to install."
-  fi
-  echo "($(( $(epoc_ms) - $st ))ms)."
+  $(echo 'import pynvim'| python3 > /dev/null 2>&1) && echo -n "(pynvim ok) " && return 0
+  python3 -m pip install pynvim --user; echo "pynvim not found so tried to install."; return 1
 }
-
 chkfile_or_flink() {
-  st=$(epoc_ms)
-  if [ -L $1 ]; then
-    echo -n "$1 ok."
-  else
-    ln -s $2 $1
-    echo -n "$1 not found so tried to link! ($1<-$2)"
-  fi
-  echo "($(( $(epoc_ms) - $st ))ms)."
+  [ -L $1 ] && echo -n "(${1//${HOME}/~} ok) " && return 0
+  ln -s $2 $1; echo "$1 not found so tried to link! ($1<-$2)"; return 1
 }
 chkfile_or_dlink() {
-  st=$(epoc_ms)
-  if [ -d $1 ]; then
-    echo -n "$1 ok."
-  else
-    ln -s $2 $1
-    echo -n "$1 not found so tried to link! ($1<-$2)"
-  fi
-  echo "($(( $(epoc_ms) - $st ))ms)."
+  [ -d $1 ] && echo -n "(${1//${HOME}/~} ok) " && return 0
+  ln -s $2 $1; echo "$1 not found so tried to link! ($1<-$2)"; return 1
 }
 
 type_or_inst xz

@@ -55,4 +55,4 @@ zplug check || zplug install
 zplug load #--verbose
 
 TIME=$(expr $(epoc_ms) - $START)
-echo ".zshrc load finished (${TIME}ms)."
+echo "\n.zshrc load finished (${TIME}ms)."
