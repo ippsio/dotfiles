@@ -1,5 +1,29 @@
+# [[plugins]]
+# repo = 'uplus/deoplete-solargraph'
+
 [[plugins]]
-repo = 'uplus/deoplete-solargraph'
+repo = 'autozimu/LanguageClient-neovim'
+branch = 'next'
+build = 'bash install.sh'
+hook_add = '''
+set hidden
+
+let g:LanguageClient_serverCommands = {
+    \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
+    \ 'javascript': ['/usr/local/bin/javascript-typescript-stdio'],
+    \ 'javascript.jsx': ['tcp://127.0.0.1:2089'],
+    \ 'python': ['/usr/local/bin/pyls'],
+    \ '#ruby': ['~/.rbenv/shims/solargraph', 'stdio'],
+    \ }
+
+nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
+nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
+nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
+'''
+
+# [[plugins]]
+# repo = 'fishbullet/deoplete-ruby'
+# on_ft = ['ruby']
 
 [[plugins]]
 repo = 'Shougo/echodoc.vim'
@@ -41,6 +65,8 @@ hook_add = '''
 
   let g:deoplete#enable_ignore_case = 1
 
+  inoremap <expr><C-j> pumvisible() ? "\<C-n>" : "\<C-j>"
+  inoremap <expr><C-k> pumvisible() ? "\<C-p>" : "\<C-k>"
   inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
   inoremap <expr><C-g>   deoplete#undo_completion()
 
@@ -63,16 +89,17 @@ hook_add = '''
   call deoplete#custom#option({
   \ 'auto_complete_delay': 5,
   \ 'smart_case': v:true,
-  \ '#auto_complete': v:false,
+  \ 'auto_complete': v:true,
   \ 'on_insert_enter': v:false,
   \ 'on_text_changed_i': v:true,
+  \ 'num_processes': 2,
   \ })
 '''
 
 [[plugins]]
 repo = 'Shougo/neosnippet.vim'
 hook_add = '''
-imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+"imap <C-k>     <Plug>(neosnippet_expand_or_jump)
 smap <C-k>     <Plug>(neosnippet_expand_or_jump)
 xmap <C-k>     <Plug>(neosnippet_expand_target)
 imap <expr><TAB> neosnippet#expandable_or_jumpable() ?

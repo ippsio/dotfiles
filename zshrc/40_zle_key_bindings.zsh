@@ -2,12 +2,12 @@
 bindkey -e
 
 # スペースキー補完
-source ~/dotfiles/zsh/21_space_triggered.zsh
+source ~/dotfiles/zshrc/41_space_triggered.zsh
 zle -N triggered_by_space
 bindkey " " triggered_by_space
 
 # TAB(=CTRL+I)キー補完
-source ~/dotfiles/zsh/22_tab_triggered.zsh
+source ~/dotfiles/zshrc/42_tab_triggered.zsh
 zle -N triggered_by_tab
 bindkey "^I" triggered_by_tab
 

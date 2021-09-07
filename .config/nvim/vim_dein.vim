@@ -9,6 +9,11 @@ augroup MyAutoCmd
   autocmd!
 augroup END
 
+" toml上、deinのプラグイン定義を削除したのに実際のプラグインが消えてないよ、って場合、
+" call dein#recache_runtimepath() を実行するとキャッシュが削除される。
+" キャッシュを削除した後はvimを再起動しましょう。
+" call dein#recache_runtimepath()
+
 " Add the dein installation directory into runtimepath
 set runtimepath+=~/.cache/dein/repos/github.com/Shougo/dein.vim
 
@@ -17,6 +22,8 @@ if dein#load_state('~/.cache/dein')
   call dein#add('~/.cache/dein/repos/github.com/Shougo/dein.vim')
   " お試し中
   call dein#load_toml('~/.config/nvim/toml/0_tasting_now.toml', {'lazy': 0})
+  call dein#load_toml('~/.config/nvim/toml/1_tasting_now.toml', {'lazy': 1})
+
   " lazy0: どんなfiletypeでも動く
   call dein#load_toml('~/.config/nvim/toml/0_fzf.toml', {'lazy': 0})
   call dein#load_toml('~/.config/nvim/toml/0_jump.toml', {'lazy': 0})

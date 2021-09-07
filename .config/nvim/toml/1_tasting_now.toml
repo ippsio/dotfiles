@@ -1,0 +1,14 @@
+[[plugins]]
+repo ='carlitux/deoplete-ternjs'
+hook_post_update = '''
+  call system ('npm install -g tern')
+'''
+hook_add = '''
+let g:deoplete#sources#ternjs#filetypes = [
+    \ 'jsx',
+    \ 'javascript.jsx',
+    \ 'vue',
+    \ ]
+'''
+on_ft = ['javascript']
+

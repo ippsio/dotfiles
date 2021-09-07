@@ -34,7 +34,8 @@ _mergebase() {
       # gitのリポジトリ名を取得。
       local REPO=$(git remote get-url origin 2> /dev/null| egrep -o "([a-zA-Z0-9+-]+)\/([a-zA-Z0-9+-]+)")
       # 現在のブランチを検索条件に、PR番号を取得。
-      PR_NO=$(curl -X GET -s -H "Authorization: token ${AUTHZ_TOKEN}" "https://api.github.com/search/issues?q=type:pr%20repo:${REPO}%20head:${CURRENT_BRANCH}"| jq -r '.items[] | .number')
+      # is:open, type:pr, repo: 現在のリポジトリ, head: 現在のブランチ
+      PR_NO=$(curl -X GET -s -H "Authorization: token ${AUTHZ_TOKEN}" "https://api.github.com/search/issues?q=is:open%20type:pr%20repo:${REPO}%20head:${CURRENT_BRANCH}"| jq -r '.items[] | .number')
       if [[ ! -z "${PR_NO}" ]]; then
         # PRの情報を取得し、現在のブランチとマージ先ブランチを取得。
         PR_INFO=$(curl -s -H "Authorization: token ${AUTHZ_TOKEN}" "https://api.github.com/repos/${REPO}/pulls/${PR_NO}"| jq -r '.head.ref, .base.ref')
@@ -49,7 +50,7 @@ _mergebase() {
         fi
       else
         merge_base_branch=$(git_branch_fzf)
-        decision_source="HANDr3"
+        decision_source="HAND3"
       fi
     fi
   fi

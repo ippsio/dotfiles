@@ -1,9 +1,7 @@
 #!/bin/bash
 # do per 5 sec.
 #[[ ! "$(( $(date +'%s') % 5 ))" -eq "0" ]] && exit 0
-
-is_charging() {
-  if type "pmset" &>/dev/null; then
+is_charging() { if type "pmset" &>/dev/null; then
     pmset -g ps | grep -E "Battery Power|charged" >/dev/null 2>&1
     [ $? -eq 0  ] && return 1 || return 0
   elif type "ioreg" &>/dev/null; then
@@ -56,7 +54,7 @@ get_str_tmux_battery() {
   local mark="="
   local bold=""
   if is_charging; then
-    [[ "$(( $(date +'%s') % 2 ))" -eq "0" ]] && mark=" " || mark="+"
+    [[ "$(expr $(date +'%S') % 2 )" -eq "0" ]] && mark=" " || mark="+"
     bold=",bold"
   fi
 
@@ -66,7 +64,13 @@ get_str_tmux_battery() {
   [[ "${color_def}" == "" ]] && [[ "${bat_percentage%%%*}" -ge "40" ]] && color_def="bg=colour96"
   [[ "${color_def}" == "" ]] && [[ "${bat_percentage%%%*}" -ge "20" ]] && color_def="bg=colour89"
   [[ "${color_def}" == "" ]]                                           && color_def="bg=colour160"
-  echo -e "#[${color_def}${bold}]${prefix}${mark}${bat_percentage}(${bat_remain})#[default]"
+  # echo -e "#[${color_def}${bold}]${prefix}${mark}${bat_percentage}(${bat_remain})#[default]"
+
+  if [[ "$(expr $(date +'%S') % 4 )" -lt 2 ]]; then
+    printf "#[${color_def}${bold}]%8s#[default]" "${prefix}${mark}${bat_percentage}"
+  else
+    printf "#[${color_def}${bold}]%8s#[default]" "(${bat_remain})"
+  fi
 }
 
 get_str_tmux_battery

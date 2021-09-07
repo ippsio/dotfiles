@@ -16,7 +16,7 @@
 [[plugins]]
 repo = 'Shougo/defx.nvim'
 hook_add='''
-nnoremap <silent>sf :<C-u>Defx -listed -resume
+nnoremap <silent>sf :<C-u>Defx -listed -resume -show-ignored-files
       \ -columns=indent:mark:icon:icons:filename:git:size
       \ -buffer-name=tab`tabpagenr()`
       \ `expand('%:p:h')` -search=`expand('%:p')`<CR>

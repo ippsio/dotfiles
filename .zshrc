@@ -1,3 +1,5 @@
+epoc_ms() { perl -MTime::HiRes -e 'printf("%.0f\n",Time::HiRes::time()*1000)'; }
+START=$(epoc_ms)
 # zsh起動時にtmux起動
 if (type "tmux" > /dev/null 2>&1) ; then
   if [[ -z "$TMUX" && ! -z "$PS1" ]]; then
@@ -8,75 +10,49 @@ if (type "tmux" > /dev/null 2>&1) ; then
   fi
 fi
 
-epoc_ms() { perl -MTime::HiRes -e 'printf("%.0f\n",Time::HiRes::time()*1000)'; }
-
-# CTRL-D でログアウトしないようにする
-setopt ignore_eof
-
-# cdコマンド補完時に鳴るBeep音を消す。
-# unsetopt BEEP # Turn off all beeps
-unsetopt LIST_BEEP # Turn off autocomplete beeps
-
-# ------------------
-# preparing section
-# ------------------
-# prepare essential utility/middle/environmental softwares.
-START=$(epoc_ms)
-source ~/dotfiles/prepare.zsh
-### pyenv/rbenv/direnv/nodenv/goenv
-eval "$(pyenv init --path)"
-eval "$(rbenv init -)"
-eval "$(direnv hook zsh)"
-eval "$(nodenv init -)"
-eval "$(goenv init -)"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-echo "preparing section end in $(( $(epoc_ms) - $START ))ms."
-
-# -------------------------------
-# Authentic zsh settings section
-# -------------------------------
-START=$(epoc_ms)
-source ~/dotfiles/zsh/00_alias.zsh
-source ~/dotfiles/zsh/10_prompt.zsh
-source ~/dotfiles/zsh/20_bindkeys.zsh
-source ~/dotfiles/zsh/30_man.zsh
-# custom functions
-#for file in $(ls ~/dotfiles/zsh/custom_functions/*.zsh); { source $file }
-# custom completion
-# for file in $(ls ~/dotfiles/zsh/custom_completions/*.zsh); { source $file }
+# source
+source ~/dotfiles/zshrc/00_export.zsh
+source ~/dotfiles/zshrc/10_prepare.zsh
+source ~/dotfiles/zshrc/20_alias.zsh
+source ~/dotfiles/zshrc/30_prompt.zsh
+source ~/dotfiles/zshrc/40_zle_key_bindings.zsh
+source ~/dotfiles/zshrc/50_existing_command_hacking.zsh
 
 # history
 HISTFILE=~/.zsh_history
 HISTSIZE=10000 # メモリに保存される履歴の件数
 SAVEHIST=10000 # 履歴ファイルに保存される履歴の件数
+
+# setopts/ unsetopts
 setopt hist_ignore_dups # 直前と同じコマンドをヒストリに追加しない
-setopt hist_ignore_all_dups # 重複するコマンドは古い法を削除する
+setopt hist_ignore_all_dups # 重複するコマンドは古い方を削除する
 setopt share_history # 異なるウィンドウでコマンドヒストリを共有する
 setopt hist_no_store # historyコマンドは履歴に登録しない
 setopt hist_reduce_blanks # 余分な空白は詰めて記録
 setopt hist_verify # `!!`を実行したときにいきなり実行せずコマンドを見せる
-echo "Authentic zsh section end in $(( $(epoc_ms) - $START ))ms."
+setopt ignore_eof # CTRL-D でログアウトしないようにする
+unsetopt LIST_BEEP # Turn off autocomplete beeps
 
-# ------------------
+### eval **env
+eval "$(pyenv init --path)"
+eval "$(rbenv init -)"
+eval "$(direnv hook zsh)"
+eval "$(nodenv init -)"
+eval "$(goenv init -)"
+
 # zplug
-# ------------------
-START=$(epoc_ms)
 source ${ZPLUG_HOME}/init.zsh
-# zplug 'zsh-users/zsh-autosuggestions'
 zplug "zsh-users/zsh-autosuggestions", hook-load: "ZSH_AUTOSUGGEST_CLEAR_WIDGETS=(my_space_extraction my_tab_completion end-of-line $ZSH_AUTOSUGGEST_CLEAR_WIDGETS)"
 zplug 'zsh-users/zsh-completions'
 zplug "mollifier/anyframe"
 zplug "zsh-users/zsh-history-substring-search", hook-build:"__zsh_version 4.3"
 zplug "junegunn/fzf-bin", as:command, from:gh-r, rename-to:fzf
-#zplug "junegunn/fzf", as:command, use:bin/fzf-tmux
 zplug "junegunn/fzf", use:shell/key-bindings.zsh
 zplug "junegunn/fzf", use:shell/completion.zsh
 zplug "zsh-users/zsh-syntax-highlighting", defer:2
-
-# 標準のファイル名、ディレクトリ名補完にfzfをつかってくれるようになる
-zplug "Aloxaf/fzf-tab"
-
+#zplug "Aloxaf/fzf-tab" # 標準のファイル名、ディレクトリ名補完にfzfをつかってくれるようになる
 zplug check || zplug install
 zplug load #--verbose
-echo "zplug section end in $(( $(epoc_ms) - $START ))ms."
+
+TIME=$(expr $(epoc_ms) - $START)
+echo ".zshrc load finished (${TIME}ms)."

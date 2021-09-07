@@ -32,7 +32,7 @@ hook_add = '''
   command! -bang -nargs=* BLinesWithPreview
     \ call fzf#vim#grep(
     \   'rg --with-filename --line-number --no-heading --smart-case . '.fnameescape(expand('%:p')), 1,
-    \   fzf#vim#with_preview({'options': '--layout reverse --query '.shellescape(<q-args>).' --with-nth=2.. --delimiter=":"'}, 'down:50%'))
+    \   fzf#vim#with_preview({'options': '--layout reverse --query '.shellescape(<q-args>).' --with-nth=2.. --nth=2.. --delimiter=":"'}, 'down:50%'))
 
   " ファイル名の一覧をfzfで絞り込む
   nnoremap <C-p> :FzfFiles<CR>

@@ -3,7 +3,9 @@
 _ME=$( [ -L $0 ] && basename $(readlink $0) || basename $0)
 _FZF_PROMPT="${_ME} > "
 
-project=$(ghq list | fzf --prompt="${_FZF_PROMPT}")
-[[ -z $project ]] && exit 1
-cd $(ghq root)/${project} && file=$(fzf_list_file .) && [ ! -z $file ] && nvim ${file} || exit 1
+while true; do
+  project=$(ghq list | fzf --prompt="${_FZF_PROMPT}")
+  [[ -z $project ]] && break
+  cd $(ghq root)/${project} && file=$(fzf_list_file .) && [ ! -z $file ] && nvim "${file}"
+done
 
