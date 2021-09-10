@@ -25,6 +25,6 @@ cd ${EXEC_DIR} && \
     --bind "enter:execute(nvim {1} +{2} < /dev/tty > /dev/tty)" \
     --preview '
       decide_range_from() { echo $(( $1 - 5 > 0 ? $1 - 5 : 1)) };
-      bat --color=always --style=numbers,header,grid \
+      bat --color=always --style=numbers,header \
         --line-range $(decide_range_from {2}): \
         --highlight-line {2} {1}'

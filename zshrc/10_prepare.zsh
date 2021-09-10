@@ -5,7 +5,7 @@ type_or_inst() {
 }
 nodir_then_gitclone() {
   [ -d $1 ] && echo -n "($2 ok) " && return 0
-  git clone https://github.com/$2 $1; echo "$2 not found so tried to git clone."; return 1
+  git clone https://github.com/$2 ${3:-$1}; echo "$2 not found so tried to git clone."; return 1
 }
 chk_pynvim_or_install() {
   $(echo 'import pynvim'| python3 > /dev/null 2>&1) && echo -n "(pynvim ok) " && return 0
@@ -22,7 +22,7 @@ chkfile_or_dlink() {
 
 type_or_inst xz
 type_or_inst nvim neovim
-type_or_inst zsh # expect v5.8~
+type_or_inst zsh
 type_or_inst tmux
 type_or_inst direnv
 type_or_inst rg
@@ -40,14 +40,14 @@ nodir_then_gitclone "${NODENV_ROOT}" "nodenv/nodenv.git"
 nodir_then_gitclone "${NODENV_ROOT}/plugins/node-build" "nodenv/node-build.git"
 nodir_then_gitclone "${TMUX_PLUGINS}/tpm" "tmux-plugins/tpm"
 nodir_then_gitclone "${ZPLUG_HOME}" "zplug/zplug"
+nodir_then_gitclone "${ZINIT_ROOT}" "zdharma/zinit.git" "${ZINIT_ROOT}/bin"
 nodir_then_gitclone "${HOME}/setting_box" "ippsio/setting_box.git"
 
 chk_pynvim_or_install
 
-# -----------------------------------------------------
-# Generate link fot real file, directory in this repo.
-# -----------------------------------------------------
+# check link.
 chkfile_or_dlink ~/.config/nvim          ~/dotfiles/.config/nvim
+chkfile_or_dlink ~/.config/bat           ~/dotfiles/.config/bat
 chkfile_or_dlink ~/.config/karabiner     ~/setting_box/karabiner
 
 chkfile_or_flink ~/.gitattributes_global ~/dotfiles/.gitattributes_global

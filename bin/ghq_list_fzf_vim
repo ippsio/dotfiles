@@ -2,9 +2,10 @@
 
 _ME=$( [ -L $0 ] && basename $(readlink $0) || basename $0)
 _FZF_PROMPT="${_ME} > "
+_FZF_HEADER="[ENTER: open ghq repository]"
 
 while true; do
-  project=$(ghq list | fzf --prompt="${_FZF_PROMPT}")
+  project=$(ghq list | fzf --prompt="${_FZF_PROMPT}" --header="${_FZF_HEADER}")
   [[ -z $project ]] && break
   cd $(ghq root)/${project} && file=$(fzf_list_file .) && [ ! -z $file ] && nvim "${file}"
 done

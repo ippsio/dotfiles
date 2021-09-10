@@ -1,18 +1,12 @@
 #!/usr/bin/env zsh
-# zprof
-zmodload zsh/zprof && zprof
+# zmodload zsh/zprof && zprof #zprof 見たい時はコメントアウト外す。
+
+# zsh起動時にtmux起動
+(type "tmux" > /dev/null 2>&1) && [[ -z "$TMUX" && ! -z "$PS1" ]] \
+  && for i in {0..128}; do [[ -z $(tmux ls -f "#{==:#{session_name},${i}}") ]] && tmux new-session -s ${i} && echo "bye." && sleep 1 && exit; done
 
 epoc_ms() { perl -MTime::HiRes -e 'printf("%.0f\n",Time::HiRes::time()*1000)'; }
 START=$(epoc_ms)
-# zsh起動時にtmux起動
-if (type "tmux" > /dev/null 2>&1) ; then
-  if [[ -z "$TMUX" && ! -z "$PS1" ]]; then
-    for i in {0..128}; do
-      [[ -z $(tmux ls -f "#{==:#{session_name},${i}}") ]] \
-        && tmux new-session -s ${i} && echo "bye." && sleep 1 && exit
-    done
-  fi
-fi
 
 # history
 HISTFILE=~/.zsh_history
@@ -44,9 +38,10 @@ eval "$(direnv hook zsh)"
 eval "$(nodenv init -)"
 eval "$(goenv init -)"
 
-# zplug
-time source ~/dotfiles/zshrc/60_zplug.zsh
+# zsh-plugin
+source ~/dotfiles/zshrc/60_zsh_plugin_manage.zsh
 
-TIME=$(expr $(epoc_ms) - $START)
-echo "\n.zshrc load finished (${TIME}ms)."
-(which zprof > /dev/null) && zprof | vim
+# profiling
+( type "zprof" > /dev/null 2>&1 ) && zprof| less # zprof
+printf "\n.zshrc load finished (%dms).\n" $(expr $(epoc_ms) - $START)
+

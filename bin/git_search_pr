@@ -1,0 +1,13 @@
+#!/bin/bash
+
+branch_name=$1
+AUTHZ_TOKEN=$(cat ~/.config/hub| grep "oauth_token:"| awk '{ print $2 }')
+REPO=$(git_reponame_get)
+
+# 現在のブランチを検索条件に、PR番号を取得。
+# is:open, type:pr, repo: 現在のリポジトリ, head: 現在のブランチ
+HTTP_HEADER="Authorization: token ${AUTHZ_TOKEN}"
+HTTP_URL="https://api.github.com/search/issues?q=is:open%20type:pr%20repo:${REPO}%20head:${branch_name}"
+HTTP_RES=$(curl -X GET -s -H "${HTTP_HEADER}" "${HTTP_URL}")
+echo "${HTTP_RES}"
+

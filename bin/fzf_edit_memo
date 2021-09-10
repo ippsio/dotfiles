@@ -17,7 +17,7 @@ function exec_find() {
       --bind k:up \
       --bind j:down \
       --bind 'enter:execute(f=$(echo {}| sed -e "s#^~#${HOME}#"); nvim -c 5 $f < /dev/tty > /dev/tty)' \
-      --preview='f=$(echo {}| sed -e "s#^~#${HOME}#"); bat $f --color=always'
+      --preview='f=$(echo {}| sed -e "s#^~#${HOME}#"); bat $f --color=always --style=numbers'
 }
 
 while true;

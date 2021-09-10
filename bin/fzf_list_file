@@ -1,19 +1,20 @@
 #!/bin/bash
 # ファイルの選択I/Fをする。
 # プレビュー：ファイル内の内容。
-_FZF_PROMPT="$(basename $0)"
-_FZF_HEADER="?: Toggle-preview, Tab(or CTRL-f): ripgrep"
-FIND_TARGET=$1
-
+FIND_TARGET=${1:-./}
 READABLE_PATH=$(echo ${FIND_TARGET}| sed "s#~#${HOME}#"| xargs realpath| sed -e "s#^${HOME}#~#")
+
+_FZF_PROMPT="$(basename $0)"
+_FZF_HEADER="[?:Toggle-preview, TAB:ripgrep(${READABLE_PATH}/), CTRL-F:ripgrep(file)]"
 SELECTED=$(find -s -E ${FIND_TARGET/'~'/${HOME}} -not -regex '.*(\.DS_Store|/*.git/).*' -and \
   | sed -e 's#\/\/*#\/#g' \
   | sed -e "s#^${HOME}#~#" \
   | fzf +m \
-  --prompt="${_FZF_PROMPT} (DIR=${READABLE_PATH}) > " \
+  --prompt="${_FZF_PROMPT} (dir=${READABLE_PATH}) > " \
+  --header="${_FZF_HEADER}" \
   --bind "?:toggle-preview" \
-  --bind "tab:execute(rg_fzf_vim . {} < /dev/tty > /dev/tty)" \
-  --bind "ctrl-f:execute(rg_fzf_vim . ${FIND_TARGET} < /dev/tty > /dev/tty)" \
+  --bind "ctrl-f:execute(rg_fzf_vim . {} < /dev/tty > /dev/tty)" \
+  --bind "tab:execute(rg_fzf_vim . ${FIND_TARGET} < /dev/tty > /dev/tty)" \
   --preview '
     _dir=$(echo $(cd $(dirname $(echo {}| sed -e "s#^~#${HOME}#")) && pwd));
     _file=$(echo {}| sed -e "s#^~#${HOME}#"| sed -e "s#^.*/##");

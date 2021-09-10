@@ -1,0 +1,10 @@
+#!/bin/bash
+
+pr_no=$1
+REPO=$(git_reponame_get)
+AUTHZ_TOKEN=$(cat ~/.config/hub| grep "oauth_token:"| awk '{ print $2 }')
+HTTP_HEADER="Authorization: token ${AUTHZ_TOKEN}"
+HTTP_URL="https://api.github.com/repos/${REPO}/pulls/${pr_no}"
+HTTP_RES=$(curl -X GET -s -H "${HTTP_HEADER}" "${HTTP_URL}")
+echo "${HTTP_RES}"
+

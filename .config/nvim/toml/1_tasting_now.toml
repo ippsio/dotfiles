@@ -12,3 +12,5 @@ let g:deoplete#sources#ternjs#filetypes = [
 '''
 on_ft = ['javascript']
 
+repo ='ap/vim-css-color'
+on_ft = ['css', 'scss']

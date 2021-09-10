@@ -1,0 +1,34 @@
+#!/bin/bash
+
+_ME=$( [ -L $0 ] && basename $(readlink $0) || basename $0)
+PR_HEAD_BASE_CSV="$(git_root)/.git/${_ME}.csv"
+_DELIMITER='\t'
+
+_csv_load() { touch ${PR_HEAD_BASE_CSV} && grep "^$1${_DELIMITER}" ${PR_HEAD_BASE_CSV}| head -n 1 || echo ""; }
+_csv_write() { echo -e "$1${_DELIMITER}$2${_DELIMITER}$3${_DELIMITER}$4${_DELIMITER}$(date +'%Y-%m-%d %H:%M:%S')" >> ${PR_HEAD_BASE_CSV}; }
+
+CURRENT_BRANCH=$1
+CSV_DATA=$(_csv_load "${CURRENT_BRANCH}")
+if [[ "${CSV_DATA}" != "" ]]; then
+  BY="${PR_HEAD_BASE_CSV//${HOME}/~}"
+  MB_BRANCH="$(echo "${CSV_DATA}"| awk -F '\t' '{ print $2 }')"
+  PR_NO="$(echo "${CSV_DATA}"| awk -F '\t' '{ print $3 }')"
+  PR_TITLE="$(echo "${CSV_DATA}"| awk -F '\t' '{ print $4 }')"
+else
+  PR_NO=$(git_get_prno "${CURRENT_BRANCH}")
+  if [[ "${PR_NO}" != "" ]]; then
+    PR_INFO=$(git_get_prinfo "${PR_NO}")
+    PR_TITLE=$(echo "${PR_INFO}"| jq -r '.title')
+    HEAD_REF__BASE_REF=$(echo "${PR_INFO}"| jq -r '.head.ref, .base.ref')
+    if [[ $(echo -e "$HEAD_REF__BASE_REF"| wc -l| tr -d ' ') -eq 2 ]]; then
+      BY="github-api"; MB_BRANCH=$(echo -e "${HEAD_REF__BASE_REF}"| tail -n 1)
+      _csv_write "${CURRENT_BRANCH}" "${MB_BRANCH}" "${PR_NO}" "${PR_TITLE}"
+    else
+      BY="manual-1"; MB_BRANCH=$(git_branch_fzf)
+    fi
+  else
+    BY="manual-2"; MB_BRANCH=$(git_branch_fzf)
+  fi
+fi
+echo -e "MERGE_BASE_BRANCH=${MB_BRANCH}\nCURRENT_BRANCH=${CURRENT_BRANCH}\nPR_NO=${PR_NO}\nPR_TITLE=${PR_TITLE}\nBY=${BY}"
+

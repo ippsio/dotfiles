@@ -4,6 +4,7 @@
 # ----------------------------------
 export EDITOR=nvim
 export ZPLUG_HOME=~/.cache/zplug
+export ZINIT_ROOT=~/.zinit
 export TMUX_PLUGINS=~/.cache/tmux/plugins
 export PYENV_ROOT=$HOME/.pyenv
 export GOENV_ROOT=$HOME/.goenv

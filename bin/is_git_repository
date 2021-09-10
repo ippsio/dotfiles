@@ -1,0 +1,9 @@
+#!/bin/bash
+if $(git rev-parse --is-inside-work-tree > /dev/null 2>&1); then
+  # echo "yes."
+  exit 0
+
+else
+  # echo "Not a git repository."
+  exit 1
+fi

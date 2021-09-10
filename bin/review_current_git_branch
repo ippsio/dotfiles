@@ -1,12 +1,7 @@
 #!/bin/bash
-_ME=$( [ -L $0 ] && basename $(readlink $0) || basename $0)
-PR_HEAD_BASE_CSV="$(git rev-parse --show-superproject-working-tree --show-toplevel 2>&1| head -1)/.git/${_ME}.csv"
 
-[ ! $(git rev-parse --is-inside-work-tree 2>/dev/null) ] && echo "Not a git repository." && return
-CURRENT_BRANCH=$(git branch --contains| tr -d "* ")
-
-# true: PRから自動的にマージ先ブランチを取得して欲しい。false:マージ先ブランチを自分で選択したい。
-SELECT_BRANCH=false
+# exit when not a git repository.
+! $(is_git_repository) && echo "Not a git repository." && exit 1
 
 arg_verbose=$(for arg in "$@"; do [[ "${arg}" =~ "--verbose" ]] && echo "${arg}"; done;)
 _fg() { printf "\e[38;5;%dm" "$1"; }
@@ -14,52 +9,10 @@ _bg() { printf "\e[48;5;%dm" "$1"; }
 _verbose() { [[ ! -z "${arg_verbose}" ]] && return 0 || return 1; }
 _echo() { ARG_COLOR=$2; printf "\e[m%s" "${ARG_COLOR}"; echo -n "$1"; printf "\e[m\n"; }
 _echon() { ARG_COLOR=$2; printf "\e[m%s" "${ARG_COLOR}"; echo -n "$1"; printf "\e[m"; }
-_csv_get() { touch ${PR_HEAD_BASE_CSV} && grep "^$1," ${PR_HEAD_BASE_CSV}| head -n 1| awk -F ',' '{ print $2 }' || echo ""; }
-_csv_write() { echo "$1,$2,$(date +'%Y-%m-%d %H:%M:%S')" >> ${PR_HEAD_BASE_CSV}; }
 
-decision_source="-"
-_mergebase() {
-  local mergebase
-  local PR_INFO
-  if "${SELECT_BRANCH}"; then
-    merge_base_branch=$(git_branch_fzf)
-    decision_source="HAND"
-  else # github apiのauthorizationトークンを ~/.config/hub ファイルから読む。
-    csv_data=$(_csv_get "${CURRENT_BRANCH}")
-    if [[ ! -z ${csv_data} ]]; then
-      merge_base_branch=${csv_data}
-      decision_source="CSV"
-    else
-      local AUTHZ_TOKEN=$(cat ~/.config/hub| grep "oauth_token:"| awk '{ print $2 }')
-      # gitのリポジトリ名を取得。
-      local REPO=$(git remote get-url origin 2> /dev/null| egrep -o "([a-zA-Z0-9+-]+)\/([a-zA-Z0-9+-]+)")
-      # 現在のブランチを検索条件に、PR番号を取得。
-      # is:open, type:pr, repo: 現在のリポジトリ, head: 現在のブランチ
-      PR_NO=$(curl -X GET -s -H "Authorization: token ${AUTHZ_TOKEN}" "https://api.github.com/search/issues?q=is:open%20type:pr%20repo:${REPO}%20head:${CURRENT_BRANCH}"| jq -r '.items[] | .number')
-      if [[ ! -z "${PR_NO}" ]]; then
-        # PRの情報を取得し、現在のブランチとマージ先ブランチを取得。
-        PR_INFO=$(curl -s -H "Authorization: token ${AUTHZ_TOKEN}" "https://api.github.com/repos/${REPO}/pulls/${PR_NO}"| jq -r '.head.ref, .base.ref')
-
-        if [[ $(echo -e "$PR_INFO"| wc -l| tr -d ' ') -eq 2 ]]; then
-          # PRの情報からマージ先ブランチを取得（成功）。
-          merge_base_branch=$(echo -e "${PR_INFO}"| tail -n 1)
-          decision_source="ISSUES-API"
-        else
-          merge_base_branch=$(git_branch_fzf)
-          decision_source="HAND2"
-        fi
-      else
-        merge_base_branch=$(git_branch_fzf)
-        decision_source="HAND3"
-      fi
-    fi
-  fi
-  echo "${merge_base_branch},CURRENT_BRANCH=${CURRENT_BRANCH},csv_data=${csv_data},PR_NO=${PR_NO},DECISION_SOURCE=${decision_source}"
-}
-
-MERGE_BASE_BRANCH=$(_mergebase| awk -F ','  '{print $1}')
-[[ -z $(_csv_get "${CURRENT_BRANCH}") ]] && _csv_write "${CURRENT_BRANCH}" "${MERGE_BASE_BRANCH}"
-echo $MERGE_BASE_BRANCH
+CURRENT_BRANCH=$(current_git_branch)
+MERGE_BASE_INFO=$(git_get_merge_base_info "${CURRENT_BRANCH}")
+MERGE_BASE_BRANCH=$(echo "${MERGE_BASE_INFO}"| grep "MERGE_BASE_BRANCH="| awk -F '=' '{ print $2 }')
 MERGE_BASE_LONG_HASH="$(git merge-base ${MERGE_BASE_BRANCH} HEAD)"
 MERGE_BASE_HASH=$(git rev-parse --short "${MERGE_BASE_LONG_HASH}")
 
@@ -67,6 +20,8 @@ _COLOR_LABEL="$(_fg 187)$(_bg 100)"
 _COLOR_COMMAND="$(_fg 245)$(_bg 234)"
 while true; do
   clear
+  _echo "[merge_base_branch_info]" "${_COLOR_LABEL}"
+  echo -e "${MERGE_BASE_INFO}"| awk -F '=' '{ print " " $1 "=[" $2 "]" }'
   # branchs
   _echon "[branches]" "${_COLOR_LABEL}"
   _echon " '"
