@@ -3,6 +3,8 @@ DIR=~/notes
 _ME=$( [ -L $0 ] && basename $(readlink $0) || basename $0)
 _FZF_PROMPT1="${_ME} (${DIR/${HOME}/~}) > "
 _FZF_PROMPT2="${_ME} 検索文字を入力 > "
+_FZF_HEADER1="[description] select type  [keybindings] enter: select, jk:down,up"
+_FZF_HEADER2="[description] select file  [keybindings] enter: select, jk:down,up"
 [ ! -d ${DIR} ] && mkdir -p ${DIR} && echo "maybe ${DIR} created."
 
 function exec_find() {
@@ -13,21 +15,23 @@ function exec_find() {
     | sed -e "s#^${HOME}#~#" \
     | sort -r \
     | fzf --prompt="${_FZF_PROMPT1}"  \
+          --header="${_FZF_HEADER2}" \
       --bind change:top \
-      --bind k:up \
-      --bind j:down \
+      --bind 'j:down' --bind 'k:up' --bind 'i:unbind(i,j,k)' \
       --bind 'enter:execute(f=$(echo {}| sed -e "s#^~#${HOME}#"); nvim -c 5 $f < /dev/tty > /dev/tty)' \
       --preview='f=$(echo {}| sed -e "s#^~#${HOME}#"); bat $f --color=always --style=numbers'
 }
 
 while true;
 do
-  KIND=$(echo "memo,最新状況,検索する"| sed -e "s/,/\n/g"| fzf --prompt="${_FZF_PROMPT1}")
+  KIND=$(echo "memo,最新状況,検索する" \
+    | sed -e "s/,/\n/g" \
+    | fzf --prompt="${_FZF_PROMPT1}" --header="${_FZF_HEADER1}" --bind 'j:down' --bind 'k:up' )
 
   [[ ${KIND} == "" ]] && exit 1
 
   if [[ "${KIND}" == "検索する" ]]; then
-    cd ${DIR} && fzf_git_grep_then_vim "$(echo ''|fzf --prompt=\"${_FZF_PROMPT2}\" --print-query)"
+    cd ${DIR} && fzf_git_grep_then_vim "$(echo ''|fzf --prompt=\"${_FZF_PROMPT2}\" --print-query --bind 'j:down' --bind 'k:up' --bind 'i:unbind(i,j,k)')"
     continue
 
   elif [[ "${KIND}" == "最新状況" ]]; then
@@ -41,18 +45,13 @@ do
   fi
 
   [ ! -d ${NOTE_DIR} ] && mkdir -p ${NOTE_DIR}
-  echo "${BEGINNING}"
   [ ! -f ${NOTE_DIR}/${NEW_NOTE} ] && echo -e "${BEGINNING}" >> ${NOTE_DIR}/${NEW_NOTE}
   exec_find "${DIR}" "${KIND}"
 
   if ( ! (cd ${DIR} && [ -d .git ] || git rev-parse --git-dir > /dev/null 2>&1) ); then
     echo "Consider 'git init' on [${DIR}]"
   else
-    if [ $(cd ${DIR} && git status --porcelain 2>&1 > /dev/null | wc -l| tr -d ' ') -gt 0 ]; then
-      echo "変更有り。"
-      # echo $(cd ${DIR} && git add -A && echo $(git commit -m "$(date '+%Y/%m/%d(%a) %H時%M分%S秒')"))
-      cd ${DIR} && git add -A && git commit -m "$(date '+%Y/%m/%d(%a) %H時%M分%S秒')" && git log --oneline -1
-    fi
+    cd ${DIR} && git add -A && git commit -m "$(date '+%Y/%m/%d(%a) %H時%M分%S秒')" && git log --oneline -1
   fi
 done
 

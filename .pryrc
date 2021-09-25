@@ -34,7 +34,7 @@ if defined?(PryByebug)
   CodeRay::Encoders::Terminal::TOKEN_COLORS[:important] = "\e[1;31m"
   CodeRay::Encoders::Terminal::TOKEN_COLORS[:include] = "\e[31m"
   CodeRay::Encoders::Terminal::TOKEN_COLORS[:insert] = {:self=>"\e[42m", :insert=>"\e[1;32;42m", :eyecatcher=>"\e[102m"}
-  CodeRay::Encoders::Terminal::TOKEN_COLORS[:integer] = "\e[38;5;168m\e[48;5;23m"
+  CodeRay::Encoders::Terminal::TOKEN_COLORS[:integer] = "\e[38;5;168m"
   CodeRay::Encoders::Terminal::TOKEN_COLORS[:key] = {:self=>"\e[35m", :char=>"\e[1;35m", :delimiter=>"\e[1;35m"}
   CodeRay::Encoders::Terminal::TOKEN_COLORS[:keyword] = "\e[32m"
   CodeRay::Encoders::Terminal::TOKEN_COLORS[:label] = "\e[1;33m"

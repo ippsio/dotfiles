@@ -1,30 +1,38 @@
 #!/bin/bash
 label() {
-  printf "\e[38;5;$1m\e[48;5;$2mfg%3s bg%3s\e[0m " $1 $2
-  #printf "[\e[38;5;$2m\e[48;5;$1mfg%3s bg%3s\e[0m] " $1 $2
+  # NOTE: readable but slow.
+  # fg_sequence=$(printf "\e[38;5;%dm" $1)
+  # bg_sequence=$(printf "\e[48;5;%dm" $2)
+  # printf "${fg_sequence}${bg_sequence}[fg=%3s,bg%3s]\e[0m " $1 $2
+
+  printf "\e[38;5;%dm\e[48;5;%dmfg%3s,bg%3s\e[0m " $1 $2 $1 $2
 }
 
 show_color_sample() {
+  given_color=$1
+  fgbg_switch=$2
   echo
-  for bg in {0..255}; do
-    label $1 $bg
-    [[ $(( $((bg + 3)) % 12 )) -eq 0 ]] && echo && echo
-  done;
+  for loop_color in {0..255}; do
+    if [ ${fgbg_switch} -eq 0 ]; then
+      label ${given_color} ${loop_color}
+    else
+      label ${loop_color} ${given_color}
+    fi
+    [[ $(( $((loop_color + 3)) % 12 )) -eq 0 ]] && echo && echo
+  done
   echo
 }
 
-fg=${1:-0}
+color=${1:-0}
+switch=0
 while true; do
   clear
-  echo "256色カラーサンプル表示"
-  echo "・現在の文字色=[${fg}]"
-  echo "・j：文字色を-1します。"
-  echo "・k：文字色を+1します。"
-  show_color_sample ${fg}
+  show_color_sample ${color} ${switch}
+  echo "$(basename $0) color=[${color}] | J=-1, K=+1, S:Foreground-color <=> Background-color"
   read -n1 key_input
-  [[ "${key_input}" != "j" && "${key_input}" != "k" ]] && break
-  [[ ${key_input} == "j" ]] && fg=$(($fg - 1))
-  [[ ${key_input} == "k" ]] && fg=$(($fg + 1))
-  [[ ${fg} -le 0 ]] && fg=0
-  [[ ${fg} -ge 255 ]] && fg=255
+  [[ ${key_input} == "j" ]] && color=$(($color - 1))
+  [[ ${key_input} == "k" ]] && color=$(($color + 1))
+  [[ ${key_input} == "s" ]] && switch=$(( ( switch + 1 ) % 2 ))
+  [[ ${color} -le 0 ]] && color=0
+  [[ ${color} -ge 255 ]] && color=255
 done

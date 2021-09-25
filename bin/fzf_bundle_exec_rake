@@ -7,6 +7,7 @@ files=$(find . -name vendor -prune -o -name '*.rake' -print) || return
 target=$(
   find . -name vendor -prune -o -name '*.rake' -print| xargs -I {} grep "task_with_logger" -nH {}| awk -F ":" '{print $1" "$2" "$3" "$4 }'| sed -e 's/,//g'| sed -e 's/task_with_logger//'| awk '{ print $1" " $2" "$3}' \
     | fzf --bind change:top \
+  --bind 'j:down' --bind 'k:up' --bind 'i:unbind(i,j,k)' \
   --bind "ctrl-v:execute(nvim {1} < /dev/tty > /dev/tty)" \
   --bind '?:toggle-preview' --preview "bat --color=always --highlight-line {2} {1}" \
   --preview-window=right:60%:wrap

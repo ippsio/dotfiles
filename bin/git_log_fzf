@@ -1,0 +1,38 @@
+#!/bin/bash
+hr() { eval printf %.0s- '{1..'"${COLUMNS:-$(tput cols)}"\}; echo; }
+
+_ME=$( [ -L $0 ] && basename $(readlink $0) || basename $0)
+
+TARGET_BRANCH=${1:-$(git_branch_fzf)}
+_FZF_PROMPT="${_ME} (branch=${TARGET_BRANCH}) > "
+_FZF_HEADER="gitのコミット履歴です。
+ enter: git diff を見る。
+ ctrl-p: PR をブラウザで開く。
+ ctrl-y: コミットハッシュをクリップボードにコピーする。
+
+"
+
+HASH="%C($(git config --get color.diff.commit))%h%Creset"
+COMMIT_DATE="%cd"
+AUTHOR="%C(187 17)%an%Creset"
+SUBJECT="%s"
+
+CMD="git --no-pager log --oneline ${TARGET_BRANCH} --date=format-local:'%Y/%m/%d %H:%M' --pretty=format:\" ${HASH} ${COMMIT_DATE} ${AUTHOR} ${SUBJECT}\" --abbrev-commit --color=always"
+_HARF_TERM_COLS=$(( $(tput cols) / 3 ))
+
+eval $CMD \
+  | fzf --ansi --prompt="${_FZF_PROMPT}" --header="${_FZF_HEADER}" --no-sort \
+  --nth=1.. \
+  --bind "enter:execute(git show -p {1}| nvim -R -c \"set ft=diff nomod nolist nospell nu\" > /dev/tty)" \
+  --bind "ctrl-y:execute(echo -n {1}| pbcopy)" \
+  --bind "ctrl-p:execute:(git_pr_fzf {1})" \
+  --preview="
+      git log -1 --oneline --decorate=full --date=format-local:'%Y/%m/%d %H:%M:%S' --pretty=format:'%C(010 022)%h%C(reset) %C(039 017)(%cd)%C(reset) %C(079)%an%C(reset) %C(226 021)%d%C(reset)%s' --abbrev-commit {1} --color=always
+      ; echo
+      ; echo
+      ;git log -1 --oneline --stat {1} --color=always| tail -n +2
+      ; eval printf %.0s- '{1..'"${COLUMNS:-$(tput cols)}"\}; echo
+      ; echo
+      ;git log -1 --oneline -p {1} --color=always| diff-highlight | less
+    "
+

@@ -5,7 +5,6 @@
 [[plugins]]
 repo = 'tpope/vim-rails'
 on_ft = ['ruby', 'eruby', 'slim']
-
 [[plugins]]
 repo = 'vim-scripts/ruby-matchit'
 on_ft = ['ruby', 'eruby', 'slim']
@@ -35,3 +34,52 @@ on_ft = ['slim']
 #'''
 #on_ft = ['ruby']
 
+[[plugins]]
+repo = 'dense-analysis/ale'
+hook_add = '''
+  let g:ale_linters = {
+  \   'ruby': ['rubocop'],
+  \}
+
+  " 保存時だけチェックする（編集中にチェックしない。ファイルオープン時にチェックしない）
+  let g:ale_lint_on_save = 1
+  let g:ale_lint_on_text_changed = 0
+  let g:ale_lint_on_enter = 0
+
+  let g:ale_set_loclist = 1
+  let g:ale_set_quickfix = 0
+  let g:ale_open_list = 1
+  let g:ale_keep_list_window_open = 1
+
+  let g:ale_completion_autoimport = 0
+  let g:ale_ruby_rubocop_executable = 'bundle'
+  let g:ale_linters_explicit = 1
+
+  let g:ale_sign_error = 'Er'
+  hi ALEError ctermbg=168
+  hi ALESignColumnWithErrors ctermbg=168
+
+  let g:ale_sign_warning = 'Wa'
+  hi ALEWarning ctermbg=DarkMagenta
+  hi ALESignColumnWithoutErrors ctermbg=DarkMagenta
+'''
+on_ft = ['ruby', 'eruby', 'slim']
+
+### [[plugins]]
+### repo = 'todesking/ruby_hl_lvar.vim'
+### hook_add = '''
+###   " Highligt group name for local variable
+###   " Default: 'Identifier'
+###   let g:ruby_hl_lvar_hl_group = 'RubyLocalVariable'
+###   hi RubyLocalVariable ctermfg=215 cterm=underline
+###
+###   " Auto enable and refresh highlight when text is changed. Useful but bit slow.
+###   " Default: 1
+###   "let g:ruby_hl_lvar_auto_enable = 0
+###
+###   " If you wish to control the plugin manually, map these functions.
+###   nmap <leader>he <Plug>(ruby_hl_lvar-enable)
+###   nmap <leader>hd <Plug>(ruby_hl_lvar-disable)
+###   nmap <leader>hr <Plug>(ruby_hl_lvar-refresh)
+### '''
+### on_ft = ['ruby', 'eruby', 'slim']

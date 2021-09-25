@@ -1,0 +1,68 @@
+#!/bin/bash
+
+# 指定ブランチとのgit diffをfzfで表示する。
+# プレビューとして、該当ファイルの差分を表示する。
+# TAB、CTRL-L、カーソルキー右でtigを開く。
+# enterで、たぶんvimが開く。
+
+merge_base=$1
+nvim_bind=${2:-ctrl-v}
+_harf_term_cols=$(( $(tput cols) / 3 ))
+#_ME=$(basename $(readlink $0 || $0))
+_ME=$( [ -L $0 ] && basename $(readlink $0) || basename $0)
+_FZF_PROMPT="${_ME} (merge_base=${merge_base}) > "
+
+#--bind "tab:execute(git diff --color=always $merge_base {3} < /dev/tty |less -eR > /dev/tty)" \
+files=$(git diff --numstat ${merge_base} | awk '{printf "%+5s" , "+" $1} {printf "%+5s" , "-" $2} {printf "%s\n", ", " $3} ') || return
+target=$(echo "$files" | \
+  fzf \
+  --prompt="${_FZF_PROMPT}" \
+  --header="(${nvim_bind}: nvim)  (right: tig) (tab: git diff)  (?: preview toggle)" \
+  --nth=3 \
+  --bind change:top \
+  --bind "${nvim_bind}:execute(cd $(git_root) && env GIT_MERGE_BASE=${merge_base} nvim {3} < /dev/tty > /dev/tty)" \
+  --bind "right:execute(cd $(git_root); env GIT_MERGE_BASE=${merge_base} tig ${merge_base}...HEAD {3} < /dev/tty > /dev/tty)" \
+  --bind "tab:execute(cd $(git_root); git diff --color=auto ${merge_base} {3}< /dev/tty  |nvim -R > /dev/tty)" \
+  --bind '?:toggle-preview' \
+  --preview "
+      cd $(git_root);
+      #git log --oneline ${merge_base}.. -- {3} | wc -l| tr -d ' '| sed -e 's/$/ total commits on this branch(merge_base=${merge_base})./'
+      ;git log --oneline -3 ${merge_base}.. --color=always --decorate=full --date=format-local:'%Y/%m/%d %H:%M:%S' \
+        --pretty=format:'%C(010 022)%h%C(reset) %C(039 017)(%cd)%C(reset) %C(079)%an%C(reset) %C(226 021)%d%C(reset)%s' --abbrev-commit -- {3}
+      ; echo ; echo
+      ;git diff --color=always --stat=${_harf_term_cols} ${merge_base} -- {3}
+      ; echo
+      ;git diff --color=always ${merge_base} -- {3}| diff-highlight | less \
+    " --preview-window=right)
+    echo $target | awk '{print $3}'
+
+
+#merge_base_hash=$1
+#nvim_bind=${2:-ctrl-v}
+#_harf_term_cols=$(( $(tput cols) / 3 ))
+##_ME=$(basename $(readlink $0 || $0))
+#_ME=$( [ -L $0 ] && basename $(readlink $0) || basename $0)
+#_FZF_PROMPT="${_ME} (merge_base_hash=${merge_base_hash}) > "
+#
+##--bind "tab:execute(git diff --color=always $merge_base_hash {3} < /dev/tty |less -eR > /dev/tty)" \
+#files=$(git diff --numstat ${merge_base_hash} | awk '{printf "%+5s" , "+" $1} {printf "%+5s" , "-" $2} {printf "%s\n", ", " $3} ') || return
+#target=$(echo "$files" | \
+#  fzf \
+#  --prompt="${_FZF_PROMPT}" \
+#  --header="(${nvim_bind}: nvim)  (right: tig) (tab: git diff)  (?: preview toggle)" \
+#  --nth=3 \
+#  --bind change:top \
+#  --bind "${nvim_bind}:execute(env GIT_MERGE_BASE=${merge_base_hash} nvim {3} < /dev/tty > /dev/tty)" \
+#  --bind "right:execute(tig ${merge_base_hash}...HEAD {3} < /dev/tty > /dev/tty)" \
+#  --bind "tab:execute(git diff --color=auto ${merge_base_hash} {3}< /dev/tty  |nvim -R > /dev/tty)" \
+#  --bind '?:toggle-preview' \
+#  --preview "
+#      git log --oneline ${merge_base_hash}.. -- {3} | wc -l| tr -d ' '| sed -e 's/$/ total commits on this branch(merge_base_hash=${merge_base_hash})./'
+#      ;git log --oneline -3 ${merge_base_hash}.. --color=always --decorate=full --date=format-local:'%Y/%m/%d %H:%M:%S' \
+#        --pretty=format:'%C(010 022)%h%C(reset) %C(039 017)(%cd)%C(reset) %C(079)%an%C(reset) %C(226 021)%d%C(reset)%s' --abbrev-commit -- {3}
+#      ; echo ; echo
+#      ;git diff --color=always --stat=${_harf_term_cols} ${merge_base_hash} -- {3}
+#      ; echo
+#      ;git diff --color=always ${merge_base_hash} -- {3}| diff-highlight | less \
+#    " --preview-window=right)
+#    echo $target | awk '{print $3}'

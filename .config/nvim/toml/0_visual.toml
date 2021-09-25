@@ -7,11 +7,11 @@ hook_add = '''
   autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#373739 ctermbg=237
 '''
 
-[[plugins]]
-repo = 'luochen1990/rainbow'
-hook_add='''
-let g:rainbow_active = 1 "set to 0 if you want to enable it later via :RainbowToggle
-'''
+### [[plugins]]
+### repo = 'luochen1990/rainbow'
+### hook_add='''
+### let g:rainbow_active = 1 "set to 0 if you want to enable it later via :RainbowToggle
+### '''
 
 # インサートモードで行番号をハイライトONし、状態をわかりやすくする
 [[plugins]]

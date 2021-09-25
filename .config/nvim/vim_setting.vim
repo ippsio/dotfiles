@@ -66,7 +66,7 @@ set switchbuf=useopen
 "  移動
 " --------------
 " スクロールする時に下が見えるようにする
-set scrolloff=10
+"set scrolloff=10
 
 " 移動コマンドを使ったとき、行頭に移動しない
 set nostartofline
@@ -139,7 +139,9 @@ set cursorline
 set guicursor=
 
 " ウィンドウの幅より長い行は折り返され、次の行に続けて表示される
-set wrap
+"set wrap
+" ウィンドウの幅より長い行は折り返され、次の行に続けて表示されない
+set nowrap
 
 " 入力されているテキストの最大幅を無効にする
 set textwidth=0

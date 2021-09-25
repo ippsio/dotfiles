@@ -7,16 +7,17 @@ hook_add = '''
   endif
 
   set laststatus=2
-  let g:lightline_colorscheme = 'Tomorrow_Night_Bright'
+  "let g:lightline_colorscheme = 'Tomorrow_Night_Bright'
+  let g:lightline_colorscheme = 'powerline'
   let g:lightline = {
     \  'colorscheme': g:lightline_colorscheme,
     \  'inactive': {
-    \    'left': [ ['mode', 'paste'], ['readonly', 'filepath'], ['timeinfo'] ],
+    \    'left': [ ['mode', 'paste'], ['readonly', 'filepath']],
     \    'right': [ [ 'lineinfo' ]]
     \  },
     \  'active': {
-    \    'left': [ ['mode', 'paste'], ['readonly', 'filepath'], ['timeinfo'] ],
-    \    'right': [ [ 'lineinfo' ], ['info'], ['str_under_sursor'] ]
+    \    'left': [ ['mode', 'paste'], ['readonly', 'filepath']],
+    \    'right': [ [ 'lineinfo' ], ['info'] ]
     \  },
     \  'mode_map': {
     \    'n': 'N',
@@ -31,8 +32,8 @@ hook_add = '''
     \    "\<C-s>": 'S',
     \    't': 'TERMINAL'
     \  },
-    \  'component': { 'lineinfo': '%l/%L(%p%%):%v%<', 'info': '0x%B|' . &fileformat . '|' . &fileencoding . '%<'},
-    \  'component_function': { 'filepath': 'FileName', 'str_under_sursor': 'StrUnderCursor'}
+    \  'component': { 'lineinfo': '%l/%L(%p%%):%v%<', 'info': '%{%StrGitMergeBase()%}(%{%StrUnderCursor()%} 0x%B)' . &fileformat . '|' . &fileencoding . '%<'},
+    \  'component_function': { 'filepath': 'FileName', 'git': 'StrGitMergeBase'}
     \ }
 
   function! FileName()
@@ -41,6 +42,10 @@ hook_add = '''
 
   function! StrUnderCursor()
     return matchstr(getline('.'), '.', col('.')-1)
+  endfunction
+
+  function! StrGitMergeBase()
+    return g:gitgutter_diff_base != "" ? '[' . g:gitgutter_diff_base . ']' : ''
   endfunction
 '''
 

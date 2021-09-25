@@ -1,3 +1,0 @@
-#!/bin/bash
-branch_name=$1
-git_search_pr "${branch_name}"| jq -r '.items[] | .number'

@@ -2,6 +2,17 @@
 repo = 'tpope/vim-fugitive'
 hook_add = '''
   nnoremap <silent> <space>a :Git blame<CR>
+
+  command! -nargs=0 GD call s:GitDiff()
+  function! s:GitDiff()
+    if $GIT_MERGE_BASE != ""
+      echo 'Gvdiffsplit ' . $GIT_MERGE_BASH
+      Gvdiffsplit $GIT_MERGE_BASH
+    else
+      echo 'Gvdiffsplit HEAD^'
+      Gvdiffsplit HEAD^
+    endif
+  endfunction
 '''
 
 [[plugins]]
@@ -34,19 +45,10 @@ hook_add = '''
     " 何かバッファを開いたら、gitgutterのサイン表示に利用するgitの比較元ハッシュを更新する
     autocmd BufEnter * call s:UpdateMergeBase()
     function! s:UpdateMergeBase()
-      if $GIT_MERGE_BASE_HASH != ""
-        let g:gitgutter_diff_base = $GIT_MERGE_BASE_HASH
-        GitGutter
-      else
-        for diff_base in ['origin/develop', 'origin/master']
-          let s:merge_base = system('cd '. expand("%:h") . ' && git merge-base ' . diff_base . ' HEAD')
-          if v:shell_error == 0
-            let g:gitgutter_diff_base = s:merge_base
-            GitGutter
-            break
-          endif
-        endfor
+      if $GIT_MERGE_BASE != ""
+        let g:gitgutter_diff_base = $GIT_MERGE_BASE
       endif
+      GitGutter
     endfunction
   augroup END
 

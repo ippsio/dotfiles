@@ -5,14 +5,17 @@
 # fzfのプレビューは、基本的に検索ヒットした行の5行前から表示する(decide_from)。
 
 _FZF_PROMPT="$(basename $0)"
-_FZF_HEADER="git grep result.."
-[ -z "$1" ] && echo 'Argument required' && return 0
-result=$(git grep --line-number ${1:-.} \
+_FZF_HEADER="[description] git grep results filter.
+[keybind] enter:nvim"
+
+q=${1:-.}
+result=$(git grep --line-number ${q} \
   | perl -pe 's/(^.*):(\d+):(.*)$/\1 \2 \3/' \
   | fzf -m \
-    --prompt="${_FZF_PROMPT} (keyword=$1)> " \
+    --prompt="${_FZF_PROMPT} (keyword=${q})> " \
     --header="${_FZF_HEADER}" \
     --bind "enter:execute(nvim {1} +{2} < /dev/tty > /dev/tty)" \
+    --nth=1,3.. \
     --preview '
       decide_range_from() { echo $(( $1 - 5 > 0 ? $1 - 5 : 1)) };
       bat --color=always --style=numbers,header,grid \

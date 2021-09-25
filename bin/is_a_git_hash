@@ -1,0 +1,15 @@
+#!/bin/bash
+
+if ! [[ "$1" =~ "[0-9abcdef]{7,40}$" ]]; then
+  # is not a valid commit hash.
+  exit 1
+elif (git branch -a --format="%(refname:short)" > /dev/null 2>&1| grep -E "^$1$"); then
+  # is not a valid commit hash.
+  # is a branch.
+  exit 1
+elif ! (git reflog show "$1" > /dev/null 2>&1); then
+  # is not a valid commit hash.
+  exit 1
+fi
+exit 0
+

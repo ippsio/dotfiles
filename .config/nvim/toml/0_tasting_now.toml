@@ -5,9 +5,7 @@
 repo = 'autozimu/LanguageClient-neovim'
 branch = 'next'
 build = 'bash install.sh'
-hook_add = '''
-set hidden
-
+hook_add = ''' set hidden
 let g:LanguageClient_serverCommands = {
     \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
     \ 'javascript': ['/usr/local/bin/javascript-typescript-stdio'],
@@ -140,4 +138,17 @@ repo = 'ujihisa/neco-look'
 #[[plugins]]
 #repo = 'Townk/vim-autoclose'
 
-
+[[plugins]]
+repo = 'nvim-treesitter/nvim-treesitter'
+hook_add = '''
+lua <<EOF
+require'nvim-treesitter.configs'.setup {
+  highlight = {
+    enable = true,
+    disable = {
+      'ruby',
+    }
+  }
+}
+EOF
+'''

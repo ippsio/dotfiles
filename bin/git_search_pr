@@ -1,13 +1,34 @@
 #!/bin/bash
 
-branch_name=$1
-AUTHZ_TOKEN=$(cat ~/.config/hub| grep "oauth_token:"| awk '{ print $2 }')
-REPO=$(git_reponame_get)
+if (is_a_git_hash "$1"); then
+  Q=$1
+else
+  # is:open, type:pr, repo: 現在のリポジトリ, head: ブランチ
+  REPO=$(git_reponame_get)
+  Q="is:open%20type:pr%20repo:${REPO}%20head:$1"
+fi
 
-# 現在のブランチを検索条件に、PR番号を取得。
-# is:open, type:pr, repo: 現在のリポジトリ, head: 現在のブランチ
+AUTHZ_TOKEN=$(cat ~/.config/hub| grep "oauth_token:"| awk '{ print $2 }')
 HTTP_HEADER="Authorization: token ${AUTHZ_TOKEN}"
-HTTP_URL="https://api.github.com/search/issues?q=is:open%20type:pr%20repo:${REPO}%20head:${branch_name}"
-HTTP_RES=$(curl -X GET -s -H "${HTTP_HEADER}" "${HTTP_URL}")
-echo "${HTTP_RES}"
+HTTP_URL="https://api.github.com/search/issues?q=${Q}"
+
+# 1 number
+# 2 state
+# 3 user.login
+# 4 title
+# 5 body
+# 6 html_url
+# 7 created_at
+# 8 updated_at
+# 9 closed_at
+res=$(curl -X GET -s -H "${HTTP_HEADER}" "${HTTP_URL}" \
+  | jq -r ".items[] | [.number, .state, .user.login, .title, .body, .html_url, .created_at, .updated_at, .closed_at] | @tsv")
+
+if [[ "${res}" != "" ]]; then
+  echo "${res}"
+  exit 0
+else
+  echo "Not found."
+  exit 1
+fi
 

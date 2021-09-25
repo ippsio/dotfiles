@@ -72,7 +72,8 @@ hi Directory ctermbg=16 ctermfg=75
 "hi Type ctermbg=16 ctermfg=118 cterm=bold
 "hi Type ctermbg=16 ctermfg=118
 hi Type ctermbg=16 ctermfg=48
-hi Visual ctermbg=136
+"hi Visual ctermbg=240
+hi Visual ctermbg=60
 
 " markdown
 " hi markdownH1          guibg=#cc2299 guifg=#ffff66
@@ -104,9 +105,8 @@ hi DiffText    ctermfg=168 ctermbg=125
 hi DiffDelete  ctermfg=238 ctermbg=234
 
 " qfixgrep
-hi qfFileName ctermfg=36 ctermbg=16
-hi QuickFixLine ctermfg=36 ctermbg=16
-" hi qfLineNr   guifg=#00ff33 guibg=#004433
+hi qfFileName ctermfg=118
+hi QuickFixLine ctermfg=222 ctermbg=69
 
 " カーソル下のhighlight情報を表示する
 function! s:part(s, fgbg, type)

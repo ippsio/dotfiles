@@ -14,6 +14,11 @@ function triggered_by_tab() {
     [[ $BUFFER =~ "^${c} *.+/+$" ]] && BUFFER="${c} $(fzf_list_file ${${BUFFER#${c} }:-.} --PROMPT=${c})" && zle end-of-line && return
   done
 
+  # tig + completion
+  [[ $BUFFER =~ '^tig +$' ]] \
+  && zle autosuggest-clear \
+  && BUFFER="tig $(git_branch_fzf| sed -e 's#^origin/##')" && zle end-of-line && return
+
   # 上記にヒットしなかたら、普通っぽい挙動にする
   zle expand-or-complete
 }

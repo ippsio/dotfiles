@@ -50,11 +50,19 @@ export LC_ALL=
 # ---------------------
 # FZF
 # ---------------------
-export FZF_DEFAULT_OPTS=" --exact --extended --reverse --border --bind 'F11:down' --bind 'F12:up' --bind 'ctrl-v:execute(vim {})' --bind change:top --preview-window=bottom:60%"
-export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --color fg:-1,bg:-1,hl:226 --color fg+:123,bg+:23,hl+:226 --color info:108,prompt:48,spinner:108,pointer:168,marker:168,header:201"
+fzf_default_opts=()
+fzf_default_opts+=("--exact --extended --reverse --border --no-sort")
+#fzf_default_opts+=("--bind 'j:down' --bind 'k:up' --bind 'i:unbind(j,k)'")
+fzf_default_opts+=("--bind change:top")
+fzf_default_opts+=("--preview-window=bottom:60%")
+fzf_default_opts+=("--color fg:-1,bg:-1,hl:226")
+fzf_default_opts+=("--color fg+:143,bg+:8,hl+:226")
+#fzf_default_opts+=("--color fg+:123,bg+:23,hl+:226")
+fzf_default_opts+=("--color info:108,prompt:48,spinner:108,pointer:168,marker:168,header:191:reverse")
+export FZF_DEFAULT_OPTS="${fzf_default_opts[@]}"
 
 # ---------------------
 # BAT
 # ---------------------
-export BAT_THEME="GitHub"
-
+#export BAT_THEME="GitHub"
+#export BAT_STYLE="plain"
