@@ -5,19 +5,19 @@ rev = 'release'
 merge = 0
 hook_source = '''
   let g:coc_global_extensions =[]
-  let g:coc_global_extensions = add(g:coc_global_extensions,"coc-solargraph")
-  let g:coc_global_extensions = add(g:coc_global_extensions,"coc-python")
-  let g:coc_global_extensions = add(g:coc_global_extensions,"coc-pyls")
-  let g:coc_global_extensions = add(g:coc_global_extensions,"coc-json")
-  " let g:coc_global_extensions = add(g:coc_global_extensions,"coc-snippets")
-  let g:coc_global_extensions = add(g:coc_global_extensions,"coc-todolist")
-  " let g:coc_global_extensions = add(g:coc_global_extensions,"coc-translator")
   let g:coc_global_extensions = add(g:coc_global_extensions,"coc-tsserver")
-  let g:coc_global_extensions = add(g:coc_global_extensions,"coc-yaml")
+  "let g:coc_global_extensions = add(g:coc_global_extensions,"coc-solargraph")
+  "let g:coc_global_extensions = add(g:coc_global_extensions,"coc-python")
+  "let g:coc_global_extensions = add(g:coc_global_extensions,"coc-pyls")
+  "let g:coc_global_extensions = add(g:coc_global_extensions,"coc-json")
+  " let g:coc_global_extensions = add(g:coc_global_extensions,"coc-snippets")
+  "let g:coc_global_extensions = add(g:coc_global_extensions,"coc-todolist")
+  " let g:coc_global_extensions = add(g:coc_global_extensions,"coc-translator")
+  "let g:coc_global_extensions = add(g:coc_global_extensions,"coc-yaml")
   " let g:coc_global_extensions = add(g:coc_global_extensions,"coc-yank")
-  let g:coc_global_extensions = add(g:coc_global_extensions,"coc-docker")
-  let g:coc_global_extensions = add(g:coc_global_extensions,"coc-sh")
-  let g:coc_global_extensions = add(g:coc_global_extensions,"coc-java")
+  "let g:coc_global_extensions = add(g:coc_global_extensions,"coc-docker")
+  "let g:coc_global_extensions = add(g:coc_global_extensions,"coc-sh")
+  "let g:coc_global_extensions = add(g:coc_global_extensions,"coc-java")
 
   " Extension> coc-yank
   hi HighlightedyankRegion cterm=bold ctermfg=123 ctermbg=75

@@ -32,7 +32,7 @@ hook_add = '''
     \    "\<C-s>": 'S',
     \    't': 'TERMINAL'
     \  },
-    \  'component': { 'lineinfo': '%l/%L(%p%%):%v%<', 'info': '%{%StrGitMergeBase()%}(%{%StrUnderCursor()%} 0x%B)' . &fileformat . '|' . &fileencoding . '%<'},
+    \  'component': { 'lineinfo': '%l/%L(%p%%):%v%<', 'info': '%{%StrGitMergeBase()%}(%{%StrUnderCursor()%} 0x%02B)' . &fileformat . '|' . &fileencoding . '%<'},
     \  'component_function': { 'filepath': 'FileName', 'git': 'StrGitMergeBase'}
     \ }
 
@@ -41,7 +41,13 @@ hook_add = '''
   endfunction
 
   function! StrUnderCursor()
-    return matchstr(getline('.'), '.', col('.')-1)
+    let l:str = matchstr(getline('.'), '.', col('.')-1)
+    if (l:str == "")
+      let l:str = "'' "
+    else
+      let l:str = "'" . l:str . "'"
+    endif
+    return l:str
   endfunction
 
   function! StrGitMergeBase()

@@ -171,3 +171,8 @@ nnoremap <C-q> :<C-u>:q<CR>
 nnoremap <silent> W :<C-u>:w<CR>:echo 'SAVED! ' . strftime("%Y/%m/%d %H:%M:%S") . '[' . substitute(expand("%:p"), $HOME, "~", "g") . ']'<CR>
 nnoremap <silent> <C-s> :<C-u>:w<CR>:echo 'SAVED! ' . strftime("%Y/%m/%d %H:%M:%S") . '[' . substitute(expand("%:p"), $HOME, "~", "g") . ']'<CR>
 
+" -----------------------------------------------------
+" バッファ系
+" -----------------------------------------------------
+" H で、直前に開いていたファイルに戻る。
+nnoremap H   :<C-u>:b#<CR>

@@ -85,9 +85,10 @@ while true; do
   list+=("5, show git diff(compact) - (git diff ${MERGE_BASE_HASH} --unified=0| nvim -R)")
   list+=("6, pull git branch        - (git fetch origin --prune; git merge)")
   list+=("7, open pull request page - (open https://github.com/$(git_reponame_get)/pull/${PR_NO})")
+  list+=("8, show pull request      - (git_pr_fzf \"${CURRENT_BRANCH})\"")
 
   REPLY=$(for element in "${list[@]}"; do printf "${element}\n"; done \
-    | fzf --info=hidden --height=10 --prompt="COMMAND> " --bind "j:down" --bind "k:up" \
+    | fzf --info=hidden --height=11 --prompt="COMMAND> " --bind "j:down" --bind "k:up" \
     | awk -F ',' '{ print $1 }')
   case "${REPLY}" in
    # 1) git_diff_fzf "${MERGE_BASE_HASH}" "enter" ;;
@@ -98,6 +99,7 @@ while true; do
     5) git diff ${MERGE_BASE_HASH} --unified=0 | nvim -R ;;
     6) set -x; git fetch origin --prune ; git merge ; set +x; echo "enter to continue."; read ;;
     7) open https://github.com/$(git_reponame_get)/pull/${PR_NO} ;;
+    8) git_pr_fzf "${CURRENT_BRANCH}" ;;
     *) break
   esac
 done

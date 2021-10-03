@@ -39,7 +39,7 @@ nodir_then_gitclone "${RBENV_ROOT}/plugins/ruby-build" "sstephenson/ruby-build.g
 nodir_then_gitclone "${NODENV_ROOT}" "nodenv/nodenv.git"
 nodir_then_gitclone "${NODENV_ROOT}/plugins/node-build" "nodenv/node-build.git"
 nodir_then_gitclone "${TMUX_PLUGINS}/tpm" "tmux-plugins/tpm"
-nodir_then_gitclone "${ZPLUG_HOME}" "zplug/zplug"
+#nodir_then_gitclone "${ZPLUG_HOME}" "zplug/zplug"
 nodir_then_gitclone "${ZINIT_ROOT}" "zdharma/zinit.git" "${ZINIT_ROOT}/bin"
 nodir_then_gitclone "${HOME}/setting_box" "ippsio/setting_box.git"
 

@@ -1,6 +1,7 @@
 #!/bin/bash
 if ! is_git_repository; then
-  echo echo "Not a git repository. " exit 1
+  echo "Not a git repository. "
+  exit 1
 fi
 
 _ME=$( [ -L $0 ] && basename $(readlink $0) || basename $0)

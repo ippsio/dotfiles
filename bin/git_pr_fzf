@@ -3,12 +3,11 @@
 _ME=$( [ -L $0 ] && basename $(readlink $0) || basename $0)
 hash=$1
 _FZF_PROMPT="$_ME (commit hash = $hash)> "
-_FZF_HEADER="xxx"
+_FZF_HEADER="ctrl-p: open PR in browser"
 
 git_search_pr "${hash}"| \
   fzf --no-sort --prompt="${_FZF_PROMPT}" --header="${_FZF_HEADER}" --delimiter='\t' \
   --bind "enter:execute(echo '# commit hash: ${hash} に関するpull request です。\n- No: ['{1}']\n- State: ['{2}']\n- Author: ['{3}']\n- Title: ['{4}']\n- Created_at: ['{7}']\n- Updated_at: ['{8}']\n- Closed_at:  ['{9}']\n---------------------------------------------------\n\n'{5}| sed -e 's/\r//g'| nvim -Ro -c \"set ft=markdown\" > /dev/tty)" \
-  --preview="
-echo '# commit hash: ${hash} に関するpull request です。\n- No: ['{1}']\n- State: ['{2}']\n- Author: ['{3}']\n- Title: ['{4}']\n- Created_at: ['{7}']\n- Updated_at: ['{8}']\n- Closed_at:  ['{9}']\n---------------------------------------------------\n\n'{5}| bat --language=md
-" \
+  --bind "ctrl-p:execute(open '{6}')" \
+  --preview="echo '# commit hash: ${hash} に関するpull request です。\n- No: ['{1}']\n- State: ['{2}']\n- Author: ['{3}']\n- Title: ['{4}']\n- Created_at: ['{7}']\n- Updated_at: ['{8}']\n- Closed_at:  ['{9}']\n---------------------------------------------------\n\n'{5}| bat --language=md" \
   --preview-window=75%

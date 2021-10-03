@@ -3,7 +3,7 @@
 # export environmental variables.
 # ----------------------------------
 export EDITOR=nvim
-export ZPLUG_HOME=~/.cache/zplug
+#export ZPLUG_HOME=~/.cache/zplug
 export ZINIT_ROOT=~/.zinit
 export TMUX_PLUGINS=~/.cache/tmux/plugins
 export PYENV_ROOT=$HOME/.pyenv

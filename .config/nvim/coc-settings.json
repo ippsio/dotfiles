@@ -2,21 +2,21 @@
   "#suggest.autoTrigger": "trigger",
   "#suggest.noselect": true,
   "#suggest.preferCompleteThanJumpPlaceholder": true,
-  "python.jediEnabled": false,
+  "#python.jediEnabled": false,
 
   "#tsserver.tsdk": ".yarn/sdks/typescript/lib",
   "#eslint.packageManager": "yarn",
   "#eslint.nodePath": ".yarn/sdks",
 
-  "suggest.enablePreselect": true,
-  "solargraph.bundlerPath": "~/.rbenv/shims/bundle",
-  "solargraph.commandPath": "~/.rbenv/shims/solargraph",
+  "#suggest.enablePreselect": true,
+  "#solargraph.bundlerPath": "~/.rbenv/shims/bundle",
+  "#solargraph.commandPath": "~/.rbenv/shims/solargraph",
 
-  "yank.highlight.enable": true,
-  "yank.highlight.duration": 75,
-  "yank.list.maxsize": 20,
-  "yank.enableCompletion": true,
-  "yank.priority": 90,
-  "yank.limit": 10,
-  "yank.shortcut": "YANK"
+  "#yank.highlight.enable": true,
+  "#yank.highlight.duration": 75,
+  "#yank.list.maxsize": 20,
+  "#yank.enableCompletion": true,
+  "#yank.priority": 90,
+  "#yank.limit": 10,
+  "#yank.shortcut": "YANK"
 }

@@ -1,3 +1,8 @@
 [[plugins]]
 repo = 'leafgarland/typescript-vim'
-on_ft = ['typescriptreact']
+on_ft = ['typescript']
+
+[[plugins]]
+repo = 'Quramy/tsuquyomi'
+on_ft = ['js', 'typescript']
+
