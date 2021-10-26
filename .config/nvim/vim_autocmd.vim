@@ -33,6 +33,17 @@ augroup vimrc-highlight
   endfun
 augroup END
 
+"""augroup aufugitive
+"""  autocmd!
+"""
+"""  autocmd BufLeave * call MaybeCloseFugitiveBlame()
+"""  fun MaybeCloseFugitiveBlame()
+"""    if &ft == "fugitiveblame"
+"""      call feedkeys(":b%<CR>:gq<CR>", "n")
+"""    endif
+"""  endfun
+"""augroup END
+
 augroup FileTypeRuby
   autocmd!
   " @hoge のような変数に対し、先頭の@も単語として扱ってもらう。

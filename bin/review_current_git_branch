@@ -78,7 +78,8 @@ while true; do
 
   # command
   list=()
-  list+=("1, edit (neovim)          - (git_diff_fzf \"${MERGE_BASE_HASH}\" \"enter\")")
+  #list+=("1, edit (neovim)          - (git_diff_fzf \"${MERGE_BASE_HASH}\" \"enter\")")
+  list+=("1, edit (neovim)          - (git_diff_fzf \"${MERGE_BASE_BRANCH}\" \"enter\")")
   list+=("2, git log                - (git_log_fzf ${CURRENT_BRANCH})")
   list+=("3, show tig               - (tig ${MERGE_BASE_HASH}...HEAD)")
   list+=("4, show git diff          - (git diff ${MERGE_BASE_HASH} | nvim -R)")

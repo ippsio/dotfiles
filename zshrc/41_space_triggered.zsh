@@ -77,10 +77,10 @@ function triggered_by_space() {
 
   # docker exec
   # docker exec -it `docker ps -a | fzf | awk '{print $1}'` /bin/bash --login
-  [[ $BUFFER =~ '^docker exec+$' ]] \
+  [[ $BUFFER =~ '^de+$' || $BUFFER =~ '^docker exec+$' ]] \
   && BUFFER="docker exec -it $(docker ps -a | fzf | awk '{print $1}') /bin/bash --login" && zle end-of-line && return
 
-  # dockero-compose
+  # docker-compose
   [[ $BUFFER =~ '^dc+$' ]] \
   && BUFFER="docker-compose " && zle end-of-line && return
 

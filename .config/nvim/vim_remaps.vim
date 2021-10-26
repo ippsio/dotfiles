@@ -29,6 +29,8 @@ xnoremap <silent> <Space><Space> mz:call <SID>hi_selected()<CR>
 """xnoremap <F4>       mz:call <SID>hi_selected_and_grep(1)<CR>
 """cnoremap <F4> <CR>gnmz:call <SID>hi_selected_and_grep(1)<CR>
 
+nnoremap F       mz:call <SID>grep_z_register()<CR>
+
 " ESCでハイライト解除
 nmap <silent> <Esc> :<C-u>nohlsearch<CR>
 
@@ -74,18 +76,10 @@ endfunction
 """  endif
 """endfunction
 
-"""" Zレジスタの内容をgrep(可能ならripgrep)
-"""function s:grep_z_register()
-"""  let @z = escape(@z, '\()[]{}|^&#$%*+?')
-"""  let @z = substitute(@z, '\', '\\\', 'g')
-"""  let @z = substitute(@z, '"', '\\"', 'g')
-"""  let @z = substitute(@z, '`', '\\`', 'g')
-"""  if executable('rg')
-"""    call feedkeys(":Rg \"\<C-r>z\"\<CR>", "n")
-"""  else
-"""    call feedkeys(":grep \"\<C-r>z\"", "n")
-"""  endif
-"""endfunction
+" Zレジスタの内容をgrep(可能ならripgrep)
+function s:grep_z_register()
+  call feedkeys(":Grep " . escape(@z, '\()[]{}*+') . "\<CR>", "n")
+endfunction
 
 """" Zレジスタの内容で、カレントバッファ内をvimgrep
 """function s:vimgrep_current_buf_z_register()

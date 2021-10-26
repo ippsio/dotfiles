@@ -72,8 +72,9 @@ hi Directory ctermbg=16 ctermfg=75
 "hi Type ctermbg=16 ctermfg=118 cterm=bold
 "hi Type ctermbg=16 ctermfg=118
 hi Type ctermbg=16 ctermfg=48
-"hi Visual ctermbg=240
-hi Visual ctermbg=60
+"hi Visual ctermbg=0 ctermbg=226
+"hi Visual ctermbg=60
+hi Visual ctermfg=220 ctermbg=237
 
 " markdown
 " hi markdownH1          guibg=#cc2299 guifg=#ffff66

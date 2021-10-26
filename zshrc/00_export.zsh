@@ -56,8 +56,12 @@ fzf_default_opts+=("--exact --extended --reverse --border --no-sort")
 fzf_default_opts+=("--bind change:top")
 fzf_default_opts+=("--preview-window=bottom:60%")
 fzf_default_opts+=("--color fg:-1,bg:-1,hl:226")
-fzf_default_opts+=("--color fg+:143,bg+:8,hl+:226")
+#fzf_default_opts+=("--color fg+:173,bg+:88,hl+:226")
 #fzf_default_opts+=("--color fg+:123,bg+:23,hl+:226")
+#fzf_default_opts+=("--color fg+:237,bg+:220,hl+:226")
+fzf_default_opts+=("--color fg+:220,bg+:244,hl+:226")
+#fzf_default_opts+=("--color fg+:49,bg+:245,hl+:226")
+#fzf_default_opts+=("--color fg+:-1,bg+:216,hl+:226")
 fzf_default_opts+=("--color info:108,prompt:48,spinner:108,pointer:168,marker:168,header:191:reverse")
 export FZF_DEFAULT_OPTS="${fzf_default_opts[@]}"
 

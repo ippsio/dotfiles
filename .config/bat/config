@@ -3,8 +3,30 @@
 
 # Specify desired highlighting theme (e.g. "TwoDark"). Run `bat --list-themes`
 # for a list of all available themes
---theme="TwoDark"
+#--theme="1337"
+#--theme="Coldark-Cold"
+#--theme="Coldark-Dark"
+#--theme="DarkNeon"
+#--theme="Dracula"
 #--theme="GitHub"
+#--theme="Monokai Extended"
+#--theme="Monokai Extended Bright"
+#--theme="Monokai Extended Light"
+#--theme="Monokai Extended Origin"
+#--theme="Nord"
+#--theme="OneHalfDark"
+#--theme="OneHalfLight"
+#--theme="Solarized (dark)"
+#--theme="Solarized (light)"
+#--theme="Sublime Snazzy"
+#--theme="TwoDark"
+#--theme="Visual Studio Dark+"
+#--theme="ansi"
+#--theme="base16"
+--theme="base16-256"
+#--theme="gruvbox-dark"
+#--theme="gruvbox-light"
+#--theme="zenburn"
 
 # Enable this to use italic text on the terminal. This is not supported on all
 # terminal emulators (like tmux, by default):
