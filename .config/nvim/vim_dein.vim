@@ -44,7 +44,6 @@ if dein#load_state('~/.cache/dein')
   call dein#load_toml('~/.config/nvim/toml/1_json.toml', {'lazy': 1})
   call dein#load_toml('~/.config/nvim/toml/1_typescript.toml', {'lazy': 1})
   call dein#load_toml('~/.config/nvim/toml/1_yaml.toml', {'lazy': 1})
-  call dein#load_toml('~/.config/nvim/toml/1_syntax_vim-precious.toml', {'lazy': 1})
   call dein#load_toml('~/.config/nvim/toml/1_coffee.toml', {'lazy': 1})
 
   if has('nvim')

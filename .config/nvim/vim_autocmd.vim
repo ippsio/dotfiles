@@ -18,11 +18,15 @@ augroup vimrc-highlight
       let &colorcolumn=join(range(0, 0), ",")
 
     elseif match(["ruby", "python"], &ft) >= 0
-        " ファイルタイプによって、コード規約遵守のための縦線を引く(120桁目位に）。
-        let &colorcolumn=join(range(121, 121), ",")
+      " ファイルタイプによって、コード規約遵守のための縦線を引く(120桁目位に）。
+      let &colorcolumn=join(range(121, 121), ",")
 
     elseif match(["yaml"], &ft) >= 0
       let &colorcolumn=join(range(0, 0), ",")
+      " ymlの場合、ある行をコメントアウトしたくて「#」を打った瞬間にインデントが崩れることがある。
+      " 例えば docker-compose.yml など。
+      " これは想像よりもかなりしっかり崩れるので、この挙動はなんとか制御したい。防ぎたい。
+      " そのための対策として 「#」をどうにかする設定を以下でします。
       " setlocal nosmartindent
       " setlocal noautoindent
       setlocal indentkeys-=0#

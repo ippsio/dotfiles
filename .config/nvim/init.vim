@@ -1,6 +1,5 @@
 "filetype off
 runtime! vim_nvimvar.vim
-runtime! vim_command.vim
 runtime! vim_setting.vim
 runtime! vim_remaps.vim
 

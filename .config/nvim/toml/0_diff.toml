@@ -4,27 +4,6 @@ hook_add = '''
   vmap ,d :call ClipDiff()<CR>
 '''
 
-# [[plugins]]
-# repo = 'fuenor/qfixgrep'
-# hook_add = '''
-#   " NOTE: QuickFix上で 'i' を入力すると、プレビューのON/OFFを切り替えることができます。
-# 
-#   " QuickFix処理制御
-#   " プレビューや絞り込みをQuickFix/ロケーションリストの両方で有効化(デフォルト:2)
-#   " 0 : なにもしない
-#   " 1 : QuickFix/ロケーションリストの両方で有効
-#   " 2 : ロケーションリストのみ有効
-#   " 3 : QFixMemo/QFixGrepコマンドで開いた場合のみ有効
-#   let g:QFixWin_EnableMode = 1
-# 
-#   " QFixHowm/QFixGrepでロケーションリストを使用する/しない
-#   let g:QFix_UseLocationList = 0
-# 
-#   " QuickFixウィンドウでプレビューを有効にする
-#   let g:QFix_PreviewEnable = 1
-# 
-# '''
-
 [[plugins]]
 repo = 'rhysd/accelerated-jk'
 on_map = {n = '<Plug>'}
@@ -34,7 +13,8 @@ hook_add = '''
   " let g:accelerated_jk_acceleration_table = [7,12,17,21,24,26,28,30]
   "let g:accelerated_jk_acceleration_table = [4,6,8,11,12,13,14,15]
   "let g:accelerated_jk_acceleration_table = [14,24,34,42,48,52,56,60]
-  let g:accelerated_jk_acceleration_table = [15,100,150]
+  "let g:accelerated_jk_acceleration_table = [15,100,150]
+  let g:accelerated_jk_acceleration_table = [10,20,150]
   nmap <silent>j <Plug>(accelerated_jk_gj)
   nmap <silent>k <Plug>(accelerated_jk_gk)
 '''

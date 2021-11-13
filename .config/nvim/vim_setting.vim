@@ -108,7 +108,7 @@ set shortmess+=I
 set matchpairs& matchpairs+=<:>
 
 " 対応括弧をハイライト表示する
-set showmatch
+"set showmatch
 
 " 対応括弧の表示秒数を1秒にする
 set matchtime=1
@@ -139,9 +139,9 @@ set cursorline
 set guicursor=
 
 " ウィンドウの幅より長い行は折り返され、次の行に続けて表示される
-"set wrap
+set wrap
 " ウィンドウの幅より長い行は折り返され、次の行に続けて表示されない
-set nowrap
+"set nowrap
 
 " 入力されているテキストの最大幅を無効にする
 set textwidth=0
@@ -151,13 +151,14 @@ set list
 set listchars=tab:»-,trail:-,extends:»,precedes:«,nbsp:%
 
 " ◆や○文字が崩れる問題を解決"
-" set ambiwidth=double
+"set ambiwidth=double
 set ambiwidth=single
 
 " ①②③
 
 " シンタックスハイライトの最大行数
-set synmaxcol=2048
+"set synmaxcol=2048
+set synmaxcol=1024
 
 " パターンマッチングに使うメモリ量の最大値(キロバイト単位。デフォルトでは1000)
 set maxmempattern=100000 " 100,000KB = 100MB
@@ -190,9 +191,10 @@ set incsearch
 set hlsearch
 
 " インタラクティブな置換。vim-overのようなもの。
-"set inccommand=
-set inccommand=nosplit
+" ⇒重いからoffにします。
+"set inccommand=nosplit
 "set inccommand=split
+"set inccommand=
 
 " --------------
 " マウス操作

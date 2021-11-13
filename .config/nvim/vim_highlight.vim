@@ -50,10 +50,15 @@ hi NormalNC ctermfg=251
 
 " コメント
 hi Comment ctermbg=23 ctermfg=123
+hi vimLineComment ctermbg=23 ctermfg=123
+hi vimCommentString ctermbg=23 ctermfg=123
+hi vimCommentTitle ctermbg=23
+hi vimCommentTitleLeader ctermbg=23
 
 " 変数、文字列
 "hi Constant ctermfg=168 cterm=bold
-hi Constant ctermfg=168
+"hi Constant ctermfg=168
+hi Constant ctermfg=105
 
 hi PreProc ctermfg=170
 

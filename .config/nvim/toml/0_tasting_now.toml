@@ -127,7 +127,6 @@ endif
 [[plugins]]
 repo = 'Shougo/neosnippet-snippets'
 
-
 [[plugins]]
 repo = 'Shougo/neco-vim'
 
