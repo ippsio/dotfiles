@@ -89,7 +89,7 @@ while true; do
   list+=("8, show pull request      - (git_pr_fzf \"${CURRENT_BRANCH})\"")
 
   REPLY=$(for element in "${list[@]}"; do printf "${element}\n"; done \
-    | fzf --info=hidden --height=11 --prompt="COMMAND> " --bind "j:down" --bind "k:up" \
+    | fzf --disabled --no-clear --info=hidden --height=11 --prompt="COMMAND> " --bind "j:down" --bind "k:up" \
     | awk -F ',' '{ print $1 }')
   case "${REPLY}" in
    # 1) git_diff_fzf "${MERGE_BASE_HASH}" "enter" ;;

@@ -113,60 +113,68 @@ function _precmd_vcs_info_msg() {
 add-zsh-hook precmd _precmd_vcs_info_msg
 
 # MARK DEFINITIONS
-#local _text_unstaged="wtree"
-local _text_unstaged=""
-local _mark_deleted="x"
-local _mark_untracked="?"
-local _mark_unstaged="-"
-#local _text_staged="stage"
-local _text_staged=""
-local _mark_staged="+"
-#local _text_repo="repo"
-local _text_repo=""
-local _mark_ahead="$(echo '\u2191')"  # ↑
-local _mark_behind="$(echo '\u2193')" # ↓
-local _mark_stash="stash"
-local _mark_branch="" # VCS_BRANCH_ICON                $'\uF126 '             # 
-local _mark_git_repo="" # VCS_GIT_GITHUB_ICON            $'\uF113 '             # 
+# _text_unstaged="wtree"
+_text_unstaged=""
+_mark_deleted="x"
+_mark_untracked="?"
+_mark_unstaged="m"
+# _text_staged="stage"
+_text_staged=""
+_mark_staged="+"
+# _text_repo="repo"
+_text_repo=""
+## # そういう文字が使えるフォント環境の場合
+## _mark_ahead="$(echo '\u2191')"  # ↑
+## _mark_behind="$(echo '\u2193')" # ↓
+## _mark_stash="stash"
+## _mark_branch="" # VCS_BRANCH_ICON                $'\uF126 '             # 
+## _mark_git_repo="" # VCS_GIT_GITHUB_ICON            $'\uF113 '             # 
+
+# じゃない場合
+_mark_ahead="^"
+_mark_behind="v"
+_mark_stash="stash"
+_mark_branch=""
+_mark_git_repo=""
 
 # exit status and git basic infomations.
-local EXIT_CD="%K{red}%(?.. [\$?=%?])%k"
-local GIT_REPO_NAME="%K{118}%F{0}%(1v|[${_mark_git_repo}%1v|)%f%k"
+EXIT_CD="%K{red}%(?.. [\$?=%?])%k"
+GIT_REPO_NAME="%K{118}%F{0}%(1v|[${_mark_git_repo}%1v|)%f%k"
 # '\ue0a0' is a git branch mark(icon).
-local GIT_BRANCH="%K{220}%F{0}%(2v| ${_mark_branch}%2v]|)%f%k"
+GIT_BRANCH="%K{220}%F{0}%(2v| ${_mark_branch}%2v]|)%f%k"
 
 # git working_tree
-local _deleted="%(3v|${_text_unstaged}[${_mark_deleted}%3v|)"
-local _untracked="%(4v| ${_mark_untracked}%4v|)"
-local _unstaged="%(5v| ${_mark_unstaged}%5v]|)"
-#local GIT_WORKING_TREE="%K{94}%F{255}${_deleted}${_untracked}${_unstaged}%f%k"
-local GIT_WORKING_TREE="%K{8}%F{143}${_deleted}${_untracked}${_unstaged}%f%k"
+_deleted="%(3v|${_text_unstaged}[${_mark_deleted}%3v|)"
+_untracked="%(4v| ${_mark_untracked}%4v|)"
+_unstaged="%(5v| ${_mark_unstaged}%5v]|)"
+#GIT_WORKING_TREE="%K{94}%F{255}${_deleted}${_untracked}${_unstaged}%f%k"
+GIT_WORKING_TREE="%K{8}%F{143}${_deleted}${_untracked}${_unstaged}%f%k"
 
 # git stage
-local _staged="%(6v| ${_text_staged}[${_mark_staged}%6v]|)%k"
-#local GIT_STAGE="%K{90}%F{255}${_staged}%f%k"
-local GIT_STAGE="%K{61}%F{153}${_staged}%f%k"
+_staged="%(6v| ${_text_staged}[${_mark_staged}%6v]|)%k"
+# GIT_STAGE="%K{90}%F{255}${_staged}%f%k"
+GIT_STAGE="%K{61}%F{153}${_staged}%f%k"
 
 # git local repositry
-local _ahead="%(7v| ${_text_repo}[${_mark_ahead}%7v|)"
-local _behind="%(8v| ${_mark_behind}%8v]|)"
-local GIT_LOCAL_REPO="%K{90}%F{200}${_ahead}${_behind}%f%k"
+_ahead="%(7v| ${_text_repo}[${_mark_ahead}%7v|)"
+_behind="%(8v| ${_mark_behind}%8v]|)"
+GIT_LOCAL_REPO="%K{90}%F{200}${_ahead}${_behind}%f%k"
 
-local _stash="%(9v| ${_mark_stash}(%9v) |)"
+_stash="%(9v| ${_mark_stash}(%9v) |)"
 # 10v,11v,12v,13vって....。たぶんもっといいやり方あるんだろうけど、調べるのが面倒臭かったんです..
-local _more_such_as_rebase="%(10v| %10v |)%(11v| %11v |)%(12v| %12v |)%(13v| %13v |)"
-local GIT_CAUTION="%K{18}${_stash}${_more_such_as_rebase}%k"
+_more_such_as_rebase="%(10v| %10v |)%(11v| %11v |)%(12v| %12v |)%(13v| %13v |)"
+GIT_CAUTION="%K{18}${_stash}${_more_such_as_rebase}%k"
 
 # others
-local CURRENT_DIRECTORY="%K{237}%F{255}[%~] %f%k"
-local CURRENT_DATETIME="%K{237}%F{255}%D{%m/%d %T} %f%k"
+CURRENT_DIRECTORY="%K{237}%F{255}[%~] %f%k"
+CURRENT_DATETIME="%K{237}%F{255}%D{%m/%d %T} %f%k"
 
-local NUMBER_OF_JOBS="%(1j|%F{226}BackgroundJobs(%j)%f|)"
+NUMBER_OF_JOBS="%(1j|%F{226}BackgroundJobs(%j)%f|)"
 
-local LINE1="${EXIT_CD}${GIT_REPO_NAME}${GIT_BRANCH}"
-local LINE2="${GIT_WORKING_TREE}${GIT_STAGE}${GIT_LOCAL_REPO}"
-local LINE3="${NUMBER_OF_JOBS}${CURRENT_DIRECTORY}%K{238}%# %k"
-local LINE_FEED="
+LINE1="${EXIT_CD}${GIT_REPO_NAME}${GIT_BRANCH}"
+LINE2="${GIT_WORKING_TREE}${GIT_STAGE}${GIT_LOCAL_REPO}"
+LINE3="${NUMBER_OF_JOBS}${CURRENT_DIRECTORY}%K{238}%# %k"
+LINE_FEED="
 "
 PROMPT=""
 [[ "${LINE1}" != "" ]] && PROMPT+="${LINE_FEED}${LINE1}"

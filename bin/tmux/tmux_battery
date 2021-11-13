@@ -54,7 +54,7 @@ get_str_tmux_battery() {
   local mark="="
   local bold=""
   if is_charging; then
-    [[ "$(expr $(date +'%S') % 2 )" -eq "0" ]] && mark=" " || mark="+"
+    [[ $(expr $(date +'%S') % 2) -eq 1 ]] && mark=" " || mark="+"
     bold=",bold"
   fi
 
@@ -66,9 +66,13 @@ get_str_tmux_battery() {
   [[ "${color_def}" == "" ]]                                           && color_def="bg=colour160"
   # echo -e "#[${color_def}${bold}]${prefix}${mark}${bat_percentage}(${bat_remain})#[default]"
 
-  if [[ "$(expr $(date +'%S') % 4 )" -lt 2 ]]; then
-    # Q:why %7s?, A: because "BAT=96%".len => 7. (100%? will be decreased soooon.)
-    printf "#[${color_def}${bold}]%7s#[default]" "${prefix}${mark}${bat_percentage}"
+  if [[ "$(expr $(date +'%S') % 4 )" -lt 3 ]]; then
+    if [[ "${bat_percentage%%%*}" -eq "100" ]]; then
+      printf "#[${color_def}${bold}]%7s#[default]" "${prefix}FULL"
+      # Q:why %7s?, A: because "BAT=96%".len => 7.
+    else
+      printf "#[${color_def}${bold}]%7s#[default]" "${prefix}${mark}${bat_percentage}"
+    fi
   else
     printf "#[${color_def}${bold}] %-6s#[default]" "${bat_remain}"
   fi

@@ -22,11 +22,9 @@ ssid="${wifi_info[2]}"   # wifi ssid name
 
 MIN_LEN_LIMIT=12
 [[ ${#ssid} -lt ${MIN_LEN_LIMIT} ]] && LEN=${MIN_LEN_LIMIT} || LEN=${#ssid}
-if [[ "$(expr $(date +'%S') % 4 )" -lt 2 ]]; then
+if [[ "$(expr $(date +'%S') % 4 )" -lt 3 ]]; then
   printf "%${LEN}s\n" "${ssid}"
-  exit 0
 else
   printf "%${LEN}s\n" "${rate}Mbps $signal"
-  exit 0
 fi
 
