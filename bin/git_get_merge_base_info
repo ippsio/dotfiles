@@ -15,19 +15,23 @@ if [[ "${CSV_DATA}" != "" ]]; then
   PR_NO="$(echo "${CSV_DATA}"| awk -F '\t' '{ print $3 }')"
   PR_TITLE="$(echo "${CSV_DATA}"| awk -F '\t' '{ print $4 }')"
 else
-  PR_NO=$(git_search_pr "${CURRENT_BRANCH}"| head -1| awk -F '\t' '{ print $1 }')
-  if [[ "${PR_NO}" != "" ]]; then
-    PR_INFO=$(git_get_prinfo "${PR_NO}")
-    PR_TITLE=$(echo "${PR_INFO}"| jq -r '.title')
-    HEAD_REF__BASE_REF=$(echo "${PR_INFO}"| jq -r '.head.ref, .base.ref')
-    if [[ $(echo -e "$HEAD_REF__BASE_REF"| wc -l| tr -d ' ') -eq 2 ]]; then
-      BY="github-api"; MB_BRANCH=$(echo -e "${HEAD_REF__BASE_REF}"| tail -n 1)
-      _csv_write "${CURRENT_BRANCH}" "${MB_BRANCH}" "${PR_NO}" "${PR_TITLE}"
-    else
-      BY="manual-1"; MB_BRANCH=$(git_branch_fzf)
+  for TMP_PR_NO in $(git_search_pr_by_branch "${CURRENT_BRANCH}"| awk -F '\t' '{ print $1 }'); do
+    if [[ "${TMP_PR_NO}" != "GIT_SEARCH_PR:PR_NOT_FOUND" ]]; then
+      PR_INFO=$(git_get_prinfo "${TMP_PR_NO}")
+      HEAD_REF=$(echo "${PR_INFO}"| jq -r '.head.ref')
+      BASE_REF=$(echo "${PR_INFO}"| jq -r '.base.ref')
+      if [[ "$HEAD_REF" == "${CURRENT_BRANCH}" && "${BASE_REF}" != "" ]]; then
+        PR_NO=$TMP_PR_NO
+        PR_TITLE=$(echo "${PR_INFO}"| jq -r '.title')
+        MB_BRANCH=${BASE_REF}
+        BY="github-api";
+        _csv_write "${CURRENT_BRANCH}" "${MB_BRANCH}" "${PR_NO}" "${PR_TITLE}"
+        break
+      fi
     fi
-  else
-    BY="manual-2"; MB_BRANCH=$(git_branch_fzf)
+  done
+  if [[ -z $PR_NO ]]; then
+    BY="manual-1"; MB_BRANCH=$(git_branch_fzf "--respond_me_branch")
   fi
 fi
 echo -e "MERGE_BASE_BRANCH=${MB_BRANCH}\nCURRENT_BRANCH=${CURRENT_BRANCH}\nPR_NO=${PR_NO}\nPR_TITLE=${PR_TITLE}\nBY=${BY}"

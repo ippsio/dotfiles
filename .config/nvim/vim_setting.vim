@@ -151,10 +151,11 @@ set list
 set listchars=tab:»-,trail:-,extends:»,precedes:«,nbsp:%
 
 " ◆や○文字が崩れる問題を解決"
-"set ambiwidth=double
-set ambiwidth=single
+set ambiwidth=double
+"set ambiwidth=single
 
 " ①②③
+" ⇒←■
 
 " シンタックスハイライトの最大行数
 "set synmaxcol=2048

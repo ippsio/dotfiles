@@ -6,32 +6,6 @@ fi
 
 _ME=$( [ -L $0 ] && basename $(readlink $0) || basename $0)
 
-select_branch() {
-  readonly HASH="%(color:051)%(objectname:short)%(color:reset)"
-  readonly DATE="%(color:169)%(authordate:format:%Y-%m-%d %H:%M:%S)%(color:reset)"
-  readonly BRANCH="%(color:051)%(refname:short)%(color:reset)"
-  readonly AUTHOR="%(color:33)%(authorname)%(color:reset)"
-  readonly SUBJECT="%(subject)"
-  readonly HELPER1="xxxxxxxxxx	xxxx-xx-xx xx:xx:xx	xxxxxx	--	現在の変更を取り消す。"
-  readonly HELPER2="xxxxxxxxxx	xxxx-xx-xx xx:xx:xx	xxxxxx	-- .	現在の変更を全て取り消す。"
-  readonly HELPER3="xxxxxxxxxx	xxxx-xx-xx xx:xx:xx	xxxxxx	-b	ブランチを作る。"
-  readonly CMD="git branch --color=always -a --format=\"${HASH}	${DATE}	${AUTHOR}	${BRANCH}	${SUBJECT}\""
-  readonly DEVEL_BRANCHS=$(eval "${CMD} --sort=upstream --list develop origin/develop")
-  readonly OTHER_BRANCHS=$(eval "${CMD} --sort=-authordate" | grep -Ev "\[(develop|origin/develop)\]")
-
-  readonly _FZF_PROMPT="$_ME > "
-  readonly _FZF_HEADER="ブランチを指定し 次の操作を選択して下さい。
-  次に選択できる操作：respond hash／git checkout／review／git log
-
-"
-
-  # {1} hash {2} date {3} author {4} branch {5} subject
-  selected=$(printf '%s\n%s\n%s\n%s\n%s' "${DEVEL_BRANCHS}" "${HELPER1}" "${HELPER2}" "${HELPER3}" "${OTHER_BRANCHS}" \
-    | fzf --ansi --prompt="${_FZF_PROMPT}" --header="${_FZF_HEADER}" \
-       --no-sort --tabstop=2 --info=inline --delimiter "	" --nth 1..)
-  echo -e "$selected"
-}
-
 do_something() {
   hash=$1
   date=$2
@@ -40,19 +14,18 @@ do_something() {
   remote_branch=$5
   subject=$6
 
-  _FZF_PROMPT2="next action > "
-  _FZF_HEADER2="branch:
-  ${branch}
-
-last commit:
-  ${hash} ${date}
-  ${author}/ ${subject}
-
+  LF="
 "
+  _FZF_PROMPT2="next action > "
+  _FZF_HEADER2="${LF}branch     : [${local_branch}]"
+  _FZF_HEADER2+="${LF}commit date: [${date}]"
+  _FZF_HEADER2+="${LF}comitter   : [${author}]"
+  _FZF_HEADER2+="${LF}commit     : [${hash}]"
+  _FZF_HEADER2+="${LF}           : [${subject}]"
+  _FZF_HEADER2+="${LF}"
+
   nextaction_list=()
   nextaction_list+=("1, respond me        '${local_branch}'")
-  nextaction_list+=("2, git checkout      '${local_branch}'")
-  nextaction_list+=("3, review            '${local_branch}'")
   nextaction_list+=("4, git log + fzf     '${local_branch}'")
   nextaction_list+=("5, show pull request '${hash}'")
 
@@ -73,13 +46,6 @@ last commit:
     echo "${local_branch}"
     return 0
 
-  elif [[ "$nextaction" == "2" ]]; then
-    echo "git checkout ${local_branch}"
-    return 0
-
-  elif [[ "$nextaction" == "3" ]]; then
-    git checkout ${local_branch} && rv < /dev/tty > /dev/tty return 1 || return 0
-
   elif [[ "$nextaction" == "4" ]]; then
     if (git branch -a --format="%(refname:short)"| grep -E "^${local_branch}+$"); then
       git_log_fzf ${local_branch}
@@ -95,21 +61,48 @@ last commit:
   return 0
 }
 
+QUERY=""
 while true; do
-  selected=$(select_branch "$@")
-  [[ "${selected}" == "" ]] && exit 0
+  HASH="%(color:051)%(objectname:short)%(color:reset)"
+  DATE="%(color:169)%(authordate:format:%Y-%m-%d %H:%M:%S(%a))%(color:reset)"
+  BRANCH="%(color:051)%(refname:short)%(color:reset)"
+  AUTHOR="%(color:33)%(authorname)%(color:reset)"
+  SUBJECT="%(subject)"
+  HELPER1="xxxxxxxxxx	xxxx-xx-xx xx:xx:xx	xxxxxx	--	現在の変更を取り消す。"
+  HELPER2="xxxxxxxxxx	xxxx-xx-xx xx:xx:xx	xxxxxx	-- .	現在の変更を全て取り消す。"
+  HELPER3="xxxxxxxxxx	xxxx-xx-xx xx:xx:xx	xxxxxx	-b	ブランチを作る。"
+  CMD="git branch --color=always -a --format=\"${HASH}	${DATE}	${AUTHOR}	${BRANCH}	${SUBJECT}\""
+  DEVEL_BRANCHS=$(eval "${CMD} --sort=upstream --list develop origin/develop")
+  OTHER_BRANCHS=$(eval "${CMD} --sort=-authordate" | grep -Ev "\[(develop|origin/develop)\]")
 
-  hash=$(echo -n "${selected}"| awk -F '\t' '{ print $1 }')
-  date=$(echo -n "${selected}"| awk -F '\t' '{ print $2 }')
-  author=$(echo -n "${selected}"| awk -F '\t' '{ print $3 }')
-  branch=$(echo -n "${selected}"| awk -F '\t' '{ print $4 }')
-  local_branch=$(echo -n "${selected}"| awk -F '\t' '{ print $4 }'| sed -e 's#^origin/##')
-  remote_branch="origin/${local_branch}"
-  subject=$(echo -n "${selected}"| awk -F '\t' '{ print $5 }')
+  _FZF_PROMPT="$_ME > "
+  _FZF_HEADER="ブランチを指定し 次の操作を選択して下さい。
+  次に選択できる操作：respond hash／git log
 
-  [[ "${hash}" == "xxxxxxxxxx" ]] && add=" --respond_me_branch "
+"
 
-  if (do_something "${hash}" "${date}" "${author}" "${local_branch}" "${remote_branch}" "${subject}" "$@" "$add"); then
+  # {1} hash {2} date {3} author {4} branch {5} subject
+  FZF_RES=$(printf '%s\n%s\n%s\n%s\n%s' "${DEVEL_BRANCHS}" "${HELPER1}" "${HELPER2}" "${HELPER3}" "${OTHER_BRANCHS}" \
+    | fzf --print-query --ansi --query="${QUERY}" --prompt="${_FZF_PROMPT}" --header="${_FZF_HEADER}" \
+       --no-sort --tabstop=2 --info=inline --delimiter "	" --nth 1..)
+
+  QUERY="$(echo "$FZF_RES"| awk 'NR==1')"
+  SELECTED=$(echo "$FZF_RES"| awk 'NR==2')
+
+  #SELECTED=$(select_branch "$@")
+  [[ "${SELECTED}" == "" ]] && exit 0
+
+  _hash=$(echo -n "${SELECTED}"| awk -F '\t' '{ print $1 }')
+  _date=$(echo -n "${SELECTED}"| awk -F '\t' '{ print $2 }')
+  _author=$(echo -n "${SELECTED}"| awk -F '\t' '{ print $3 }')
+  _branch=$(echo -n "${SELECTED}"| awk -F '\t' '{ print $4 }')
+  _local_branch=$(echo -n "${SELECTED}"| awk -F '\t' '{ print $4 }'| sed -e 's#^origin/##')
+  _remote_branch="origin/${_local_branch}"
+  _subject=$(echo -n "${SELECTED}"| awk -F '\t' '{ print $5 }')
+
+  [[ "${_hash}" == "xxxxxxxxxx" ]] && add=" --respond_me_branch "
+
+  if (do_something "${_hash}" "${_date}" "${_author}" "${_local_branch}" "${_remote_branch}" "${_subject}" "$@" "$add"); then
     break
   fi
 done

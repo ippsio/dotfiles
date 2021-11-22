@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # exit when not a git repository.
 ! $(is_git_repository) && echo "Not a git repository." && exit 1
 
@@ -12,18 +11,16 @@ _echon() { ARG_COLOR=$2; printf "\e[m%s" "${ARG_COLOR}"; echo -n "$1"; printf "\
 
 CURRENT_BRANCH=$(current_git_branch)
 MERGE_BASE_INFO=$(git_get_merge_base_info "${CURRENT_BRANCH}")
-MERGE_BASE_BRANCH=origin/$(echo "${MERGE_BASE_INFO}"| grep "MERGE_BASE_BRANCH="| awk -F '=' '{ print $2 }'| sed -e 's#^origin/##')
+MERGE_BASE_BRANCH=$(echo "${MERGE_BASE_INFO}"| grep "MERGE_BASE_BRANCH="| awk -F '=' '{ print $2 }'| sed -e 's#^origin/##')
+if [[ "${MERGE_BASE_BRANCH}" == "" ]]; then
+  echo "MERGE_BASE_BRANCH empty. Bye"
+  exit 1
+fi
+MERGE_BASE_BRANCH=origin/${MERGE_BASE_BRANCH}
 MERGE_BASE_LONG_HASH="$(git merge-base ${MERGE_BASE_BRANCH} HEAD)"
 MERGE_BASE_HASH=$(git rev-parse --short "${MERGE_BASE_LONG_HASH}")
 PR_NO=$(echo "${MERGE_BASE_INFO}"| grep "PR_NO="| awk -F '=' '{ print $2 }')
 
-# echo "CURRENT_BRANCH=${CURRENT_BRANCH}"
-# echo "MERGE_BASE_INFO=${MERGE_BASE_INFO}"
-# echo "MERGE_BASE_BRANCH=${MERGE_BASE_BRANCH}"
-# echo "MERGE_BASE_LONG_HASH=${MERGE_BASE_LONG_HASH}"
-# echo "MERGE_BASE_HASH=${MERGE_BASE_HASH}"
-# echo "PR_NO=${PR_NO}"
-# exit 0
 _COLOR_LABEL="$(_fg 187)$(_bg 100)"
 _COLOR_COMMAND="$(_fg 245)$(_bg 234)"
 while true; do
@@ -78,7 +75,6 @@ while true; do
 
   # command
   list=()
-  #list+=("1, edit (neovim)          - (git_diff_fzf \"${MERGE_BASE_HASH}\" \"enter\")")
   list+=("1, edit (neovim)          - (git_diff_fzf \"${MERGE_BASE_BRANCH}\" \"enter\")")
   list+=("2, git log                - (git_log_fzf ${CURRENT_BRANCH})")
   list+=("3, show tig               - (tig ${MERGE_BASE_HASH}...HEAD)")
@@ -92,7 +88,6 @@ while true; do
     | fzf --disabled --no-clear --info=hidden --height=11 --prompt="COMMAND> " --bind "j:down" --bind "k:up" \
     | awk -F ',' '{ print $1 }')
   case "${REPLY}" in
-   # 1) git_diff_fzf "${MERGE_BASE_HASH}" "enter" ;;
     1) git_diff_fzf "${MERGE_BASE_BRANCH}" "enter" ;;
     2) git_log_fzf ${CURRENT_BRANCH} ;;
     3) tig ${MERGE_BASE_HASH}...HEAD ;;

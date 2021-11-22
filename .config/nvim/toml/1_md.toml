@@ -1,6 +1,3 @@
-# [[plugins]]
-# repo = 'tpope/vim-markdown'
-# on_ft = ['markdown']
 [[plugins]]
 repo = 'rcmdnk/vim-markdown'
 on_ft = ['markdown']
@@ -14,8 +11,6 @@ hook_add = '''
   hi htmlH4 ctermbg=131
   hi htmlH5 ctermbg=94
 
-  "hi markdownCode          guibg=#333333 guifg=#cccccc ctermbg=236 ctermfg=255
-  "hi markdownCodeDelimiter guibg=#222222 guifg=#cccccc ctermbg=88 ctermfg=211
   hi mkdCode guifg=#ffffff guibg=#666666 ctermbg=236 ctermfg=255
   hi mkdCodeDelimiter guifg=#ff6666 guibg=#663333 ctermbg=88 ctermfg=213
   hi mkdInlineCodeDelimiter guifg=#ff6666 guibg=#663333
@@ -23,16 +18,3 @@ hook_add = '''
   hi mkdBlockquote guifg=#cccccc guibg=#333333 ctermbg=236 ctermfg=255
 '''
 
-[[plugins]]
-repo = 'previm/previm'
-hook_add = '''
-  let g:previm_open_cmd = 'open -a "Google Chrome"'
-'''
-on_ft = ['markdown']
-
-[[plugins]]
-repo = 'dhruvasagar/vim-table-mode'
-hook_add = '''
-  let g:table_mode_corner = "|"
-'''
-on_ft = ['markdown']

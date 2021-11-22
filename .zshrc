@@ -23,7 +23,7 @@ setopt hist_verify # `!!`を実行したときにいきなり実行せずコマ�
 setopt ignore_eof # CTRL-D でログアウトしないようにする
 unsetopt LIST_BEEP # Turn off autocomplete beeps
 
-# source
+## source
 source ~/dotfiles/zshrc/00_export.zsh
 source ~/dotfiles/zshrc/10_prepare.zsh
 source ~/dotfiles/zshrc/20_alias.zsh
@@ -38,8 +38,10 @@ eval "$(direnv hook zsh)"
 eval "$(nodenv init -)"
 eval "$(goenv init -)"
 
-# zsh-plugin
+# zsh-plugin manager
 source ~/dotfiles/zshrc/60_zsh_plugin_manage.zsh
+# theme (fast-theme -l to show theme list.)
+fast-theme spa > /dev/null 2>&1
 
 # profiling
 ( type "zprof" > /dev/null 2>&1 ) && zprof| less # zprof

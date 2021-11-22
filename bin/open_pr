@@ -1,5 +1,0 @@
-#!/bin/bash
-PR_NO=$1
-[[ -z ${PR_NO} ]] && echo "No PR_NO specified." && exit 1
-REPO=$(git_reponame_get)
-open https://github.com/${REPO}/pull/${PR_NO}

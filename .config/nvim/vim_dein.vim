@@ -13,7 +13,6 @@ augroup END
 " call dein#recache_runtimepath() を実行するとキャッシュが削除される。
 " キャッシュを削除した後はvimを再起動しましょう。
 " call dein#recache_runtimepath()
-
 " Add the dein installation directory into runtimepath
 set runtimepath+=~/.cache/dein/repos/github.com/Shougo/dein.vim
 

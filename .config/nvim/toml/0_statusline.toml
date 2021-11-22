@@ -41,13 +41,7 @@ hook_add = '''
   endfunction
 
   function! StrUnderCursor()
-    let l:str = matchstr(getline('.'), '.', col('.')-1)
-    " if (l:str == "")
-    "   let l:str = "'' "
-    " else
-    "   let l:str = "'" . l:str . "'"
-    " endif
-    return l:str
+    return matchstr(getline('.'), '.', col('.')-1)
   endfunction
 
   function! StrGitMergeBase()
