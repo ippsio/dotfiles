@@ -12,6 +12,9 @@ augroup vimrc-highlight
   autocmd!
   autocmd Syntax conf if 10000 < line('$') | syntax sync minlines=100 | endif
 
+  " .slimなファイルのファイルタイプがslimであると、vimが気づいてくれない時があったので、その対策。
+  autocmd BufNewFile,BufRead *.slim setlocal filetype=slim
+
   autocmd BufRead,BufEnter,BufWinEnter * call DoWellByFileType()
   fun DoWellByFileType()
     if &ft == ""

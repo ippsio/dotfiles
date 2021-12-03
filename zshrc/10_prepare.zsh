@@ -29,17 +29,14 @@ type_or_inst rg
 type_or_inst tig
 type_or_inst fzf
 type_or_inst bat
+type_or_inst pyenv
+type_or_inst pyenv-virtualenv
+type_or_inst goenv
+type_or_inst rbenv
+type_or_inst ruby-build
 
-nodir_then_gitclone "${PYENV_ROOT}" "pyenv/pyenv.git"
-nodir_then_gitclone "${GOENV_ROOT}" "syndbg/goenv.git"
-nodir_then_gitclone "${PYENV_ROOT}/plugins/pyenv-virtualenv" "yyuu/pyenv-virtualenv.git"
-nodir_then_gitclone "${RBENV_ROOT}" "sstephenson/rbenv.git"
-nodir_then_gitclone "${RBENV_ROOT}/plugins/ruby-build" "sstephenson/ruby-build.git"
-# cd ${RBENV_ROOT} && src/configure && make -C src # Optionally, try to compile dynamic bash extension to speed up rbenv.
-# nodir_then_gitclone "${NODENV_ROOT}" "nodenv/nodenv.git"
-# nodir_then_gitclone "${NODENV_ROOT}/plugins/node-build" "nodenv/node-build.git"
+type_or_inst nodenv
 nodir_then_gitclone "${TMUX_PLUGINS}/tpm" "tmux-plugins/tpm"
-#nodir_then_gitclone "${ZPLUG_HOME}" "zplug/zplug"
 nodir_then_gitclone "${ZINIT_ROOT}" "zdharma/zinit.git" "${ZINIT_ROOT}/bin"
 nodir_then_gitclone "${HOME}/setting_box" "ippsio/setting_box.git"
 

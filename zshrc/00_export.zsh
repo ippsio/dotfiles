@@ -3,18 +3,12 @@
 # export environmental variables.
 # ----------------------------------
 export EDITOR=nvim
-#export ZPLUG_HOME=~/.cache/zplug
 export ZINIT_ROOT=~/.zinit
 export TMUX_PLUGINS=~/.cache/tmux/plugins
-export PYENV_ROOT=$HOME/.pyenv
-export GOENV_ROOT=$HOME/.goenv
-export RBENV_ROOT=$HOME/.rbenv
-export NODENV_ROOT=$HOME/.nodenv
-#export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
 
 # diff-highlight
 DIFF_HIGHLIGHT=$(find /opt/homebrew/Cellar/git -type f -name "diff-highlight" | sort -nr| head -n 1)
-export PATH=~/dotfiles/bin:${PYENV_ROOT}/bin:${GOENV_ROOT}/bin:${RBENV_ROOT}/bin:${NODENV_ROOT}/bin:${PATH}:$(dirname ${DIFF_HIGHLIGHT})
+export PATH=~/dotfiles/bin:${PATH}:$(dirname ${DIFF_HIGHLIGHT})
 
 # LSCOLORS
 # a black      , b red      , c green      , d brown      , e blue      , f magenta      , g cyan      , h light grey

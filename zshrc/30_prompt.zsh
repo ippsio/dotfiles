@@ -14,7 +14,9 @@ function +vi-git-set-message-hook() {
 
   # obtain git command results
   local git_remote="$(git remote get-url origin 2> /dev/null)"
-  local git_status="$(git status --porcelain --branch 2> /dev/null)"
+  # local git_status="$(git status --porcelain --branch 2> /dev/null)"
+  local git_status="$(git status --porcelain --branch 2> /dev/null| awk '{ print substr( $1 " ", 0, 2) }')"
+
   local git_stash="$(git stash list 2>/dev/null)"
   local git_log="$(git rev-list origin/${hook_com[branch]}..${hook_com[branch]} 2> /dev/null)"
 
@@ -22,7 +24,30 @@ function +vi-git-set-message-hook() {
   local repo=$(echo ${git_remote}| egrep -o "([a-zA-Z0-9+-]+)\/([a-zA-Z0-9+-]+)(.git)?$")
   local ahead=$(echo "${git_log}"| egrep -v "^$"       | wc -l| tr -d ' ')
   local behind=${$(echo ${git_status}   | egrep "^##"| egrep -o "behind [0-9]+"| sed -e "s/behind //"):-0}
-  local untracked=$(echo "${git_status}"| egrep -c "^(\?\?)")
+
+  local not updated=$(                  echo "${git_status}"| egrep -c "^([AMD][ ])")
+  local updated_in_index=$(             echo "${git_status}"| egrep -c "^(M[ MD])")
+  local added_to_index=$(               echo "${git_status}"| egrep -c "^(A[ MD])")
+  local deleted_from_index=$(           echo "${git_status}"| egrep -c "^(D[ ])")
+  local renamed_in_index=$(             echo "${git_status}"| egrep -c "^(R[ MD])")
+  local copied_in_index=$(              echo "${git_status}"| egrep -c "^(C[ MD])")
+  local index_and_work_tree_matches=$(  echo "${git_status}"| egrep -c "^([MARC][ ])")
+  local work_tree_changed_since_index=$(echo "${git_status}"| egrep -c "^([ MARC]M)")
+  local deleted_in_work_tree=$(         echo "${git_status}"| egrep -c "^([ MARC]D)")
+  local renamed_in_work_tree=$(         echo "${git_status}"| egrep -c "^([ D]R)")
+  local copied_in_work_tree=$(          echo "${git_status}"| egrep -c "^([ D]C)")
+
+  local unmerged_both_deleted=$(        echo "${git_status}"| egrep -c "^(DD)")
+  local unmerged_added_by_us=$(         echo "${git_status}"| egrep -c "^(AU)")
+  local unmerged_deleted_by_them=$(     echo "${git_status}"| egrep -c "^(UD)")
+  local unmerged_added_by_them=$(       echo "${git_status}"| egrep -c "^(UA)")
+  local unmerged_deleted_by_us=$(       echo "${git_status}"| egrep -c "^(DU)")
+  local unmerged_both_added=$(          echo "${git_status}"| egrep -c "^(AA)")
+  local unmerged_both_modified=$(       echo "${git_status}"| egrep -c "^(UU)")
+
+  local untracked=$(                    echo "${git_status}"| egrep -c "^(\?\?)")
+  # local ignored=$(                      echo "${git_status}"| egrep -c "^(!!)")
+
   local unstaged=$(echo "${git_status}" | egrep -c "^([ ADM]M)")
   local deleted=$(echo "${git_status}"  | egrep -c "^([ AM]D)")
   local staged=$(echo "${git_status}"   | egrep -c "^([AMD])")
@@ -72,7 +97,7 @@ function +vi-git-set-message-hook() {
 #   o   R = renamed
 #   o   C = copied
 #   o   U = updated but unmerged
-#       X        Y     Meaning
+#       X        Y     Meaning(X=the status of the index, Y=the status of the working tree)
 #       -------------------------------------------------
 #              [AMD]   not updated
 #       M      [ MD]   updated in index
