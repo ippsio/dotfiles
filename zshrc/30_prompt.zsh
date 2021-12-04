@@ -17,21 +17,21 @@ function +vi-git-set-message-hook() {
   local git_status="$(git status --porcelain --branch --ahead-behind 2> /dev/null)"
   local git_XY="$(echo -e ${git_status}| sed -e "s/^\(..\).*$/\1/")"
 
-  local stash="$(git stash list 2>/dev/null| egrep "^stash@"| wc -l| tr -d ' ')"
-  [[ "${stash}" == "0" ]] && stash=""
+  local stash_9="$(git stash list 2>/dev/null| egrep "^stash@"| wc -l| tr -d ' ')"
+  [[ "${stash_9}" == "0" ]] && stash_9=""
 
   # collect results
-  local repo=$(echo ${git_remote}| egrep -o "([a-zA-Z0-9_+-]+)\/([a-zA-Z0-9_+-]+)(.git)?$")
-  [ -z ${repo} ] && repo="NOT_SPECIFIED"
-  local ahead=$(echo -e ${git_status}| egrep "ahead [0-9]*"| sed -e "s/^.*\[ahead \([0-9]*\).*/\1/")
-  [ -z ${ahead} ] && ahead=0
+  local repo_1=$(echo ${git_remote}| egrep -o "([a-zA-Z0-9_+-]+)\/([a-zA-Z0-9_+-]+)(.git)?$")
+  [ -z ${repo_1} ] && repo_1="NOT_SPECIFIED"
+  local ahead_7=$(echo -e ${git_status}| egrep "ahead [0-9]*"| sed -e "s/^.*\[ahead \([0-9]*\).*/\1/")
+  [ -z ${ahead_7} ] && ahead_7=0
 
   # case
   # ## master...origin/master [ahead 1]
   # ## master...origin/master [behind 1]
   # ## master...origin/master [ahead 1, behind 1]
-  local behind=$(echo -e ${git_status}| egrep "behind [0-9]*"| sed -e "s/^.*[ \[]behind \([0-9]*\).*/\1/")
-  [ -z ${behind} ] && behind=0
+  local behind_8=$(echo -e ${git_status}| egrep "behind [0-9]*"| sed -e "s/^.*[ \[]behind \([0-9]*\).*/\1/")
+  [ -z ${behind_8} ] && behind_8=0
 
   # <indexに載ってるもの>
   # local updated_in_index=$(             echo "${git_XY}"| egrep -c "^(M[ MD])")
@@ -43,7 +43,7 @@ function +vi-git-set-message-hook() {
   # local index_and_work_tree_matches=$(  echo "${git_XY}"| egrep -c "^([MARC][ ])")
 
   # 上記を参考にすると、これからgit commitしないといかんものはつまり、これだ
-  local index=$(echo "${git_XY}"| egrep -c "^([MADRC][ MD])")
+  local index_6=$(echo "${git_XY}"| egrep -c "^([MADRC][ MD])")
   # </indexに載ってるもの>
 
   # <worktreeの変更>
@@ -61,14 +61,16 @@ function +vi-git-set-message-hook() {
   # local unmerged_both_modified=$(       echo "${git_XY}"| egrep -c "^(UU)")
 
   # 上記を参考にすると、これからgit addしないといかんものはつまり、これだ
-  local unstaged=$(                     echo "${git_XY}"| egrep -c "^([ MADRC][MADRCU])")
+  #local unstaged_4=$(                     echo "${git_XY}"| egrep -c "^([ MADRC][MADRCU])")
+  local unstaged_4=$(                     echo "${git_XY}"| egrep -c "^([ MADRC][MDRC])")
+  # 上記を参考にすると、merge時の競合を解決しないといけないものはたぶんこれ。
+  local unmerged_5=$(                     echo "${git_XY}"| egrep -c "^([DAU][DAU])")
+  # [[ "${unmerged_5}" == "0" ]] && unmerged_5=""
   # local deleted=$(                      echo "${git_XY}"| egrep -c "^([ MADRC][D])")
   # </worktreeの変更>
 
-  local untracked=$(                    echo "${git_XY}"| egrep -c "^(\?\?)")
+  local untracked_3=$(                    echo "${git_XY}"| egrep -c "^(\?\?)")
   # local ignored=$(                      echo "${git_XY}"| egrep -c "^(!!)")
-
-  # local stash=$(echo "${git_XY}" | sed '/^$/d'| wc -l| tr -d ' ')
 
 # ---------------------------
 # FYI: from `man git-status`
@@ -142,7 +144,7 @@ function +vi-git-set-message-hook() {
 
 
   # misc (%m) に追加
-  hook_com[misc]="${repo} ${hook_com[branch]} ${untracked} ${unstaged} ${index} ${ahead} ${behind} ${stash} ${hook_com[action]}"
+  hook_com[misc]="${repo_1} ${hook_com[branch]} ${untracked_3} ${unstaged_4} ${unmerged_5} ${index_6} ${ahead_7} ${behind_8} ${stash_9} ${hook_com[action]}"
 }
 
 function _precmd_vcs_info_msg() {
@@ -160,6 +162,7 @@ _text_worktree="worktree"
 #_mark_deleted="x"
 _mark_untracked="?"
 _mark_unstaged="m"
+_mark_unmerged="!"
 # _text_staged="stage"
 _text_staged="index"
 _mark_staged="+"
@@ -188,22 +191,23 @@ GIT_BRANCH="%K{220}%F{0}%(2v| ${_mark_branch}%2v]|)%f%k"
 # git working_tree
 #_deleted="%(3v|${_text_worktree}[${_mark_deleted}%3v|)"
 _untracked="%(3v| ${_text_worktree}[${_mark_untracked}%3v|)"
-_unstaged="%(4v| ${_mark_unstaged}%4v]|)"
-GIT_WORKING_TREE="%K{8}%F{143}${_untracked}${_unstaged}%f%k"
+_unstaged="%(4v| ${_mark_unstaged}%4v|)"
+_unmerged="%(5v| ${_mark_unmerged}%5v]|)"
+GIT_WORKING_TREE="%K{8}%F{143}${_untracked}${_unstaged}${_unmerged}%f%k"
 
 # git stage
-_staged="%(5v| ${_text_staged}[${_mark_staged}%5v]|)%k"
+_staged="%(6v| ${_text_staged}[${_mark_staged}%6v]|)%k"
 # GIT_STAGE="%K{90}%F{255}${_staged}%f%k"
 GIT_STAGE="%K{61}%F{153}${_staged}%f%k"
 
 # git local repositry
-_ahead="%(6v| ${_text_repo}[${_mark_ahead}%6v|)"
-_behind="%(7v| ${_mark_behind}%7v]|)"
+_ahead="%(7v| ${_text_repo}[${_mark_ahead}%7v|)"
+_behind="%(8v| ${_mark_behind}%8v]|)"
 GIT_LOCAL_REPO="%K{90}%F{200}${_ahead}${_behind}%f%k"
 
-_stash="%(8v| ${_mark_stash}(%8v) |)"
-# 10v,11v,12v,13vって....。たぶんもっといいやり方あるんだろうけど、調べるのが面倒臭かったんです..
-_more_such_as_rebase="%(10v| %10v |)%(11v| %11v |)%(12v| %12v |)%(13v| %13v |)"
+_stash="%(9v| ${_mark_stash}(%9v) |)"
+# 9v,10v,11v,12v,13vって....。たぶんもっといいやり方あるんだろうけど、調べるのが面倒臭かったんです..
+_more_such_as_rebase="%(9v| %9v |)%(10v| %10v |)%(11v| %11v |)%(12v| %12v |)%(13v| %13v |)"
 GIT_CAUTION="%K{18}${_stash}${_more_such_as_rebase}%k"
 
 # others
