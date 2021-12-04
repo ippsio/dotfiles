@@ -80,7 +80,8 @@ set diff-highlight = true
 # ======================
 # 各viewの表示
 # ======================
-set main-view   = id date author:email-user commit-title:graph=yes,refs=yes
+#set main-view   = id date author:email-user commit-title:graph=yes,refs=yes
+set main-view   = id date author commit-title:graph=yes,refs=yes
 set blame-view  = date:default author:email-user id:yes,color line-number:yes,interval=1 text
 set pager-view  = line-number:yes,interval=1 text
 set stage-view  = line-number:yes,interval=1 text
@@ -107,7 +108,10 @@ set split-view-height = 60%
 # 長い行をラップするか
 set wrap-lines = no
 # 行の描画のための文字グラフィックスの種類 [ascii|default|utf-8|<bool>]
-set line-graphics = utf-8
+set line-graphics = ascii
+#set line-graphics = default
+#set line-graphics = utf-8
+#set line-graphics = bool
 # タブごとの空白の数
 set tab-size = 2
 # diffビュー内の空白の変更を無視するか

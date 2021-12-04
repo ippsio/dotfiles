@@ -14,17 +14,24 @@ function +vi-git-set-message-hook() {
 
   # obtain git command results
   local git_remote="$(git remote get-url origin 2> /dev/null)"
-  # local git_status="$(git status --porcelain --branch 2> /dev/null)"
-  local git_status="$(git status --porcelain --branch 2)"
-  local git_XY="$(git status --porcelain --branch 2> /dev/null| sed -e "s/^\(..\).*$/\1/")"
+  local git_status="$(git status --porcelain --branch --ahead-behind 2> /dev/null)"
+  local git_XY="$(echo -e ${git_status}| sed -e "s/^\(..\).*$/\1/")"
 
-  local git_stash="$(git stash list 2>/dev/null)"
-  local git_log="$(git rev-list origin/${hook_com[branch]}..${hook_com[branch]} 2> /dev/null)"
+  local stash="$(git stash list 2>/dev/null| egrep "^stash@"| wc -l| tr -d ' ')"
+  [[ "${stash}" == "0" ]] && stash=""
 
   # collect results
-  local repo=$(echo ${git_remote}| egrep -o "([a-zA-Z0-9+-]+)\/([a-zA-Z0-9+-]+)(.git)?$")
-  local ahead=$(echo "${git_log}"| egrep -v "^$"       | wc -l| tr -d ' ')
-  local behind=${$(echo ${git_status}   | egrep "^##"| egrep -o "behind [0-9]+"| sed -e "s/behind //"):-0}
+  local repo=$(echo ${git_remote}| egrep -o "([a-zA-Z0-9_+-]+)\/([a-zA-Z0-9_+-]+)(.git)?$")
+  [ -z ${repo} ] && repo="NOT_SPECIFIED"
+  local ahead=$(echo -e ${git_status}| egrep "ahead [0-9]*"| sed -e "s/^.*\[ahead \([0-9]*\).*/\1/")
+  [ -z ${ahead} ] && ahead=0
+
+  # case
+  # ## master...origin/master [ahead 1]
+  # ## master...origin/master [behind 1]
+  # ## master...origin/master [ahead 1, behind 1]
+  local behind=$(echo -e ${git_status}| egrep "behind [0-9]*"| sed -e "s/^.*[ \[]behind \([0-9]*\).*/\1/")
+  [ -z ${behind} ] && behind=0
 
   # <indexに載ってるもの>
   # local updated_in_index=$(             echo "${git_XY}"| egrep -c "^(M[ MD])")
@@ -37,8 +44,6 @@ function +vi-git-set-message-hook() {
 
   # 上記を参考にすると、これからgit commitしないといかんものはつまり、これだ
   local index=$(echo "${git_XY}"| egrep -c "^([MADRC][ MD])")
-  # echo "${git_XY}"
-  # echo "index=${index}"
   # </indexに載ってるもの>
 
   # <worktreeの変更>
@@ -54,41 +59,16 @@ function +vi-git-set-message-hook() {
   # local unmerged_deleted_by_us=$(       echo "${git_XY}"| egrep -c "^(DU)")
   # local unmerged_both_added=$(          echo "${git_XY}"| egrep -c "^(AA)")
   # local unmerged_both_modified=$(       echo "${git_XY}"| egrep -c "^(UU)")
-  # </worktreeの変更>
 
   # 上記を参考にすると、これからgit addしないといかんものはつまり、これだ
   local unstaged=$(                     echo "${git_XY}"| egrep -c "^([ MADRC][MADRCU])")
   # local deleted=$(                      echo "${git_XY}"| egrep -c "^([ MADRC][D])")
+  # </worktreeの変更>
 
   local untracked=$(                    echo "${git_XY}"| egrep -c "^(\?\?)")
   # local ignored=$(                      echo "${git_XY}"| egrep -c "^(!!)")
 
-  # echo "-----------"
-  # echo "updated_in_index=${updated_in_index}"
-  # echo "added_to_index=${added_to_index}"
-  # echo "deleted_from_index=${deleted_from_index}"
-  # echo "renamed_in_index=${renamed_in_index}"
-  # echo "copied_in_index=${copied_in_index}"
-  # echo "index_and_work_tree_matches=${index_and_work_tree_matches}"
-  # echo "not_updated=${not_updated}"
-  # echo "-----------"
-  # echo "work_tree_changed_since_index=${work_tree_changed_since_index}"
-  # echo "deleted_in_work_tree=${deleted_in_work_tree}"
-  # echo "renamed_in_work_tree=${renamed_in_work_tree}"
-  # echo "copied_in_work_tree=${copied_in_work_tree}"
-  # echo "-----------"
-  # echo "unmerged_both_deleted=${unmerged_both_deleted}"
-  # echo "unmerged_added_by_us=${unmerged_added_by_us}"
-  # echo "unmerged_deleted_by_them=${unmerged_deleted_by_them}"
-  # echo "unmerged_added_by_them=${unmerged_added_by_them}"
-  # echo "unmerged_deleted_by_us=${unmerged_deleted_by_us}"
-  # echo "unmerged_both_added=${unmerged_both_added}"
-  # echo "unmerged_both_modified=${unmerged_both_modified}"
-  # echo "untracked=${untracked}"
-
-  # local unstaged=$(echo "${git_XY}" | egrep -c "^([ ADM]M)")
-  # local deleted=$(echo "${git_XY}"  | egrep -c "^([ AM]D)")
-  local stash=$(echo "${git_XY}" | sed '/^$/d'| wc -l| tr -d ' ')
+  # local stash=$(echo "${git_XY}" | sed '/^$/d'| wc -l| tr -d ' ')
 
 # ---------------------------
 # FYI: from `man git-status`
