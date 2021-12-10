@@ -1,14 +1,16 @@
-# [[plugins]]
-# repo = 'vim-ruby/vim-ruby'
-# on_ft = ['ruby']
+#### [[plugins]]
+#### repo = 'vim-ruby/vim-ruby'
+#### on_ft = ['ruby']
 
 [[plugins]]
 repo = 'tpope/vim-rails'
 on_ft = ['ruby', 'rake', 'eruby', 'slim']
+
 [[plugins]]
 repo = 'vim-scripts/ruby-matchit'
 on_ft = ['ruby', 'rake', 'eruby', 'slim']
 
+# slimのハイライト
 [[plugins]]
 repo = 'slim-template/vim-slim'
 on_ft = ['slim']

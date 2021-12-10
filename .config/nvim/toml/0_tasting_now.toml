@@ -137,18 +137,16 @@ repo = 'ujihisa/neco-look'
 #[[plugins]]
 #repo = 'Townk/vim-autoclose'
 
-#[[plugins]]
-#repo = 'nvim-treesitter/nvim-treesitter'
-#hook_add = '''
-#lua <<EOF
-#require'nvim-treesitter.configs'.setup {
-#  highlight = {
-#    enable = true,
-#    disable = {
-#      'ruby',
-#    }
-#  }
-#}
-#EOF
-#'''
+[[plugins]]
+repo = 'nvim-treesitter/nvim-treesitter'
+hook_add = '''
+lua <<EOF
+require'nvim-treesitter.configs'.setup {
+  highlight = {
+    enable = true,
+    disable = { }
+  }
+}
+EOF
+'''
 

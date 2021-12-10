@@ -39,7 +39,7 @@ if dein#load_state('~/.cache/dein')
   " lazy1: 特定のfiletypeでのみ動く
   call dein#load_toml('~/.config/nvim/toml/1_toml.toml', {'lazy': 1})
   call dein#load_toml('~/.config/nvim/toml/1_rb.toml', {'lazy': 1})
-  call dein#load_toml('~/.config/nvim/toml/1_md.toml', {'lazy': 1})
+  " call dein#load_toml('~/.config/nvim/toml/1_md.toml', {'lazy': 1})
   call dein#load_toml('~/.config/nvim/toml/1_json.toml', {'lazy': 1})
   call dein#load_toml('~/.config/nvim/toml/1_typescript.toml', {'lazy': 1})
   call dein#load_toml('~/.config/nvim/toml/1_yaml.toml', {'lazy': 1})

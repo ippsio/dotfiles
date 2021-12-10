@@ -45,7 +45,7 @@ export LC_ALL=
 # FZF
 # ---------------------
 fzf_default_opts=()
-fzf_default_opts+=("--exact --extended --reverse --border --no-sort")
+fzf_default_opts+=("--exact --extended --reverse --border --no-sort --no-unicode")
 fzf_default_opts+=("--bind change:top")
 fzf_default_opts+=("--preview-window=bottom:60%")
 fzf_default_opts+=("--color fg:-1,bg:-1,hl:226")

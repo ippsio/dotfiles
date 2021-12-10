@@ -16,5 +16,13 @@ hook_add = '''
   hi mkdInlineCodeDelimiter guifg=#ff6666 guibg=#663333
 
   hi mkdBlockquote guifg=#cccccc guibg=#333333 ctermbg=236 ctermfg=255
+
+  let g:vim_markdown_folding_disabled=1
+  let g:vim_markdown_liquid=1
+  let g:vim_markdown_math=0
+  let g:vim_markdown_frontmatter=1
+  let g:vim_markdown_toml_frontmatter=1
+  let g:vim_markdown_json_frontmatter=0
+  set nofoldenable
 '''
 
