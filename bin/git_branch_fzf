@@ -64,15 +64,18 @@ do_something() {
 QUERY=""
 while true; do
   HASH="%(color:51)%(objectname:short)%(color:reset)"
-  DATE="%(color:169)%(authordate:format:%Y-%m-%d %H:%M:%S(%a))%(color:reset)"
+  DATE="%(color:169)%(authordate:format:%Y-%m-%då%H:%M:%S(%a))%(color:reset)"
   BRANCH="%(color:51)%(refname:short)%(color:reset)"
   AUTHOR="%(color:51)%(authorname)%(color:reset)"
 
   SUBJECT="%(subject)"
-  HELPER1=$(printf "\e[38;5;51mxxxxxxxxxx\e[m	\e[38;5;169mxxxx-xx-xx xx:xx:xx(XXX)\e[m	\e[38;5;51m--\e[m	\e[38;5;51mxxxxxx\e[m	現在の変更を取り消す。")
-  HELPER2=$(printf "\e[38;5;51mxxxxxxxxxx\e[m	\e[38;5;169mxxxx-xx-xx xx:xx:xx(XXX)\e[m	\e[38;5;51m-b\e[m	\e[38;5;51mxxxxxx\e[m	ブランチを作る。")
+  COLOR0="\e[m"
+  COLOR1="\e[38;5;51m"
+  COLOR2="\e[38;5;169m"
+  HELPER1=$(printf "${COLOR1}xxxxxxxxxx${COLOR0}	${COLOR2}xxxx-xx-xxåxx:xx:xx(XXX)${COLOR0}	${COLOR1}xxxxxx${COLOR0}	${COLOR1}--${COLOR0}å|å現在の変更を取り消す。")
+  HELPER2=$(printf "${COLOR1}xxxxxxxxxx${COLOR0}	${COLOR2}xxxx-xx-xxåxx:xx:xx(XXX)${COLOR0}	${COLOR1}xxxxxx${COLOR0}	${COLOR1}-b${COLOR0}å|åブランチを作る。")
 
-  CMD="git branch --color=always -a --format=\"${HASH}	${DATE}	${BRANCH}	${AUTHOR}	${SUBJECT}\""
+  CMD="git branch --color=always -a --format=\"${HASH}	${DATE}	${AUTHOR}	${BRANCH}å|å${SUBJECT}\""
   OTHER_BRANCHS=$(eval "${CMD} --sort=-authordate")
 
   _FZF_PROMPT="$_ME > "
@@ -84,25 +87,23 @@ while true; do
   # {1} hash {2} date {3} author {4} branch {5} subject
   #FZF_RES=$(printf '%s\n%s\n%s\n%s\n%s' "${DEVEL_BRANCHS}" "${HELPER1}" "${HELPER2}" "${HELPER3}" "${OTHER_BRANCHS}" \
   FZF_RES=$(printf '%s\n%s\n%s\n' "${HELPER1}" "${HELPER2}" "${OTHER_BRANCHS}" \
-    | sed -e 's/ /å/g'| column -t | sed -e 's/å/ /g' \
+    | sed -e 's/ /　/g'| column -t \
+    | sed -e 's/å/ /g' \
     | fzf --print-query --ansi --query="${QUERY}" --prompt="${_FZF_PROMPT}" --header="${_FZF_HEADER}" \
-       --no-sort --tabstop=2 --info=inline --delimiter "	" --nth 1..4)
+       --no-sort --tabstop=1 --info=inline --delimiter '\|' --nth 1) # パイプマークより左にある文字列でのみ検索できるようにした。
 
   QUERY="$(echo "$FZF_RES"| awk 'NR==1')"
   SELECTED=$(echo "$FZF_RES"| awk 'NR==2')
-  #echo "QUERY=$QUERY"
-  #echo "SELECTED=$SELECTED"
 
-  #SELECTED=$(select_branch "$@")
   [[ "${SELECTED}" == "" ]] && exit 0
 
   _hash=$(echo -n "${SELECTED}"| awk '{ print $1 }')
-  _date=$(echo -n "${SELECTED}"| awk '{ print $2 }')
-  _author=$(echo -n "${SELECTED}"| awk '{ print $3 }')
-  _branch=$(echo -n "${SELECTED}"| awk '{ print $4 }')
-  _local_branch=$(echo -n "${SELECTED}"| awk '{ print $4 }'| sed -e 's#^origin/##')
+  _date=$(echo -n "${SELECTED}"| awk '{ print $2" "$3 }')
+  _author=$(echo -n "${SELECTED}"| awk '{ print $4 }')
+  _branch=$(echo -n "${SELECTED}"| awk '{ print $5 }')
+  _local_branch=$(echo -n "${SELECTED}"| awk '{ print $5 }'| sed -e 's#^origin/##')
   _remote_branch="origin/${_local_branch}"
-  _subject=$(echo -n "${SELECTED}"| awk '{ print $5 }')
+  _subject=$(echo -n "${SELECTED}"| awk '{ print $6$7$8$9$10$11 }')
 
   [[ "${_hash}" == "xxxxxxxxxx" ]] && add=" --respond_me_branch "
 
