@@ -85,10 +85,10 @@ while true; do
 "
 
   # {1} hash {2} date {3} author {4} branch {5} subject
-  #FZF_RES=$(printf '%s\n%s\n%s\n%s\n%s' "${DEVEL_BRANCHS}" "${HELPER1}" "${HELPER2}" "${HELPER3}" "${OTHER_BRANCHS}" \
+  # NOTE: `LC_TYPE=C` is solution for error "sed: RE error: illegal byte sequence".
   FZF_RES=$(printf '%s\n%s\n%s\n' "${HELPER1}" "${HELPER2}" "${OTHER_BRANCHS}" \
-    | sed -e 's/ /　/g'| column -t \
-    | sed -e 's/å/ /g' \
+    | LC_CTYPE=C sed -e 's/ /　/g'| column -t \
+    | LC_CTYPE=C sed -e 's/å/ /g' \
     | fzf --print-query --ansi --query="${QUERY}" --prompt="${_FZF_PROMPT}" --header="${_FZF_HEADER}" \
        --no-sort --tabstop=1 --info=inline --delimiter '\|' --nth 1) # パイプマークより左にある文字列でのみ検索できるようにした。
 
