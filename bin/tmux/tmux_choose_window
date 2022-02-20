@@ -44,6 +44,30 @@
 # WINDOW_TREE_DEFAULT_FORMAT+=$(echo   "}")
 # WINDOW_TREE_DEFAULT_FORMAT+=$(echo "}")
 
+# window_flags
+# window.c
+# 	pos = 0;
+# 	if (wl->flags & WINLINK_ACTIVITY) {
+# 		flags[pos++] = '#';
+# 		if (escape)
+# 			flags[pos++] = '#';
+# 	}
+# 	if (wl->flags & WINLINK_BELL)
+# 		flags[pos++] = '!';
+# 	if (wl->flags & WINLINK_SILENCE)
+# 		flags[pos++] = '~';
+# 	if (wl == s->curw)
+# 		flags[pos++] = '*';
+# 	if (wl == TAILQ_FIRST(&s->lastw))
+# 		flags[pos++] = '-';
+# 	if (server_check_marked() && wl == marked_pane.wl)
+# 		flags[pos++] = 'M';
+# 	if (wl->window->flags & WINDOW_ZOOMED)
+# 		flags[pos++] = 'Z';
+# 	flags[pos] = '\0';
+# 	return (flags);
+# }
+
 # So ... This is customized style.
 WINDOW_TREE_DEFAULT_FORMAT=""
 WINDOW_TREE_CUSTOM_FORMAT+=$(echo "#{?pane_format,")

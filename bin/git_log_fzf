@@ -1,40 +1,83 @@
 #!/bin/bash
-hr() { eval printf %.0s- '{1..'"${COLUMNS:-$(tput cols)}"\}; echo; }
+# -------------------------------------------------------------
+# git_log_fzf <commit1> <commit2>
+# - commit1: required.
+# - commit2: optional.
+# -------------------------------------------------------------
+commit1=${1:-$(current_git_branch)}
+commit2=${2:-HEAD}
+file=${3}
 
 _ME=$( [ -L $0 ] && basename $(readlink $0) || basename $0)
 
-# TARGET_BRANCH=${1:-$(git_branch_fzf)}
-TARGET_BRANCH=${1:-$(current_git_branch)}
-_FZF_PROMPT="${_ME} (branch=${TARGET_BRANCH}) > "
-_FZF_HEADER="gitのコミット履歴です。
- enter: git diff を見る。
- ctrl-p: PR をブラウザで開く。
- ctrl-y: コミットハッシュをクリップボードにコピーする。
+_FZF_PROMPT="${_ME} (commit1=[${commit1}],commit2=[${commit2}],file=[$file]) > "
+LF=$'\n'
+_FZF_HEADER+="gitのコミット履歴です。${LF}"
+_FZF_HEADER+=" enter: git diff を見る。${LF}"
+_FZF_HEADER+=" ctrl-p: PR をブラウザで開く。${LF}"
+_FZF_HEADER+=" ctrl-y: コミットハッシュをクリップボードにコピーする。${LF}"
 
-"
+GIT_LOG_CMD="git --no-pager log"\
+" --oneline"\
+" --decorate=full"\
+" --date=format-local:'%Y/%m/%d %H:%M(%a)'"\
+" --pretty=format:'%C($(git config --get color.diff.commit))%h%Creset"\
+" %cd"\
+" %C(187 17)%an%Creset"\
+" %s"\
+" %d'"\
+" --abbrev-commit"\
+" --color=always"\
+" ${commit1}..${commit2}"
+if [ "${file}" != "" ]; then
+  GIT_LOG_CMD="${GIT_LOG_CMD} -- ${file}"
+fi
+GIT_LOG_CMD="${GIT_LOG_CMD}| cat -n| sed -r 's/^ *([0-9]+)\t(.*)/\1@@@\2/'| awk -F '@@@' '{printf \"%+2s\" , \$1} {print \" \" \$2}'"
+GIT_LOG_CMD="${GIT_LOG_CMD}| tac| tail -n +2| tac"
 
-HASH="%C($(git config --get color.diff.commit))%h%Creset"
-COMMIT_DATE="%cd"
-AUTHOR="%C(187 17)%an%Creset"
-SUBJECT="%s"
+GIT_LOG_ONE_CMD="git log -1"\
+" --oneline"\
+" --decorate=full"\
+" --date=format-local:'%Y/%m/%d %H:%M(%a)'"\
+" --pretty=format:'%C($(git config --get color.diff.commit))%h%Creset"\
+" %cd"\
+" %C(187 17)%an%Creset"\
+" %s"\
+" %d'"\
+" --abbrev-commit"\
+" --color=always"\
+" {2}"
 
-CMD="git --no-pager log --oneline ${TARGET_BRANCH} --date=format-local:'%Y/%m/%d %H:%M(%a)' --pretty=format:\" ${HASH} ${COMMIT_DATE} ${AUTHOR} ${SUBJECT}\" --abbrev-commit --color=always"
-_HARF_TERM_COLS=$(( $(tput cols) / 3 ))
+GIT_LOG_STAT="git log -1 --oneline --stat {2} --color=always| tail -n +2"
 
-eval $CMD \
+GIT_LOG_P_CMD="git log -1"\
+" --oneline"\
+" -p"\
+" {2}"\
+" --color=always"
+if ( type "diff-highlight" > /dev/null 2>&1 );then
+  GIT_LOG_P_CMD="${GIT_LOG_P_CMD}| diff-highlight"
+fi
+GIT_LOG_P_CMD="${GIT_LOG_P_CMD}| tail -n +2"
+
+eval "${GIT_LOG_CMD}" \
   | fzf --ansi --prompt="${_FZF_PROMPT}" --header="${_FZF_HEADER}" --no-sort \
   --nth=1.. \
-  --bind "enter:execute(git show -p {1}| nvim -R -c \"set ft=diff nomod nolist nospell nu\" > /dev/tty)" \
-  --bind "ctrl-y:execute(echo -n {1}| pbcopy)" \
+  --bind "enter:execute(git show -p {2}| nvim -R -c \"set ft=diff nomod nolist nospell nu\" > /dev/tty)" \
+  --bind "ctrl-y:execute(echo -n {2}| pbcopy)" \
   --bind "ctrl-/:toggle-preview" \
-  --bind "ctrl-p:execute:(git_pr_fzf {1})" \
+  --bind "ctrl-p:execute:(git_pr_fzf {2})" \
   --preview="
-      git log -1 --oneline --decorate=full --date=format-local:'%Y/%m/%d %H:%M:%S(%a)' --pretty=format:'%C(010 022)%h%C(reset) %C(039 017)(%cd)%C(reset) %C(079)%an%C(reset) %C(226 021)%d%C(reset)%s' --abbrev-commit {1} --color=always
-      ; echo
-      ; echo
-      ;git log -1 --oneline --stat {1} --color=always| tail -n +2
-      ; eval printf %.0s- '{1..'"${COLUMNS:-$(tput cols)}"\}; echo
-      ; echo
-      ;git log -1 --oneline -p {1} --color=always| diff-highlight | less
+      color() { printf '\e[38;5;%dm\e[48;5;%dm' 173 234; };
+      reset_color() { printf '\e[0m'; };
+      color; echo \"${GIT_LOG_ONE_CMD}\"; reset_color; eval \"${GIT_LOG_ONE_CMD}\";
+      echo;
+      echo;
+
+      color; echo \"${GIT_LOG_STAT}\"; reset_color; eval \"${GIT_LOG_STAT}\";
+      eval printf '%.0s-' '{1..'$(tput cols)'}';
+      echo;
+
+      color; echo \"${GIT_LOG_P_CMD}\"; reset_color; eval \"${GIT_LOG_P_CMD}\";
     "
 

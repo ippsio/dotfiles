@@ -10,8 +10,9 @@ _echo() { ARG_COLOR=$2; printf "\e[m%s" "${ARG_COLOR}"; echo -n "$1"; printf "\e
 _echon() { ARG_COLOR=$2; printf "\e[m%s" "${ARG_COLOR}"; echo -n "$1"; printf "\e[m"; }
 
 CURRENT_BRANCH=$(current_git_branch)
-MERGE_BASE_INFO=$(git_get_merge_base_info "${CURRENT_BRANCH}")
-MERGE_BASE_BRANCH=$(echo "${MERGE_BASE_INFO}"| grep "MERGE_BASE_BRANCH="| awk -F '=' '{ print $2 }'| sed -e 's#^origin/##')
+ARG_BRANCH=$1
+MERGE_BASE_INFO=$(git_get_merge_base_info "${CURRENT_BRANCH}" "${ARG_BRANCH}")
+MERGE_BASE_BRANCH=$(echo "${MERGE_BASE_INFO}"| grep "MERGE_BASE_BRANCH="| awk -F '=' '{ print $2 }'| sed -e 's#^origin/##'| sed -e 's/ *//g')
 if [[ "${MERGE_BASE_BRANCH}" == "" ]]; then
   echo "MERGE_BASE_BRANCH empty. Bye"
   exit 1
@@ -55,17 +56,20 @@ while true; do
   _TOTAL_COMMITS=$(eval "${_CMD}")
 
   _echon "[git log]" "${_COLOR_LABEL}" && echo " (${_TOTAL_COMMITS} commits in total.)"
-  _CMD="git --no-pager log --oneline ${MERGE_BASE_HASH}...HEAD --reverse --oneline -${COMMITS_COUNT_LAST}"
-  _CMD+=" --date=format-local:'%Y/%m/%d %H:%M'"
-  _CMD+=" --pretty=format:\" ${HASH} ${COMMIT_DATE} ${AUTHOR} ${SUBJECT}\""
-  _CMD+=" --abbrev-commit"
+  _CMD="git --no-pager log --oneline ${MERGE_BASE_HASH}...HEAD --reverse --oneline"
+  _CMD="${_CMD} --date=format-local:'%Y/%m/%d %H:%M'"
+  _CMD="${_CMD} --pretty=format:\" ${HASH} ${COMMIT_DATE} ${AUTHOR} ${SUBJECT}\""
+  _CMD="${_CMD} --abbrev-commit --color=always"
+  _CMD="${_CMD} | cat -n| sed -e 's/^ */ /g'| sed -e 's/\t//g'| tail -n ${COMMITS_COUNT_LAST}"
   _verbose && _echo " ${_CMD}" "${_COLOR_COMMAND}"
   eval "${_CMD}"; echo
 
   # git diff --stat
   _echo "[git diff --stat]" "${_COLOR_LABEL}"
-  _STAT_GRAPH_WIDTH_COLS=$(( $(tput cols) / 4 ))
-  _CMD="git diff --stat-graph-width=${_STAT_GRAPH_WIDTH_COLS} ${MERGE_BASE_HASH}"
+  _STAT_GRAPH_WIDTH_COLS=$(( $(tput cols) / 1 ))
+  _CMD="git diff --color=always --stat-graph-width=${_STAT_GRAPH_WIDTH_COLS} ${MERGE_BASE_HASH}"
+  _CMD="${_CMD}| cat -n| sed -r 's/^ *([0-9]+)\t(.*)/\1@@@\2/'| awk -F '@@@' '{printf \"%+2s\" , \$1} {print \$2}'"
+  _CMD="${_CMD}| tac| tail -n +2| tac"
   _verbose && _echo " ${_CMD}" "${_COLOR_COMMAND}"
   eval "${_CMD}"
 
@@ -75,27 +79,27 @@ while true; do
 
   # command
   list=()
-  list+=("1, edit (neovim)          - (git_diff_fzf \"${MERGE_BASE_BRANCH}\" \"enter\")")
-  list+=("2, git log                - (git_log_fzf ${CURRENT_BRANCH})")
-  list+=("3, show tig               - (tig ${MERGE_BASE_HASH}...HEAD)")
-  list+=("4, show git diff          - (git diff ${MERGE_BASE_HASH} | nvim -R)")
-  list+=("5, show git diff(compact) - (git diff ${MERGE_BASE_HASH} --unified=0| nvim -R)")
-  list+=("6, pull git branch        - (git fetch origin --prune; git merge)")
-  list+=("7, open pull request page - (open https://github.com/$(git_reponame_get)/pull/${PR_NO})")
-  list+=("8, show pull request      - (git_pr_fzf \"${CURRENT_BRANCH})\"")
+  list+=("1, edit (neovim)     - (git_diff_fzf \"${MERGE_BASE_BRANCH}\")")
+  list+=("2, git log           - (git_log_fzf  \"${MERGE_BASE_BRANCH}\")")
+  list+=("3, tig               - (tig          \"${MERGE_BASE_BRANCH}..\")")
+  list+=("4, git diff          - (git diff     \"${MERGE_BASE_BRANCH}...\" | nvim -R)")
+  list+=("5, git diff(compact) - (git diff     \"${MERGE_BASE_BRANCH}...\" --unified=0| nvim -R)")
+  list+=("6, pull git branch   - (git fetch origin --prune; git merge)")
+  list+=("7, open pull request - (open https://github.com/$(git_reponame_get)/pull/${PR_NO})")
+  list+=("8, show pull request - (git_pr_fzf \"${CURRENT_BRANCH})\"")
 
   REPLY=$(for element in "${list[@]}"; do printf "${element}\n"; done \
     | fzf --disabled --no-clear --info=hidden --height=11 --prompt="COMMAND> " --bind "j:down" --bind "k:up" \
     | awk -F ',' '{ print $1 }')
   case "${REPLY}" in
-    1) git_diff_fzf "${MERGE_BASE_BRANCH}" "enter" ;;
-    2) git_log_fzf ${CURRENT_BRANCH} ;;
-    3) tig ${MERGE_BASE_HASH}...HEAD ;;
-    4) git diff ${MERGE_BASE_HASH} | nvim -R ;;
-    5) git diff ${MERGE_BASE_HASH} --unified=0 | nvim -R ;;
+    1) git_diff_fzf "${MERGE_BASE_BRANCH}" ;;
+    2) git_log_fzf  "${MERGE_BASE_BRANCH}" ;;
+    3) tig          "${MERGE_BASE_BRANCH}.." ;;
+    4) git diff     "${MERGE_BASE_BRANCH}..." | nvim -R ;;
+    5) git diff     "${MERGE_BASE_BRANCH}..." --unified=0 | nvim -R ;;
     6) set -x; git fetch origin --prune ; git merge ; set +x; echo "enter to continue."; read ;;
     7) open https://github.com/$(git_reponame_get)/pull/${PR_NO} ;;
-    8) git_pr_fzf "${CURRENT_BRANCH}" ;;
+    8) git_pr_fzf   "${CURRENT_BRANCH}" ;;
     *) break
   esac
 done
