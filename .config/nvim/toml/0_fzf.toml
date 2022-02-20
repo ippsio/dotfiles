@@ -26,8 +26,8 @@ hook_add = '''
     endif
   endfunction
 
-  "nnoremap <silent> ' :BLinesWithPreview<CR>
-  nnoremap <silent> ' :<C-u>:BLinesWithPreview  def <CR>
+  nnoremap <silent> ' :<C-u>:BLinesWithPreview<CR>
+  "nnoremap <silent> ' :<C-u>:BLinesWithPreview  def <CR>
   "nnoremap <silent> ' :<C-u>:BLinesWithPreview module \| class \| def \| before_action \| protect_from_forgery \| helper_method <CR>
   "nnoremap <space>m :BLines module\ \\|class\ \\|\ def\ \\|before_action\ \\|protect_from_forgery\ \\|helper_method\ <CR>
   "nnoremap <space>m :<C-u>:BLinesWithPreview module \| class \| def \| before_action \| protect_from_forgery \| helper_method <CR>

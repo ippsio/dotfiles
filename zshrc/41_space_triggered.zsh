@@ -22,6 +22,10 @@ function triggered_by_space() {
     [[ $BUFFER =~ '^gg+$' ]] \
       && BUFFER="git_grep_fzf " && zle end-of-line && return
 
+    # git
+    [[ $BUFFER =~ '^g+$' ]] \
+      && BUFFER="git " && zle end-of-line && return
+
     # git status
     [[ $BUFFER =~ '^gs+$' || $BUFFER =~ '^gst+$' || $BUFFER =~ '^git st+$' ]] \
       && BUFFER="git status " && zle end-of-line && return
@@ -36,6 +40,13 @@ function triggered_by_space() {
     && BUFFER="git_branch_fzf" \
     && zle end-of-line \
     && BUFFER="$(git_branch_fzf)" \
+    && zle end-of-line && return
+
+    # git branch + completion
+    [[ $BUFFER =~ '^.*B+$' ]] \
+    && zle autosuggest-clear \
+    && zle end-of-line \
+    && BUFFER="${BUFFER%B}$(git_branch_fzf '--respond_me_branch')" \
     && zle end-of-line && return
 
     # git fetch origin --prune

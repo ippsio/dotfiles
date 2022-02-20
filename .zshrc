@@ -1,4 +1,5 @@
 #!/usr/bin/env zsh
+autoload -Uz compinit && compinit
 # zmodload zsh/zprof && zprof #zprof 見たい時はコメントアウト外す。
 
 # zsh起動時にtmux起動

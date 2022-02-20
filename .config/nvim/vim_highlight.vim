@@ -110,6 +110,12 @@ hi DiffChange  ctermfg=210 ctermbg=052
 hi DiffText    ctermfg=168 ctermbg=125
 hi DiffDelete  ctermfg=238 ctermbg=234
 
+" rst
+hi rstSections ctermfg=224 ctermbg=198
+
+" man
+hi manHeader ctermfg=224 ctermbg=198
+
 " qfixgrep
 hi qfFileName ctermfg=118
 hi QuickFixLine ctermfg=222 ctermbg=69

@@ -35,6 +35,7 @@ if dein#load_state('~/.cache/dein')
   call dein#load_toml('~/.config/nvim/toml/0_vimdoc.toml', {'lazy': 0})
   call dein#load_toml('~/.config/nvim/toml/0_filemanage.toml', {'lazy': 0})
   call dein#load_toml('~/.config/nvim/toml/0_syntax_context_filetype.toml', {'lazy': 0})
+  call dein#load_toml('~/.config/nvim/toml/0_linter.toml', {'lazy': 0})
 
   " lazy1: 特定のfiletypeでのみ動く
   call dein#load_toml('~/.config/nvim/toml/1_toml.toml', {'lazy': 1})
@@ -44,6 +45,8 @@ if dein#load_state('~/.cache/dein')
   call dein#load_toml('~/.config/nvim/toml/1_typescript.toml', {'lazy': 1})
   call dein#load_toml('~/.config/nvim/toml/1_yaml.toml', {'lazy': 1})
   call dein#load_toml('~/.config/nvim/toml/1_coffee.toml', {'lazy': 1})
+  call dein#load_toml('~/.config/nvim/toml/1_rst.toml', {'lazy': 1})
+  call dein#load_toml('~/.config/nvim/toml/1_py.toml', {'lazy': 1})
 
   if has('nvim')
     call dein#remote_plugins()

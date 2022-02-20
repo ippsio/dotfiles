@@ -170,3 +170,6 @@ nnoremap <silent> <C-s> :<C-u>:w<CR>:echo 'SAVED! ' . strftime("%Y/%m/%d %H:%M:%
 " -----------------------------------------------------
 " H で、直前に開いていたファイルに戻る。
 nnoremap H   :<C-u>:b#<CR>
+
+
+inoremap <C-space> <C-n>

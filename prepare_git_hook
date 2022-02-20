@@ -1,10 +1,11 @@
 #!/bin/bash
+readonly EXPECTED=".githooks"
+
 set -x
 # ----------------------------
 # git hookが動作するための準備
 # ----------------------------
 # .git/config の core.hooksPath が期待する値でなければ、期待する値を設定する。
-EXPECTED=".githooks"
 core_hookspath="$(git config --local --get core.hooksPath)"
 if [[ "${core_hookspath}" != "${EXPECTED}" ]]; then
   git_root="$(git rev-parse --show-superproject-working-tree --show-toplevel 2>&1| head -1)"

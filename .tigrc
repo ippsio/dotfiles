@@ -27,6 +27,10 @@ color title-focus       234     250
 color title-blur        234     250
 color author            079     default
 
+color help-group    011 237
+#color help-action   079 default
+
+
 #------------------------------------------------------------
 # `diff --git a/xxxx b/xxxx`みたいな箇所(グレー地に白文字)
 #------------------------------------------------------------
@@ -242,7 +246,7 @@ bind generic P      none
 #------------------------------------------
 # <Hash>とは、#(シャープ)キーのこと。
 bind generic <Hash> none
-bind generic <Hash> @sh -c "echo %(commit) | pbcopy"
+bind generic <Hash> +bash -c "hash=$(git rev-parse --short %(commit)| xargs -I {} echo -n \"{}\"); echo -n \"${hash}\"| pbcopy; echo -n \"hash [${hash}] copied to clipboard.\""
 bind main L         !sh -c "hash=$(git rev-parse --short %(commit)); \
                             echo \"Copied=> commit=[${hash}]\"; \
                             printf \"${hash}\" | pbcopy; \

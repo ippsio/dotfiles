@@ -15,6 +15,9 @@ augroup vimrc-highlight
   " .slimなファイルのファイルタイプがslimであると、vimが気づいてくれない時があったので、その対策。
   autocmd BufNewFile,BufRead *.slim setlocal filetype=slim
 
+  " .coffeeなファイルのファイルタイプがcoffeeであると、vimが気づいてくれない時があったので、その対策。
+  autocmd BufNewFile,BufRead *.coffee setlocal filetype=coffee
+
   autocmd BufRead,BufEnter,BufWinEnter * call DoWellByFileType()
   fun DoWellByFileType()
     if &ft == ""

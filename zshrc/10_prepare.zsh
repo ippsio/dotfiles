@@ -1,23 +1,55 @@
-#!/usr/local/env zsh
+#!/usr/bin/env zsh
+readonly VERBOSE=1
+
 type_or_inst() {
-  ( type "$1" > /dev/null 2>&1 ) && echo -n "($1 ok) " && return 0
-  brew install ${2:-$1} && echo "$1 not found so tried to install."; return 1
+  if ( type "$1" > /dev/null 2>&1 ); then
+    echo -n "($1 ok) "
+    return 0
+  else
+    echo "$1 not found. install."
+    brew install ${2:-$1}
+    return 1
+  fi
 }
 nodir_then_gitclone() {
-  [ -d $1 ] && echo -n "($2 ok) " && return 0
-  git clone https://github.com/$2 ${3:-$1}; echo "$2 not found so tried to git clone."; return 1
+  if [ -d $1 ]; then
+    echo -n "($2 ok) "
+    return 0
+  else
+    echo "$2 not found. git clone."
+    git clone https://github.com/$2 ${3:-$1}
+    return 1
+  fi
 }
 chk_pynvim_or_install() {
-  $(echo 'import pynvim'| python3 > /dev/null 2>&1) && echo -n "(pynvim ok) " && return 0
-  python3 -m pip install pynvim --user; echo "pynvim not found so tried to install."; return 1
+  if ( python3 -c 'import pynvim' > /dev/null 2>&1 ); then
+    echo -n "(pynvim ok) "
+    return 0
+  else
+    echo "pynvim not found. install."
+    python3 -m pip install pynvim --user
+    return 1
+  fi
 }
 chkfile_or_flink() {
-  [ -L $1 ] && echo -n "(${1//${HOME}/~} ok) " && return 0
-  ln -s $2 $1; echo "$1 not found so tried to link! ($1<-$2)"; return 1
+  if [ -L $1 ]; then
+    echo -n "(${1//${HOME}/~} ok) "
+    return 0
+  else
+    echo "$1 not found. link! ($1<-$2)"
+    ln -s $2 $1
+    return 1
+  fi
 }
 chkfile_or_dlink() {
-  [ -d $1 ] && echo -n "(${1//${HOME}/~} ok) " && return 0
-  ln -s $2 $1; echo "$1 not found so tried to link! ($1<-$2)"; return 1
+  if [ -d $1 ]; then
+    echo -n "(${1//${HOME}/~} ok) "
+    return 0
+  else
+    echo "$1 not found. link! ($1<-$2)"
+    ln -s $2 $1
+    return 1
+  fi
 }
 
 type_or_inst xz
@@ -45,6 +77,7 @@ chk_pynvim_or_install
 # check link.
 chkfile_or_dlink ~/.config/nvim          ~/dotfiles/.config/nvim
 chkfile_or_dlink ~/.config/bat           ~/dotfiles/.config/bat
+chkfile_or_dlink ~/.config/alacritty     ~/dotfiles/.config/alacritty
 chkfile_or_dlink ~/.config/karabiner     ~/setting_box/karabiner
 
 chkfile_or_flink ~/.gitattributes_global ~/dotfiles/.gitattributes_global

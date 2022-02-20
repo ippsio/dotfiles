@@ -1,7 +1,6 @@
 #!/usr/bin/env zsh
 
 source ${ZINIT_ROOT}/bin/zinit.zsh
-zinit ice atload"ZSH_AUTOSUGGEST_CLEAR_WIDGETS=(my_space_extraction my_tab_completion end-of-line $ZSH_AUTOSUGGEST_CLEAR_WIDGETS)"
 zinit light zsh-users/zsh-autosuggestions
 
 zinit light "zsh-users/zsh-completions"

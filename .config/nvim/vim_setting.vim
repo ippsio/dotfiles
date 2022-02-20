@@ -154,6 +154,10 @@ set listchars=tab:»-,trail:-,extends:»,precedes:«,nbsp:%
 set ambiwidth=double
 "set ambiwidth=single
 
+" vim には setcellwidths が実装されたらしいので、それを使えそう。
+" neovim には setcellwidths がまだ実装されていないので、使えない。
+" 悲しい。
+
 " ①②③
 " ⇒←■
 
@@ -195,7 +199,7 @@ set hlsearch
 " ⇒重いからoffにします。
 "set inccommand=nosplit
 "set inccommand=split
-"set inccommand=
+set inccommand=
 
 " --------------
 " マウス操作
