@@ -8,7 +8,7 @@
 commit1=$1
 commit2=${2:-HEAD}
 
-_harf_term_cols=$(( $(tput cols) / 1 ))
+_harf_term_cols=$(( $(tput cols) / 2 ))
 _ME=$( [ -L $0 ] && basename $(readlink $0) || basename $0)
 _FZF_PROMPT="${_ME} (commit1=${commit1},commit2=${commit2}) > "
 
@@ -17,10 +17,12 @@ GIT_LOG="git log"\
 " --color=always"\
 " --decorate=full"\
 " --date=format-local:'%Y/%m/%d %H:%M:%S'"\
-" --pretty=format:'%C(010 022)%h%C(reset) %C(039 017)(%cd)%C(reset) %C(079)%an%C(reset) %C(226 021)%d%C(reset)%s'"\
+" --pretty=format:'%C($(git config --get color.diff.commit))%h%C(reset) %C(039 017)(%cd)%C(reset) %C(079)%an%C(reset) %C(226 021)%d%C(reset)%s'"\
 " --abbrev-commit"\
-" ${commit1}...${commit2} -- {3}"\
+" ${commit1}..${commit2} -- {3}"\
 " | cat -n| sed -r 's/(^ +)([1-9][0-9]*)(\t+)(.*$)/\2 \4/'" # git logの結果に対し、cat -n の力で行番号を与え、sedの力で見た目を整える。
+
+#git log --oneline -99 --color=always --decorate=full --date=format-local:'%Y/%m/%d %H:%M:%S' --pretty=format:'%C(010 022)%h%C(reset) %C(039 017)(%cd)%C(reset) %C(079)%an%C(reset) %C(226 021)%d%C(reset)%s' --abbrev-commit origin/develop...HEAD
 
 GIT_DIFF_STAT="git diff"\
 " --color=always"\
@@ -50,7 +52,7 @@ target=$(echo "$files" | \
   --bind "enter:execute(cd $(git_root) && env GIT_MERGE_BASE=${commit1} nvim {3} < /dev/tty > /dev/tty)" \
   --bind "tab:execute(cd $(git_root); env GIT_MERGE_BASE=${commit1} tig ${commit1}...${commit2} -- {3} < /dev/tty > /dev/tty)" \
   --bind "ctrl-d:execute(cd $(git_root); ${GIT_DIFF_NO_COLOR} < /dev/tty| nvim -R > /dev/tty)" \
-  --bind "ctrl-l:execute(cd $(git_root); git_log_fzf ${commit1} ${commit2} {3})" \
+  --bind "ctrl-l:execute(cd $(git_root); git_log_fzf \"${commit1}..${commit2}\" \"{3}\")" \
   --bind 'ctrl-/:toggle-preview' \
   --preview "
       color() { printf '\e[38;5;%dm\e[48;5;%dm' 173 234; };

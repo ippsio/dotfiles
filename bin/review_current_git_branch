@@ -2,7 +2,20 @@
 # exit when not a git repository.
 ! $(is_git_repository) && echo "Not a git repository." && exit 1
 
+
 arg_verbose=$(for arg in "$@"; do [[ "${arg}" =~ "--verbose" ]] && echo "${arg}"; done;)
+args=()
+for arg in "$@";
+do
+  if [[ "${arg}" =~ "--verbose" ]]; then
+    arg_verbose="${arg}";
+  else
+    args=("${args[@]}" "${arg}")
+  fi
+done
+
+commit1=${args[0]}
+
 _fg() { printf "\e[38;5;%dm" "$1"; }
 _bg() { printf "\e[48;5;%dm" "$1"; }
 _verbose() { [[ ! -z "${arg_verbose}" ]] && return 0 || return 1; }
@@ -10,8 +23,7 @@ _echo() { ARG_COLOR=$2; printf "\e[m%s" "${ARG_COLOR}"; echo -n "$1"; printf "\e
 _echon() { ARG_COLOR=$2; printf "\e[m%s" "${ARG_COLOR}"; echo -n "$1"; printf "\e[m"; }
 
 CURRENT_BRANCH=$(current_git_branch)
-ARG_BRANCH=$1
-MERGE_BASE_INFO=$(git_get_merge_base_info "${CURRENT_BRANCH}" "${ARG_BRANCH}")
+MERGE_BASE_INFO=$(git_get_merge_base_info "${CURRENT_BRANCH}" "${commit1}")
 MERGE_BASE_BRANCH=$(echo "${MERGE_BASE_INFO}"| grep "MERGE_BASE_BRANCH="| awk -F '=' '{ print $2 }'| sed -e 's#^origin/##'| sed -e 's/ *//g')
 if [[ "${MERGE_BASE_BRANCH}" == "" ]]; then
   echo "MERGE_BASE_BRANCH empty. Bye"
@@ -56,17 +68,17 @@ while true; do
   _TOTAL_COMMITS=$(eval "${_CMD}")
 
   _echon "[git log]" "${_COLOR_LABEL}" && echo " (${_TOTAL_COMMITS} commits in total.)"
-  _CMD="git --no-pager log --oneline ${MERGE_BASE_HASH}...HEAD --reverse --oneline"
+  _CMD="(git --no-pager log --oneline --full-history --simplify-merges ${MERGE_BASE_HASH}.. --reverse --oneline"
   _CMD="${_CMD} --date=format-local:'%Y/%m/%d %H:%M'"
   _CMD="${_CMD} --pretty=format:\" ${HASH} ${COMMIT_DATE} ${AUTHOR} ${SUBJECT}\""
   _CMD="${_CMD} --abbrev-commit --color=always"
-  _CMD="${_CMD} | cat -n| sed -e 's/^ */ /g'| sed -e 's/\t//g'| tail -n ${COMMITS_COUNT_LAST}"
+  _CMD="${_CMD}; echo)| tac | cat -n| head -${COMMITS_COUNT_LAST}"
   _verbose && _echo " ${_CMD}" "${_COLOR_COMMAND}"
   eval "${_CMD}"; echo
 
   # git diff --stat
   _echo "[git diff --stat]" "${_COLOR_LABEL}"
-  _STAT_GRAPH_WIDTH_COLS=$(( $(tput cols) / 1 ))
+  _STAT_GRAPH_WIDTH_COLS=$(( $(tput cols) / 20 ))
   _CMD="git diff --color=always --stat-graph-width=${_STAT_GRAPH_WIDTH_COLS} ${MERGE_BASE_HASH}"
   _CMD="${_CMD}| cat -n| sed -r 's/^ *([0-9]+)\t(.*)/\1@@@\2/'| awk -F '@@@' '{printf \"%+2s\" , \$1} {print \$2}'"
   _CMD="${_CMD}| tac| tail -n +2| tac"
@@ -80,7 +92,7 @@ while true; do
   # command
   list=()
   list+=("1, edit (neovim)     - (git_diff_fzf \"${MERGE_BASE_BRANCH}\")")
-  list+=("2, git log           - (git_log_fzf  \"${MERGE_BASE_BRANCH}\")")
+  list+=("2, git log           - (git_log_fzf  \"${MERGE_BASE_BRANCH}..\")")
   list+=("3, tig               - (tig          \"${MERGE_BASE_BRANCH}..\")")
   list+=("4, git diff          - (git diff     \"${MERGE_BASE_BRANCH}...\" | nvim -R)")
   list+=("5, git diff(compact) - (git diff     \"${MERGE_BASE_BRANCH}...\" --unified=0| nvim -R)")
@@ -93,7 +105,7 @@ while true; do
     | awk -F ',' '{ print $1 }')
   case "${REPLY}" in
     1) git_diff_fzf "${MERGE_BASE_BRANCH}" ;;
-    2) git_log_fzf  "${MERGE_BASE_BRANCH}" ;;
+    2) git_log_fzf  "${MERGE_BASE_BRANCH}..HEAD" ;;
     3) tig          "${MERGE_BASE_BRANCH}.." ;;
     4) git diff     "${MERGE_BASE_BRANCH}..." | nvim -R ;;
     5) git diff     "${MERGE_BASE_BRANCH}..." --unified=0 | nvim -R ;;

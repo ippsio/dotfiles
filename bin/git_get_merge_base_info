@@ -1,5 +1,7 @@
 #!/bin/bash
 
+CURRENT_BRANCH=$1
+
 _ME=$( [ -L $0 ] && basename $(readlink $0) || basename $0)
 PR_HEAD_BASE_CSV="$(git_root)/../${_ME}.csv"
 _DELIMITER='\t'
@@ -7,7 +9,6 @@ _DELIMITER='\t'
 _csv_load() { touch ${PR_HEAD_BASE_CSV} && grep "^$1${_DELIMITER}" ${PR_HEAD_BASE_CSV}| head -n 1 || echo ""; }
 _csv_write() { echo -e "$1${_DELIMITER}$2${_DELIMITER}$3${_DELIMITER}$4${_DELIMITER}$(date +'%Y-%m-%d %H:%M:%S')" >> ${PR_HEAD_BASE_CSV}; }
 
-CURRENT_BRANCH=$1
 
 if [[ "$2" != "" ]]; then
     BY="given"

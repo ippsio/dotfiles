@@ -4,21 +4,19 @@
 # - commit1: required.
 # - commit2: optional.
 # -------------------------------------------------------------
-commit1=${1:-$(current_git_branch)}
-commit2=${2:-HEAD}
-file=${3}
+range=${1}
+file=${2}
 
 _ME=$( [ -L $0 ] && basename $(readlink $0) || basename $0)
 
-_FZF_PROMPT="${_ME} (commit1=[${commit1}],commit2=[${commit2}],file=[$file]) > "
+_FZF_PROMPT="${_ME} (range=[${range}],file=[$file]) > "
 LF=$'\n'
-_FZF_HEADER+="gitのコミット履歴です。${LF}"
-_FZF_HEADER+=" enter: git diff を見る。${LF}"
-_FZF_HEADER+=" ctrl-p: PR をブラウザで開く。${LF}"
-_FZF_HEADER+=" ctrl-y: コミットハッシュをクリップボードにコピーする。${LF}"
+_FZF_HEADER+=" (enter: git diff)"
+_FZF_HEADER+=" (ctrl-p: PR)"
+_FZF_HEADER+=" (ctrl-y: yank hash)"
 
 GIT_LOG_CMD="git --no-pager log"\
-" --oneline"\
+" --oneline --oneline --full-history --simplify-merges"\
 " --decorate=full"\
 " --date=format-local:'%Y/%m/%d %H:%M(%a)'"\
 " --pretty=format:'%C($(git config --get color.diff.commit))%h%Creset"\
@@ -28,12 +26,12 @@ GIT_LOG_CMD="git --no-pager log"\
 " %d'"\
 " --abbrev-commit"\
 " --color=always"\
-" ${commit1}..${commit2}"
+" ${range}"
 if [ "${file}" != "" ]; then
   GIT_LOG_CMD="${GIT_LOG_CMD} -- ${file}"
 fi
 GIT_LOG_CMD="${GIT_LOG_CMD}| cat -n| sed -r 's/^ *([0-9]+)\t(.*)/\1@@@\2/'| awk -F '@@@' '{printf \"%+2s\" , \$1} {print \" \" \$2}'"
-GIT_LOG_CMD="${GIT_LOG_CMD}| tac| tail -n +2| tac"
+GIT_LOG_RESULT=$(eval "${GIT_LOG_CMD}")
 
 GIT_LOG_ONE_CMD="git log -1"\
 " --oneline"\
@@ -60,7 +58,7 @@ if ( type "diff-highlight" > /dev/null 2>&1 );then
 fi
 GIT_LOG_P_CMD="${GIT_LOG_P_CMD}| tail -n +2"
 
-eval "${GIT_LOG_CMD}" \
+echo "${GIT_LOG_RESULT}" \
   | fzf --ansi --prompt="${_FZF_PROMPT}" --header="${_FZF_HEADER}" --no-sort \
   --nth=1.. \
   --bind "enter:execute(git show -p {2}| nvim -R -c \"set ft=diff nomod nolist nospell nu\" > /dev/tty)" \
@@ -79,5 +77,5 @@ eval "${GIT_LOG_CMD}" \
       echo;
 
       color; echo \"${GIT_LOG_P_CMD}\"; reset_color; eval \"${GIT_LOG_P_CMD}\";
-    "
+    " --preview-window=right
 
