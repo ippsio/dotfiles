@@ -8,57 +8,27 @@ range=${1}
 file=${2}
 
 _ME=$( [ -L $0 ] && basename $(readlink $0) || basename $0)
-
 _FZF_PROMPT="${_ME} (range=[${range}],file=[$file]) > "
-LF=$'\n'
-_FZF_HEADER+=" (enter: git diff)"
-_FZF_HEADER+=" (ctrl-p: PR)"
-_FZF_HEADER+=" (ctrl-y: yank hash)"
+_FZF_HEADER=" (enter: git diff) (ctrl-p: PR) (ctrl-y: yank hash)"
 
-GIT_LOG_CMD="git --no-pager log"\
-" --oneline --oneline --full-history --simplify-merges"\
-" --decorate=full"\
+GIT_LOG_CMD="git --no-pager log --graph --oneline --full-history --simplify-merges --decorate=full --abbrev-commit --color=always"\
+" --date=format-local:'%Y/%m/%d %H:%M(%a)'"\
+" --pretty=format:'%C(187 17)%an%Creset %s %d#AWK_DELIMITTER#%C($(git config --get color.diff.commit))%h%Creset %cd'"\
+" ${range} -- ${file}"
+
+GIT_LOG_ONE_CMD="git log -1 --oneline --decorate=full"\
 " --date=format-local:'%Y/%m/%d %H:%M(%a)'"\
 " --pretty=format:'%C($(git config --get color.diff.commit))%h%Creset"\
-" %cd"\
-" %C(187 17)%an%Creset"\
-" %s"\
-" %d'"\
-" --abbrev-commit"\
-" --color=always"\
-" ${range}"
-if [ "${file}" != "" ]; then
-  GIT_LOG_CMD="${GIT_LOG_CMD} -- ${file}"
-fi
-GIT_LOG_CMD="${GIT_LOG_CMD}| cat -n| sed -r 's/^ *([0-9]+)\t(.*)/\1@@@\2/'| awk -F '@@@' '{printf \"%+2s\" , \$1} {print \" \" \$2}'"
-GIT_LOG_RESULT=$(eval "${GIT_LOG_CMD}")
-
-GIT_LOG_ONE_CMD="git log -1"\
-" --oneline"\
-" --decorate=full"\
-" --date=format-local:'%Y/%m/%d %H:%M(%a)'"\
-" --pretty=format:'%C($(git config --get color.diff.commit))%h%Creset"\
-" %cd"\
-" %C(187 17)%an%Creset"\
-" %s"\
-" %d'"\
-" --abbrev-commit"\
-" --color=always"\
-" {2}"
+" %cd %C(187 17)%an%Creset %s %d' --abbrev-commit --color=always {2}"
 
 GIT_LOG_STAT="git log -1 --oneline --stat {2} --color=always| tail -n +2"
-
-GIT_LOG_P_CMD="git log -1"\
-" --oneline"\
-" -p"\
-" {2}"\
-" --color=always"
+GIT_LOG_P_CMD="git log -1 --oneline -p {2} --color=always"
 if ( type "diff-highlight" > /dev/null 2>&1 );then
   GIT_LOG_P_CMD="${GIT_LOG_P_CMD}| diff-highlight"
 fi
 GIT_LOG_P_CMD="${GIT_LOG_P_CMD}| tail -n +2"
 
-echo "${GIT_LOG_RESULT}" \
+eval "${GIT_LOG_CMD}"| grep '*'| awk -F '#AWK_DELIMITTER#' '{ print $2 " " $1 }'| cat -n| awk -F '\t' '{ printf "%2d %s\n", $1, $2 }' \
   | fzf --ansi --prompt="${_FZF_PROMPT}" --header="${_FZF_HEADER}" --no-sort \
   --nth=1.. \
   --bind "enter:execute(git show -p {2}| nvim -R -c \"set ft=diff nomod nolist nospell nu\" > /dev/tty)" \
@@ -68,8 +38,7 @@ echo "${GIT_LOG_RESULT}" \
   --preview="
       color() { printf '\e[38;5;%dm\e[48;5;%dm' 173 234; };
       reset_color() { printf '\e[0m'; };
-      color; echo \"${GIT_LOG_ONE_CMD}\"; reset_color; eval \"${GIT_LOG_ONE_CMD}\";
-      echo;
+      color; echo \"${GIT_LOG_ONE_CMD}\"; reset_color; eval \"${GIT_LOG_ONE_CMD}\"; echo;
       echo;
 
       color; echo \"${GIT_LOG_STAT}\"; reset_color; eval \"${GIT_LOG_STAT}\";

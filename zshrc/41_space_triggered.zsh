@@ -55,7 +55,7 @@ function triggered_by_space() {
 
     # git merge
     [[ $BUFFER =~ '^gme+$' || $BUFFER =~ '^git me+$' ]] \
-    && BUFFER="git merge " && zle end-of-line && return
+    && BUFFER="git merge --ff" && zle end-of-line && return
 
     # git push origin HEAD
     [[ $BUFFER =~ '^gps+$' || $BUFFER =~ '^git ps+$' ]] \
