@@ -28,9 +28,10 @@ if ( type "diff-highlight" > /dev/null 2>&1 );then
 fi
 GIT_LOG_P_CMD="${GIT_LOG_P_CMD}| tail -n +2"
 
-eval "${GIT_LOG_CMD}"| grep '*'| awk -F '#AWK_DELIMITTER#' '{ print $2 " " $1 }'| cat -n| awk -F '\t' '{ printf "%2d %s\n", $1, $2 }' \
-  | fzf --ansi --prompt="${_FZF_PROMPT}" --header="${_FZF_HEADER}" --no-sort \
-  --nth=1.. \
+eval "${GIT_LOG_CMD}" \
+  | grep '*' \
+  | awk -F '#AWK_DELIMITTER#' '{ print $2 " " $1 }'| cat -n| awk -F '\t' '{ printf "%2d %s\n", $1, $2 }' \
+  | fzf --ansi --prompt="${_FZF_PROMPT}" --header="${_FZF_HEADER}" --no-sort --nth=1.. \
   --bind "enter:execute(git show -p {2}| nvim -R -c \"set ft=diff nomod nolist nospell nu\" > /dev/tty)" \
   --bind "ctrl-y:execute(echo -n {2}| pbcopy)" \
   --bind "ctrl-/:toggle-preview" \

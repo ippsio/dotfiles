@@ -12,35 +12,19 @@ _harf_term_cols=$(( $(tput cols) / 2 ))
 _ME=$( [ -L $0 ] && basename $(readlink $0) || basename $0)
 _FZF_PROMPT="${_ME} (commit1=${commit1},commit2=${commit2}) > "
 
-GIT_LOG="git log"\
-" --oneline -99"\
-" --color=always"\
-" --decorate=full"\
+GIT_LOG="git log --oneline -99 --color=always --abbrev-commit --decorate=full"\
 " --date=format-local:'%Y/%m/%d %H:%M:%S'"\
 " --pretty=format:'%C($(git config --get color.diff.commit))%h%C(reset) %C(039 017)(%cd)%C(reset) %C(079)%an%C(reset) %C(226 021)%d%C(reset)%s'"\
-" --abbrev-commit"\
 " ${commit1}..${commit2} -- {3}"\
 " | cat -n| sed -r 's/(^ +)([1-9][0-9]*)(\t+)(.*$)/\2 \4/'" # git logの結果に対し、cat -n の力で行番号を与え、sedの力で見た目を整える。
 
-#git log --oneline -99 --color=always --decorate=full --date=format-local:'%Y/%m/%d %H:%M:%S' --pretty=format:'%C(010 022)%h%C(reset) %C(039 017)(%cd)%C(reset) %C(079)%an%C(reset) %C(226 021)%d%C(reset)%s' --abbrev-commit origin/develop...HEAD
+GIT_DIFF_STAT="git diff --color=always --stat=${_harf_term_cols} ${commit1}...${commit2} -- {3}"
 
-GIT_DIFF_STAT="git diff"\
-" --color=always"\
-" --stat=${_harf_term_cols}"\
-" ${commit1}...${commit2} -- {3}"
-
-GIT_DIFF_COLORED="git diff"\
-" --color=always"\
-" ${commit1}...${commit2} -- {3}"
+GIT_DIFF_NO_COLOR="git diff --no-color ${commit1}...${commit2} -- {3}"
+GIT_DIFF_COLORED="git diff --color=always ${commit1}...${commit2} -- {3}"
 ( type "diff-highlight" > /dev/null 2>&1 ) && GIT_DIFF_COLORED="${GIT_DIFF_COLORED}| diff-highlight"
 
-GIT_DIFF_NO_COLOR="git diff"\
-" --no-color"\
-" ${commit1}...${commit2} -- {3}"
-
-GIT_DIFF_NUMSTAT="git diff"\
-" --numstat"\
-" ${commit1}...${commit2}"
+GIT_DIFF_NUMSTAT="git diff --numstat ${commit1}...${commit2}"
 
 files=$(eval "${GIT_DIFF_NUMSTAT}"| awk '{printf "%+5s" , "+" $1} {printf "%+5s" , "-" $2} {printf "%s\n", ", " $3} ')
 target=$(echo "$files" | \
