@@ -1,44 +1,27 @@
 #!/bin/bash
-# exit when not a git repository.
 ! $(is_git_repository) && echo "Not a git repository." && exit 1
 
-arg_verbose=$(for arg in "$@"; do [[ "${arg}" =~ "--verbose" ]] && echo "${arg}"; done;)
-args=(); for arg in "$@"; do [[ "${arg}" =~ "--verbose" ]] && arg_verbose="${arg}" || args=("${args[@]}" "${arg}"); done
-
+args=(); for arg in "$@"; do [[ "${arg}" == "--verbose" ]] && arg_verbose="${arg}" || args=("${args[@]}" "${arg}"); done
 commit1=${args[0]}
 
 _fg() { printf "\e[38;5;%dm" "$1"; }
 _bg() { printf "\e[48;5;%dm" "$1"; }
-_verbose() { [[ ! -z "${arg_verbose}" ]] && return 0 || return 1; }
-_COLOR_COMMAND="$(_fg 245)$(_bg 234)"
-_echo() {  ARG_COLOR=$2; printf "\e[m%s" "${ARG_COLOR}"; echo -n "$1"; printf "\e[m"; echo; }
-_echo2() { printf "\e[m%s" "$(_fg 220)$(_bg 237)"; echo -n "$1"; printf "\e[m"; echo; }
-_echo3() { printf "\e[m%s" "$(_fg 245)$(_bg 234)"; echo -n "$1"; printf "\e[m"; echo; }
-_echon() { ARG_COLOR=$2; printf "\e[m%s" "${ARG_COLOR}"; echo -n "$1"; printf "\e[m"; }
-_echon2() { printf "\e[m%s" "$(_fg 187)$(_bg 100)"; echo -n "$1"; printf "\e[m"; }
+_echo_info() { printf "\e[m%s" "$(_fg 220)$(_bg 237)"; echo -n "$1"; printf "\e[m"; echo; }
+_echo_verbose() { [[ ! -z "${arg_verbose}" ]] && (printf "\e[m%s" "$(_fg 245)$(_bg 234)"; echo -n "$1"; printf "\e[m"; echo;); }
+_echo_label() { printf "\e[m%s" "$(_fg 187)$(_bg 100)"; echo -n "$1"; printf "\e[m"; }
 
 CURRENT_BRANCH=$(current_git_branch)
 MERGE_BASE_INFO=$(git_get_merge_base_info "${CURRENT_BRANCH}" "${commit1}")
 MERGE_BASE_BRANCH=$(echo "${MERGE_BASE_INFO}"| grep "MERGE_BASE_BRANCH="| awk -F '=' '{ print $2 }'| sed -e 's#^origin/##'| sed -e 's/ *//g')
-if [[ "${MERGE_BASE_BRANCH}" == "" ]]; then
-  echo "MERGE_BASE_BRANCH empty. Bye"
-  exit 1
-fi
+[[ "${MERGE_BASE_BRANCH}" == "" ]] && echo "MERGE_BASE_BRANCH empty. Bye" && exit 1
 MERGE_BASE_BRANCH=origin/${MERGE_BASE_BRANCH}
-MERGE_BASE_LONG_HASH="$(git merge-base ${MERGE_BASE_BRANCH} HEAD)"
-MERGE_BASE_HASH=$(git rev-parse --short "${MERGE_BASE_LONG_HASH}")
+MERGE_BASE_HASH=$(git rev-parse --short "$(git merge-base ${MERGE_BASE_BRANCH} HEAD)")
 PR_NO=$(echo "${MERGE_BASE_INFO}"| grep "PR_NO="| awk -F '=' '{ print $2 }')
 
-GIT_LOG_HEAD_3_CMD="(git --no-pager log --oneline --full-history --simplify-merges ${MERGE_BASE_HASH}.. --oneline"\
-" --date=format-local:'%Y/%m/%d %H:%M'"\
-" --pretty=format:\" %C($(git config --get color.diff.commit))%h%Creset %cd %C(187 17)%an%Creset %s\""\
-" --abbrev-commit --color=always; echo)| head -3"\
-
-GIT_COMMIT_COUNT_CMD="git --no-pager log --oneline ${MERGE_BASE_HASH}...HEAD| wc -l| tr -d ' '"
-GIT_LOG_1_MERGE_BASE="git log --oneline ${MERGE_BASE_HASH} --oneline -1 --date=format-local:'%Y/%m/%d %H:%M' --pretty=format:'%h %cd %an %s' --abbrev-commit"
-
-GIT_DIFF_STAT_CMD="git diff --color=always --stat-graph-width=$(( $(tput cols) / 1 )) ${MERGE_BASE_HASH}"
-
+GIT_LOG_CMD="git --no-pager log ${MERGE_BASE_HASH}...HEAD --oneline --abbrev-commit --date=format-local:'%Y/%m/%d %H:%M'"
+GIT_LOG_1_CMD="${GIT_LOG_CMD} -1 --pretty=format:'%h %cd %an %s'"
+GIT_LOG_3_CMD="${GIT_LOG_CMD} -3 --pretty=format:' %C($(git config --get color.diff.commit))%h%Creset %cd %C(187 17)%an%Creset %s' --full-history --simplify-merges --color=always"
+GIT_DIFF_STAT_CMD="git diff ${MERGE_BASE_HASH} --stat-graph-width=$(( $(tput cols) / 1 )) --color=always"
 COMMANDS=$(cat << EOF
 1, edit (neovim)     - 	git_diff_fzf "${MERGE_BASE_BRANCH}"
 2, git log           - 	git_log_fzf  "${MERGE_BASE_BRANCH}.."
@@ -51,40 +34,34 @@ COMMANDS=$(cat << EOF
 EOF
 )
 
-while true; do
-  clear
-  _echon2 "[merge_base_branch_info]"; echo
+while true; do clear
+  _echo_label "[merge_base_branch_info]"; echo
   echo -e "${MERGE_BASE_INFO}"| awk -F '=' '{ print " " $1 "=[" $2 "]" }'
 
-  # branchs
-  _echon2 "[branches]"
-  _echo2 "${MERGE_BASE_BRANCH}<=${CURRENT_BRANCH}"
+  _echo_label "[branches]"
+  _echo_info "${MERGE_BASE_BRANCH}<=${CURRENT_BRANCH}"
 
-  # merge-base
-  _echon2 "[merge-base]"
-  _verbose && _echo3 "${GIT_LOG_1_MERGE_BASE}"
-  _echo2 "$(eval ${GIT_LOG_1_MERGE_BASE})"
+  _echo_label "[merge-base]"
+  _echo_verbose "${GIT_LOG_1_CMD}"
+  _echo_info "$(eval ${GIT_LOG_1_CMD})"
 
-  # (total commit count)
-  _echon2 "[git log]"
-  _verbose && _echo3 " ${GIT_COMMIT_COUNT_CMD}"
-  _echo2 "$(eval ${GIT_COMMIT_COUNT_CMD}) commits."
+  _echo_label "[git log]"
+  _echo_verbose " ${GIT_LOG_CMD}"
+  _echo_info "$(eval ${GIT_LOG_CMD}| wc -l| tr -d ' ') commits."
+  _echo_verbose " ${GIT_LOG_3_CMD}"
+  eval "(${GIT_LOG_3_CMD};echo)"| sed -r 's/^/#AWK_DELIMITTER#/'| cat -n| sed -r 's/^ +//'| sed -r 's/\t//g'| awk -F '#AWK_DELIMITTER#' '{ printf "%+2s " , $1 } { print $2 }'
 
-  # recent 3 commits.
-  _verbose && _echo3 " ${GIT_LOG_HEAD_3_CMD}"
-  eval "${GIT_LOG_HEAD_3_CMD}"| sed -r 's/^/#AWK_DELIMITTER#/'| cat -n| sed -r 's/^ +//'| sed -r 's/\t//g'| awk -F '#AWK_DELIMITTER#' '{ printf "%+2s " , $1 } { print $2 }'
-
-  # git diff --stat
-  _echon2 "[git diff --stat]"; echo
-  _verbose && _echo3 " ${GIT_DIFF_STAT_CMD}"
+  _echo_label "[git diff --stat]"
+  _echo_verbose " ${GIT_DIFF_STAT_CMD}"
   GIT_DIFF_STAT=$(eval "${GIT_DIFF_STAT_CMD}")
-  GIT_DIFF_STAT_CNT=$(echo "${GIT_DIFF_STAT}"| wc -l| tr -d ' ')
+  GIT_DIFF_STAT_CNT=$(echo "${GIT_DIFF_STAT}"| tail -n +2| wc -l| tr -d ' ')
+  _echo_info "${GIT_DIFF_STAT_CNT} files."
   echo "${GIT_DIFF_STAT}"| sed -r 's/^/#AWK_DELIMITTER#/'| cat -n| sed -r 's/^ +//'| sed -r 's/\t//g'| awk -F '#AWK_DELIMITTER#' '{ printf "%+'${#GIT_DIFF_STAT_CNT}'s " , $1 } { print $2 }'| tac| tail -n +2| tac
 
-  # current directory
-  _echon2 "[pwd]"; _echo2 " $(pwd| sed -e "s#$HOME#~#")"
+  _echo_label "[pwd]";
+  _echo_info " $(pwd| sed -e "s#$HOME#~#")"
 
-  # command
+  # command selector
   ANS=$(echo "${COMMANDS}"| fzf --disabled --info=hidden --height=11 --prompt="COMMAND> " --bind "j:down" --bind "k:up" | awk -F "\t" '{ print $2 }')
   [[ -z ${ANS} ]] && exit || eval ${ANS}
 done
