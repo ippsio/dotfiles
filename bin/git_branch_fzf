@@ -1,113 +1,39 @@
 #!/bin/bash
-if ! is_git_repository; then
-  echo "Not a git repository. "
-  exit 1
-fi
+( ! is_git_repository ) && echo "Not a git repository. " && exit 1
 
 _ME=$( [ -L $0 ] && basename $(readlink $0) || basename $0)
+TAB='	'
+GIT_BRANCH_CMD="git branch --sort=-authordate --color=always --format='%(objectname:short)${TAB}%(authordate:format:%Y-%m-%d %H:%M:%S(%a))${TAB}%(authorname)${TAB}%(refname:short)${TAB}%(subject)'"
 
-do_something() {
-  hash=$1
-  date=$2
-  author=$3
-  local_branch=$4
-  remote_branch=$5
-  subject=$6
+L1="xxxxxxxxxx${TAB}xxxx-xx-xx xx:xx:xx(XX)${TAB}xxxxxx${TAB}--${TAB}現在の変更を取り消す。"
+L2=$(eval "${GIT_BRANCH_CMD} --list develop"$TAB)
+L2=$(eval "${GIT_BRANCH_CMD} --all --list develop origin/develop"$TAB)
+LIST="${L2}"$'\n'"${L22}"$'\n'
 
-  LF="
-"
-  _FZF_PROMPT2="next action > "
-  _FZF_HEADER2="${LF}branch     : [${local_branch}]"
-  _FZF_HEADER2+="${LF}commit date: [${date}]"
-  _FZF_HEADER2+="${LF}comitter   : [${author}]"
-  _FZF_HEADER2+="${LF}commit     : [${hash}]"
-  _FZF_HEADER2+="${LF}           : [${subject}]"
-  _FZF_HEADER2+="${LF}"
+exit
+L3=$(eval "${GIT_BRANCH_CMD} --remotes --list origin/develop"$TAB)
+L4=$(eval "${GIT_BRANCH_CMD}"$TAB)
+LIST="${L1}"$'\n'"${L2}"$'\n'"${L3}"$'\n'"${L4}"
 
-  nextaction_list=()
-  nextaction_list+=("1, respond me        '${local_branch}'")
-  nextaction_list+=("4, git log + fzf     '${local_branch}'")
-  nextaction_list+=("5, show pull request '${hash}'")
+echo "${LIST}" \
+  | perl -pe 's/^[ ][ ]//' \
+  | awk -F "${TAB}" '
+    { printf "%+2s", NR }                   # fzf {1} index no
+    { printf "	\033[0m"     }{ printf $1 } # fzf {2} hash
+    { printf "	\033[1;32m"  }{ printf $2 } # fzf {3} date
+    { printf "	\033[0m"     }{ printf $3 } # fzf {4} authorname
+    { printf "	\033[1;34m"  }{ printf $4 } # fzf {5} refname:short
+    { printf "	\033[1;35m"  }{ printf $5 } # fzf {6} subject
+    { print  "	\033[0m" }' \
+  | fzf --ansi --prompt="$_ME > " --no-sort --info=inline --tabstop=4 --delimiter="${TAB}" --nth=1..5 \
+  | awk -F "${TAB}" '{ print $5 }'
 
-  IS_1=$(for arg in "$@"; do [[ "${arg}" =~ "--respond_me_branch" ]] && echo "${arg}"; done;)
-  #echo "IS_1=${IS_1}"
 
-  if [[ ! -z "${IS_1}" ]]; then
-    nextaction="1"
-  else
-    nextaction=$(for row in "${nextaction_list[@]}"; do echo "$row"; done \
-      | fzf-tmux -p 75% --no-info --prompt="${_FZF_PROMPT2}" --header="${_FZF_HEADER2}"| awk -F ',' '{ print $1 }')
-  fi
 
-  if [[ "$nextaction" == "" ]]; then
-    return 0
+# [local-branchs only develop]
+# [remote-branchs only origin/develop]
 
-  elif [[ "$nextaction" == "1" ]]; then
-    echo "${local_branch} "
-    return 0
+# [local-branchs without develop]
+# [remote-branchs without origin/develop]
 
-  elif [[ "$nextaction" == "4" ]]; then
-    if (git branch -a --format="%(refname:short)"| grep -E "^${local_branch}+$"); then
-      git_log_fzf ${local_branch}
-    else
-      git_log_fzf ${remote_branch}
-    fi
-    return 0
 
-  elif [[ "$nextaction" == "5" ]]; then
-    git_pr_fzf "${hash}"
-    return 1
-  fi
-  return 0
-}
-
-QUERY=""
-while true; do
-  HASH="%(color:51)%(objectname:short)%(color:reset)"
-  DATE="%(color:169)%(authordate:format:%Y-%m-%då%H:%M:%S(%a))%(color:reset)"
-  BRANCH="%(color:51)%(refname:short)%(color:reset)"
-  AUTHOR="%(color:51)%(authorname)%(color:reset)"
-
-  SUBJECT="%(subject)"
-  COLOR0="\e[m"
-  COLOR1="\e[38;5;51m"
-  COLOR2="\e[38;5;169m"
-  HELPER1=$(printf "${COLOR1}xxxxxxxxxx${COLOR0}	${COLOR2}xxxx-xx-xxåxx:xx:xx(XXX)${COLOR0}	${COLOR1}xxxxxx${COLOR0}	${COLOR1}--${COLOR0}å|å現在の変更を取り消す。")
-  HELPER2=$(printf "${COLOR1}xxxxxxxxxx${COLOR0}	${COLOR2}xxxx-xx-xxåxx:xx:xx(XXX)${COLOR0}	${COLOR1}xxxxxx${COLOR0}	${COLOR1}-b${COLOR0}å|åブランチを作る。")
-
-  CMD="git branch --color=always -a --format=\"${HASH}	${DATE}	${AUTHOR}	${BRANCH}å|å${SUBJECT}\""
-  OTHER_BRANCHS=$(eval "${CMD} --sort=-authordate")
-
-  _FZF_PROMPT="$_ME > "
-  _FZF_HEADER="ブランチを指定し 次の操作を選択して下さい。
-  次に選択できる操作：respond hash／git log
-
-"
-
-  # {1} hash {2} date {3} author {4} branch {5} subject
-  # NOTE: `LC_TYPE=C` is solution for error "sed: RE error: illegal byte sequence".
-  FZF_RES=$(printf '%s\n%s\n%s\n' "${HELPER1}" "${HELPER2}" "${OTHER_BRANCHS}" \
-    | LC_CTYPE=C sed -e 's/ /　/g'| column -t \
-    | LC_CTYPE=C sed -e 's/å/ /g' \
-    | fzf --print-query --ansi --query="${QUERY}" --prompt="${_FZF_PROMPT}" --header="${_FZF_HEADER}" \
-       --no-sort --tabstop=1 --info=inline --delimiter '\|' --nth 1) # パイプマークより左にある文字列でのみ検索できるようにした。
-
-  QUERY="$(echo "$FZF_RES"| awk 'NR==1')"
-  SELECTED=$(echo "$FZF_RES"| awk 'NR==2')
-
-  [[ "${SELECTED}" == "" ]] && exit 0
-
-  _hash=$(echo -n "${SELECTED}"| awk '{ print $1 }')
-  _date=$(echo -n "${SELECTED}"| awk '{ print $2" "$3 }')
-  _author=$(echo -n "${SELECTED}"| awk '{ print $4 }')
-  _branch=$(echo -n "${SELECTED}"| awk '{ print $5 }')
-  _local_branch=$(echo -n "${SELECTED}"| awk '{ print $5 }'| sed -e 's#^origin/##')
-  _remote_branch="origin/${_local_branch}"
-  _subject=$(echo -n "${SELECTED}"| awk '{ print $6$7$8$9$10$11 }')
-
-  [[ "${_hash}" == "xxxxxxxxxx" ]] && add=" --respond_me_branch "
-
-  if (do_something "${_hash}" "${_date}" "${_author}" "${_local_branch}" "${_remote_branch}" "${_subject}" "$@" "$add"); then
-    break
-  fi
-done
