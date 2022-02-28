@@ -1,39 +1,55 @@
 #!/bin/bash
+# -------------------------
+# git_branch_fzf
+# rich branch selector.
+# -------------------------
 ( ! is_git_repository ) && echo "Not a git repository. " && exit 1
-
 _ME=$( [ -L $0 ] && basename $(readlink $0) || basename $0)
-TAB='	'
-GIT_BRANCH_CMD="git branch --sort=-authordate --color=always --format='%(objectname:short)${TAB}%(authordate:format:%Y-%m-%d %H:%M:%S(%a))${TAB}%(authorname)${TAB}%(refname:short)${TAB}%(subject)'"
+difference() { (printf '%s\n' $@ | sort -u; printf '%s\n' ${2}) | sort | uniq -u; };
 
-L1="xxxxxxxxxx${TAB}xxxx-xx-xx xx:xx:xx(XX)${TAB}xxxxxx${TAB}--${TAB}現在の変更を取り消す。"
-L2=$(eval "${GIT_BRANCH_CMD} --list develop"$TAB)
-L2=$(eval "${GIT_BRANCH_CMD} --all --list develop origin/develop"$TAB)
-LIST="${L2}"$'\n'"${L22}"$'\n'
+# L1) ローカルブランチ(developのみ)
+L1_local_develop_ARGS=$(git branch --list develop| sed -r 's/[ \*]+//')
+# L2) リモートブランチ(origin/developのみ)
+L2_remote_develop_ARGS=$(git branch --remotes --list origin/develop| sed -r 's/[ \*]+//')
+# L3) ローカルブランチ(develop以外の全て)
+L3_local_without_develop_ARGS="$(git branch| sed -r 's/[ \*]+//')"
+L3_local_without_develop_ARGS=$(difference "${L3_local_without_develop_ARGS}" "${L1_local_develop_ARGS}")
+L3_local_without_develop_ARGS=$(difference "${L3_local_without_develop_ARGS}" "${L2_remote_develop_ARGS}")
+L3_local_without_develop_ARGS=$(echo "${L3_local_without_develop_ARGS}"| awk '{ printf " " $1 }')
+# L4) リモートブランチのうち、ローカルにない存在しないものから、ブランチ名の接頭辞'origin/' を除去しもの。
+L4_local_not_checkedout_ARGS=$(git branch --remotes| grep -v 'HEAD ->'| sed -r 's/[ \*]+//'| sed -r 's#^origin/##')
+L4_local_not_checkedout_ARGS=$(difference "${L4_local_not_checkedout_ARGS}" "${L1_local_develop_ARGS}")
+L4_local_not_checkedout_ARGS=$(difference "${L4_local_not_checkedout_ARGS}" "${L3_local_without_develop_ARGS}")
+L4_local_not_checkedout_ARGS=$(echo "${L4_local_not_checkedout_ARGS}"| sed -r 's#^#origin/#g'| awk '{ printf " " $1 }')
+# L5) リモートブランチ(origin/develop以外の全て)
+L5_remote_without_develop_ARGS=$(git branch --remotes| grep -v 'HEAD ->'| sed -r 's/[ \*]+//')
+L5_remote_without_develop_ARGS=$(difference "${L5_remote_without_develop_ARGS}" "${L2_remote_develop_ARGS}")
+L5_remote_without_develop_ARGS=$(echo "${L5_remote_without_develop_ARGS}"| awk '{ printf " " $1 }')
 
-exit
-L3=$(eval "${GIT_BRANCH_CMD} --remotes --list origin/develop"$TAB)
-L4=$(eval "${GIT_BRANCH_CMD}"$TAB)
-LIST="${L1}"$'\n'"${L2}"$'\n'"${L3}"$'\n'"${L4}"
+# 情報付きのgit branch
+GIT_BRANCH_CMD="git branch --sort=-authordate --color=always --format='%(objectname:short)	%(authordate:format:%Y-%m-%d	%H:%M:%S(%a))	%(authorname)	%(refname:short)	%(subject)'"
+L0_hyphen_hyphen="xxxxxxxxxx	xxxx-xx-xx	xx:xx:xx(XX)	xxxxxx	--	現在の変更を取り消す。"
+L1_local_develop=$(eval "${GIT_BRANCH_CMD} --list ${L1_local_develop_ARGS}"| perl -pe 's/^[ ][ ]//')
+L2_remote_develop=$(eval "${GIT_BRANCH_CMD} --remotes --list ${L2_remote_develop_ARGS}"| perl -pe 's/^[ ][ ]//')
+L3_local_without_develop=$(eval "${GIT_BRANCH_CMD} --list ${L3_local_without_develop_ARGS}"| perl -pe 's/^[ ][ ]//')
+L4_local_not_checkedout=$(eval "${GIT_BRANCH_CMD} --remotes --list ${L4_local_not_checkedout_ARGS}"| perl -pe 's/^[ ][ ]//'| perl -pe 's#	origin/(.*	)#	\1#')
+L5_remote_without_develop=$(eval "${GIT_BRANCH_CMD} --remotes --list ${L5_remote_without_develop_ARGS}"| perl -pe 's/^[ ][ ]//')
 
-echo "${LIST}" \
-  | perl -pe 's/^[ ][ ]//' \
-  | awk -F "${TAB}" '
-    { printf "%+2s", NR }                   # fzf {1} index no
-    { printf "	\033[0m"     }{ printf $1 } # fzf {2} hash
-    { printf "	\033[1;32m"  }{ printf $2 } # fzf {3} date
-    { printf "	\033[0m"     }{ printf $3 } # fzf {4} authorname
-    { printf "	\033[1;34m"  }{ printf $4 } # fzf {5} refname:short
-    { printf "	\033[1;35m"  }{ printf $5 } # fzf {6} subject
+echo "${L0_hyphen_hyphen}
+${L1_local_develop}
+${L2_remote_develop}
+${L3_local_without_develop}
+${L4_local_not_checkedout}
+${L5_remote_without_develop}" | perl -pe 's/^[ ][ ]//' \
+  | awk -F '	' '
+    { printf "%+2s", NR }                   # awk-NR is fzf-{1}: index no
+    { printf "	\033[0m"     }{ printf $1 } # awk-$1 is fzf-{2}: %(objectname:short)
+    { printf "	\033[1;32m"  }{ printf $2 } # awk-$2 is fzf-{3}: date part of %(authordate:format:%Y-%m-%d	%H:%M:%S(%a))
+    { printf "	\033[1;32m"  }{ printf $3 } # awk-$3 is fzf-{4}: time part of %(authordate:format:%Y-%m-%d	%H:%M:%S(%a))
+    { printf "	\033[0m"     }{ printf $4 } # awk-$4 is fzf-{5}: %(authorname)
+    { printf "	\033[1;34m"  }{ printf $5 } # awk-$5 is fzf-{6}: %(refname:short)
+    { printf "	\033[1;35m"  }{ printf $6 } # awk-$6 is fzf-{7}: %(subject)
     { print  "	\033[0m" }' \
-  | fzf --ansi --prompt="$_ME > " --no-sort --info=inline --tabstop=4 --delimiter="${TAB}" --nth=1..5 \
-  | awk -F "${TAB}" '{ print $5 }'
-
-
-
-# [local-branchs only develop]
-# [remote-branchs only origin/develop]
-
-# [local-branchs without develop]
-# [remote-branchs without origin/develop]
-
+  | fzf --ansi --prompt="$_ME > " --no-sort --info=inline --tabstop=2 --delimiter="	" --nth=1,2,3,5,6 \
+  | awk -F '	' '{ print $6 }'
 
