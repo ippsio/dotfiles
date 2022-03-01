@@ -8,12 +8,12 @@ function triggered_by_space() {
   && zle _expand_alias
 
   # ssh
-  [[ $BUFFER =~ '^ssh+$' ]] \
+  [[ $BUFFER =~ '^ssh+[ ]$' ]] \
   && BUFFER="ssh $(fgrep 'Host ' ~/.ssh/config | grep -v '*' |  awk '{print $2}' | sort | fzf)" \
   && zle end-of-line && return
 
   # scp
-  [[ $BUFFER =~ '^scp+$' ]] \
+  [[ $BUFFER =~ '^scp+[ ]$' ]] \
   && BUFFER="scp $(fgrep 'Host ' ~/.ssh/config | grep -v '*' |  awk '{print $2}' | sort | fzf)" \
   && zle end-of-line && return
 
@@ -32,7 +32,7 @@ function triggered_by_space() {
 
     # git checkout + completion
     [[ $BUFFER =~ '^gco+$' || $BUFFER =~ '^git co+$' ]] \
-    && zle autosuggest-clear && BUFFER="git checkout $(git_branch_fzf "--respond_me_branch"| sed -e 's#^origin/##')" && zle end-of-line && return
+    && zle autosuggest-clear && BUFFER="git checkout $(git_branch_fzf)" && zle end-of-line && return
 
     # git branch + completion
     [[ $BUFFER =~ '^b+$' ]] \
@@ -46,7 +46,7 @@ function triggered_by_space() {
     [[ $BUFFER =~ '^.*B+$' ]] \
     && zle autosuggest-clear \
     && zle end-of-line \
-    && BUFFER="${BUFFER%B}$(git_branch_fzf '--respond_me_branch')" \
+    && BUFFER="${BUFFER%B}$(git_branch_fzf)" \
     && zle end-of-line && return
 
     # git fetch origin --prune

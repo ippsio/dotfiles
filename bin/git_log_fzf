@@ -47,5 +47,5 @@ eval "${GIT_LOG_CMD}" \
       echo;
 
       color; echo \"${GIT_LOG_P_CMD}\"; reset_color; eval \"${GIT_LOG_P_CMD}\";
-    " --preview-window=right
+    " --preview-window=bottom:85%
 
