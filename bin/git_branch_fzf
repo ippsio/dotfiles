@@ -8,50 +8,45 @@ _ME=$( [ -L $0 ] && basename $(readlink $0) || basename $0)
 difference() { (printf '%s\n' $@ | sort -u; printf '%s\n' ${2}) | sort | uniq -u; };
 
 # L1) ローカルブランチ(developのみ)
-L1_local_develop_ARGS=$(git branch --list develop| sed -r 's/[ \*]+//')
+L1_local_develop_ARGS=$(git branch --list develop| grep -Ev '(HEAD ->|HEAD detached at)'| sed -r 's/[ \*]+//')
 # L2) リモートブランチ(origin/developのみ)
-L2_remote_develop_ARGS=$(git branch --remotes --list origin/develop| sed -r 's/[ \*]+//')
+L2_remote_develop_ARGS=$(git branch --remotes --list origin/develop| grep -Ev '(HEAD ->|HEAD detached at)'| sed -r 's/[ \*]+//')
 # L3) ローカルブランチ(develop以外の全て)
-L3_local_without_develop_ARGS="$(git branch| sed -r 's/[ \*]+//')"
+L3_local_without_develop_ARGS="$(git branch| grep -Ev '(HEAD ->|HEAD detached at)'| sed -r 's/[ \*]+//')"
 L3_local_without_develop_ARGS=$(difference "${L3_local_without_develop_ARGS}" "${L1_local_develop_ARGS}")
 L3_local_without_develop_ARGS=$(difference "${L3_local_without_develop_ARGS}" "${L2_remote_develop_ARGS}")
 L3_local_without_develop_ARGS=$(echo "${L3_local_without_develop_ARGS}"| awk '{ printf " " $1 }')
 # L4) リモートブランチのうち、ローカルにない存在しないものから、ブランチ名の接頭辞'origin/' を除去しもの。
-L4_local_not_checkedout_ARGS=$(git branch --remotes| grep -v 'HEAD ->'| sed -r 's/[ \*]+//'| sed -r 's#^origin/##')
+L4_local_not_checkedout_ARGS=$(git branch --remotes| grep -Ev '(HEAD ->|HEAD detached at)'| sed -r 's/[ \*]+//'| sed -r 's#^origin/##')
 L4_local_not_checkedout_ARGS=$(difference "${L4_local_not_checkedout_ARGS}" "${L1_local_develop_ARGS}")
 L4_local_not_checkedout_ARGS=$(difference "${L4_local_not_checkedout_ARGS}" "${L3_local_without_develop_ARGS}")
 L4_local_not_checkedout_ARGS=$(echo "${L4_local_not_checkedout_ARGS}"| sed -r 's#^#origin/#g'| awk '{ printf " " $1 }')
 # L5) リモートブランチ(origin/develop以外の全て)
-L5_remote_without_develop_ARGS=$(git branch --remotes| grep -v 'HEAD ->'| sed -r 's/[ \*]+//')
+L5_remote_without_develop_ARGS=$(git branch --remotes| grep -Ev '(HEAD ->|HEAD detached at)'| sed -r 's/[ \*]+//')
 L5_remote_without_develop_ARGS=$(difference "${L5_remote_without_develop_ARGS}" "${L2_remote_develop_ARGS}")
 L5_remote_without_develop_ARGS=$(echo "${L5_remote_without_develop_ARGS}"| awk '{ printf " " $1 }')
 
-TAGINFO_FIXED=':------'
-TAGINFO_LOCAL_BRANCH=':local+'
-TAGINFO_REMOTE_BRANCH=':remote'
-TAGINFO_NOT_ON_LOCAL=':local-'
+TAGINFO_FIXED='------'
+TAGINFO_LOCAL_BRANCH='local+'
+TAGINFO_REMOTE_BRANCH='remote'
+TAGINFO_NOT_ON_LOCAL='local-'
 # git branchコマンドの共通部分
 GIT_BRANCH_CMD="git branch --sort=-authordate --color=always --format='%(objectname:short)	%(authordate:format:%Y-%m-%d	%H:%M:%S(%a))	%(authorname)	%(refname:short)	%(subject)'"
 L0_hyphen_hyphen="${TAGINFO_FIXED}	xxxxxxxxxx	xxxx-xx-xx	xx:xx:xx(XX)	xxxxxx	--	現在の変更を取り消す。"
 if [[ ! -z ${L1_local_develop_ARGS} ]]; then
-  L1_local_develop=$(eval "${GIT_BRANCH_CMD} --list ${L1_local_develop_ARGS}" \
-    | perl -pe "s/^/${TAGINFO_LOCAL_BRANCH}	/")
+  L1_local_develop=$(eval "${GIT_BRANCH_CMD} --list ${L1_local_develop_ARGS}"| perl -pe "s/^/${TAGINFO_LOCAL_BRANCH}	/")
 fi
 if [[ ! -z ${L2_remote_develop_ARGS} ]]; then
-  L2_remote_develop=$(eval "${GIT_BRANCH_CMD} --remotes --list ${L2_remote_develop_ARGS}" \
-    | perl -pe "s/^/${TAGINFO_REMOTE_BRANCH}	/")
+  L2_remote_develop=$(eval "${GIT_BRANCH_CMD} --remotes --list ${L2_remote_develop_ARGS}"| perl -pe "s/^/${TAGINFO_REMOTE_BRANCH}	/")
 fi
 if [[ ! -z ${L3_local_without_develop_ARGS} ]]; then
-  L3_local_without_develop=$(eval "${GIT_BRANCH_CMD} --list ${L3_local_without_develop_ARGS}" \
-    | perl -pe "s/^/${TAGINFO_LOCAL_BRANCH}	/")
+  L3_local_without_develop=$(eval "${GIT_BRANCH_CMD} --list ${L3_local_without_develop_ARGS}"| perl -pe "s/^/${TAGINFO_LOCAL_BRANCH}	/")
 fi
 if [[ ! -z ${L4_local_not_checkedout_ARGS} ]]; then
-  L4_local_not_checkedout=$(eval "${GIT_BRANCH_CMD} --remotes --list ${L4_local_not_checkedout_ARGS}" \
-    | perl -pe "s/^/${TAGINFO_NOT_ON_LOCAL}	/"| perl -pe 's#	origin/(.*	)#	\1#')
+  L4_local_not_checkedout=$(eval "${GIT_BRANCH_CMD} --remotes --list ${L4_local_not_checkedout_ARGS}" | perl -pe "s/^/${TAGINFO_NOT_ON_LOCAL}	/"| perl -pe 's#	origin/(.*	)#	\1#')
 fi
 if [[ ! -z ${L5_remote_without_develop_ARGS} ]]; then
-  L5_remote_without_develop=$(eval "${GIT_BRANCH_CMD} --remotes --list ${L5_remote_without_develop_ARGS}" \
-    | perl -pe "s/^/${TAGINFO_REMOTE_BRANCH}	/")
+  L5_remote_without_develop=$(eval "${GIT_BRANCH_CMD} --remotes --list ${L5_remote_without_develop_ARGS}" | perl -pe "s/^/${TAGINFO_REMOTE_BRANCH}	/")
 fi
 
 echo "${L0_hyphen_hyphen}
@@ -74,5 +69,6 @@ ${L5_remote_without_develop}" \
  | fzf --ansi --prompt="$_ME > " --no-sort --info=inline --tabstop=1 --delimiter="	" --nth=1,2,3,4,6,7 \
    --bind "tab:execute(cd $(git_root); git_log_fzf {7})" \
    --bind "ctrl-l:execute(cd $(git_root); git_log_fzf {7})" \
+   --preview 'echo {3}' --preview-window down,2 \
  | awk -F '	' '{ print $7 }'
 

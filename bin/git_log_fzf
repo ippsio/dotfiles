@@ -12,14 +12,11 @@ _FZF_PROMPT="${_ME} (range=[${range}],file=[$file]) > "
 _FZF_HEADER=" (enter: git diff) (ctrl-p: PR) (ctrl-y: yank hash)"
 
 GIT_LOG_CMD="git --no-pager log --graph --oneline --full-history --simplify-merges --decorate=full --abbrev-commit --color=always"\
-" --date=format-local:'%Y/%m/%d %H:%M(%a)'"\
-" --pretty=format:'%C(187 17)%an%Creset %s %d#AWK_DELIMITTER#%C($(git config --get color.diff.commit))%h%Creset %cd'"\
+" --date=format-local:'%Y/%m/%d %H:%M(%a)' --pretty=format:'%an	%h	%s	%d	%cd'"\
 " ${range} -- ${file}"
 
 GIT_LOG_ONE_CMD="git log -1 --oneline --decorate=full"\
-" --date=format-local:'%Y/%m/%d %H:%M(%a)'"\
-" --pretty=format:'%C($(git config --get color.diff.commit))%h%Creset"\
-" %cd %C(187 17)%an%Creset %s %d' --abbrev-commit --color=always {2}"
+" --date=format-local:'%Y/%m/%d %H:%M(%a)' --pretty=format:'%h	%cd	%an	%s	%d' --abbrev-commit --color=always {2}"
 
 GIT_LOG_STAT="git log -1 --oneline --stat {2} --color=always| tail -n +2"
 GIT_LOG_P_CMD="git log -1 --oneline -p {2} --color=always"
@@ -30,7 +27,20 @@ GIT_LOG_P_CMD="${GIT_LOG_P_CMD}| tail -n +2"
 
 eval "${GIT_LOG_CMD}" \
   | grep '*' \
-  | awk -F '#AWK_DELIMITTER#' '{ print $2 " " $1 }'| cat -n| awk -F '\t' '{ printf "%2d %s\n", $1, $2 }' \
+  | awk -F '	' \
+    '{ printf "\033[2m" }{ printf "%+2s", NR }{ printf "\033[0m" }          # awk-NR is fzf-{1}: index no
+     { printf "	" }{ printf $2 }
+     { printf "	" }{ printf $1 }
+     { printf "	" }{ printf "\033[38;5;169m" }{ printf $5 }{ printf "\033[0m" } # awk-$1 is fzf-{6}: %(authorname)
+     { printf "	" }{ printf $3 }
+     { printf "	" }{ printf "\033[38;5;223m" }{ printf $4 }{ printf "\033[0m" } # awk-$1 is fzf-{3}: %(objectname:short)
+     { printf  "\n" }
+     '|perl -pe 's/\t/ /g'
+exit
+eval "${GIT_LOG_CMD}" \
+  | grep '*' \
+  | awk -F '	' '
+    { print $2 " " $1 }' \
   | fzf --ansi --prompt="${_FZF_PROMPT}" --header="${_FZF_HEADER}" --no-sort --nth=1.. \
   --bind "enter:execute(git show -p {2}| nvim -R -c \"set ft=diff nomod nolist nospell nu\" > /dev/tty)" \
   --bind "ctrl-y:execute(echo -n {2}| pbcopy)" \
