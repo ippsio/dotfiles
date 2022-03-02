@@ -1,0 +1,1 @@
+echo "console.log(Date.now().toString())"| node
