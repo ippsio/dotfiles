@@ -12,7 +12,7 @@ _FZF_PROMPT="${_ME} (range=[${range}],file=[$file]) > "
 _FZF_HEADER=" (enter: git diff) (ctrl-p: PR) (ctrl-y: yank hash)"
 
 GIT_LOG_CMD="git --no-pager log --graph --oneline --full-history --simplify-merges --decorate=full --abbrev-commit --color=always"\
-" --date=format-local:'%Y/%m/%d %H:%M(%a)' --pretty=format:'%an	%h	%s	%d	%cd'"\
+" --date=format-local:'%Y/%m/%d %H:%M(%a)' --pretty=format:'	%an	%s	%h	%cd'"\
 " ${range} -- ${file}"
 
 GIT_LOG_ONE_CMD="git log -1 --oneline --decorate=full"\
@@ -28,20 +28,14 @@ GIT_LOG_P_CMD="${GIT_LOG_P_CMD}| tail -n +2"
 eval "${GIT_LOG_CMD}" \
   | grep '*' \
   | awk -F '	' \
-    '{ printf "\033[2m" }{ printf "%+2s", NR }{ printf "\033[0m" }          # awk-NR is fzf-{1}: index no
-     { printf "	" }{ printf $2 }
-     { printf "	" }{ printf $1 }
-     { printf "	" }{ printf "\033[38;5;169m" }{ printf $5 }{ printf "\033[0m" } # awk-$1 is fzf-{6}: %(authorname)
-     { printf "	" }{ printf $3 }
-     { printf "	" }{ printf "\033[38;5;223m" }{ printf $4 }{ printf "\033[0m" } # awk-$1 is fzf-{3}: %(objectname:short)
-     { printf  "\n" }
-     '|perl -pe 's/\t/ /g'
-exit
-eval "${GIT_LOG_CMD}" \
-  | grep '*' \
-  | awk -F '	' '
-    { print $2 " " $1 }' \
-  | fzf --ansi --prompt="${_FZF_PROMPT}" --header="${_FZF_HEADER}" --no-sort --nth=1.. \
+    '{ printf "\033[2m" }{ printf "%+2s", NR }                                       { printf "\033[0m" } # awk-NR is fzf-{1}: index no
+     { printf "	" }{ printf "\033[38;5;223m" }                    { printf "%s", $4 }{ printf "\033[0m" } # awk-$4 is fzf-{2}: %h
+     { printf "	" }{ printf "\033[38;5;184m" }{ printf "\033[2m" }{ printf "%s", $5 }{ printf "\033[0m" } # awk-$5 is fzf-{3}: %cd
+     { printf "	" }                                               { printf "%s", $1 }                     # awk-$1 is fzf-{4}: commit graph
+     { printf "	" }{ printf "\033[38;5;169m" }                    { printf "%s", $2 }{ printf "\033[0m" } # awk-$2 is fzf-{5}: %cd
+     { printf "	" }{ printf "\033[38;5;223m" }                    { printf "%s", $3 }{ printf "\033[0m" } # awk-$3 is fzf-{6}: %s
+     { printf  "\n" }' \
+  | fzf --ansi --prompt="${_FZF_PROMPT}" --tabstop=1 --header="${_FZF_HEADER}" --no-sort --delimiter='\t' \
   --bind "enter:execute(git show -p {2}| nvim -R -c \"set ft=diff nomod nolist nospell nu\" > /dev/tty)" \
   --bind "ctrl-y:execute(echo -n {2}| pbcopy)" \
   --bind "ctrl-/:toggle-preview" \
