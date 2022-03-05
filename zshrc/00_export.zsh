@@ -44,12 +44,18 @@ export LC_ALL=
 # ---------------------
 # FZF
 # ---------------------
-fzf_default_opts=()
-fzf_default_opts+=("--exact --extended --reverse --border --no-sort --no-unicode")
-#fzf_default_opts+=("--bind change:top")
-fzf_default_opts+=("--preview-window=bottom:60%")
-fzf_default_opts+=("--color fg:-1,bg:-1,hl:226")
-fzf_default_opts+=("--color fg+:120,bg+:20,hl+:226")
-fzf_default_opts+=("--color info:108,prompt:48,spinner:108,pointer:168,marker:168,header:191:reverse")
-export FZF_DEFAULT_OPTS="${fzf_default_opts[@]}"
+export FZF_DEFAULT_OPTS=\
+" --exact"\
+" --extended"\
+" --reverse"\
+" --no-sort"\
+" --no-unicode"\
+" --color fg:-1,bg:-1,hl:226:underline"\
+" --color fg+:120,bg+:240,hl+:226:underline"\
+" --color info:108:reverse"\
+" --color prompt:123:reverse"\
+" --color spinner:108"\
+" --color pointer:168:underline"\
+" --color marker:168:reverse"\
+" --color header:191:reverse"
 

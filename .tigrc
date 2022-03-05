@@ -105,7 +105,7 @@ set main-view-date-format = "%Y-%m-%d %H:%M"
 # ビューを水平方向あるいは垂直方向に分割するかどうか
 set vertical-split = auto
 # Width of the right-most view in a vertically split display
-set split-view-width = 50%
+set split-view-width = 70%
 # 水平方向の分割表示時の下のビューの高さ
 set split-view-height = 60%
 

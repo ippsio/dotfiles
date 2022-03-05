@@ -11,8 +11,14 @@ _ME=$( [ -L $0 ] && basename $(readlink $0) || basename $0)
 _FZF_PROMPT="${_ME} (range=[${range}],file=[$file]) > "
 _FZF_HEADER=" (enter: git diff) (ctrl-p: PR) (ctrl-y: yank hash)"
 
-GIT_LOG_CMD="git --no-pager log --graph --oneline --full-history --simplify-merges --decorate=full --abbrev-commit --color=always"\
-" --date=format-local:'%Y/%m/%d %H:%M(%a)' --pretty=format:'	%an	%s	%h	%cd'"\
+GIT_LOG_CMD="git --no-pager log --graph --oneline --full-history --decorate=full --abbrev-commit --color=always"\
+" --date=format-local:'%Y/%m/%d %H:%M(%a)' --pretty=format:'"\
+"	"\
+"%an	"\
+"%s	"\
+"%h	"\
+"%cd	"\
+"%d'"\
 " ${range} -- ${file}"
 
 GIT_LOG_ONE_CMD="git log -1 --oneline --decorate=full"\
@@ -20,22 +26,85 @@ GIT_LOG_ONE_CMD="git log -1 --oneline --decorate=full"\
 
 GIT_LOG_STAT="git log -1 --oneline --stat {2} --color=always| tail -n +2"
 GIT_LOG_P_CMD="git log -1 --oneline -p {2} --color=always"
-if ( type "diff-highlight" > /dev/null 2>&1 );then
+# --diff-merges たちの 違いがわからない....
+#GIT_LOG_P_CMD="${GIT_LOG_P_CMD} --diff-merges=on"
+GIT_LOG_P_CMD="${GIT_LOG_P_CMD} --diff-merges=first-parent"
+#GIT_LOG_P_CMD="${GIT_LOG_P_CMD} --diff-merges=separate"
+#GIT_LOG_P_CMD="${GIT_LOG_P_CMD} --diff-merges=combined"
+#GIT_LOG_P_CMD="${GIT_LOG_P_CMD} --diff-merges=dense-combined"
+
+# --diff-merges=(off|none|on|first-parent|1|separate|m|combined|c|dense-combined|cc), --no-diff-merges
+#   Specify diff format to be used for merge commits.
+#   Default is off unless --first-parent is in use, in which case first-parent is the default.
+#
+#   --diff-merges=(off|none), --no-diff-merges
+#       Disable output of diffs for merge commits. Useful to override implied value.
+#
+#   --diff-merges=on, --diff-merges=m, -m
+#       This option makes diff output for merge commits to be shown in the default format.
+#       -m will produce the output only if -p is given as well.
+#       The default format could be changed using log.diffMerges configuration parameter, which default
+#       value is separate.
+#
+#   --diff-merges=first-parent, --diff-merges=1
+#       This option makes merge commits show the full diff with respect to the first parent only.
+#
+#   --diff-merges=separate
+#       This makes merge commits show the full diff with respect to each of the parents.
+#       Separate log entry and diff is generated for each parent.
+#
+#   --diff-merges=combined, --diff-merges=c, -c
+#       With this option, diff output for a merge commit shows the differences from each of the parents
+#       to the merge result simultaneously instead of showing pairwise diff between a parent and
+#       the result one at a time. Furthermore, it lists only files which were modified from all parents.
+#       -c implies -p.
+#
+#   --diff-merges=dense-combined, --diff-merges=cc, --cc
+#       With this option the output produced by --diff-merges=combined is further compressed
+#       by omitting uninteresting hunks whose contents in the parents have only two variants
+#       and the merge result picks one of them without modification.
+#       --cc implies -p.
+GIT_LOG_P_CMD="${GIT_LOG_P_CMD} ${file}"
+if ( type "diff-highlight" > /dev/null 2>&1 ); then
   GIT_LOG_P_CMD="${GIT_LOG_P_CMD}| diff-highlight"
 fi
 GIT_LOG_P_CMD="${GIT_LOG_P_CMD}| tail -n +2"
 
+# ============================================================================================================================================
+# result image of git log.
+# ============================================================================================================================================
+# *       ippsio  update-d  52618e2 2022/03/03 10:36(木)     (HEAD -> refs/heads/dotfiles, refs/remotes/origin/dotfiles, refs/remotes/origin/HEAD)
+# *       ippsio  update-c  2f0fee1 2022/03/03 07:06(木)
+# *       ippsio  update-b  46a7e05 2022/03/02 11:46(水)
+# *       ippsio  update-a  6ffabe4 2020/04/29 17:51(水)
+# ~~~~~~~ ~~~~~~  ~~~~~~~~  ~~~~~~~ ~~~~~~~~~~~~~~~~~~~~~    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# awk-$1  awk-$2  awk-$3    awk-$4  awk-$5                   awk-$6
+# fzf-{5} fzf-{4} fzf-{7}   fzf-{2} fzf-{3}                  fzf-{6}
+
+diff_color_commit="$(git config --get diff.color.commit)"
+diff_color_commit_fg="${diff_color_commit:-255}"
+color_decorate_HEAD="$(git config --get color.decorate.HEAD)"
+color_decorate_HEAD_fg="${color_decorate_HEAD:-255}"
+
 eval "${GIT_LOG_CMD}" \
   | grep '*' \
   | awk -F '	' \
-    '{ printf "\033[2m" }{ printf "%+2s", NR }                                       { printf "\033[0m" } # awk-NR is fzf-{1}: index no
-     { printf "	" }{ printf "\033[38;5;223m" }                    { printf "%s", $4 }{ printf "\033[0m" } # awk-$4 is fzf-{2}: %h
-     { printf "	" }{ printf "\033[38;5;184m" }{ printf "\033[2m" }{ printf "%s", $5 }{ printf "\033[0m" } # awk-$5 is fzf-{3}: %cd
-     { printf "	" }                                               { printf "%s", $1 }                     # awk-$1 is fzf-{4}: commit graph
-     { printf "	" }{ printf "\033[38;5;169m" }                    { printf "%s", $2 }{ printf "\033[0m" } # awk-$2 is fzf-{5}: %cd
-     { printf "	" }{ printf "\033[38;5;223m" }                    { printf "%s", $3 }{ printf "\033[0m" } # awk-$3 is fzf-{6}: %s
-     { printf  "\n" }' \
-  | fzf --ansi --prompt="${_FZF_PROMPT}" --tabstop=1 --header="${_FZF_HEADER}" --no-sort --delimiter='\t' \
+    -v diff_color_commit_fg="\033[38;5;${diff_color_commit_fg}m" \
+    -v color_cd_fg="\033[38;5;184m" \
+    -v color_an_fg="\033[38;5;6m" \
+    -v color_d_fg="\033[38;5;${color_decorate_HEAD_fg}m" \
+    -v color_s_fg="\033[38;5;253m" \
+    -v reset="\033[0m" \
+    -v dim="\033[2m" \
+    '{ printf dim }{ printf "%+2s", NR }                                  { printf reset } # awk-NR = fzf-{1} = index no
+     { printf "	" }{ printf diff_color_commit_fg }     { printf "%s", $4 }{ printf reset } # awk-$4 = fzf-{2} = %h
+     { printf "	" }{ printf color_cd_fg }{ printf dim }{ printf "%s", $5 }{ printf reset } # awk-$5 = fzf-{3} = %cd
+     { printf "	" }{ printf color_an_fg }              { printf "%s", $2 }{ printf reset } # awk-$2 = fzf-{4} = %an
+     { printf "	" }                                    { printf "%s", $1 }                 # awk-$1 = fzf-{5} = commit graph
+     { printf "	" }{ printf color_d_fg }               { printf "%s", $6 }{ printf reset } # awk-$6 = fzf-{6} = %d
+     { printf "	" }{ printf color_s_fg }               { printf "%s", $3 }{ printf reset } # awk-$3 = fzf-{7} = %s
+     { printf "\n" }' \
+  | fzf --ansi --info=inline --prompt="${_FZF_PROMPT}" --no-clear --tabstop=1 --header="${_FZF_HEADER}" --no-sort --delimiter='\t' \
   --bind "enter:execute(git show -p {2}| nvim -R -c \"set ft=diff nomod nolist nospell nu\" > /dev/tty)" \
   --bind "ctrl-y:execute(echo -n {2}| pbcopy)" \
   --bind "ctrl-/:toggle-preview" \

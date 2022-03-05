@@ -34,6 +34,10 @@ function triggered_by_space() {
     [[ $BUFFER =~ '^gco+$' || $BUFFER =~ '^git co+$' ]] \
     && zle autosuggest-clear && BUFFER="git checkout $(git_branch_fzf)" && zle end-of-line && return
 
+    # git log + completion
+    [[ $BUFFER =~ '^gl+$' || $BUFFER =~ '^glo+$' || $BUFFER =~ '^gitlog+$' ]] \
+    && zle autosuggest-clear && BUFFER="git_log_fzf " && zle end-of-line && return
+
     # git branch + completion
     [[ $BUFFER =~ '^b+$' ]] \
     && zle autosuggest-clear \

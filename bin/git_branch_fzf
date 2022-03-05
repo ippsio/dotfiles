@@ -69,6 +69,6 @@ ${L5_remote_without_develop}" \
  | fzf --ansi --prompt="$_ME > " --no-sort --info=inline --tabstop=1 --delimiter="	" --nth=1,2,3,4,6,7 \
    --bind "tab:execute(cd $(git_root); git_log_fzf {7})" \
    --bind "ctrl-l:execute(cd $(git_root); git_log_fzf {7})" \
-   --preview 'echo {3}' --preview-window down,2 \
+   --preview 'echo {}' --preview-window down,2 \
  | awk -F '	' '{ print $7 }'
 

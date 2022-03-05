@@ -7,66 +7,103 @@
 
 [color]
   ui = auto
-	branch = auto
-	diff = auto
-	interactive = auto
-	status = auto
+  branch = auto
+  diff = auto
+  interactive = auto
+  status = auto
 
-[color "diff"]
-  #------------------------------------------------------------
-  # `diff --git a/xxxx b/xxxx`
-  # `index acbd5f297b..4a56929e4e 100644`
-  # `a/xxxx`
-  # `b/xxxx`
-  # みたいな箇所(グレー地に白文字)
-  #----------------------------------------
-  meta =                      249 238
+[diff "color"]
+  # git/diff.c
+  # ```c
+  # static const char *color_diff_slots[] = {
+  # 	[DIFF_CONTEXT]		      = "context",
+  # 	[DIFF_METAINFO]		      = "meta",
+  # 	[DIFF_FRAGINFO]		      = "frag",
+  # 	[DIFF_FILE_OLD]		      = "old",
+  # 	[DIFF_FILE_NEW]		      = "new",
+  # 	[DIFF_COMMIT]		      = "commit",
+  # 	[DIFF_WHITESPACE]	      = "whitespace",
+  # 	[DIFF_FUNCINFO]		      = "func",
+  # 	[DIFF_FILE_OLD_MOVED]	      = "oldMoved",
+  # 	[DIFF_FILE_OLD_MOVED_ALT]     = "oldMovedAlternative",
+  # 	[DIFF_FILE_OLD_MOVED_DIM]     = "oldMovedDimmed",
+  # 	[DIFF_FILE_OLD_MOVED_ALT_DIM] = "oldMovedAlternativeDimmed",
+  # 	[DIFF_FILE_NEW_MOVED]	      = "newMoved",
+  # 	[DIFF_FILE_NEW_MOVED_ALT]     = "newMovedAlternative",
+  # 	[DIFF_FILE_NEW_MOVED_DIM]     = "newMovedDimmed",
+  # 	[DIFF_FILE_NEW_MOVED_ALT_DIM] = "newMovedAlternativeDimmed",
+  # 	[DIFF_CONTEXT_DIM]	      = "contextDimmed",
+  # 	[DIFF_FILE_OLD_DIM]	      = "oldDimmed",
+  # 	[DIFF_FILE_NEW_DIM]	      = "newDimmed",
+  # 	[DIFF_CONTEXT_BOLD]	      = "contextBold",
+  # 	[DIFF_FILE_OLD_BOLD]	      = "oldBold",
+  # 	[DIFF_FILE_NEW_BOLD]	      = "newBold",
+  # };
+  # ```
 
-  #----------------------------------------------------------------------
-  # `@@ -518,9 +518,7 @@` みたいな箇所(ダークグレー地に黄緑色文字)
-  # 及びその右隣のメソッド名やクラス名が表示されるところ(ダークグレー地に黄緑色文字)
-  #----------------------------------------------------------------------
-  frag =                       149 235
-
-  #----------------------
-  # diff old系(赤系)
-  #----------------------
-  old =                        210 052 # "#ff7766 #440000"
-  oldMoved =                   210 052 #"#aaaa00 #666600"
+  # =============================================================================================
+  #  % git diff
+  # =============================================================================================
+  # diff.color.meta     | diff --git a/.tigrc b/.tigrc
+  # diff.color.meta     | index 443b82a..18cef12 100644
+  # diff.color.meta     | --- a/.tigrc
+  # diff.color.meta     | +++ b/.tigrc
+  #                     | @@ -105,7 +105,7 @@ set main-view-date-format = "%Y-%m-%d %H:%M"
+  #                     | ~~~~~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  #                     |  ^                   ^
+  # diff.color.flag ----:--+                   |
+  # diff.color.func ----:----------------------+
+  # diff.color.context  |  set vertical-split = auto
+  # diff.color.old      | -set split-view-width = 50%
+  # diff.color.new      | +set split-view-width = 70%
+  # diff.color.context  | # 水平方向の分割表示時の下のビューの高さ
+  # diff.color.context  | set split-view-height = 60%
+  meta = 149 238
+  frag = 149 235
+  func = 017 190 bold
+  context = 247
+  old = 210 052
+  oldMoved = 210 052
   #oldMovedAlternative =       203 053
   #oldMovedAlternativeDimmed = 203 053
-
-  #----------------------
-  # new系(緑系)
-  #----------------------
-  new =                        051 023 # "#00ff33 #004433"
-  newMoved =                   051 023
+  new = 051 023
+  newMoved = 051 023
   #newMovedAlternative =       047 024
   #newMovedAlternativeDimmed = 047 024
 
-  #--------------------------
-  # 変更なし部分の文字色
-  #--------------------------
-  context =                    253
+  # =============================================================================================
+  #  % git log -1 --abbrev-commit --stat
+  # =============================================================================================
+  #                             | commit 52618e2 (HEAD -> dotfiles, origin/dotfiles, origin/HEAD)
+  #                             |        ~~~~~~~  ~~~~    ~~~~~~~~  ~~~~~~~~~~~~~~~  ~~~~~~~~~~~
+  #                             |        ^        ^       ^         ^                ^
+  # diff.color.commit ----------:--------+        |       |         |                |
+  # color.decorate.HEAD --------:-----------------+       |         |                |
+  # color.decorate.branch-------:-------------------------+         |                |
+  # color.decorate.remoteBranch :-----------------------------------+----------------+
+  #                             |
+  #                             | Author: ippsio <ippei.shioiri@gmail.com>
+  #                             | Date:   Thu Mar 3 10:36:54 2022 +0900
+  #                             |
+  #                             |     update
+  #                             |
+  #                             |  bin/git_log_fzf | 24 +++++++++---------------
+  #                             |  1 file changed, 9 insertions(+), 15 deletions(-)
+  commit = 223
 
-  #----------------------------------
-  # git log時のcommit hashの色(緑系)
-  #----------------------------------
-  commit =                     123 023 # "#00ff33 #004433"
-  func =                       017 190 bold # tig の diff-statに相当
+[color "decorate"]
+  HEAD = 14
+  branch = "yellow"
+  remoteBranch = red
+  tag = "reverse bold yellow"
+  stash = magenta
 
 [color "diff-highlight"]
-  #----------------------
-  # diff old系(赤系)
-  #----------------------
-  oldNormal =                  210 052 # "#ff7766 #440000"
-  oldHighlight =               211 124 # 単語差分ハイライト部分
-
-  #----------------------
-  # new系(緑系)
-  #----------------------
-  newNormal =                  051 023 # "#00ff33 #004433"
-  newHighlight =               159 30  # 単語差分ハイライト部分
+  oldNormal = 210 052
+  newNormal = 051 023
+  # 単語差分ハイライト部分
+  oldHighlight = 211 124
+  newHighlight = 159 30
 
 [diff]
   compactionHeuristic = true

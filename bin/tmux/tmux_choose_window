@@ -69,22 +69,28 @@
 # }
 
 # So ... This is customized style.
-WINDOW_TREE_DEFAULT_FORMAT=""
-WINDOW_TREE_CUSTOM_FORMAT+=$(echo "#{?pane_format,")
-WINDOW_TREE_CUSTOM_FORMAT+=$(echo   "#[fg=colour192]#[bg=colour233]-->PANE #{?pane_active,#[fg=colour72]#[bg=colour48](active)#[default],        }#[fg=colour192]#[bg=colour233] #{pane_current_command}#{?pane_marked,M,} ")
-WINDOW_TREE_CUSTOM_FORMAT+=$(echo   "#{?#{&&:#{pane_title},},: \"#{pane_title}\",}")
-WINDOW_TREE_CUSTOM_FORMAT+=$(echo ",")
-WINDOW_TREE_CUSTOM_FORMAT+=$(echo   "#{?window_format,")
-WINDOW_TREE_CUSTOM_FORMAT+=$(echo     "#[fg=colour75]#[bg=colour17]->WINDOW #{?window_active,#[reverse](ACTIVE)#[default],        }#[fg=colour75]#[bg=colour17]  window_name #{window_name} #{window_flags} ")
-WINDOW_TREE_CUSTOM_FORMAT+=$(echo     "#{?#{&&:#{==:#{window_panes},1},},: \"#{pane_title}\",}")
-WINDOW_TREE_CUSTOM_FORMAT+=$(echo   ",")
-WINDOW_TREE_CUSTOM_FORMAT+=$(echo     "#[fg=colour115]#[bg=colour236] SESSION #{?session_attached,#[reverse](ATTACHED),} #[default]")
-WINDOW_TREE_CUSTOM_FORMAT+=$(echo     "#{?session_grouped, ")
-WINDOW_TREE_CUSTOM_FORMAT+=$(echo       "(group #{session_group}: ")
-WINDOW_TREE_CUSTOM_FORMAT+=$(echo       "#{session_group_list}),")
-WINDOW_TREE_CUSTOM_FORMAT+=$(echo     "}")
-WINDOW_TREE_CUSTOM_FORMAT+=$(echo   "}")
-WINDOW_TREE_CUSTOM_FORMAT+=$(echo "}")
-
+WINDOW_TREE_CUSTOM_FORMAT=`cat << EOF
+#{?pane_format,
+  #{?pane_active,
+    #[fg=default ]#[bg=default]-->#[fg=color193]#[bg=color234] PANE(ACTIVE) #{pane_current_command}#{?pane_marked,M,}#{?#{&&:#{pane_title},#{!=:#{pane_title},#{host_short}}},: "#{pane_title}",},
+    #[fg=color243]#[bg=default]-->#[fg=color242]#[bg=default ] PANE         #{pane_current_command}#{?pane_marked,M,}#{?#{&&:#{pane_title},#{!=:#{pane_title},#{host_short}}},: "#{pane_title}",}
+  }
+,
+  #{?window_format,
+    #{?window_marked_flag,#[reverse],}
+    #{?window_active,
+      #[fg=color75]#[bg=color17 ] WINDOW (ACTIVE) #{window_name} #{window_flags}#{?#{&&:#{==:#{window_panes},1},#{&&:#{pane_title},#{!=:#{pane_title},#{host_short}}}},: "#{pane_title}",},
+      #[fg=color243]#[bg=default] WINDOW          #{window_name} #{window_flags}#{?#{&&:#{==:#{window_panes},1},#{&&:#{pane_title},#{!=:#{pane_title},#{host_short}}}},: "#{pane_title}",}
+    }
+  ,
+    #{?session_attached,
+      #[fg=color115]#[bg=color236] SESSION (ATTACHED) #{?session_grouped,(group #{session_group}: #{session_group_list}),},
+      #[fg=color243]#[bg=default ] SESSION            #{?session_grouped,(group #{session_group}: #{session_group_list}),}
+    }
+  }
+}
+EOF
+`
+WINDOW_TREE_CUSTOM_FORMAT=$(echo "${WINDOW_TREE_CUSTOM_FORMAT}"| sed -r 's/^[ ]+//'| perl -pe 's/\n//g')
 tmux choose-window -F "${WINDOW_TREE_CUSTOM_FORMAT}"
 
