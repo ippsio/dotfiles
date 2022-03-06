@@ -17,7 +17,7 @@ else
 fi
 
 _FZF_PROMPT="${_ME} (dir=${PWD_TO_SHOW}) (q=$ARG)> "
-_FZF_HEADER="[keybind] enter:nvim, (j,k,i):(down,up,unbind jki)"
+_FZF_HEADER="[keybind] enter:nvim"
 
 cd ${EXEC_DIR} && \
   rg --hidden --line-number ${GLOB} ${ARG} \
@@ -25,7 +25,6 @@ cd ${EXEC_DIR} && \
   | fzf -m \
     --prompt="${_FZF_PROMPT}" \
     --header="${_FZF_HEADER}" \
-    --bind 'j:down' --bind 'k:up' --bind 'i:unbind(i,j,k)' \
     --bind "enter:execute(nvim {1} +{2} < /dev/tty > /dev/tty)" \
     --preview '
       decide_range_from() { echo $(( $1 - 5 > 0 ? $1 - 5 : 1)) };

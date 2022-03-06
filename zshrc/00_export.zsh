@@ -53,7 +53,7 @@ export FZF_DEFAULT_OPTS=\
 " --color fg:-1,bg:-1,hl:226:underline"\
 " --color fg+:120,bg+:240,hl+:226:underline"\
 " --color info:108:reverse"\
-" --color prompt:123:reverse"\
+" --color prompt:193:reverse"\
 " --color spinner:108"\
 " --color pointer:168:underline"\
 " --color marker:168:reverse"\
