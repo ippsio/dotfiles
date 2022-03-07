@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# NOTE: Why realpath?
+# Because if "~/dotfiles/bin/../" was given,
+#  - it's     good to return "/Users/username/dotfiles/".
+#  - it's not good to return "/Users/username/dotfiles/bin/../".
+
+result=$(echo "$1" \
+  | sed "s#~#${HOME}#" \
+  | xargs realpath
+)
+echo "${result}"
