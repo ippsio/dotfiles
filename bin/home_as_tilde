@@ -1,12 +1,9 @@
 #!/bin/bash
-
-# NOTE: Why realpath?
-# Because if "/Users/username/dotfiles/bin/../" was given,
-#  - it's     good to return "~/dotfiles/".
-#  - it's not good to return "~/dotfiles/bin/../".
-
-result=$(echo "$1" \
-  | xargs realpath \
-  | sed "s#^${HOME}#~#"
-)
-echo "${result}"
+FROM=${HOME}
+INTO='~'
+if [ -z "$1" ]
+then
+  sed "s#^${FROM}#${INTO}#"
+else
+  echo "$1"| sed "s#^${FROM}#${INTO}#"
+fi

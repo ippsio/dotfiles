@@ -1,26 +1,22 @@
 #!/bin/bash
-# ファイルの選択I/Fをする。
-# プレビュー：ファイル内の内容。
-HOME_AS_TILDE=$(home_as_tilde "${1:-./}")
-HOME_AS_HOME=$(home_as_home "${1:-./}")
+
+# NOTE: Why realpath?
+# Because if "/Users/username/dotfiles/bin/../" was given,
+#  - good "~/dotfiles/".
+#  - bad  "~/dotfiles/bin/../".
+HOME_AS_HOME=$(realpath "${1:-./}"| home_as_home)
+HOME_AS_TILDE=$(realpath "${1:-./}"| home_as_tilde)
 
 FZF_PROMPT="$(basename $0)"
 FZF_HEADER="C-g:ripgrep, C-/:TogglePreview"
 
+FIND_CMD="find -s ${HOME_AS_HOME}"\
+" -not -regex '.*/.git'"\
+" -not -regex '.*/.git/.*'"\
+" -not -regex '.*\.DS_Store'"
 
-# find option
-# -s Cause find to traverse the file hierarchies in lexicographical order, i.e., alphabetical order within each directory.
-#    Note: ‘find -s’ and ‘find | sort’ may give diffent results.
-#
-# -E Interpret regular expressions followed by -regex and -iregex primaries as extended (modern) regular expressions
-#    rather than basic regular expressions (BRE's).  The re_format(7) manual page fully describes both formats.
-FIND_CMD="find -s -E ${HOME_AS_HOME}"\
-" -not -regex '.*(/.git)'"\
-" -not -regex '.*(/.git/.*)'"\
-" -not -regex '.*(\.DS_Store)'"
-
-SELECTED=$(eval ${FIND_CMD} \
-  | sed "s#^${HOME}#~#" \
+FZF_RESULT=$(eval ${FIND_CMD} \
+  | home_as_tilde \
   | fzf \
     +m \
     --info=inline \
@@ -31,14 +27,17 @@ SELECTED=$(eval ${FIND_CMD} \
     --preview='bat $(home_as_home {}) --color=always --style=numbers --line-range :100'\
 )
 
-if [[ -z "${SELECTED}" ]]; then
-  echo -n "$1" && exit 1
+if [[ -z "${FZF_RESULT}" ]]
+then
+  echo -n "$1"
+  exit 1
 else
-  SELECTED=$(home_as_home "${SELECTED}")
-  if [[ -d ${SELECTED} ]]; then
-    # 選択されたのがディレクトリなら、末尾に/を付ける。
-    SELECTED="${SELECTED}/"
+  FZF_RESULT=$(home_as_home "${FZF_RESULT}")
+  if [[ -d "${FZF_RESULT}" ]]
+  then
+    FZF_RESULT="${FZF_RESULT}/"
   fi
-  echo -n "${SELECTED}" && exit 0
+  echo -n "${FZF_RESULT}"
+  exit 0
 fi
 
