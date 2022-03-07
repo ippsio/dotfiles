@@ -3,7 +3,7 @@ readonly VERBOSE=1
 
 type_or_inst() {
   if ( type "$1" > /dev/null 2>&1 ); then
-    echo -n "($1 ok) "
+    echo -n "$1 ok, "
     return 0
   else
     echo "$1 not found. install."
@@ -13,7 +13,7 @@ type_or_inst() {
 }
 nodir_then_gitclone() {
   if [ -d $1 ]; then
-    echo -n "($2 ok) "
+    echo -n "$2 ok, "
     return 0
   else
     echo "$2 not found. git clone."
@@ -23,7 +23,7 @@ nodir_then_gitclone() {
 }
 chk_pynvim_or_install() {
   if ( python3 -c 'import pynvim' > /dev/null 2>&1 ); then
-    echo -n "(pynvim ok) "
+    echo -n "pynvim ok, "
     return 0
   else
     echo "pynvim not found. install."
@@ -33,7 +33,7 @@ chk_pynvim_or_install() {
 }
 chkfile_or_flink() {
   if [ -L $1 ]; then
-    echo -n "(${1//${HOME}/~} ok) "
+    echo -n "${1//${HOME}/~} ok, "
     return 0
   else
     echo "$1 not found. link! ($1<-$2)"
@@ -43,7 +43,7 @@ chkfile_or_flink() {
 }
 chkfile_or_dlink() {
   if [ -d $1 ]; then
-    echo -n "(${1//${HOME}/~} ok) "
+    echo -n "${1//${HOME}/~} ok, "
     return 0
   else
     echo "$1 not found. link! ($1<-$2)"

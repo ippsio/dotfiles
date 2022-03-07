@@ -183,14 +183,14 @@ _mark_branch=""
 _mark_git_repo=""
 
 # exit status and git basic infomations.
-EXIT_CD="%K{red}%(?.. [\$?=%?])%k"
+EXIT_CD="%K{red}%(?..[\$?=%?])%k"
 GIT_REPO_NAME="%K{118}%F{0}%(1v|[${_mark_git_repo}%1v|)%f%k"
 # '\ue0a0' is a git branch mark(icon).
 GIT_BRANCH="%K{220}%F{0}%(2v| ${_mark_branch}%2v]|)%f%k"
 
 # git working_tree
 #_deleted="%(3v|${_text_worktree}[${_mark_deleted}%3v|)"
-_untracked="%(3v| ${_text_worktree}[${_mark_untracked}%3v|)"
+_untracked="%(3v|${_text_worktree}[${_mark_untracked}%3v|)"
 _unstaged="%(4v| ${_mark_unstaged}%4v|)"
 _unmerged="%(5v| ${_mark_unmerged}%5v]|)"
 GIT_WORKING_TREE="%K{8}%F{143}${_untracked}${_unstaged}${_unmerged}%f%k"
@@ -214,19 +214,18 @@ GIT_CAUTION="%K{18}${_stash}${_more_such_as_rebase}%k"
 CURRENT_DIRECTORY="%K{237}%F{255}[%~] %f%k"
 CURRENT_DATETIME="%K{237}%F{255}%D{%m/%d %T} %f%k"
 
-NUMBER_OF_JOBS="%(1j|%F{226}BackgroundJobs(%j)%f|)"
+NUMBER_OF_JOBS="%(1j|%F{226}bg-jobs(%j)%f|)"
 
-LINE1="${GIT_REPO_NAME}${GIT_BRANCH}"
-LINE2="${GIT_WORKING_TREE}${GIT_STAGE}${GIT_LOCAL_REPO}"
-LINE3="${CURRENT_DATETIME}"
-LINE4="${EXIT_CD}${NUMBER_OF_JOBS}${CURRENT_DIRECTORY}%K{238}%# %k"
-LINE_FEED="
-"
-PROMPT=""
-[[ "${LINE1}" != "" ]] && PROMPT+="${LINE_FEED}${LINE1}"
-[[ "${LINE2}" != "" ]] && PROMPT+="${LINE_FEED}${LINE2}"
-[[ "${LINE3}" != "" ]] && PROMPT+="${LINE_FEED}${LINE3}"
-[[ "${LINE4}" != "" ]] && PROMPT+="${LINE_FEED}${LINE4}"
+CHUNK1="${GIT_WORKING_TREE}${GIT_STAGE}${GIT_LOCAL_REPO}"
+CHUNK2="${GIT_REPO_NAME}${GIT_BRANCH}"
+CHUNK3="${CURRENT_DATETIME}"
+CHUNK4="${EXIT_CD}${NUMBER_OF_JOBS}${CURRENT_DIRECTORY}%K{238}%# %k"
+
+PROMPT=$'\n'
+[[ "${CHUNK1}" != "" ]] && PROMPT+="${CHUNK1}"
+[[ "${CHUNK2}" != "" ]] && PROMPT+="${CHUNK2}"
+# [[ "${CHUNK3}" != "" ]] && PROMPT+="${CHUNK3}"
+[[ "${CHUNK4}" != "" ]] && PROMPT+=$'\n'"${CHUNK4}"
 
 #PROMPT=$(echo "${PROMPT}"| perl -pe "s/^[\r\n]//g")
 

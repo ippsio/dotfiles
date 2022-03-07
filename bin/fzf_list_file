@@ -4,8 +4,8 @@
 # Because if "/Users/username/dotfiles/bin/../" was given,
 #  - good "~/dotfiles/".
 #  - bad  "~/dotfiles/bin/../".
-HOME_AS_HOME=$(realpath "${1:-./}"| home_as_home)
-HOME_AS_TILDE=$(realpath "${1:-./}"| home_as_tilde)
+HOME_AS_HOME=$(home_as_home "${1:-./}")
+HOME_AS_TILDE=$(home_as_tilde "${HOME_AS_HOME}")
 
 FZF_PROMPT="$(basename $0)"
 FZF_HEADER="C-g:ripgrep, C-/:TogglePreview"

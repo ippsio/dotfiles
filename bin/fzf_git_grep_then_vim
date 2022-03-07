@@ -1,25 +1,30 @@
 #!/bin/bash
 
-# git grepの検索結果を選択I/Fを表示する。
-# さらに、選択したファイルをvimで開く
-# fzfのプレビューは、基本的に検索ヒットした行の5行前から表示する(decide_from)。
+# git_grep_fzf_vim
+# git grep earch + fzf filter +  edit with vim .
+SEARCH_WORD=${1:-.}
+GIT_GREP_CMD="git grep --line-number ${SEARCH_WORD}"
+FZF_PROMPT="$(basename $0): '${GIT_GREP_CMD}'"
+FZF_HEADER="enter:nvim"
 
-_FZF_PROMPT="$(basename $0)"
-_FZF_HEADER="[description] git grep results filter.
-[keybind] enter:nvim"
-
-q=${1:-.}
-result=$(git grep --line-number ${q} \
-  | perl -pe 's/(^.*):(\d+):(.*)$/\1 \2 \3/' \
+eval "${GIT_GREP_CMD}" \
+  | perl -pe 's/(^.*):(\d+):(.*)$/\1	\2	\3/' \
   | fzf -m \
-    --prompt="${_FZF_PROMPT} (keyword=${q})> " \
-    --header="${_FZF_HEADER}" \
+    --info=inline \
+    --ansi \
+    --delimiter='	' \
+    --tabstop=2 \
+    --prompt="${FZF_PROMPT} > " \
+    --header="${FZF_HEADER}" \
     --bind "enter:execute(nvim {1} +{2} < /dev/tty > /dev/tty)" \
-    --nth=1,3.. \
-    --preview '
-      decide_range_from() { echo $(( $1 - 5 > 0 ? $1 - 5 : 1)) };
-      bat --color=always --style=numbers,header,grid \
-        --line-range $(decide_range_from {2}): \
-        --highlight-line {2} {1}')
+    --preview='
+      # 原則、検索ヒットした行の5行前から表示。
+      from=$(expr {2} - 5);
+      [[ ${from} -lt 1 ]] && from=1;
+      bat \
+        --color=always \
+        --style=numbers,header \
+        --line-range ${from}: \
+        --highlight-line {2} {1}
+      '
 
-      #bat --color=always --style=numbers,header,grid \
