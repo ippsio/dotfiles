@@ -77,7 +77,7 @@ eval "${GIT_LOG_CMD}" \
   --bind "enter:execute(git log -1 -p --diff-merges=${DIFF_MERGES} {2}| nvim -R -c \"set ft=diff nomod nolist nospell nu\" > /dev/tty)" \
   --bind "ctrl-y:execute(echo -n {2}| pbcopy)" \
   --bind "ctrl-/:toggle-preview" \
-  --bind "ctrl-p:execute:(git_pr_fzf {2})" \
+  --bind "ctrl-p:execute:(git_pr_search_hash_fzf {2})" \
   --preview="
       verbose_color() { printf '\e[38;5;%dm\e[48;5;%dm' 3 235; };
       reset_color() { printf '\e[0m'; };

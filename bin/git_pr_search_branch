@@ -1,0 +1,35 @@
+#!/bin/bash
+
+if ! (is_git_branch "$1"); then
+  echo "GIT_SEARCH_PR:PR_NOT_FOUND"
+  exit 1
+fi
+
+Q="is:open%20type:pr%20repo:$(git_reponame)%20head:$1"
+AUTHZ_TOKEN=$(cat ~/.config/hub| grep "oauth_token:"| awk '{ print $2 }')
+HTTP_HEADER="Authorization: token ${AUTHZ_TOKEN}"
+HTTP_URL="https://api.github.com/search/issues?q=${Q}"
+
+API_RES=$(curl -X GET -s -H "${HTTP_HEADER}" "${HTTP_URL}")
+RES=$(echo "$API_RES"| jq -r ".items[] \
+  | [ \
+    .number \
+    ,.state \
+    ,.user.login \
+    ,.title \
+    ,.body \
+    ,.html_url \
+    ,.created_at \
+    ,.updated_at \
+    ,.closed_at \
+  ] | @tsv")
+
+if [[ "${RES}" != "" ]]; then
+  # 1 number, 2 state, 3 user.login, 4 title, 5 body, 6 html_url, 7 created_at, 8 updated_at, 9 closed_at
+  echo "${RES}"
+  exit 0
+else
+  echo "GIT_SEARCH_PR:PR_NOT_FOUND"
+  exit 1
+fi
+

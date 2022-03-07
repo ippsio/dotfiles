@@ -17,10 +17,14 @@ function triggered_by_space() {
   && BUFFER="scp $(fgrep 'Host ' ~/.ssh/config | grep -v '*' |  awk '{print $2}' | sort | fzf)" \
   && zle end-of-line && return
 
-  if $(is_git_repository); then
+  # file or directory
+  [[ $BUFFER =~ '[ ][ ]$' ]] \
+    && BUFFER=" $(fzf_list_file ${BUFFER})" && zle end-of-line && return
+
+  if $(is_git_repo); then
     # git grep
     [[ $BUFFER =~ '^gg+$' ]] \
-      && BUFFER="git_grep_fzf " && zle end-of-line && return
+      && BUFFER="git_grep_fzf_vim " && zle end-of-line && return
 
     # git
     [[ $BUFFER =~ '^g+$' ]] \

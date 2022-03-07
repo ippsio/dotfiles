@@ -1,3 +1,2 @@
 #!/bin/bash
-#git branch --contains| tr -d "* "
 git branch --show-current

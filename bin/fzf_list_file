@@ -4,7 +4,7 @@
 # Because if "/Users/username/dotfiles/bin/../" was given,
 #  - good "~/dotfiles/".
 #  - bad  "~/dotfiles/bin/../".
-HOME_AS_HOME=$(home_as_home "${1:-./}")
+HOME_AS_HOME=$(home_as_home "${1:-}")
 HOME_AS_TILDE=$(home_as_tilde "${HOME_AS_HOME}")
 
 FZF_PROMPT="$(basename $0)"

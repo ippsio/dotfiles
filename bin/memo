@@ -31,7 +31,7 @@ do
   [[ ${KIND} == "" ]] && exit 1
 
   if [[ "${KIND}" == "検索する" ]]; then
-    cd ${DIR} && fzf_git_grep_then_vim "$(echo ''|fzf --prompt=\"${_FZF_PROMPT2}\" --print-query --bind 'j:down' --bind 'k:up' --bind 'i:unbind(i,j,k)')"
+    cd ${DIR} && git_grep_fzf_vim "$(echo ''|fzf --prompt=\"${_FZF_PROMPT2}\" --print-query --bind 'j:down' --bind 'k:up' --bind 'i:unbind(i,j,k)')"
     continue
 
   elif [[ "${KIND}" == "最新状況" ]]; then

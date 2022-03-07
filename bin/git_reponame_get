@@ -1,2 +1,0 @@
-#!/bin/bash
-git remote get-url origin 2> /dev/null| egrep -o "([a-zA-Z0-9+-]+)\/([a-zA-Z0-9+-]+)"

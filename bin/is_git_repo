@@ -1,0 +1,5 @@
+#!/bin/bash
+# is_a_git_repo
+# result code
+# 0: is a git repo, 128: is not a git repo.
+git rev-parse --is-inside-work-tree > /dev/null 2>&1

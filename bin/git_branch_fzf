@@ -3,7 +3,7 @@
 # git_branch_fzf
 # rich branch selector.
 # -------------------------
-( ! is_git_repository ) && echo "Not a git repository. " && exit 1
+( ! is_git_repo ) && echo "Not a git repository. " && exit 1
 _ME=$( [ -L $0 ] && basename $(readlink $0) || basename $0)
 difference() { (printf '%s\n' $@ | sort -u; printf '%s\n' ${2}) | sort | uniq -u; };
 

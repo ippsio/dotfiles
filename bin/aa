@@ -1,7 +1,0 @@
-#!/bin/bash
-HOGE=$(cat << EOF
-a
-b
-c
-EOF)
-printf "$HOGE"

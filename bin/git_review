@@ -1,5 +1,5 @@
 #!/bin/bash
-! $(is_git_repository) && echo "Not a git repository." && exit 1
+! $(is_git_repo) && echo "Not a git repository." && exit 1
 
 args=(); for arg in "$@"; do [[ "${arg}" == "--verbose" ]] && arg_verbose="${arg}" || args=("${args[@]}" "${arg}"); done
 commit1=${args[0]}
@@ -9,7 +9,7 @@ infoln() { printf "\e[m\e[38;5;%dm\e[48;5;%dm" 220 237; echo -n "$1"; printf "\e
 label() {  printf "\e[m\e[38;5;%dm\e[48;5;%dm" 187 100; echo -n "$1"; printf "\e[m"; }
 verbose() { [[ ! -z "${arg_verbose}" ]] && (printf "\e[m\e[38;5;%dm\e[48;5;%dm" 245 234; echo -n "$1"; printf "\e[m"; echo;); }
 
-CURRENT_BRANCH=$(current_git_branch)
+CURRENT_BRANCH=$(git_branch_current)
 MERGE_BASE_INFO=$(git_get_merge_base_info "${CURRENT_BRANCH}" "${commit1}")
 MERGE_BASE_BRANCH=$(echo "${MERGE_BASE_INFO}"| grep "MERGE_BASE_BRANCH="| awk -F '=' '{ print $2 }'| sed -e 's#^origin/##'| sed -e 's/ *//g')
 [[ "${MERGE_BASE_BRANCH}" == "" ]] && echo "MERGE_BASE_BRANCH empty. Bye" && exit 1
@@ -34,8 +34,8 @@ COMMANDS=$(cat << EOF
 4, git diff          - 	git diff     "${MERGE_BASE_BRANCH}..." | nvim -R
 5, git diff(compact) - 	git diff     "${MERGE_BASE_BRANCH}..." --unified=0| nvim -R
 6, pull git branch   - 	set -x; git fetch origin --prune; git merge --ff; set +x; read
-7, open pull request - 	open https://github.com/$(git_reponame_get)/pull/${PR_NO}
-8, show pull request - 	git_pr_fzf "${CURRENT_BRANCH}"
+7, open pull request - 	open https://github.com/$(git_reponame)/pull/${PR_NO}
+8, show pull request - 	git_pr_search_hash_fzf "${CURRENT_BRANCH}"
 EOF
 )
 

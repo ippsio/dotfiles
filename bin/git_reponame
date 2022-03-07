@@ -1,0 +1,2 @@
+#!/bin/bash
+git remote get-url origin 2> /dev/null| grep -Eo "([a-zA-Z0-9+-]+)\/([a-zA-Z0-9+-]+)"
