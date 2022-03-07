@@ -35,7 +35,7 @@ COMMANDS=$(cat << EOF
 5, git diff(compact) - 	git diff     "${MERGE_BASE_BRANCH}..." --unified=0| nvim -R
 6, pull git branch   - 	set -x; git fetch origin --prune; git merge --ff; set +x; read
 7, open pull request - 	open https://github.com/$(git_reponame)/pull/${PR_NO}
-8, show pull request - 	git_pr_search_hash_fzf "${CURRENT_BRANCH}"
+8, show pull request - 	git_pr_search_fzf "${CURRENT_BRANCH}"
 EOF
 )
 
