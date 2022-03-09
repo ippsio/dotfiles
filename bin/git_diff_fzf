@@ -26,9 +26,27 @@ GIT_DIFF_COLORED="git diff --color=always ${commit1}...${commit2} -- {3}"
 
 GIT_DIFF_NUMSTAT="git diff --numstat ${commit1}...${commit2}"
 
-files=$(eval "${GIT_DIFF_NUMSTAT}"| awk '{printf "%+5s" , "+" $1} {printf "%+5s" , "-" $2} {printf "%s\n", ", " $3} ')
+files=$(eval "${GIT_DIFF_NUMSTAT}"| awk '
+  { printf "%+5s	", "+" $1 }
+  { printf "%+5s	", "-" $2 }
+  {
+    if($3 ~ /\.rb$/) { printf "\033[38;5;%dm", 170 }
+    if($3 ~ /\.coffee$/){  printf "\033[38;5;%dm", 130 }
+    if($3 ~ /\.erb$/) { printf "\033[38;5;%dm", 168 }
+    if($3 ~ /\.js$/) { printf "\033[38;5;%dm", 117 }
+    if($3 ~ /\.scss$/) { printf "\033[38;5;%dm", 125 }
+    if($3 ~ /\.slim$/) { printf "\033[38;5;%dm", 72 }
+    if($3 ~ /\.schema$/) { printf "\033[38;5;%dm", 239 }
+
+    { printf "	%s", $3 }
+    { printf "\033[0m" }
+  }
+  { printf "\n" }
+  ')
 target=$(echo "$files" | \
   fzf \
+  --tabstop=2 \
+  --ansi \
   --prompt="${_FZF_PROMPT}" \
   --header="(enter: nvim)  (tab: tig) (ctrl-d: git diff) (ctrl-l: git_log_fzf)   (ctrl-/: preview toggle)" \
   --nth=3 \
