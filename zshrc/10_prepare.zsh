@@ -66,7 +66,6 @@ type_or_inst pyenv-virtualenv
 type_or_inst goenv
 type_or_inst rbenv
 type_or_inst ruby-build
-
 type_or_inst nodenv
 nodir_then_gitclone "${TMUX_PLUGINS}/tpm" "tmux-plugins/tpm"
 nodir_then_gitclone "${ZINIT_ROOT}" "zdharma/zinit.git" "${ZINIT_ROOT}/bin"

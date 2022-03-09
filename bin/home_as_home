@@ -3,7 +3,9 @@ FROM='~'
 INTO=${HOME}
 if [ -z "$1" ]
 then
-  sed "s#^${FROM}#${INTO}#"
+  sed "s#^${FROM}#${INTO}#" \
+    | sed -r 's#/{1,}#/#g'
 else
-  echo "$1"| sed "s#^${FROM}#${INTO}#"
+  echo "$1"| sed "s#^${FROM}#${INTO}#" \
+    | sed -r 's#/{1,}#/#g'
 fi

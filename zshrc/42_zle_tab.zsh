@@ -11,7 +11,10 @@ function triggered_by_tab() {
   local -a cmds=("vim" "nvim" "source" "ls" "ll")
   for c in $cmds; do
     [[ $BUFFER =~ "^${c} *$" ]] && BUFFER="${c} ./" && zle end-of-line # complete first './'.
-    [[ $BUFFER =~ "^${c} *.+/+$" ]] && BUFFER="${c} $(fzf_list_file ${${BUFFER#${c} }:-.} --PROMPT=${c})" && zle end-of-line && return
+    if [[ $BUFFER =~ "^${c} *.+/+$" ]]; then
+      BUFFER="${c} $(fzf_list_file ${${BUFFER#${c} }:-.} --PROMPT=${c})" && zle end-of-line
+      return 0
+    fi
   done
 
   # tig + completion

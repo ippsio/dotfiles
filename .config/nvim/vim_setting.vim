@@ -105,12 +105,15 @@ set shortmess+=I
 "  括弧
 " --------------
 " 対応括弧に<と>のペアを追加
+" * NOTE: see 'itchyny/vim-parenmatch'
 set matchpairs& matchpairs+=<:>
 
 " 対応括弧をハイライト表示する
+" * NOTE: see 'itchyny/vim-parenmatch'
 "set showmatch
 
 " 対応括弧の表示秒数を1秒にする
+" * NOTE: see 'itchyny/vim-parenmatch'
 set matchtime=1
 
 " --------------

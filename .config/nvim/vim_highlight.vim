@@ -120,6 +120,19 @@ hi manHeader ctermfg=224 ctermbg=198
 hi qfFileName ctermfg=118
 hi QuickFixLine ctermfg=222 ctermbg=69
 
+" vimContinue
+hi vimContinue ctermfg=200 ctermbg=124
+hi vimOperParen ctermfg=222
+hi vimUserFunc ctermfg=10
+" 例）
+" vimContinue: `\` 部分
+" vimOperParen: `fzf#vim#` 部分
+" vimUserFunc: `with_preview` 部分
+"  command! -bang -nargs=? -complete=dir FzfFiles
+"        \ call fzf#run(
+"        \   fzf#vim#with_preview(
+"        \     fzf#wrap(
+
 " カーソル下のhighlight情報を表示する
 function! s:part(s, fgbg, type)
   let l:attr = synIDattr(a:s, a:fgbg, a:type)

@@ -1,10 +1,11 @@
 #!/bin/bash
 
-# NOTE: Why realpath?
-# Because if "/Users/username/dotfiles/bin/../" was given,
-#  - good "~/dotfiles/".
-#  - bad  "~/dotfiles/bin/../".
-HOME_AS_HOME=$(home_as_home "${1:-}")
+if [[ -e "$(home_as_home "${1:-.}")" ]]; then
+  HOME_AS_HOME=$(home_as_home "${1:-.}")
+else
+  FZF_QUERY="$1"
+  HOME_AS_HOME=$(home_as_home .)
+fi
 HOME_AS_TILDE=$(home_as_tilde "${HOME_AS_HOME}")
 
 FZF_PROMPT="$(basename $0)"
@@ -20,6 +21,7 @@ FZF_RESULT=$(eval ${FIND_CMD} \
   | fzf \
     +m \
     --info=inline \
+    --query="${FZF_QUERY}" \
     --prompt="${FZF_PROMPT} (dir='${HOME_AS_TILDE}') > " \
     --header="${FZF_HEADER}" \
     --bind "ctrl-/:toggle-preview" \
@@ -27,14 +29,12 @@ FZF_RESULT=$(eval ${FIND_CMD} \
     --preview='bat $(home_as_home {}) --color=always --style=numbers --line-range :100'\
 )
 
-if [[ -z "${FZF_RESULT}" ]]
-then
-  echo -n "$1"
+if [[ -z "${FZF_RESULT}" ]]; then
+  #echo -n "$1"
   exit 1
 else
   FZF_RESULT=$(home_as_home "${FZF_RESULT}")
-  if [[ -d "${FZF_RESULT}" ]]
-  then
+  if [[ -d "${FZF_RESULT}" && "${FZF_RESULT: -1}" != "/" ]]; then
     FZF_RESULT="${FZF_RESULT}/"
   fi
   echo -n "${FZF_RESULT}"

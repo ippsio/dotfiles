@@ -1,5 +1,5 @@
 # スペースでよく使うコマンドを展開
-function triggered_by_space() {
+zle_space() {
   #printf "BUFFER=[${BUFFER}] LBUFFER=[${LBUFFER}] RBUFFER=[${RBUFFER}]\n"
 
   # globalaliasの展開
@@ -9,17 +9,13 @@ function triggered_by_space() {
 
   # ssh
   [[ $BUFFER =~ '^ssh+[ ]$' ]] \
-  && BUFFER="ssh $(fgrep 'Host ' ~/.ssh/config | grep -v '*' |  awk '{print $2}' | sort | fzf)" \
+  && BUFFER="ssh $(fgrep 'Host ' ~/.ssh/config | grep -v '*' | awk '{print $2}' | sort | fzf)" \
   && zle end-of-line && return
 
   # scp
   [[ $BUFFER =~ '^scp+[ ]$' ]] \
-  && BUFFER="scp $(fgrep 'Host ' ~/.ssh/config | grep -v '*' |  awk '{print $2}' | sort | fzf)" \
+  && BUFFER="scp $(fgrep 'Host ' ~/.ssh/config | grep -v '*' | awk '{print $2}' | sort | fzf)" \
   && zle end-of-line && return
-
-  # file or directory
-  [[ $BUFFER =~ '[ ][ ]$' ]] \
-    && BUFFER=" $(fzf_list_file ${BUFFER})" && zle end-of-line && return
 
   if $(is_git_repo); then
     # git grep

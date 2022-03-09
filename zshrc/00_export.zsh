@@ -59,3 +59,4 @@ export FZF_DEFAULT_OPTS=\
 " --color marker:168:reverse"\
 " --color header:191:reverse"
 
+# " --preview-window=bottom:60%"\
