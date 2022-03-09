@@ -46,4 +46,16 @@ elif ( is_git_branch "$1" ); then
       --preview="${TEMPLATE}| bat --language=md" \
       --preview-window=75%
 
+else
+  git_pr_search_author "${commit}"| \
+    fzf \
+      --no-sort \
+      --prompt="${FZF_PROMPT}" \
+      --header="${FZF_HEADER}" \
+      --delimiter='\t' \
+      --bind "enter:execute(${TEMPLATE}| sed -e 's/\r//g'| nvim -Ro -c \"set ft=markdown\" > /dev/tty)" \
+      --bind "tab:execute(open '{6}')" \
+      --preview="${TEMPLATE}| bat --language=md" \
+      --preview-window=75%
+
 fi

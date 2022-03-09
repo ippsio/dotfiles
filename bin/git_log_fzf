@@ -33,7 +33,7 @@ DIFF_MERGES="first-parent"
 #DIFF_MERGES="combined"
 #DIFF_MERGES="dense-combined"
 
-GIT_LOG_1_P_CMD="git log -1 --color=always --diff-merges=${DIFF_MERGES} -p --pretty=fuller --abbrev-commit {2} ${file}"
+GIT_LOG_1_P_CMD="git log -1 --color=always --diff-merges=${DIFF_MERGES} -p --stat --pretty=fuller --abbrev-commit {2} ${file}"
 if ( type "diff-highlight" > /dev/null 2>&1 ); then
   GIT_LOG_1_P_CMD="${GIT_LOG_1_P_CMD}| diff-highlight"
 fi
@@ -74,10 +74,10 @@ eval "${GIT_LOG_CMD}" \
      { printf "	" }{ printf color_s_fg }               { printf "%s", $3 }{ printf reset } # awk-$3 = fzf-{7} = %s
      { printf "\n" }' \
   | fzf --ansi --info=inline --prompt="${_FZF_PROMPT}" --no-clear --tabstop=1 --header="${_FZF_HEADER}" --no-sort --delimiter='\t' \
-  --bind "enter:execute(git log -1 -p --diff-merges=${DIFF_MERGES} {2}| nvim -R -c \"set ft=diff nomod nolist nospell nu\" > /dev/tty)" \
+  --bind "enter:execute(git log -1 -p --stat --diff-merges=${DIFF_MERGES} {2}| nvim -R -c \"set ft=diff nomod nolist nospell nu\" > /dev/tty)" \
   --bind "ctrl-y:execute(echo -n {2}| pbcopy)" \
   --bind "ctrl-/:toggle-preview" \
-  --bind "ctrl-p:execute:(git_pr_search_hash_fzf {2})" \
+  --bind "ctrl-p:execute:(git_pr_search_fzf {2})" \
   --preview="
       verbose_color() { printf '\e[38;5;%dm\e[48;5;%dm' 3 235; };
       reset_color() { printf '\e[0m'; };

@@ -26,7 +26,8 @@ GIT_LOG_BASE_CMD="git --no-pager log --oneline --abbrev-commit --date=format-loc
 GIT_LOG_CMD="${GIT_LOG_BASE_CMD} ${MERGE_BASE_COMMIT}...HEAD"
 GIT_LOG_1_CMD="${GIT_LOG_BASE_CMD} ${MERGE_BASE_COMMIT} -1"
 GIT_LOG_3_CMD="${GIT_LOG_BASE_CMD} ${MERGE_BASE_COMMIT}...HEAD -3 --full-history --simplify-merges"
-GIT_DIFF_STAT_CMD="git diff ${MERGE_BASE_COMMIT} --stat-graph-width=$(( $(tput cols) / 1 )) --color=always"
+#GIT_DIFF_STAT_CMD="git diff ${MERGE_BASE_COMMIT} --stat-graph-width=$(( $(tput cols) / 1 )) --color=always"
+GIT_DIFF_STAT_CMD="git diff ${MERGE_BASE_COMMIT} --stat=$(( $(tput cols) / 1 )) --color=always"
 COMMANDS=$(cat << EOF
 1, edit (neovim)     - 	git_diff_fzf "${MERGE_BASE_BRANCH}"
 2, git log           - 	git_log_fzf  "${MERGE_BASE_BRANCH}.."
@@ -54,15 +55,33 @@ while true; do clear
   verbose " ${GIT_LOG_CMD}"
   infoln " $( (eval ${GIT_LOG_CMD}; echo )| wc -l| tr -d ' ') commits."
   verbose " ${GIT_LOG_3_CMD}"
-  eval "(${GIT_LOG_3_CMD};echo)"| sed -r 's/^/###/'| cat -n| sed -r 's/^ +//'| sed -r 's/\t//'| awk -F '###' '{ printf "%+2s " , $1 } { print $2 }'
+  eval "(${GIT_LOG_3_CMD};echo)"| awk '{ printf "%+2s %s\n", NR, $0 }'
 
   label "[git diff --stat]"
   verbose " ${GIT_DIFF_STAT_CMD}"
-  GIT_DIFF_STAT=$(eval "${GIT_DIFF_STAT_CMD}"| grep -v "files changed,"| sed -r 's/^/###/'| cat -n| sed -r 's/^ +//'| sed -r 's/\t//g'| awk -F '###' '{ printf "%+2s " , $1 } { print $2 }')
+  GIT_DIFF_STAT=$(eval "${GIT_DIFF_STAT_CMD}" \
+    | awk '
+      {
+        if ($0 !~ / files changed/ && NR < 15) {
+          { printf "%+2s ", NR };
+          { if($0 ~ /\.rb /) printf "\033[38;5;%dm", 170 }
+          { if($0 ~ /\.coffee /) printf "\033[38;5;%dm", 130 }
+          { if($0 ~ /\.erb /) printf "\033[38;5;%dm", 168 }
+          { if($0 ~ /\.js /) printf "\033[38;5;%dm", 117 }
+          { if($0 ~ /\.scss /) printf "\033[38;5;%dm", 125 }
+          { printf "%s\n", $0 }
+          { printf "\033[0m"; };
+        }
+      }
+      END {
+        if (NR >= 15) { printf " :\n" }
+        gsub(" insertions", ""); gsub(" deletions", ""); printf "*SUMMARY=>%s", $0
+      }
+    ')
   GIT_DIFF_STAT_CNT=$(echo "${GIT_DIFF_STAT}"| wc -l| tr -d ' ')
-  infoln " ${GIT_DIFF_STAT_CNT} files."
-  echo "${GIT_DIFF_STAT}"| head -15
-  [[ ${GIT_DIFF_STAT_CNT} -ge 15 ]] && echo " :" && echo "${GIT_DIFF_STAT}"| tail -n 1
+  echo;
+  echo "${GIT_DIFF_STAT}"
+  #[[ ${GIT_DIFF_STAT_CNT} -ge 15 ]] && echo " :" && echo "${GIT_DIFF_STAT}"| tail -n 1
 
   label "[pwd]";
   infoln " $(pwd| sed -e "s#$HOME#~#")"
