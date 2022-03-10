@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env zsh
 
 # -------------------------------------------------------------
 # git_diff_fzf <commit1> <commit2>
@@ -26,7 +26,8 @@ GIT_DIFF_COLORED="git diff --color=always ${commit1}...${commit2} -- {3}"
 
 GIT_DIFF_NUMSTAT="git diff --numstat ${commit1}...${commit2}"
 
-files=$(eval "${GIT_DIFF_NUMSTAT}"| awk '
+files=$(eval "${GIT_DIFF_NUMSTAT}" \
+  | awk '
   { printf "%2s", NR      }{ printf "\033[0m" } { printf "	" }
   { printf "\033[38;5;%dm", 169 } { printf "%+4s", "+" $1 }{ printf "\033[0m" } { printf "|" }
   { printf "\033[38;5;%dm", 117 } { printf "%-4s"  , $2 "-" }{ printf "\033[0m" } { printf "	" }
