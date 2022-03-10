@@ -26,13 +26,8 @@ diff_color_commit_fg="${diff_color_commit:-255}"
 color_decorate_HEAD="$(git config --get color.decorate.HEAD)"
 color_decorate_HEAD_fg="${color_decorate_HEAD:-255}"
 
-# --diff-merges たちの 違いがわからない....
-#DIFF_MERGES="on"
+# --diff-merges たちの 違いがあまりわからない...。 diff-merges: 'on', 'first-parent',  'separate' , 'combined' , 'dense-combined'
 DIFF_MERGES="first-parent"
-#DIFF_MERGES="separate"
-#DIFF_MERGES="combined"
-#DIFF_MERGES="dense-combined"
-
 GIT_LOG_1_P_CMD="git log -1 --color=always --diff-merges=${DIFF_MERGES} -p --stat --pretty=fuller --abbrev-commit {2} ${file}"
 if ( type "diff-highlight" > /dev/null 2>&1 ); then
   GIT_LOG_1_P_CMD="${GIT_LOG_1_P_CMD}| diff-highlight"
@@ -67,6 +62,7 @@ eval "${GIT_LOG_CMD}" \
     -v dim="\033[2m" \
     '{ printf dim }{ printf "%+2s", NR }                                  { printf reset } # awk-NR = fzf-{1} = index no
      { printf "	" }{ printf diff_color_commit_fg }     { printf "%s", $4 }{ printf reset } # awk-$4 = fzf-{2} = %h
+     { printf "	" }{ system("highlighter --type=git_hash "$4)""  } # awk-$4 = fzf-{2} = %h
      { printf "	" }{ printf color_cd_fg }{ printf dim }{ printf "%s", $5 }{ printf reset } # awk-$5 = fzf-{3} = %cd
      { printf "	" }{ printf color_an_fg }              { printf "%s", $2 }{ printf reset } # awk-$2 = fzf-{4} = %an
      { printf "	" }                                    { printf "%s", $1 }                 # awk-$1 = fzf-{5} = commit graph
