@@ -1,0 +1,20 @@
+#!/bin/bash
+CMD='docker ps -a --format '\
+'"table {{.ID}}'\
+'\t{{.Names}}'\
+'\t{{.Image}}'\
+'\t{{.Status}}'\
+'\t{{.RunningFor}}'\
+'\t{{.Command}}'\
+'\t{{.Ports}}"'\
+
+ROW=$(eval "${CMD}" | fzf)
+
+if [[ ! -z ${ROW} ]]; then
+  echo "${ROW}"| awk '{ printf "%s", $1 }'
+  exit 0;
+else
+  exit 1;
+fi
+
+

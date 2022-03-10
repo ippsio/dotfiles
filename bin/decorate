@@ -1,0 +1,24 @@
+#!/usr/bin/env zsh
+
+_decorate() { echo $1 | awk -F ',' ' { if ($1!=NULL) { printf "\033[38;5;%dm", $1 }; } { if ($2!=NULL) { printf "\033[48;5;%dm", $2 }; } '; }
+_git_config_get() { cfg=$(git config --get "${1}") && echo -n "${cfg// /,}" || "$2"; }
+
+declare -A t=(
+[git_hash]=223,
+[git_cd]=184
+[git_an]=169,
+[git_d]=$(_git_config_get color.decorate.HEAD 255)
+[git_s]=252
+[ext_rb]=170
+[ext_coffee]=130
+[ext_erb]=168
+[ext_js]=117
+[ext_scss]=125
+[ext_slim]=72
+[ext_schema]=239
+)
+
+setting="${t[${1//-/}]}"
+[[ ! -z "${setting}" ]] && _decorate "${setting}"
+[[ ! -z "$2" ]] && printf '%s' "$2"
+

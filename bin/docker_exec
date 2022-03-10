@@ -1,0 +1,6 @@
+#!/bin/bash
+CONTAINER_ID=$(docker_ps_fzf)
+if [[ ! -z ${CONTAINER_ID} ]]; then
+  echo -n "docker exec -it ${CONTAINER_ID} /bin/bash --login"
+fi
+

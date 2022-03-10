@@ -21,11 +21,6 @@ GIT_LOG_CMD="git --no-pager log --graph --author-date-order --oneline --full-his
 "%d'"\
 " ${range} -- ${file}"
 
-diff_color_commit="$(git config --get diff.color.commit)"
-diff_color_commit_fg="${diff_color_commit:-255}"
-color_decorate_HEAD="$(git config --get color.decorate.HEAD)"
-color_decorate_HEAD_fg="${color_decorate_HEAD:-255}"
-
 # --diff-merges たちの 違いがあまりわからない...。 diff-merges: 'on', 'first-parent',  'separate' , 'combined' , 'dense-combined'
 DIFF_MERGES="first-parent"
 GIT_LOG_1_P_CMD="git log -1 --color=always --diff-merges=${DIFF_MERGES} -p --stat --pretty=fuller --abbrev-commit {2} ${file}"
@@ -45,29 +40,28 @@ fi
 # awk-$1  awk-$2  awk-$3    awk-$4  awk-$5                   awk-$6
 # fzf-{5} fzf-{4} fzf-{7}   fzf-{2} fzf-{3}                  fzf-{6}
 
-diff_color_commit="$(git config --get diff.color.commit)"
-diff_color_commit_fg="${diff_color_commit:-255}"
-color_decorate_HEAD="$(git config --get color.decorate.HEAD)"
-color_decorate_HEAD_fg="${color_decorate_HEAD:-255}"
-
+decorate_git_hash="$(decorate -git_hash)"
+decorate_git_cd=$(decorate -git_cd)
+decorate_git_an="$(decorate -git_an)"
+decorate_git_d="$(decorate -git_d)"
+decorate_git_s="$(decorate -git_s)"
 eval "${GIT_LOG_CMD}" \
   | grep '*' \
   | awk -F '	' \
-    -v diff_color_commit_fg="\033[38;5;${diff_color_commit_fg}m" \
-    -v color_cd_fg="\033[38;5;184m" \
-    -v color_an_fg="\033[38;5;169m" \
-    -v color_d_fg="\033[38;5;${color_decorate_HEAD_fg}m" \
-    -v color_s_fg="\033[38;5;253m" \
+    -v decorate_git_hash="${decorate_git_hash}" \
+    -v decorate_git_cd="$decorate_git_cd" \
+    -v decorate_git_an="$decorate_git_an" \
+    -v decorate_git_d="$decorate_git_d" \
+    -v decorate_git_s="$decorate_git_s" \
     -v reset="\033[0m" \
     -v dim="\033[2m" \
     '{ printf dim }{ printf "%+2s", NR }                                  { printf reset } # awk-NR = fzf-{1} = index no
-     { printf "	" }{ printf diff_color_commit_fg }     { printf "%s", $4 }{ printf reset } # awk-$4 = fzf-{2} = %h
-     { printf "	" }{ system("highlighter --type=git_hash "$4)""  } # awk-$4 = fzf-{2} = %h
-     { printf "	" }{ printf color_cd_fg }{ printf dim }{ printf "%s", $5 }{ printf reset } # awk-$5 = fzf-{3} = %cd
-     { printf "	" }{ printf color_an_fg }              { printf "%s", $2 }{ printf reset } # awk-$2 = fzf-{4} = %an
+     { printf "	" }{ printf "%s", decorate_git_hash }     { printf "%s", $4 }{ printf reset } # awk-$4 = fzf-{2} = %h
+     { printf "	" }{ printf "%s", decorate_git_cd }{ printf dim }{ printf "%s", $5 }{ printf reset } # awk-$5 = fzf-{3} = %cd
+     { printf "	" }{ printf decorate_git_an }              { printf "%s", $2 }{ printf reset } # awk-$2 = fzf-{4} = %an
      { printf "	" }                                    { printf "%s", $1 }                 # awk-$1 = fzf-{5} = commit graph
-     { printf "	" }{ printf color_d_fg }               { printf "%s", $6 }{ printf reset } # awk-$6 = fzf-{6} = %d
-     { printf "	" }{ printf color_s_fg }               { printf "%s", $3 }{ printf reset } # awk-$3 = fzf-{7} = %s
+     { printf "	" }{ printf decorate_git_d }               { printf "%s", $6 }{ printf reset } # awk-$6 = fzf-{6} = %d
+     { printf "	" }{ printf decorate_git_s }               { printf "%s", $3 }{ printf reset } # awk-$3 = fzf-{7} = %s
      { printf "\n" }' \
   | fzf --ansi --info=inline --prompt="${_FZF_PROMPT}" --no-clear --tabstop=1 --header="${_FZF_HEADER}" --no-sort --delimiter='\t' \
   --bind "enter:execute(git log -1 -p --stat --diff-merges=${DIFF_MERGES} {2}| nvim -R -c \"set ft=diff nomod nolist nospell nu\" > /dev/tty)" \
@@ -77,11 +71,11 @@ eval "${GIT_LOG_CMD}" \
   --preview="
       verbose_color() { printf '\e[38;5;%dm\e[48;5;%dm' 3 235; };
       reset_color() { printf '\e[0m'; };
-      commit_color_fg() { printf '\e[38;5;%dm' ${diff_color_commit_fg}; };
-      color_decorate_HEAD_fg() { printf '\e[38;5;%dm' ${color_decorate_HEAD_fg}; };
       verbose_color; echo \"${GIT_LOG_1_P_CMD}\"; reset_color;
-      commit_color_fg; echo -n 'commit '; echo -n {2}; echo -n ' '; reset_color;
-      color_decorate_HEAD_fg; echo -n {6}; reset_color;
+      decorate -git_hash;
+      echo -n 'commit '; echo -n {2}; reset_color;
+      echo -n ' '
+      decorate -git_d {6}; reset_color;
       echo;
       eval \"${GIT_LOG_1_P_CMD}\"| tail -n +2;
     " --preview-window=bottom:85%

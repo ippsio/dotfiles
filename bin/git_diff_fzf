@@ -31,13 +31,10 @@ files=$(eval "${GIT_DIFF_NUMSTAT}"| awk '
   { printf "\033[38;5;%dm", 169 } { printf "%+4s", "+" $1 }{ printf "\033[0m" } { printf "|" }
   { printf "\033[38;5;%dm", 117 } { printf "%-4s"  , $2 "-" }{ printf "\033[0m" } { printf "	" }
   {
-    if($3 ~ /\.rb$/) { printf "\033[38;5;%dm", 170 }
-    if($3 ~ /\.coffee$/){  printf "\033[38;5;%dm", 130 }
-    if($3 ~ /\.erb$/) { printf "\033[38;5;%dm", 168 }
-    if($3 ~ /\.js$/) { printf "\033[38;5;%dm", 117 }
-    if($3 ~ /\.scss$/) { printf "\033[38;5;%dm", 125 }
-    if($3 ~ /\.slim$/) { printf "\033[38;5;%dm", 72 }
-    if($3 ~ /\.schema$/) { printf "\033[38;5;%dm", 239 }
+    # NOTE: system is slow...........
+    ext=$3;
+    gsub( /^.*[\/|\.]/, "", ext); # 最後のピリオドまたは最後のスラッシュまでを削除します。
+    system("decorate" " -ext_" ext);
   }
   { printf "%s", $3 }
   { printf "\033[0m" }

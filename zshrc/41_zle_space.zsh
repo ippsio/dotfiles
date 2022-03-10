@@ -91,9 +91,8 @@ zle_space() {
   && BUFFER="rg_fzf_vim " && zle end-of-line && return
 
   # docker exec
-  # docker exec -it `docker ps -a | fzf | awk '{print $1}'` /bin/bash --login
   [[ $BUFFER =~ '^de+$' || $BUFFER =~ '^docker exec+$' ]] \
-  && BUFFER="docker exec -it $(docker ps -a | fzf | awk '{print $1}') /bin/bash --login" && zle end-of-line && return
+  && BUFFER=$(docker_exec) && zle end-of-line && return
 
   # docker-compose
   [[ $BUFFER =~ '^dc+$' ]] \
