@@ -22,8 +22,9 @@ GIT_LOG_CMD="git --no-pager log --graph --author-date-order --oneline --full-his
 " ${range} -- ${file}"
 
 # --diff-merges たちの 違いがあまりわからない...。 diff-merges: 'on', 'first-parent',  'separate' , 'combined' , 'dense-combined'
-DIFF_MERGES="first-parent"
-GIT_LOG_1_P_CMD="git log -1 --color=always --diff-merges=${DIFF_MERGES} -p --stat --pretty=fuller --abbrev-commit {2} ${file}"
+#DIFF_MERGES=""
+DIFF_MERGES="--diff-merges=first-parent"
+GIT_LOG_1_P_CMD="git log -1 --color=always ${DIFF_MERGES} -p --stat --pretty=fuller --abbrev-commit {2} ${file}"
 if ( type "diff-highlight" > /dev/null 2>&1 ); then
   GIT_LOG_1_P_CMD="${GIT_LOG_1_P_CMD}| diff-highlight"
 fi
@@ -64,7 +65,7 @@ eval "${GIT_LOG_CMD}" \
      { printf "	" }{ printf decorate_git_s }               { printf "%s", $3 }{ printf reset } # awk-$3 = fzf-{7} = %s
      { printf "\n" }' \
   | fzf --ansi --info=inline --prompt="${_FZF_PROMPT}" --no-clear --tabstop=1 --header="${_FZF_HEADER}" --no-sort --delimiter='\t' \
-  --bind "enter:execute(git log -1 -p --stat --diff-merges=${DIFF_MERGES} {2}| nvim -R -c \"set ft=diff nomod nolist nospell nu\" > /dev/tty)" \
+  --bind "enter:execute(git log -1 -p --stat ${DIFF_MERGES} --pretty=fuller --abbrev-commit {2} ${file}| nvim -R -c \"set ft=diff nomod nolist nospell nu\" > /dev/tty)" \
   --bind "ctrl-y:execute(echo -n {2}| pbcopy)" \
   --bind "ctrl-/:toggle-preview" \
   --bind "ctrl-p:execute:(git_pr_search_fzf {2})" \

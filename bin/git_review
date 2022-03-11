@@ -60,24 +60,41 @@ while true; do clear
   label "[git diff --stat]"
   verbose " ${GIT_DIFF_STAT_CMD}"
   GIT_DIFF_STAT=$(eval "${GIT_DIFF_STAT_CMD}" \
-    | awk '
-      {
-        if ($0 !~ / files changed/ && NR < 15) {
-          { printf "%+2s ", NR };
-          { if($0 ~ /\.rb /) printf "\033[38;5;%dm", 170 }
-          { if($0 ~ /\.coffee /) printf "\033[38;5;%dm", 130 }
-          { if($0 ~ /\.erb /) printf "\033[38;5;%dm", 168 }
-          { if($0 ~ /\.js /) printf "\033[38;5;%dm", 117 }
-          { if($0 ~ /\.scss /) printf "\033[38;5;%dm", 125 }
-          { printf "%s\n", $0 }
-          { printf "\033[0m"; };
-        }
+    | awk -v deco="$(decorate)" '
+    # ------------------------------------------------------------------------------------
+    # Once make an associative array(deco_of).
+    # ------------------------------------------------------------------------------------
+    BEGIN {
+      split(deco, deco_kv_ar, "/");
+      for (i=0; i<length(deco_kv_ar); i++) {
+        split(deco_kv_ar[i], kv, "=");
+        deco_of[""kv[1]""]=kv[2]
       }
-      END {
-        if (NR >= 15) { printf " :\n" }
-        gsub(" insertions", ""); gsub(" deletions", ""); printf "*SUMMARY=>%s", $0
+    }
+    # ------------------------------------------------------------------------------------
+    # Obtain file extension.
+    # ------------------------------------------------------------------------------------
+    {
+      fn=$0;
+      if (fn==NULL) { next };
+      len=split(fn, parts, /[\.\/]/);
+      split(parts[len], parts, /[ ]/);
+      ext="." parts[1];
+    }
+    # ------------------------------------------------------------------------------------
+    {
+      if ($0 !~ / files changed/ && NR < 15) {
+        printf "%+2s ", NR;
+        printf "%s", deco_of[ext]
+        printf "%s\n", fn
+        printf "\033[0m"
       }
-    ')
+    }
+    END {
+      if (NR >= 15) { printf " :\n" }
+      gsub(" insertions", ""); gsub(" deletions", ""); printf "*SUMMARY=>%s", $0
+    }
+  ')
   GIT_DIFF_STAT_CNT=$(echo "${GIT_DIFF_STAT}"| wc -l| tr -d ' ')
   echo;
   echo "${GIT_DIFF_STAT}"

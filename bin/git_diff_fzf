@@ -27,20 +27,37 @@ GIT_DIFF_COLORED="git diff --color=always ${commit1}...${commit2} -- {3}"
 GIT_DIFF_NUMSTAT="git diff --numstat ${commit1}...${commit2}"
 
 files=$(eval "${GIT_DIFF_NUMSTAT}" \
-  | awk '
-  { printf "%2s", NR      }{ printf "\033[0m" } { printf "	" }
-  { printf "\033[38;5;%dm", 169 } { printf "%+4s", "+" $1 }{ printf "\033[0m" } { printf "|" }
-  { printf "\033[38;5;%dm", 117 } { printf "%-4s"  , $2 "-" }{ printf "\033[0m" } { printf "	" }
-  {
-    # NOTE: system is slow...........
-    ext=$3;
-    gsub( /^.*[\/|\.]/, "", ext); # 最後のピリオドまたは最後のスラッシュまでを削除します。
-    system("decorate" " -ext_" ext);
+  | awk -v deco="$(decorate)" '
+  # ------------------------------------------------------------------------------------
+  # Once make an associative array(deco_of).
+  # ------------------------------------------------------------------------------------
+  BEGIN {
+    split(deco, deco_kv_ar, "/");
+    for (i=0; i<length(deco_kv_ar); i++) {
+      split(deco_kv_ar[i], kv, "=");
+      deco_of[""kv[1]""]=kv[2]
+    }
   }
-  { printf "%s", $3 }
-  { printf "\033[0m" }
-  { printf "\n" }
-  ')
+  # ------------------------------------------------------------------------------------
+  # Obtain file extension.
+  # ------------------------------------------------------------------------------------
+  {
+    fn=$3;
+    if (fn==NULL) { next };
+    len=split(fn, parts, /[\.\/]/);
+    ext="." parts[len];
+  }
+  # ------------------------------------------------------------------------------------
+  {
+    printf "%2s", NR; printf "\033[0m";
+    printf "	";
+    printf "%s", deco_of["diff_plus"]; printf "%+4s", "+" $1; printf "\033[0m";
+    printf "|";
+    printf "%s", deco_of["diff_minus"]; printf "%-4s", $2 "-"; printf "\033[0m";
+    printf "	";
+    printf "%s", deco_of[ext]; printf "%s", $3; printf "\033[0m";
+    printf "\n";
+  }')
 target=$(echo "$files" | \
   fzf \
   --tabstop=1 \

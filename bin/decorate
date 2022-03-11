@@ -9,16 +9,25 @@ declare -A t=(
 [git_an]=169,
 [git_d]=$(_git_config_get color.decorate.HEAD 255)
 [git_s]=252
-[ext_rb]=170
-[ext_coffee]=130
-[ext_erb]=168
-[ext_js]=117
-[ext_scss]=125
-[ext_slim]=72
-[ext_schema]=239
+[diff_minus]=117
+[diff_plus]=169
+[.rb]=170
+[.coffee]=130
+[.erb]=168
+[.js]=117
+[.scss]=125
+[.slim]=72
+[.schema]=229
+[.Schemafile]=120
 )
-
-setting="${t[${1//-/}]}"
-[[ ! -z "${setting}" ]] && _decorate "${setting}"
-[[ ! -z "$2" ]] && printf '%s' "$2"
+if [[ -z $1 ]]; then
+  for key in ${(k)t}; do
+    fg_bg_csv="${t[${key//-/}]}"
+    printf '%s=%s/' ${key} $(_decorate "${fg_bg_csv}")
+  done
+else
+  fg_bg_csv="${t[${1//-/}]}"
+  [[ ! -z "${fg_bg_csv}" ]] && _decorate "${fg_bg_csv}"
+  [[ ! -z "$2" ]] && printf '%s' "$2"
+fi
 
