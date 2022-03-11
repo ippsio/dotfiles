@@ -58,8 +58,9 @@ while true; do clear
   eval "(${GIT_LOG_3_CMD};echo)"| awk '{ printf "%+2s %s\n", NR, $0 }'
 
   label "[git diff --stat]"
-  verbose " ${GIT_DIFF_STAT_CMD}"
-  GIT_DIFF_STAT=$(eval "${GIT_DIFF_STAT_CMD}" \
+  GIT_DIFF_NUMSTAT="git diff --numstat ${MERGE_BASE_COMMIT}..."
+  verbose " ${GIT_DIFF_NUMSTAT}"
+  files=$(eval "${GIT_DIFF_NUMSTAT}" \
     | awk -v deco="$(decorate)" '
     # ------------------------------------------------------------------------------------
     # Once make an associative array(deco_of).
@@ -70,34 +71,48 @@ while true; do clear
         split(deco_kv_ar[i], kv, "=");
         deco_of[""kv[1]""]=kv[2]
       }
+      insertions=0
+      deletions=0
     }
     # ------------------------------------------------------------------------------------
     # Obtain file extension.
     # ------------------------------------------------------------------------------------
     {
-      fn=$0;
+      fn=$3;
       if (fn==NULL) { next };
       len=split(fn, parts, /[\.\/]/);
-      split(parts[len], parts, /[ ]/);
-      ext="." parts[1];
+      ext="." parts[len];
     }
     # ------------------------------------------------------------------------------------
     {
-      if ($0 !~ / files changed/ && NR < 15) {
-        printf "%+2s ", NR;
-        printf "%s", deco_of[ext]
-        printf "%s\n", fn
-        printf "\033[0m"
+      insertion+=$1
+      deletion+=$2
+      if (NR <= 15) {
+        printf "%2s", NR; printf "\033[0m";
+        printf "  ";
+        printf "%s", deco_of["diff_plus"]; printf "%+4s", "+" $1; printf "\033[0m";
+        printf "|";
+        printf "%s", deco_of["diff_minus"]; printf "%-4s", $2 "-"; printf "\033[0m";
+        printf "  ";
+        printf "%s", deco_of[ext]; printf "%s", $3; printf "\033[0m";
+        printf "\n";
       }
     }
     END {
       if (NR >= 15) { printf " :\n" }
-      gsub(" insertions", ""); gsub(" deletions", ""); printf "*SUMMARY=>%s", $0
+        printf "*SUMMARY=>%s files changed, ", NR
+        printf "%s", deco_of["diff_plus"]; printf "%+4s", "(+)" insertion; printf "\033[0m";
+      printf "|";
+      printf "%s", deco_of["diff_minus"]; printf "%-4s", deletion "(-)"; printf "\033[0m";
+      printf "", NR, insertion, deletion
+      printf "", NR, insertion, deletion
     }
   ')
+
   GIT_DIFF_STAT_CNT=$(echo "${GIT_DIFF_STAT}"| wc -l| tr -d ' ')
   echo;
   echo "${GIT_DIFF_STAT}"
+  echo "${files}"
   #[[ ${GIT_DIFF_STAT_CNT} -ge 15 ]] && echo " :" && echo "${GIT_DIFF_STAT}"| tail -n 1
 
   label "[pwd]";

@@ -50,8 +50,8 @@ export FZF_DEFAULT_OPTS=\
 " --reverse"\
 " --no-sort"\
 " --no-unicode"\
-" --color fg:-1,bg:-1,hl:226:underline"\
-" --color fg+:120:underline,bg+:240,hl+:226:underline"\
+" --color fg:-1,bg:-1,hl:236:underline"\
+" --color fg+:-1:underline,bg+:234,hl+:-1"\
 " --color info:108:reverse"\
 " --color prompt:193:reverse"\
 " --color spinner:108"\
