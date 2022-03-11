@@ -11,6 +11,7 @@ declare -A t=(
 [git_s]=252
 [diff_minus]=117
 [diff_plus]=169
+[verbose_log]=245,234
 [.rb]=170
 [.coffee]=130
 [.erb]=168
@@ -27,7 +28,12 @@ if [[ -z $1 ]]; then
   done
 else
   fg_bg_csv="${t[${1//-/}]}"
-  [[ ! -z "${fg_bg_csv}" ]] && _decorate "${fg_bg_csv}"
-  [[ ! -z "$2" ]] && printf '%s' "$2"
+  if [[ ! -z "${fg_bg_csv}" ]]; then
+    _decorate "${fg_bg_csv}"
+  fi
+  if [[ ! -z "$2" ]]; then
+    printf '%s' "$2"
+    printf "\033[0m"
+  fi
 fi
 

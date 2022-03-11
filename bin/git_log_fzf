@@ -46,6 +46,7 @@ decorate_git_cd=$(decorate -git_cd)
 decorate_git_an="$(decorate -git_an)"
 decorate_git_d="$(decorate -git_d)"
 decorate_git_s="$(decorate -git_s)"
+decorate_vervose_log="$(decorate -verbose_log)"
 eval "${GIT_LOG_CMD}" \
   | grep '*' \
   | awk -F '	' \
@@ -70,13 +71,15 @@ eval "${GIT_LOG_CMD}" \
   --bind "ctrl-/:toggle-preview" \
   --bind "ctrl-p:execute:(git_pr_search_fzf {2})" \
   --preview="
-      verbose_color() { printf '\e[38;5;%dm\e[48;5;%dm' 3 235; };
-      reset_color() { printf '\e[0m'; };
-      verbose_color; echo \"${GIT_LOG_1_P_CMD}\"; reset_color;
-      decorate -git_hash;
-      echo -n 'commit '; echo -n {2}; reset_color;
+      decorate -verbose_log \"${GIT_LOG_1_P_CMD}\";
+      echo;
+      # ここで GIT_LOG_1_P_CMD のコマンドを実行すると、何故か欲しい情報が得られない。
+      # 欲しい情報とは --pretty=format:'%d' の情報。
+      # 仕方ないのでfzf {6} からもらう。
+      # 最後に tail -n +2 してうまいこと見た目の帳尻を合わせる。
+      decorate -git_hash 'commit {2}';
       echo -n ' '
-      decorate -git_d {6}; reset_color;
+      [[ ! -z {6} ]] && decorate -git_d {6};
       echo;
       eval \"${GIT_LOG_1_P_CMD}\"| tail -n +2;
     " --preview-window=bottom:85%
