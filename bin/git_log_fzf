@@ -41,7 +41,7 @@ fi
 # fzf-{5} fzf-{4} fzf-{7}   fzf-{2} fzf-{3}                  fzf-{6}
 
 eval "${GIT_LOG_CMD}" \
-  | grep '*' \
+  | grep --fixed-strings '*' \
   | awk -F '	' \
     -v deco_git_hash="$(decorate -git_hash)" \
     -v deco_git_cd="$(decorate -git_cd)" \

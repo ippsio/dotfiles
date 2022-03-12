@@ -14,7 +14,7 @@ _FZF_PROMPT="${_ME} (commit1=${commit1},commit2=${commit2}) > "
 
 GIT_LOG="git log --oneline -99 --color=always --abbrev-commit --decorate=full"\
 " --date=format-local:'%Y/%m/%d %H:%M:%S'"\
-" --pretty=format:'%C($(git config --get color.diff.commit))%h%C(reset) %C(039 017)(%cd)%C(reset) %C(079)%an%C(reset) %C(226 021)%d%C(reset)%s'"\
+" --pretty=format:'%h (%cd) %an %d%s'"\
 " ${commit1}..${commit2} -- {3}"\
 " | cat -n| sed -r 's/(^ +)([1-9][0-9]*)(\t+)(.*$)/\2 \4/'" # git logの結果に対し、cat -n の力で行番号を与え、sedの力で見た目を整える。
 
@@ -75,7 +75,7 @@ target=$(echo "$files" | \
       reset_color() { printf '\e[0m'; };
       cd $(git_root);
 
-      color; echo '${GIT_DIFF_STAT}'; reset_color; eval '${GIT_DIFF_STAT}';
+      decorate -verbose_log '${GIT_DIFF_STAT}'; echo; eval '${GIT_DIFF_STAT}';
       eval printf '%.0s-' '{1..'$(tput cols)'}';
       echo;
 
@@ -84,7 +84,7 @@ target=$(echo "$files" | \
       eval printf '%.0s-' '{1..'$(tput cols)'}';
       echo;
 
-      color; echo '${GIT_DIFF_COLORED}'; reset_color; eval '${GIT_DIFF_COLORED}';
+      decorate -verbose_log '${GIT_DIFF_COLORED}'; echo; eval '${GIT_DIFF_COLORED}';
     " --preview-window=right:70%)
     echo $target | awk '{print $3}'
 
