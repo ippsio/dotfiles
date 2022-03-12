@@ -11,8 +11,22 @@ DIFF_HIGHLIGHT=$(find /opt/homebrew/Cellar/git -type f -name "diff-highlight" | 
 export PATH=~/dotfiles/bin:${PATH}:$(dirname ${DIFF_HIGHLIGHT})
 
 # LSCOLORS
-# a black      , b red      , c green      , d brown      , e blue      , f magenta      , g cyan      , h light grey
-# A black(BOLD), B red(BOLD), C green(BOLD), D brown(BOLD), E blue(BOLD), F magenta(BOLD), G cyan(BOLD), H light grey(BOLD)
+# a black,
+# b red,
+# c green,
+# d brown,
+# e blue,
+# f magenta,
+# g cyan,
+# h light grey
+# A black(BOLD),
+# B red(BOLD),
+# C green(BOLD),
+# D brown(BOLD),
+# E blue(BOLD),
+# F magenta(BOLD),
+# G cyan(BOLD),
+# H light grey(BOLD)
 # x default foreground or background
 #
 #   (A bold black, usually shows up as dark grey)
@@ -50,8 +64,12 @@ export FZF_DEFAULT_OPTS=\
 " --reverse"\
 " --no-sort"\
 " --no-unicode"\
-" --color fg:-1,bg:-1,hl:236:underline"\
-" --color fg+:-1:underline,bg+:234,hl+:-1"\
+" --color fg:-1"\
+" --color bg:-1"\
+" --color hl:184"\
+" --color fg+:-1:underline"\
+" --color bg+:234"\
+" --color hl+:184"\
 " --color info:108:reverse"\
 " --color prompt:193:reverse"\
 " --color spinner:108"\

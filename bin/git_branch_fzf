@@ -57,15 +57,22 @@ ${L4_local_not_checkedout}
 ${L5_remote_without_develop}" \
   | perl -pe 's/^[\r\n]+$//' \
   | awk -F '	' \
-    '{ printf "\033[2m" }{ printf "%+2s", NR }          # awk-NR is fzf-{1}: index no
-     { printf "	" }                           { printf "\033[2m" }{ printf $1 }{ printf "\033[0m" } # awk-$1 is fzf-{2}: tag information about the branch.
-     { printf "	" }{ printf "\033[38;5;223m" }{ printf "\033[2m" }{ printf $2 }{ printf "\033[0m" } # awk-$1 is fzf-{3}: %(objectname:short)
-     { printf "	" }{ printf "\033[38;5;184m" }{ printf "\033[2m" }{ printf $3 }{ printf "\033[0m" } # awk-$2 is fzf-{4}: date part of %(authordate:format:%Y-%m-%d	%H:%M:%S(%a))
-     { printf "	" }{ printf "\033[38;5;184m" }{ printf "\033[2m" }{ printf $4 }{ printf "\033[0m" } # awk-$3 is fzf-{5}: time part of %(authordate:format:%Y-%m-%d	%H:%M:%S(%a))
-     { printf "	" }{ printf "\033[38;5;169m" }                    { printf $5 }{ printf "\033[0m" } # awk-$4 is fzf-{6}: %(authorname)
-     { printf "	" }{ printf "\033[38;5;123m" }                    { printf $6 }{ printf "\033[0m" } # awk-$5 is fzf-{7}: %(refname:short)
-     { printf "	" }{ printf "\033[38;5;255m" }{ printf "\033[2m" }{ printf $7 }{ printf "\033[0m" } # awk-$6 is fzf-{8}: %(subject)
-     { print  "	" }{ printf "\033[0m"}' \
+    -v deco_git_objectname=$(decorate -git_objectname) \
+    -v deco_git_authordate=$(decorate -git_authordate) \
+    -v deco_git_an=$(decorate -git_an) \
+    -v deco_git_refname=$(decorate -git_refname) \
+    -v deco_git_s=$(decorate -git_s) \
+    '{
+       printf "%s",                         "\033[2m"; printf "%+2s", NR; # awk-NR is fzf-{1}: index no
+       printf "%s", "	"                     "\033[2m" $1 "\033[0m"; # awk-$1 is fzf-{2}: tag information about the branch.
+       printf "%s", "	" deco_git_objectname "\033[2m" $2 "\033[0m"; # awk-$1 is fzf-{3}: %(objectname:short)
+       printf "%s", "	" deco_git_authordate "\033[2m" $3 "\033[0m"; # awk-$2 is fzf-{4}: date part of %(authordate)
+       printf "%s", "	" deco_git_authordate "\033[2m" $4 "\033[0m"; # awk-$3 is fzf-{5}: time part of %(authordate)
+       printf "%s", "	" deco_git_an                   $5 "\033[0m"; # awk-$4 is fzf-{6}: %(authorname)
+       printf "%s", "	" deco_git_refname              $6 "\033[0m"; # awk-$5 is fzf-{7}: %(refname:short)
+       printf "%s", "	" deco_git_s          "\033[2m" $7 "\033[0m"; # awk-$6 is fzf-{8}: %(subject)
+       printf "\n";
+     }' \
  | fzf --ansi --prompt="$_ME > " --no-sort --info=inline --tabstop=1 --delimiter="	" --nth=1,2,3,4,6,7 \
    --bind "tab:execute(cd $(git_root); git_log_fzf {7})" \
    --bind "ctrl-l:execute(cd $(git_root); git_log_fzf {7})" \
