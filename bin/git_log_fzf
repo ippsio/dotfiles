@@ -28,7 +28,6 @@ GIT_LOG_1_P_CMD="git log -1 --color=always ${DIFF_MERGES} -p --stat --pretty=ful
 if ( type "diff-highlight" > /dev/null 2>&1 ); then
   GIT_LOG_1_P_CMD="${GIT_LOG_1_P_CMD}| diff-highlight"
 fi
-#GIT_LOG_P_CMD="${GIT_LOG_P_CMD}| tail -n +2"
 
 # ============================================================================================================================================
 # result image of git log.
@@ -41,30 +40,26 @@ fi
 # awk-$1  awk-$2  awk-$3    awk-$4  awk-$5                   awk-$6
 # fzf-{5} fzf-{4} fzf-{7}   fzf-{2} fzf-{3}                  fzf-{6}
 
-decorate_git_hash="$(decorate -git_hash)"
-decorate_git_cd=$(decorate -git_cd)
-decorate_git_an="$(decorate -git_an)"
-decorate_git_d="$(decorate -git_d)"
-decorate_git_s="$(decorate -git_s)"
-decorate_vervose_log="$(decorate -verbose_log)"
 eval "${GIT_LOG_CMD}" \
   | grep '*' \
   | awk -F '	' \
-    -v decorate_git_hash="${decorate_git_hash}" \
-    -v decorate_git_cd="$decorate_git_cd" \
-    -v decorate_git_an="$decorate_git_an" \
-    -v decorate_git_d="$decorate_git_d" \
-    -v decorate_git_s="$decorate_git_s" \
+    -v deco_git_hash="$(decorate -git_hash)" \
+    -v deco_git_cd="$(decorate -git_cd)" \
+    -v deco_git_an="$(decorate -git_an)" \
+    -v deco_git_d="$(decorate -git_d)" \
+    -v deco_git_s="$(decorate -git_s)" \
     -v reset="\033[0m" \
     -v dim="\033[2m" \
-    '{ printf dim }{ printf "%+2s", NR }                                  { printf reset } # awk-NR = fzf-{1} = index no
-     { printf "	" }{ printf "%s", decorate_git_hash }     { printf "%s", $4 }{ printf reset } # awk-$4 = fzf-{2} = %h
-     { printf "	" }{ printf "%s", decorate_git_cd }{ printf dim }{ printf "%s", $5 }{ printf reset } # awk-$5 = fzf-{3} = %cd
-     { printf "	" }{ printf decorate_git_an }              { printf "%s", $2 }{ printf reset } # awk-$2 = fzf-{4} = %an
-     { printf "	" }                                    { printf "%s", $1 }                 # awk-$1 = fzf-{5} = commit graph
-     { printf "	" }{ printf decorate_git_d }               { printf "%s", $6 }{ printf reset } # awk-$6 = fzf-{6} = %d
-     { printf "	" }{ printf decorate_git_s }               { printf "%s", $3 }{ printf reset } # awk-$3 = fzf-{7} = %s
-     { printf "\n" }' \
+    '{
+      printf "%s", dim; printf "%+2s", NR;                           printf "%s", reset; # awk-NR = fzf-{1} = index no
+      printf "	"; printf "%s", deco_git_hash;      printf "%s", $4; printf "%s", reset; # awk-$4 = fzf-{2} = %h
+      printf "	"; printf "%s%s", deco_git_cd, dim; printf "%s", $5; printf "%s", reset; # awk-$5 = fzf-{3} = %cd
+      printf "	"; printf "%s", deco_git_an;        printf "%s", $2; printf "%s", reset; # awk-$2 = fzf-{4} = %an
+      printf "	";                                  printf "%s", $1;                     # awk-$1 = fzf-{5} = commit graph
+      printf "	"; printf deco_git_d;               printf "%s", $6; printf "%s", reset; # awk-$6 = fzf-{6} = %d
+      printf "	"; printf deco_git_s;               printf "%s", $3; printf "%s", reset; # awk-$3 = fzf-{7} = %s
+      printf "\n";
+    }' \
   | fzf --ansi --info=inline --prompt="${_FZF_PROMPT}" --no-clear --tabstop=1 --header="${_FZF_HEADER}" --no-sort --delimiter='\t' \
   --bind "enter:execute(git log -1 -p --stat ${DIFF_MERGES} --pretty=fuller --abbrev-commit {2} ${file}| nvim -R -c \"set ft=diff nomod nolist nospell nu\" > /dev/tty)" \
   --bind "ctrl-y:execute(echo -n {2}| pbcopy)" \
@@ -75,8 +70,8 @@ eval "${GIT_LOG_CMD}" \
       echo;
       # ここで GIT_LOG_1_P_CMD のコマンドを実行すると、何故か欲しい情報が得られない。
       # 欲しい情報とは --pretty=format:'%d' の情報。
-      # 仕方ないのでfzf {6} からもらう。
-      # 最後に tail -n +2 してうまいこと見た目の帳尻を合わせる。
+      # この情報は fzf が持っている( {6} の情報。というわけで仕方ないのでfzf からもらう。
+      # 最後にeval する際、結果に tail -n +2 をかけることで、うまいこと見た目の帳尻を合わせる。
       decorate -git_hash 'commit {2}';
       echo -n ' '
       [[ ! -z {6} ]] && decorate -git_d {6};
