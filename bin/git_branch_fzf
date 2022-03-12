@@ -1,6 +1,5 @@
 #!/bin/bash
-# -------------------------
-# git_branch_fzf
+
 # rich branch selector.
 # -------------------------
 ( ! is_git_repo ) && echo "Not a git repository. " && exit 1
@@ -49,6 +48,16 @@ if [[ ! -z ${L5_remote_without_develop_ARGS} ]]; then
   L5_remote_without_develop=$(eval "${GIT_BRANCH_CMD} --remotes --list ${L5_remote_without_develop_ARGS}" | perl -pe "s/^/${TAGINFO_REMOTE_BRANCH}	/")
 fi
 
+GIT_LOG="git log"\
+" --oneline "\
+" --abbrev-commit"\
+" --decorate=full"\
+" --date=format-local:'%Y/%m/%d %H:%M:%S'"\
+" --pretty=format:'%h	(%cd)	%an	%d	%s'"\
+" -13"\
+" {7}"
+GIT_LOG=$(escape_SQ "${GIT_LOG}")
+
 echo "${L0_hyphen_hyphen}
 ${L1_local_develop}
 ${L2_remote_develop}
@@ -76,6 +85,32 @@ ${L5_remote_without_develop}" \
  | fzf --ansi --prompt="$_ME > " --no-sort --info=inline --tabstop=1 --delimiter="	" --nth=1,2,3,4,6,7 \
    --bind "tab:execute(cd $(git_root); git_log_fzf {7})" \
    --bind "ctrl-l:execute(cd $(git_root); git_log_fzf {7})" \
-   --preview 'echo {}' --preview-window down,2 \
- | awk -F '	' '{ print $7 }'
+   --preview="
+      cd $(git_root);
+      # --------------------------------------------------
+      # Git log.
+      # --------------------------------------------------
+      decorate -verbose_log; echo ${GIT_LOG}; printf '\033[0m';
+      echo;
+      eval ${GIT_LOG}\
+        | awk -F '\t' \
+          -v deco_git_hash=$(escape_SQ $(decorate -git_hash)) \
+          -v deco_git_cd=$(escape_SQ $(decorate -git_cd)) \
+          -v deco_git_an=$(escape_SQ $(decorate -git_an)) \
+          -v deco_git_d=$(escape_SQ $(decorate -git_d)) \
+          -v deco_git_s=$(escape_SQ $(decorate -git_s)) \
+          '{
+             printf \"%2s\", NR;
+             printf \"	\"; printf \"%s\", deco_git_hash; printf \"%s\", \$1; printf \"\033[0m\"; # %h
+             printf \"	\"; printf \"%s\", deco_git_cd; printf \"%s\", \$2; printf \"\033[0m\"; # (%cd)
+             printf \"	\"; printf \"%s\", deco_git_an; printf \"%s\", \$3; printf \"\033[0m\"; # %an
+             printf \"	\"; printf \"%s\", deco_git_d; printf \"%s\", \$4; printf \"\033[0m\"; # %d
+             printf \"%s\", deco_git_s; printf \"%s\", \$5; printf \"\033[0m\"; # %s
+             printf \"\n\";
+          }'
+      echo;
+      horizontal_line;
+     "\
+   --preview-window down,15 \
+ | awk -F '	' '{ printf "%s", $7; }'
 
