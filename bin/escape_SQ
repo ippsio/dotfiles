@@ -1,0 +1,7 @@
+#!/bin/bash
+
+SQ="'"
+DQ='"'
+for s in "$1"; do a+=("'${s//${SQ}/${SQ}${DQ}${SQ}${DQ}${SQ}}'"); done
+echo "${a[*]}"
+
