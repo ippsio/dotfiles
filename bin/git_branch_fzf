@@ -100,13 +100,15 @@ ${L5_remote_without_develop}" \
           -v deco_git_d=$(escape_SQ $(decorate -git_d)) \
           -v deco_git_s=$(escape_SQ $(decorate -git_s)) \
           '{
-             printf \"%2s\", NR;
-             printf \"	\"; printf \"%s\", deco_git_hash; printf \"%s\", \$1; printf \"\033[0m\"; # %h
-             printf \"	\"; printf \"%s\", deco_git_cd; printf \"%s\", \$2; printf \"\033[0m\"; # (%cd)
-             printf \"	\"; printf \"%s\", deco_git_an; printf \"%s\", \$3; printf \"\033[0m\"; # %an
-             printf \"	\"; printf \"%s\", deco_git_d; printf \"%s\", \$4; printf \"\033[0m\"; # %d
-             printf \"%s\", deco_git_s; printf \"%s\", \$5; printf \"\033[0m\"; # %s
-             printf \"\n\";
+            if (\"{7}\"!=\"--\") {
+              printf \"%2s\", NR;
+              printf \"	\"; printf \"%s\", deco_git_hash \$1 \"\033[0m\"; # %h
+              printf \"	\"; printf \"%s\", deco_git_cd   \$2 \"\033[0m\"; # (%cd)
+              printf \"	\"; printf \"%s\", deco_git_an   \$3 \"\033[0m\"; # %an
+              printf \"	\"; printf \"%s\", deco_git_d    \$4 \"\033[0m\"; # %d
+                            printf \"%s\", deco_git_s    \$5 \"\033[0m\"; # %s
+              printf \"\n\";
+            }
           }'
       echo;
       horizontal_line;
