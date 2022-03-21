@@ -1,6 +1,10 @@
 # 文字をシングルクォートとか（）で囲む
 [[plugins]]
 repo = 'tpope/vim-surround'
+hook_add='''
+  vmap ' <Plug>VSurround'
+  vmap " <Plug>VSurround"
+'''
 
 [[plugins]]
 repo = 'tpope/vim-repeat'

@@ -1,0 +1,80 @@
+#[[plugins]]
+#repo = 'Shougo/vimproc.vim'
+#build = 'make'
+[[plugins]]
+repo = 'Shougo/deoplete.nvim'
+on_event = 'InsertEnter'
+hook_add = '''
+  " Enable deoplete when InsertEnter.
+  let g:deoplete#enable_at_startup = 0
+  autocmd InsertEnter * call deoplete#enable()
+
+  let g:deoplete#enable_ignore_case = 1
+
+  inoremap <expr><C-j> pumvisible() ? "\<C-n>" : "\<C-j>"
+  inoremap <expr><C-k> pumvisible() ? "\<C-p>" : "\<C-k>"
+  inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+  inoremap <expr><C-g>   deoplete#undo_completion()
+
+"  " When I press enter, neovim closes the popup instead of inserting new line.
+"  " <CR>: close popup and save indent.
+"  inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+"  function! s:my_cr_function() abort
+"    return deoplete#close_popup() . "\<CR>"
+"  endfunction
+
+  set completeopt+=noinsert
+
+  " I want to close the preview window after completion is done.
+  autocmd CompleteDone * silent! pclose!
+
+  " I want to disable the preview window feature.
+  "set completeopt-=preview
+
+  " Pass a dictionary to set multiple options
+  call deoplete#custom#option({
+  \ 'auto_complete_delay': 20,
+  \ 'smart_case': v:true,
+  \ 'auto_complete': v:true,
+  \ 'on_insert_enter': v:false,
+  \ 'on_text_changed_i': v:true,
+  \ 'num_processes': 2,
+  \ 'min_pattern_length': 1,
+  \ })
+'''
+
+# *neco-vim* is the Vim completion source for neocomplete/deoplete/ddc.
+[[plugins]]
+repo = 'Shougo/neco-vim'
+
+# *neco-syntax* is the syntax source for neocomplete/deoplete/ncm.
+[[plugins]]
+repo='Shougo/neco-syntax'
+
+# A deoplete/neocomplete/neocomplcache plugin for /usr/bin/look for completing words in English.
+[[plugins]]
+repo = 'ujihisa/neco-look'
+
+[[plugins]]
+repo = 'zchee/deoplete-jedi'
+
+[[plugins]]
+repo='deoplete-plugins/deoplete-dictionary'
+hook_add='''
+  "" Remove this if you'd like to use fuzzy search
+  "call deoplete#custom#source(
+  "\ 'dictionary', 'matchers', ['matcher_head'])
+
+  "" If dictionary is already sorted, no need to sort it again.
+  "call deoplete#custom#source(
+  "\ 'dictionary', 'sorters', [])
+
+  "" Do not complete too short words
+  "call deoplete#custom#source(
+  "\ 'dictionary', 'min_pattern_length', 4)
+'''
+
+# 大きなリポジトリでは動かないかも知れない。
+# [[plugins]]
+# repo='rinx/deoplete-auto-programming'
+

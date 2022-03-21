@@ -41,6 +41,8 @@ EOF
 )
 
 while true; do clear
+  label "[pwd]";
+  infoln " $(pwd| sed -e "s#$HOME#~#")"
   label "[merge_base_branch_info]";
   for e in $(echo "${MERGE_BASE_INFO}"); do echo -n " {"; info "${e}"; echo -n "}"; done; echo
 
@@ -50,12 +52,15 @@ while true; do clear
   label "[merge-base]"
   verbose "${GIT_LOG_1_CMD}"
   infoln " $(eval ${GIT_LOG_1_CMD})"
+  horizontal_line; echo
+
 
   label "[git log]"
   verbose " ${GIT_LOG_CMD}"
   infoln " $( (eval ${GIT_LOG_CMD}; echo )| wc -l| tr -d ' ') commits."
   verbose " ${GIT_LOG_3_CMD}"
   eval "(${GIT_LOG_3_CMD};echo)"| awk '{ printf "%+2s %s\n", NR, $0 }'
+  horizontal_line; echo
 
   label "[git diff --stat]"
   GIT_DIFF_NUMSTAT="git diff --numstat ${MERGE_BASE_COMMIT}..."
@@ -99,24 +104,25 @@ while true; do clear
       }
     }
     END {
-      if (NR >= 15) { printf " :\n" }
-        printf "*SUMMARY=>%s files changed, ", NR
-        printf "%s", deco_of["diff_plus"]; printf "%+4s", "(+)" insertion; printf "\033[0m";
+      if (NR >= 15) {
+        printf " :\n"
+      }
+      printf "%s", ",-------------------------------------\n"
+      printf "| %s files changed, ", NR
+      printf "%s", deco_of["diff_plus"]; printf "%+4s", "(+)" insertion; printf "\033[0m";
       printf "|";
       printf "%s", deco_of["diff_minus"]; printf "%-4s", deletion "(-)"; printf "\033[0m";
       printf "", NR, insertion, deletion
       printf "", NR, insertion, deletion
+      printf "%s", "\n"
     }
   ')
 
   GIT_DIFF_STAT_CNT=$(echo "${GIT_DIFF_STAT}"| wc -l| tr -d ' ')
-  echo;
   echo "${GIT_DIFF_STAT}"
   echo "${files}"
   #[[ ${GIT_DIFF_STAT_CNT} -ge 15 ]] && echo " :" && echo "${GIT_DIFF_STAT}"| tail -n 1
-
-  label "[pwd]";
-  infoln " $(pwd| sed -e "s#$HOME#~#")"
+  horizontal_line; echo
 
   # command selector
   ANS=$(echo "${COMMANDS}"| fzf --disabled --info=hidden --height=11 --prompt="COMMAND> " --bind "j:down" --bind "k:up" | awk -F '\t' '{ print $2 }')

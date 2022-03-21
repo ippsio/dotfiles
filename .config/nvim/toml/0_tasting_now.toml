@@ -1,5 +1,3 @@
-# [[plugins]]
-# repo = 'uplus/deoplete-solargraph'
 
 #[[plugins]]
 #repo = 'autozimu/LanguageClient-neovim'
@@ -18,10 +16,6 @@
 #nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
 #nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
 #'''
-
-# [[plugins]]
-# repo = 'fishbullet/deoplete-ruby'
-# on_ft = ['ruby']
 
 [[plugins]]
 repo = 'Shougo/echodoc.vim'
@@ -46,9 +40,6 @@ hook_add = '''
 '''
 
 [[plugins]]
-repo = 'zchee/deoplete-jedi'
-
-[[plugins]]
 repo = 'davidhalter/jedi-vim'
 on_ft = 'python'
 hook_add = '''
@@ -62,49 +53,6 @@ function! s:jedivim_hook()              " jedi-vimを使うときだけ呼び出
   let g:jedi#show_call_signatures   = 0 " 関数の引数表示を無効(ポップアップのバグを踏んだことがあるため)
   autocmd FileType python setlocal omnifunc=jedi#completions   " 補完エンジンはjediを使う
 endfunction
-
-'''
-
-
-[[plugins]]
-repo = 'Shougo/deoplete.nvim'
-on_event = 'InsertEnter'
-hook_add = '''
-  " Enable deoplete when InsertEnter.
-  let g:deoplete#enable_at_startup = 0
-  autocmd InsertEnter * call deoplete#enable()
-
-  let g:deoplete#enable_ignore_case = 1
-
-  inoremap <expr><C-j> pumvisible() ? "\<C-n>" : "\<C-j>"
-  inoremap <expr><C-k> pumvisible() ? "\<C-p>" : "\<C-k>"
-  inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-  inoremap <expr><C-g>   deoplete#undo_completion()
-
-  " When I press enter, neovim closes the popup instead of inserting new line.
-  " <CR>: close popup and save indent.
-  " inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-  " function! s:my_cr_function() abort
-  "   return deoplete#close_popup() . "\<CR>"
-  " endfunction
-
-  set completeopt+=noinsert
-
-  " I want to close the preview window after completion is done.
-  autocmd CompleteDone * silent! pclose!
-
-  " I want to disable the preview window feature.
-  "set completeopt-=preview
-
-  " Pass a dictionary to set multiple options
-  call deoplete#custom#option({
-  \ 'auto_complete_delay': 5,
-  \ 'smart_case': v:true,
-  \ 'auto_complete': v:true,
-  \ 'on_insert_enter': v:false,
-  \ 'on_text_changed_i': v:true,
-  \ 'num_processes': 2,
-  \ })
 '''
 
 [[plugins]]
@@ -127,11 +75,6 @@ endif
 [[plugins]]
 repo = 'Shougo/neosnippet-snippets'
 
-[[plugins]]
-repo = 'Shougo/neco-vim'
-
-[[plugins]]
-repo = 'ujihisa/neco-look'
 
 # inoremap <esc>でコンフリクト。escで補完を抜けた後一発でノーマルモードに戻れなくなるためコメントアウト。
 #[[plugins]]
@@ -180,9 +123,6 @@ hook_add = '''
   " \ }
 '''
 
-[[plugins]]
-repo = 'Shougo/vimproc.vim'
-build = 'make'
 
 # 対応する括弧をいいかんじにする
 [[plugins]]
@@ -194,3 +134,5 @@ let g:loaded_matchparen = 1
 # カーソル下の単語に線を引く。
 [[plugins]]
 repo='itchyny/vim-cursorword'
+
+
