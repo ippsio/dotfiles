@@ -24,11 +24,6 @@ vnoremap v $h
 nnoremap <silent> <Space><Space> mz:call <SID>hi_word()<CR>
 xnoremap <silent> <Space><Space> mz:call <SID>hi_selected()<CR>
 
-"""" F4で、ハイライト＋Ripgrep検索(要ripgrepコマンド)
-"""nnoremap <F4>       mz:call <SID>hi_word_and_grep(1)<CR>
-"""xnoremap <F4>       mz:call <SID>hi_selected_and_grep(1)<CR>
-"""cnoremap <F4> <CR>gnmz:call <SID>hi_selected_and_grep(1)<CR>
-
 nnoremap F       mz:call <SID>grep_z_register()<CR>
 
 " ESCでハイライト解除
@@ -40,22 +35,8 @@ function s:hi_word()
   silent normal "zyiw
   let @/ = '\<' . @z . '\>'
   call feedkeys(":set hlsearch\<CR>", "n")
-  " 今後、matchを使うのも面白そう。他のバッファはハイライトしないようにできるし。
-  " call feedkeys(":match vimCommand /\<C-r>z\/\<CR>", "n")
   silent normal `z
 endfunction
-
-"""" カーソル下にある単語をgrep(可能ならripgrep)
-"""" range_cd: 0=カレントバッファ内を検索、1=全体を検索..という意味として定義
-"""function s:hi_word_and_grep(range_cd)
-"""  call s:hi_word()
-"""  silent normal gn"zy
-"""  if a:range_cd == 0
-"""    call s:vimgrep_current_buf_z_register()
-"""  else
-"""    call s:grep_z_register()
-"""  endif
-"""endfunction
 
 " ビジュアルモードで選択中の文字をハイライト
 function s:hi_selected()
@@ -65,31 +46,10 @@ function s:hi_selected()
   silent normal `z
 endfunction
 
-"""" ビジュアルモード選択中の文字をgrep(可能ならripgrep)
-"""function s:hi_selected_and_grep(range_cd)
-"""  call s:hi_selected()
-"""  silent normal gv"zy
-"""  if a:range_cd == 0
-"""    call s:vimgrep_current_buf_z_register()
-"""  else
-"""    call s:grep_z_register()
-"""  endif
-"""endfunction
-
 " Zレジスタの内容をgrep(可能ならripgrep)
 function s:grep_z_register()
   call feedkeys(":Grep " . escape(@z, '\()[]{}*+') . "\<CR>", "n")
 endfunction
-
-"""" Zレジスタの内容で、カレントバッファ内をvimgrep
-"""function s:vimgrep_current_buf_z_register()
-"""  let @z = escape(@z, '\()[]{}|^&#$%*+?')
-"""  let @z = substitute(@z, '\\', '\\\\', 'g')
-"""  let @z = substitute(@z, '"', '\\"', 'g')
-"""  let @z = substitute(@z, '`', '\\`', 'g')
-"""  " call feedkeys(":vimgrep \"\<C-r>z\" %\<CR>", "n")
-"""  call feedkeys(":vimgrep \"\<C-r>z\" %", "n")
-"""endfunction
 
 " /で検索モードに入った際、/{pattern}の入力中は「/」や「?」をタイプすると自動で\エスケープする。
 cnoremap <expr> / getcmdtype() == '/' ? '\/' : '/'
@@ -124,17 +84,7 @@ nnoremap <space>= <C-w>=
 "  '123'にも同じようにp(ペースト)したいのに、'def'
 "  がペーストされてしまうため、
 "  それを防ぎたいから（一言で言うと、何度も連続でpしたいから）。
-"
-" xnoremap = VISUALモードのmapを定義(再マップ無し)
-" 左辺 <expr> p
-"   = <expr> 右辺を指揮として評価する
-" 右辺 'pgv"'.v:register.'y`>'
-"   = １(p) ペースト
-"    + ２(gv) さっき選択していた範囲を
-"    + ３([v:registerの結果]y) *レジスタを使用してヤンク
-"    + ４(`>) で、最後に選択した範囲の終端にカーソルを戻す
-"
-xnoremap <expr> p 'pgv"'.v:register.'y`>'
+xnoremap p "_xP`<
 
 " -----------------------------------------------------
 " カーソル移動
