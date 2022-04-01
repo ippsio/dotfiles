@@ -1,4 +1,3 @@
-
 #[[plugins]]
 #repo = 'autozimu/LanguageClient-neovim'
 #branch = 'next'
@@ -19,7 +18,7 @@
 
 [[plugins]]
 repo = 'Shougo/echodoc.vim'
-hook_add = '''
+hook_add='''
   set cmdheight=2
   " Option 4:
   " Or, you could use neovim's floating text feature.
@@ -82,7 +81,7 @@ repo = 'Shougo/neosnippet-snippets'
 
 [[plugins]]
 repo = 'nvim-treesitter/nvim-treesitter'
-hook_add = '''
+hook_add ='''
 lua <<EOF
 require'nvim-treesitter.configs'.setup {
   highlight = {
@@ -135,4 +134,11 @@ let g:loaded_matchparen = 1
 [[plugins]]
 repo='itchyny/vim-cursorword'
 
-
+[[plugins]]
+repo = 'rhysd/accelerated-jk'
+on_map = {n = '<Plug>'}
+hook_add = '''
+  let g:accelerated_jk_acceleration_table = [7,12,17,21,24,26,28,30]
+  nmap <silent>j <Plug>(accelerated_jk_gj)
+  nmap <silent>k <Plug>(accelerated_jk_gk)
+'''

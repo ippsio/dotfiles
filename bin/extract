@@ -1,0 +1,11 @@
+#!/bin/bash
+for arg in $@; do
+  case "${arg}" in
+    *.zip) unzip ${arg} ;;
+    *.tar) tar -xvf ${arg} ;;
+    *.tar.gz) tar -xvf ${arg} ;;
+    *.tar.xz) tar -xvf ${arg} ;;
+    *.tar.bz2) pbzip2 --keep -p4 --decompress --verbose ${arg} ;;
+    * ) echo "NOT IMPREMENTED." ;;
+  esac
+done

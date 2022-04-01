@@ -2,8 +2,6 @@
 [[plugins]]
 repo = 'tpope/vim-surround'
 hook_add='''
-  vmap ' <Plug>VSurround'
-  vmap " <Plug>VSurround"
 '''
 
 [[plugins]]

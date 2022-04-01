@@ -32,17 +32,17 @@ nmap <silent> <Esc> :<C-u>nohlsearch<CR>
 " カーソル下にある単語をハイライト
 function s:hi_word()
   " （\<や\>は、単語の境界を示す特殊文字）
-  silent normal "zyiw
+  normal "zyiw
   let @/ = '\<' . @z . '\>'
   call feedkeys(":set hlsearch\<CR>", "n")
-  silent normal `z
+  normal `z
 endfunction
 
-" ビジュアルモードで選択中の文字をハイライト
+"" ビジュアルモードで選択中の文字をハイライト
 function s:hi_selected()
   silent normal gv"zy
   let @/ = '\V' . substitute(escape(@z, '/\'), '\n', '\\n', 'g')
-  call feedkeys(":set hlsearch\<CR>", "n")
+  call feedkeys(":silent set hlsearch\<CR>", "n")
   silent normal `z
 endfunction
 
@@ -84,7 +84,8 @@ nnoremap <space>= <C-w>=
 "  '123'にも同じようにp(ペースト)したいのに、'def'
 "  がペーストされてしまうため、
 "  それを防ぎたいから（一言で言うと、何度も連続でpしたいから）。
-xnoremap p "_xP`<
+xnoremap <expr> p 'pgv"'.v:register.'y`>'
+"xnoremap p "_xP`<
 
 " -----------------------------------------------------
 " カーソル移動

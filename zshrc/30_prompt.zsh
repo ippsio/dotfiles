@@ -193,7 +193,7 @@ GIT_BRANCH="%K{220}%F{0}%(2v| ${_mark_branch}%2v]|)%f%k"
 _untracked="%(3v|${_text_worktree}[${_mark_untracked}%3v|)"
 _unstaged="%(4v| ${_mark_unstaged}%4v|)"
 _unmerged="%(5v| ${_mark_unmerged}%5v]|)"
-GIT_WORKING_TREE="%K{8}%F{143}${_untracked}${_unstaged}${_unmerged}%f%k"
+GIT_WORKING_TREE="%K{193}%F{241}${_untracked}${_unstaged}${_unmerged}%f%k"
 
 # git stage
 _staged="%(6v| ${_text_staged}[${_mark_staged}%6v]|)%k"
