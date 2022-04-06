@@ -8,10 +8,10 @@
   "private": true,
   "dependencies": {
     "@secretlint/secretlint-rule-preset-recommend": "^3.0.0",
-    "secretlint": "^3.0.0"
+    "secretlint": "^3.0.0",
+    "styled-components": "^5"
   },
-  "devDependencies": {
-  },
+  "devDependencies": {},
   "resolutions": {
     "styled-components": "^5"
   },
