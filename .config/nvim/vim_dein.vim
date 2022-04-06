@@ -24,7 +24,8 @@ if dein#load_state('~/.cache/dein')
   call dein#load_toml('~/.config/nvim/toml/1_tasting_now.toml', {'lazy': 1})
 
   " lazy0: どんなfiletypeでも動く
-  call dein#load_toml('~/.config/nvim/toml/0_completion_deoplete.toml', {'lazy': 0})
+  "call dein#load_toml('~/.config/nvim/toml/0_completion_deoplete.toml', {'lazy': 0})
+  call dein#load_toml('~/.config/nvim/toml/0_ddc.toml', {'lazy': 0})
   call dein#load_toml('~/.config/nvim/toml/0_fzf.toml', {'lazy': 0})
   call dein#load_toml('~/.config/nvim/toml/0_jump.toml', {'lazy': 0})
   call dein#load_toml('~/.config/nvim/toml/0_visual.toml', {'lazy': 0})

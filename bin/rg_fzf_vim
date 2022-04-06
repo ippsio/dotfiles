@@ -35,6 +35,7 @@ eval "${RG_CMD}"\
     --prompt="${FZF_PROMPT}" \
     --header="${FZF_HEADER}" \
     --bind "enter:execute(nvim {1} +{2} < /dev/tty > /dev/tty)" \
+    --bind='ctrl-/:toggle-preview' \
     --preview='
       # 原則、検索ヒットした行の5行前から表示。
       from=$(expr {2} - 5);

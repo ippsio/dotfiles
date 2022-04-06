@@ -74,7 +74,3 @@ hook_add='''
   "\ 'dictionary', 'min_pattern_length', 4)
 '''
 
-# 大きなリポジトリでは動かないかも知れない。
-# [[plugins]]
-# repo='rinx/deoplete-auto-programming'
-

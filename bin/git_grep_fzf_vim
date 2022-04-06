@@ -14,6 +14,7 @@ eval "${GIT_GREP_CMD}" \
     --ansi \
     --delimiter='	' \
     --tabstop=2 \
+    --bind='ctrl-/:toggle-preview' \
     --prompt="${FZF_PROMPT} > " \
     --header="${FZF_HEADER}" \
     --bind "enter:execute(nvim {1} +{2} < /dev/tty > /dev/tty)" \
