@@ -1,0 +1,4 @@
+[[plugins]]
+repo='mechatroner/rainbow_csv'
+on_ft = ['csv', 'tsv']
+

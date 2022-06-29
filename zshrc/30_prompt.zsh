@@ -33,6 +33,18 @@ function +vi-git-set-message-hook() {
   local behind_8=$(echo -e ${git_status}| egrep "behind [0-9]*"| sed -e "s/^.*[ \[]behind \([0-9]*\).*/\1/")
   [ -z ${behind_8} ] && behind_8=0
 
+  # # なぜgit status とgit rev-list のahead/ behind に差が出るのか、俺はその理由を知らない..
+  # # ただし差が出る事がある。差が出る時はだいたいstatusのaheadとbehindが0。そういうケースを疑ってrev-listする。
+  # if [[ ${ahead_7} -eq 0 && ${behind_8} -eq 0 ]]; then
+  #    if [[ git branch -a --format="%(refname:short)"|grep "^$origin/${hook_com[branch]}$" > /dev/null 2>&1 ]]; then
+  #     local revlist=$(git rev-list --left-right --count origin/${hook_com[branch]}...${hook_com[branch]})
+  #     ahead_7=$(echo "${revlist}"| awk '{ print $2 }')
+  #     behind_8=$(echo "${revlist}"| awk '{ print $1 }')
+  #    else
+  #      ahead_7="9999"
+  #    fi
+  # fi
+
   # <indexに載ってるもの>
   # local updated_in_index=$(             echo "${git_XY}"| egrep -c "^(M[ MD])")
   # local added_to_index=$(               echo "${git_XY}"| egrep -c "^(A[ MD])")

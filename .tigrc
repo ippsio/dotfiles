@@ -255,4 +255,6 @@ bind main L         !sh -c "hash=$(git rev-parse --short %(commit)); \
                             echo '-------------------------------------------------'; \
                             echo"
 bind diff L         !sh -c "echo %(commit) | pbcopy"
+bind status - !bash -c "~/dotfiles/bin/tig/git_checkout_-- %(file)"
+bind stage  - !bash -c "~/dotfiles/bin/tig/git_checkout_-- %(file)"
 

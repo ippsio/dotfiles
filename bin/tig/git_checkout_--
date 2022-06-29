@@ -1,0 +1,23 @@
+#!/bin/bash
+file="$1"
+echo "file='${file}'"
+
+# check
+( git --no-pager diff ${file} ) || exit $?
+[[ -z "$(git --no-pager diff ${file})" ]] && echo "No changes." && exit 0
+
+eval printf '%.0s-' '{1..'$(tput cols)'}';
+printf '\e[38;5;255m'; printf '\e[48;5;1m'
+echo "THIS CHANGES WILL BE DELETED! OK?"
+echo " >>> git checkout -- ${file}"
+echo "----------------------------------"
+printf '\e[0m'
+
+answer_row=$(echo "-DELETE THE CHANGES
++KEEP   THE CHANGES"| fzf --height=4 --info=hidden)
+echo "=>'${answer_row}'"
+
+answer=$(echo "${answer_row}"| awk '{ print $1 }')
+[[ "${answer}" == "-DELETE" ]] && git checkout -- "${file}" && echo "=>DONE. CHANGES WERE DELETED."
+echo
+

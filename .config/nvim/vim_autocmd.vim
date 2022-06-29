@@ -18,6 +18,10 @@ augroup vimrc-highlight
   " .coffeeなファイルのファイルタイプがcoffeeであると、vimが気づいてくれない時があったので、その対策。
   autocmd BufNewFile,BufRead *.coffee setlocal filetype=coffee
 
+  " .csvなファイルのファイルタイプがcsvであると、vimが気づいてくれない時があったので、その対策。
+  autocmd BufNewFile,BufRead *.csv setlocal filetype=csv
+  autocmd BufNewFile,BufRead *.tsv setlocal filetype=tsv
+
   autocmd BufRead,BufEnter,BufWinEnter * call DoWellByFileType()
   fun DoWellByFileType()
     if &ft == ""

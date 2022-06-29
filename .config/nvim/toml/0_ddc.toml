@@ -12,14 +12,28 @@ inoremap <Tab>   <Cmd>call pum#map#insert_relative(+1)<CR>
 inoremap <S-Tab> <Cmd>call pum#map#insert_relative(-1)<CR>
 inoremap <C-n>   <Cmd>call pum#map#insert_relative(+1)<CR>
 inoremap <C-j>   <Cmd>call pum#map#insert_relative(+1)<CR>
-inoremap <Down>   <Cmd>call pum#map#insert_relative(+1)<CR>
+
+inoremap <silent><expr> <Up>   pum#visible() ? '<Cmd>call pum#map#insert_relative(-1)<CR>' : '<Up>'
+" inoremap <silent><expr> <Down>
+"       \ pum#visible() ? '<Cmd>call pum#map#insert_relative(+1)<CR>' :
+"       \ (col('.') <= 1 <Bar><Bar> getline('.')[col('.') - 2] =~# '\s') ?
+"       \ '<Down>' : ddc#manual_complete()
+inoremap <silent><expr> <Down> pum#visible() ? '<Cmd>call pum#map#insert_relative(+1)<CR>' : '<Down>'
+" inoremap <silent><expr> <Up>
+"       \ pum#visible() ? '<Cmd>call pum#map#insert_relative(-1)<CR>' :
+"       \ (col('.') <= 1 <Bar><Bar> getline('.')[col('.') - 2] =~# '\s') ?
+"       \ '<Up>' : ddc#manual_complete()
+
 inoremap <C-p>   <Cmd>call pum#map#insert_relative(-1)<CR>
 inoremap <C-k>   <Cmd>call pum#map#insert_relative(-1)<CR>
-inoremap <Up>   <Cmd>call pum#map#insert_relative(-1)<CR>
+"inoremap <Down>   <Cmd>call pum#map#insert_relative(+1)<CR>
+"inoremap <Up>   <Cmd>call pum#map#insert_relative(-1)<CR>
 inoremap <C-y>   <Cmd>call pum#map#confirm()<CR>
 inoremap <C-e>   <Cmd>call pum#map#cancel()<CR>
 inoremap <PageDown> <Cmd>call pum#map#insert_relative_page(+1)<CR>
 inoremap <PageUp>   <Cmd>call pum#map#insert_relative_page(-1)<CR>
+nnoremap :       <Cmd>call DownPre()<CR>:
+
 call ddc#custom#patch_global('autoCompleteEvents', [
     \ 'InsertEnter', 'TextChangedI', 'TextChangedP',
     \ 'CmdlineEnter', 'CmdlineChanged',
@@ -65,6 +79,7 @@ call ddc#custom#patch_global('sources', [
       \ 'around',
       \ 'file',
       \ 'cmdline-history',
+      \ 'look',
       \ ])
 
 " ddc-cmdline-history
@@ -112,6 +127,22 @@ call ddc#custom#patch_global('sourceOptions', {
 call ddc#custom#patch_global('sourceParams', {
       \ 'nvim-lsp': { 'kindLabels': { 'Class': 'c' } },
       \ })
+" }}}
+
+" cmp-look {{{
+call ddc#custom#patch_global('sourceOptions', {
+      \ 'look': {
+      \   'converters': ['loud', 'matcher_head'],
+      \   'matchers': [],
+      \   'mark': 'look',
+      \   'isVolatile': v:true,
+      \ }})
+
+call ddc#custom#patch_global('sourceParams', {
+      \ 'look': {
+      \   'convertCase': v:true,
+      \   'dict': v:null
+      \ }})
 " }}}
 
 "" ddc-mocword {{{
@@ -199,3 +230,5 @@ EOF
 repo='Shougo/ddc-cmdline-history'
 [[plugins]]
 repo = 'Shougo/neco-vim'
+[[plugins]]
+repo = 'octaltree/cmp-look'

@@ -93,6 +93,10 @@ EOF
 '''
 
 [[plugins]]
+repo = 'Shougo/vimproc.vim'
+build = 'make'
+
+[[plugins]]
 repo='thinca/vim-quickrun'
 hook_add = '''
   nnoremap <f5> :QuickRun<CR>
@@ -142,3 +146,6 @@ hook_add = '''
   nmap <silent>j <Plug>(accelerated_jk_gj)
   nmap <silent>k <Plug>(accelerated_jk_gk)
 '''
+[[plugins]]
+repo='jreybert/vimagit'
+

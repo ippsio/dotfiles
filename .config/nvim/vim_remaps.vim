@@ -122,5 +122,8 @@ nnoremap <silent> <C-s> :<C-u>:w<CR>:echo 'SAVED! ' . strftime("%Y/%m/%d %H:%M:%
 " H で、直前に開いていたファイルに戻る。
 nnoremap H   :<C-u>:b#<CR>
 
-
 inoremap <C-space> <C-n>
+
+" ファイル名と行番号を表示する。ついでにファイル名をクリップボードにコピーする。
+nnoremap <silent> <C-g> :let @* = substitute(expand("%:p"), $HOME, "~", "g")<CR><C-g>
+

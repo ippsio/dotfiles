@@ -127,4 +127,4 @@
 [commit]
 	template = ~/.stCommitMsg
 [merge]
-	ff = false
+  # ff = false

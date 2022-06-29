@@ -2,30 +2,34 @@
 
 # git_grep_fzf_vim
 # git grep earch + fzf filter +  edit with vim .
-SEARCH_WORD=${1:-.}
-GIT_GREP_CMD="git grep --line-number ${SEARCH_WORD}"
-FZF_PROMPT="$(basename $0): '${GIT_GREP_CMD}'"
+ARGS=${@:-.}
+GIT_GREP_CMD="git grep --line-number --color=always --extended-regexp ${ARGS}"
+FZF_PROMPT="$(basename $0)"
 FZF_HEADER="enter:nvim"
 
+# NOTE: sed -e\ 's/:/\t/'{1,1} の意味は「行頭から2つ目のコロンまではタブ文字に置換。それ以外は置換しない」
 eval "${GIT_GREP_CMD}" \
-  | perl -pe 's/(^.*):(\d+):(.*)$/\1	\2	\3/' \
+  | sed -e\ "s/:/\t/"{1,1} \
+  | cat -n \
   | fzf -m \
-    --info=inline \
     --ansi \
+    --info=inline \
     --delimiter='	' \
     --tabstop=2 \
-    --bind='ctrl-/:toggle-preview' \
     --prompt="${FZF_PROMPT} > " \
-    --header="${FZF_HEADER}" \
-    --bind "enter:execute(nvim {1} +{2} < /dev/tty > /dev/tty)" \
+    --header="${GIT_GREP_CMD}" \
+    --bind "ctrl-p:toggle-preview" \
+    --bind "ctrl-/:toggle-preview" \
+    --bind="enter:execute(nvim {2} +{3} < /dev/tty > /dev/tty)" \
+    --preview-window"=bottom:65%"\
     --preview='
-      # 原則、検索ヒットした行の5行前から表示。
-      from=$(expr {2} - 5);
+      # 原則、検索ヒットした行の15行前から表示。
+      from=$(expr {3} - 15);
       [[ ${from} -lt 1 ]] && from=1;
       bat \
         --color=always \
         --style=numbers,header \
         --line-range ${from}: \
-        --highlight-line {2} {1}
+        --highlight-line {3} {2}
       '
 
