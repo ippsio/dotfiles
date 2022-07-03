@@ -27,7 +27,7 @@
 "augroup END
 
 " カーソル行
-hi CursorLine cterm=NONE ctermfg=NONE ctermbg=NONE
+"""hi CursorLine cterm=NONE ctermfg=NONE ctermbg=NONE
 " カーソル自体の色は、iTerm2等のターミナルの設定であるため、コメントアウト
 " hi Cursor ctermbg=1 ctermfg=240
 
@@ -68,8 +68,7 @@ hi rubyString ctermbg=232 ctermfg=69
 hi rubyTodo ctermbg=94
 
 " 行番号
-hi LineNr guifg=#006666 ctermfg=23
-
+hi LineNr ctermfg=38
 " directory
 "hi Directory ctermbg=16 ctermfg=75 cterm=bold
 hi Directory ctermbg=16 ctermfg=75

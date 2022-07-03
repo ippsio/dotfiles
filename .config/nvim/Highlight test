@@ -1,0 +1,212 @@
+
+	SpecialKey	SpecialKey
+
+	TermCursor	TermCursor
+
+	NonText	NonText EndOfBuffer Whitespace
+
+	Directory	Directory
+
+	ErrorMsg	ErrorMsg NvimInvalidSpacing
+
+	IncSearch	IncSearch
+
+	Search	Search Substitute
+
+	MoreMsg	MoreMsg
+
+	ModeMsg	ModeMsg
+
+	LineNr	LineNr LineNrAbove LineNrBelow
+
+	CursorLineNr	CursorLineNr
+
+	Question	Question
+
+	StatusLine	StatusLine MsgSeparator
+
+	StatusLineNC	StatusLineNC
+
+	VertSplit	VertSplit WinSeparator FloatBorder
+
+	Title	Title
+
+	Visual	Visual
+
+	WarningMsg	WarningMsg
+
+	WildMenu	WildMenu
+
+	Folded	Folded
+
+	FoldColumn	FoldColumn CursorLineFold
+
+	DiffAdd	DiffAdd
+
+	DiffChange	DiffChange
+
+	DiffDelete	DiffDelete
+
+	DiffText	DiffText
+
+	SignColumn	SignColumn CursorLineSign
+
+	Conceal	Conceal
+
+	SpellBad	SpellBad
+
+	SpellCap	SpellCap
+
+	SpellRare	SpellRare
+
+	SpellLocal	SpellLocal
+
+	Pmenu	Pmenu NormalFloat
+
+	PmenuSel	PmenuSel
+
+	PmenuSbar	PmenuSbar
+
+	PmenuThumb	PmenuThumb
+
+	TabLine	TabLine
+
+	TabLineSel	TabLineSel
+
+	TabLineFill	TabLineFill
+
+	CursorColumn	CursorColumn lspReference
+
+	CursorLine	CursorLine
+
+	ColorColumn	ColorColumn
+
+	QuickFixLine	QuickFixLine
+
+	NormalNC	NormalNC
+
+	Cursor	Cursor
+
+	RedrawDebugNormal	RedrawDebugNormal
+
+	RedrawDebugClear	RedrawDebugClear
+
+	RedrawDebugComposed	RedrawDebugComposed
+
+	RedrawDebugRecompose	RedrawDebugRecompose
+
+	lCursor	lCursor
+
+	FloatShadow	FloatShadow
+
+	FloatShadowThrough	FloatShadowThrough
+
+	Error	Error NvimInvalid NvimInvalidAssignment NvimInvalidPlainAssignment NvimInvalidAugmentedAssignment NvimInvalidAssignmentWithAddition NvimInvalidAssignmentWithSubtraction
+	NvimInvalidAssignmentWithConcatenation NvimInvalidOperator NvimInvalidUnaryOperator NvimInvalidUnaryPlus NvimInvalidUnaryMinus NvimInvalidNot NvimInvalidBinaryOperator NvimInvalidComparison
+	NvimInvalidComparisonModifier NvimInvalidBinaryPlus NvimInvalidBinaryMinus NvimInvalidConcat NvimInvalidConcatOrSubscript NvimInvalidOr NvimInvalidAnd NvimInvalidMultiplication
+	NvimInvalidDivision NvimInvalidMod NvimInvalidTernary NvimInvalidTernaryColon NvimInvalidDelimiter NvimInvalidParenthesis NvimInvalidLambda NvimInvalidNestingParenthesis
+	NvimInvalidCallingParenthesis NvimInvalidSubscript NvimInvalidSubscriptBracket NvimInvalidSubscriptColon NvimInvalidCurly NvimInvalidContainer NvimInvalidDict NvimInvalidList
+	NvimInvalidValue NvimInvalidIdentifier NvimInvalidIdentifierScope NvimInvalidIdentifierScopeDelimiter NvimInvalidIdentifierName NvimInvalidIdentifierKey NvimInvalidColon NvimInvalidComma
+	NvimInvalidArrow NvimInvalidRegister NvimInvalidNumber NvimInvalidFloat NvimInvalidNumberPrefix NvimInvalidOptionSigil NvimInvalidOptionName NvimInvalidOptionScope
+	NvimInvalidOptionScopeDelimiter NvimInvalidEnvironmentSigil NvimInvalidEnvironmentName NvimInvalidString NvimInvalidStringQuote NvimInvalidSingleQuote NvimInvalidDoubleQuote
+	NvimInvalidDoubleQuotedUnknownEscape NvimInvalidFigureBrace NvimDoubleQuotedUnknownEscape rubyError rubyGlobalVariableError rubySpaceError LspErrorHighlight LspErrorText LspErrorVirtualText
+	helpError
+
+	Todo	Todo helpNote helpWarning helpDeprecated helpTodo
+
+	Constant	Constant String Character Number Boolean Float NvimNumber NvimFloat NvimString NvimStringBody NvimStringQuote NvimSingleQuote NvimSingleQuotedBody NvimDoubleQuote
+	NvimDoubleQuotedBody NvimInvalidStringBody NvimInvalidSingleQuotedBody NvimInvalidDoubleQuotedBody rubyInteger rubyFloat rubyCharacter rubyBoolean rubyPseudoVariable rubyEncoding
+	helpHyperTextEntry helpConstant helpString helpCharacter helpNumber helpBoolean helpFloat helpURL
+
+	Identifier	Identifier Function NvimIdentifier NvimIdentifierScope NvimIdentifierScopeDelimiter NvimIdentifierName NvimIdentifierKey NvimOptionName NvimOptionScope
+	NvimOptionScopeDelimiter NvimEnvironmentName rubyFunction rubyMethodName rubyIdentifier rubyPredefinedIdentifier rubyInstanceVariable rubyClassVariable rubyGlobalVariable
+	rubyPredefinedVariable rubyPredefinedConstant rubyHelper rubyViewHelper rubyTestHelper rubyUrlHelper helpHyperTextJump helpVim helpIdentifier helpFunction
+
+	Statement	Statement Conditional Repeat Label Operator Keyword Exception NvimAssignment NvimPlainAssignment NvimAugmentedAssignment NvimAssignmentWithAddition
+	NvimAssignmentWithSubtraction NvimAssignmentWithConcatenation NvimOperator NvimUnaryOperator NvimUnaryPlus NvimUnaryMinus NvimNot NvimBinaryOperator NvimComparison NvimComparisonModifier
+	NvimBinaryPlus NvimBinaryMinus NvimConcat NvimConcatOrSubscript NvimOr NvimAnd NvimMultiplication NvimDivision NvimMod NvimTernary NvimTernaryColon rubyConditional rubyControl rubyKeyword
+	rubyBeginEnd rubyConditionalModifier rubyExceptionHandler rubyRescueModifier rubyRepeat rubyOptionalDo rubyRepeatModifier rubyEval rubyException rubyOperator rubyEnglishBooleanOperator
+	rubyDefinedOperator rubyRoute rubySchema rubyResponse rubyAction rubyAssertion rubyUserAssertion rubyTestAction helpHeadline helpStatement helpConditional helpRepeat helpLabel helpOperator
+	helpKeyword helpException
+
+	PreProc	PreProc Include Define Macro PreCondit rubyDefine rubyClass rubyModule rubyExceptionHandler2 rubyInclude rubyMacro rubySharpBang rubyEntity rubyEntities rubyExceptionMacro
+	rubyValidation rubyCallback rubyRakeMacro rubyTestMacro rubyAccess rubyAttribute helpSectionDelim helpHeader helpPreProc helpInclude helpDefine helpMacro helpPreCondit
+
+	Type	Type StorageClass Structure Typedef NvimNumberPrefix NvimOptionSigil NvimEnvironmentSigil rubyConstant rubyModuleName rubyClassName helpOption helpType helpStorageClass
+	helpStructure helpTypedef
+
+	Special	Special Tag SpecialChar Delimiter SpecialComment Debug NvimParenthesis NvimLambda NvimNestingParenthesis NvimCallingParenthesis NvimSubscript NvimSubscriptBracket
+	NvimSubscriptColon NvimCurly NvimContainer NvimDict NvimList NvimColon NvimComma NvimArrow NvimRegister NvimStringSpecial NvimSingleQuotedQuote NvimDoubleQuotedEscape
+	NvimInvalidStringSpecial NvimInvalidSingleQuotedQuote NvimInvalidDoubleQuotedEscape rubyInterpolationDelimiter rubyStringEscape rubyBackslashEscape rubyQuoteEscape rubySpaceEscape
+	rubyParenthesisEscape rubyCurlyBraceEscape rubyAngleBracketEscape rubySquareBracketEscape rubyRegexpSpecial rubyRegexpCharClass rubyRegexpEscape rubyRegexpIntersection rubyRegexpQuantifier
+	rubyRegexpAnchor rubyRegexpDot rubyStringDelimiter rubyAtEscape rubyPercentStringDelimiter rubyCaretEscape rubyUnderscoreEscape rubyBackQuoteEscape rubyBangEscape rubyDoubleQuoteEscape
+	rubyHashEscape rubyDollarEscape rubyPercentEscape rubyAmpersandEscape rubyAsterixEscape rubyPlusEscape rubyCommaEscape rubyDashEscape rubyPeriodEscape rubyForwardSlashEscape rubyColonEscape
+	rubySemicolonEscape rubyBarEscape rubyEqualsEscape rubyTildeEscape rubyQuestionMarkEscape rubyHeredocDelimiter rubyRegexpDelimiter rubyPercentRegexpDelimiter rubyMagicComment
+	rubyDataDirective rubyDebug helpSpecial helpSpecialChar helpTag helpDelimiter helpSpecialComment helpDebug
+
+	DiagnosticError	DiagnosticError DiagnosticVirtualTextError DiagnosticFloatingError DiagnosticSignError
+
+	DiagnosticWarn	DiagnosticWarn DiagnosticVirtualTextWarn DiagnosticFloatingWarn DiagnosticSignWarn
+
+	DiagnosticInfo	DiagnosticInfo DiagnosticVirtualTextInfo DiagnosticFloatingInfo DiagnosticSignInfo
+
+	DiagnosticHint	DiagnosticHint DiagnosticVirtualTextHint DiagnosticFloatingHint DiagnosticSignHint
+
+	DiagnosticUnderlineError	DiagnosticUnderlineError
+
+	DiagnosticUnderlineWarn	DiagnosticUnderlineWarn
+
+	DiagnosticUnderlineInfo	DiagnosticUnderlineInfo
+
+	DiagnosticUnderlineHint	DiagnosticUnderlineHint
+
+	MatchParen	MatchParen
+
+	Comment	Comment rubyRegexpComment rubyComment rubyDocumentation rubyData helpExample helpCommand helpComment
+
+	Underlined	Underlined helpUnderlined
+
+	Ignore	Ignore helpIgnore helpBar helpStar helpBacktick
+
+	NvimInternalError	NvimInternalError NvimFigureBrace NvimSingleQuotedUnknownEscape NvimInvalidSingleQuotedUnknownEscape
+
+	LspWarningHighlight	LspWarningHighlight
+
+	LspWarningText	LspWarningText
+
+	vimLineComment	vimLineComment
+
+	vimCommentString	vimCommentString
+
+	vimCommentTitle	vimCommentTitle
+
+	vimCommentTitleLeader	vimCommentTitleLeader
+
+	rubySymbol	rubySymbol rubySymbolDelimiter rubyDoubleQuoteSymbolDelimiter rubySingleQuoteSymbolDelimiter rubyPercentSymbolDelimiter
+
+	rubyString	rubyString rubyRegexp
+
+	rubyTodo	rubyTodo
+
+	markdownCode	markdownCode
+
+	markdownCodeDelimiter	markdownCodeDelimiter
+
+	markdownListMarker	markdownListMarker
+
+	markdownError	markdownError
+
+	DiffAdded	DiffAdded
+
+	DiffRemoved	DiffRemoved
+
+	rstSections	rstSections
+
+	manHeader	manHeader
+
+	qfFileName	qfFileName
+
+	vimContinue	vimContinue
+
+	vimOperParen	vimOperParen
+vimUserFunc	vimUserFunc

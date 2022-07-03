@@ -1,0 +1,49 @@
+[[plugins]]
+repo='mattn/vim-lsp-settings'
+hook_add = '''
+  " Show diagnostics message to status line
+  let g:lsp_diagnostics_echo_cursor = 1
+
+  let g:lsp_diagnostics_signs_enabled = 0
+  let g:lsp_diagnostics_highlights_enabled = 1
+  "let g:lsp_diagnostics_virtual_text_enabled = 1
+  let g:lsp_diagnostics_virtual_text_prefix = "    "
+  "let g:lsp_diagnostics_float_cursor = 1
+
+  "hi Flake8_Error ctermfg=9 ctermbg=1
+  "hi link LspWarningHighlight DiffChange
+  hi LspWarningText        ctermfg=9  ctermbg=1
+  hi LspWarningHighlight   ctermfg=1 ctermbg=052
+  hi LspWarningVirtualText ctermfg=9  ctermbg=1
+
+  "hi LspErrorHighlight ctermfg=9  ctermbg=1
+  "hi LspInformationHighlight ctermfg=9  ctermbg=1
+  "hi LspHintHighlight ctermfg=9  ctermbg=1
+
+  hi link LspErrorVirtualText Error
+  hi LspInformationVirtualText ctermfg=9 ctermbg=1
+  hi LspHintVirtualText ctermfg=9 ctermbg=1
+
+  let g:lsp_settings_filetype_ruby = ['solargraph', 'steep', 'typeprof']
+
+  " Enable flake8
+  let g:lsp_settings = {
+  \  'pylsp-all': {
+  \    'workspace_config': {
+  \      'pylsp': {
+  \        'configurationSources': ['flake8'],
+  \        'plugins': {
+  \          'flake8': { 'enabled': 1 },
+  \          'mccabe': { 'enabled': 0 },
+  \          'pycodestyle': { 'enabled': 0 },
+  \          'pyflakes': { 'enabled': 0 },
+  \        }
+  \      }
+  \    }
+  \  }
+  \}
+'''
+
+[[plugins]]
+repo='prabirshrestha/vim-lsp'
+

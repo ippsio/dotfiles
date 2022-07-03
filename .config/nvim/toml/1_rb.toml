@@ -1,6 +1,6 @@
-#### [[plugins]]
-#### repo = 'vim-ruby/vim-ruby'
-#### on_ft = ['ruby']
+[[plugins]]
+repo = 'vim-ruby/vim-ruby'
+on_ft = ['ruby']
 
 [[plugins]]
 repo = 'tpope/vim-rails'
@@ -14,13 +14,6 @@ on_ft = ['ruby', 'rake', 'eruby', 'slim']
 [[plugins]]
 repo = 'slim-template/vim-slim'
 on_ft = ['slim']
-
-#[[plugins]]
-#repo = 'fishbullet/deoplete-ruby'
-#on_ft = ['ruby']
-#
-#[[plugins]]
-#repo='etordera/deoplete-ruby'
 
 [[plugins]]
 repo = 'takkii/ruby-dictionary3'

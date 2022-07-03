@@ -38,17 +38,14 @@ hook_add = '''
     endif
   endfunction
 
-  nnoremap <silent> ' :<C-u>:BLinesWithPreview<CR>
   "nnoremap <silent> ' :<C-u>:BLinesWithPreview  def <CR>
-  "nnoremap <silent> ' :<C-u>:BLinesWithPreview module \| class \| def \| before_action \| protect_from_forgery \| helper_method <CR>
-  "nnoremap <space>m :BLines module\ \\|class\ \\|\ def\ \\|before_action\ \\|protect_from_forgery\ \\|helper_method\ <CR>
-  "nnoremap <space>m :<C-u>:BLinesWithPreview module \| class \| def \| before_action \| protect_from_forgery \| helper_method <CR>
+  nnoremap <silent> ? :<C-u>:BLinesWithPreview<CR>
   command! -bang -nargs=* BLinesWithPreview
         \ call fzf#vim#grep(
         \   'rg --with-filename --line-number --no-heading --smart-case . '.fnameescape(expand('%:p')),
         \   1,
         \   fzf#vim#with_preview(
-        \     {'options': '--prompt="filter > " --info=inline --layout reverse --query '.shellescape(<q-args>).' --with-nth=2.. --nth=2.. --delimiter=":"'},
+        \     {'options': '--prompt="' . expand('%:p:h') . ' > " --info=inline --layout reverse --query '.shellescape(<q-args>).' --with-nth=2.. --nth=2.. --delimiter=":"'},
         \     'down:50%'
         \   )
         \ )
