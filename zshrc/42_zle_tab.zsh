@@ -4,7 +4,10 @@ function triggered_by_tab() {
   local -a cmds=("cd" "find")
   for c in $cmds; do
     [[ $BUFFER =~ "^${c} *$" ]] && BUFFER="${c} ./" && zle end-of-line # complete first './'.
-    [[ $BUFFER =~ "^${c} *.+/+$" ]] && BUFFER="${c} $(fzf_list_dir ${${BUFFER#${c} }:-.} --PROMPT=${c})" && zle end-of-line && return
+    if [[ $BUFFER =~ "^${c} *.+/+$" ]]; then
+      BUFFER="${c} $(fzf_list_dir ${${BUFFER#${c} }:-.} --PROMPT=${c})" && zle end-of-line
+      return 0
+    fi
   done
 
   # File name completion

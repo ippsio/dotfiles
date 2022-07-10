@@ -155,8 +155,11 @@ function +vi-git-set-message-hook() {
 #       -------------------------------------------------
 
 
+  # 追跡ブランチの有無
+  has_tracking_branch_10=$(git config --local branch.${hook_com[branch]}.remote >/dev/null 2>&1 || echo "!!!THIS_BRANCH_HAS_NO_TRACKING-BRANCH!!!")
+
   # misc (%m) に追加
-  hook_com[misc]="${repo_1} ${hook_com[branch]} ${untracked_3} ${unstaged_4} ${unmerged_5} ${index_6} ${ahead_7} ${behind_8} ${stash_9} ${hook_com[action]}"
+  hook_com[misc]="${repo_1} ${hook_com[branch]} ${untracked_3} ${unstaged_4} ${unmerged_5} ${index_6} ${ahead_7} ${behind_8} ${stash_9} ${has_tracking_branch_10} ${hook_com[action]}"
 }
 
 function _precmd_vcs_info_msg() {
@@ -217,10 +220,11 @@ _ahead="%(7v| ${_text_repo}[${_mark_ahead}%7v|)"
 _behind="%(8v| ${_mark_behind}%8v]|)"
 GIT_LOCAL_REPO="%K{90}%F{200}${_ahead}${_behind}%f%k"
 
-_stash="%(9v| ${_mark_stash}(%9v) |)"
+#_stash="%(9v| ${_mark_stash}(%9v) |)"
+_stash="%(9v| %9v |)"
 # 9v,10v,11v,12v,13vって....。たぶんもっといいやり方あるんだろうけど、調べるのが面倒臭かったんです..
-_more_such_as_rebase="%(9v| %9v |)%(10v| %10v |)%(11v| %11v |)%(12v| %12v |)%(13v| %13v |)"
-GIT_CAUTION="%K{18}${_stash}${_more_such_as_rebase}%k"
+_more_such_as_rebase="%(10v| %10v |)%(11v| %11v |)%(12v| %12v |)%(13v| %13v |)"
+GIT_CAUTION="%K{1}${_stash}${_more_such_as_rebase}%k"
 
 # others
 CURRENT_DIRECTORY="%K{237}%F{255}[%~] %f%k"
@@ -231,7 +235,7 @@ NUMBER_OF_JOBS="%(1j|%F{226}bg-jobs(%j)%f|)"
 CHUNK1="${GIT_WORKING_TREE}${GIT_STAGE}${GIT_LOCAL_REPO}"
 CHUNK2="${GIT_REPO_NAME}${GIT_BRANCH}"
 CHUNK3="${CURRENT_DATETIME}"
-CHUNK4="${EXIT_CD}${NUMBER_OF_JOBS}${CURRENT_DIRECTORY}%K{238}%# %k"
+CHUNK4="${EXIT_CD}${NUMBER_OF_JOBS}${CURRENT_DIRECTORY}${GIT_CAUTION}%K{238}%# %k"
 
 PROMPT=$'\n'
 [[ "${CHUNK1}" != "" ]] && PROMPT+="${CHUNK1}"

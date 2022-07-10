@@ -8,7 +8,7 @@ zle -N zle_space
 bindkey " " zle_space
 
 # ctrl-i(=tab)
-if false; then
+if true; then
   source ~/dotfiles/zshrc/42_zle_tab.zsh
   zle -N triggered_by_tab
   bindkey "^I" triggered_by_tab

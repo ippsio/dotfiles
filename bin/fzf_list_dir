@@ -1,17 +1,24 @@
 #!/bin/bash
-_FZF_PROMPT="$(basename $0)"
-FIND_TARGET=$1
-READABLE_PATH=$(realpath ${FIND_TARGET/'~'/${HOME}}| sed -e "s#${HOME}#~#")
 
-# フォルダの選択I/Fを表示する。
-# プレビュー：そのフォルダ内のファイル一覧。
-find -s -E ${FIND_TARGET/'~'/${HOME}} -not -regex '.*(\.DS_Store|/*.git/).*' -and \
-  -type d \
-  | sed -e 's#$#/#g' \
-  | sed -e 's#\/\/*#\/#g' \
-  | sed -e "s#^${HOME}#~#" \
+arg="$(echo ${1:-.}| sed -r 's#/+#/#g')"
+[[ ! -e "${arg}" ]] && arg="."
+arg_dir=$(echo -n $(cd $(echo ${arg}| sed -e "s#^~#${HOME}#"); pwd); echo '/')
+
+FZF_PROMPT="$(basename $0)"
+FIND_RESULT=$(find -s $arg \
+  -not -regex '.*/.git' \
+  -not -regex '.*/.git/.*' \
+  -not -regex '.*\.DS_Store' \
+  -and -type d -maxdepth 2 2>/dev/null| grep -v "^${arg}$")
+DIRS=$(printf "${arg}/..\n${FIND_RESULT}"| sed -r 's#^(\.\/\/)##'| sed -r 's#/+#/#g')
+FZF_RESULT=$(echo "${DIRS}" \
   | fzf +m \
-  --prompt="${_FZF_PROMPT} (dir=${READABLE_PATH})> " \
-  --preview 'echo -n $(cd $(echo {}| sed -e "s#^~#${HOME}#"); pwd); echo '/'; echo; ls -UlaFG $(echo {}| sed -e "s#^~#${HOME}#")' \
-  --preview-window=right:60%:wrap || echo $FIND_TARGET
+  --prompt="${FZF_PROMPT} (dir='$(home_as_tilde ${arg_dir})') > " \
+  --preview-window=right:60%:wrap \
+  --preview '
+    echo -n $(cd $(echo {}| sed -e "s#^~#${HOME}#"); pwd); echo '/';
+    echo;
+    ls -UlaFG --color=always $(echo {}| sed -e "s#^~#${HOME}#")
+  ')
 
+echo -n "$(realpath --relative-to=. ${FZF_RESULT:-${arg}})/"

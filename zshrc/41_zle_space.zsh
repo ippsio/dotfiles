@@ -55,7 +55,7 @@ zle_space() {
 
     # git fetch origin --prune
     [[ $BUFFER =~ '^gfo+$' || $BUFFER =~ '^git fo+$' ]] \
-    && BUFFER="git fetch origin --prune " && zle end-of-line && return
+    && BUFFER="git fetch origin $(git branch --show-current 2>/dev/null)" && zle end-of-line && return
 
     # git merge
     [[ $BUFFER =~ '^gme+$' || $BUFFER =~ '^git me+$' ]] \

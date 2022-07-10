@@ -1,9 +1,13 @@
-class Wwww
-  def initialize()
-
+class Hoge
+  def initialize
   end
 
-  def hhhhhh
+  def newton(a)
   end
 
+  def egison
+    ne
+  end
 end
+
+cl

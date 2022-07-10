@@ -1,7 +1,93 @@
 [[plugins]]
-repo='Shougo/ddc.vim'
-hook_add='''
+repo='shun/ddc-vim-lsp'
 
+# DenoでVimプラグインを開発するためのプラグイン
+[[plugins]]
+repo='vim-denops/denops.vim'
+# ポップアップウィンドウを表示するプラグイン
+[[plugins]]
+repo='Shougo/pum.vim'
+hook_add='''
+'''
+
+# カーソル周辺の既出単語を補完するsource
+[[plugins]]
+repo='Shougo/ddc-around'
+
+# ファイル名を補完するsource
+[[plugins]]
+repo='Shougo/ddc-file'
+
+[[plugins]]
+repo='Shougo/ddc-nvim-lsp'
+on_source = 'ddc.vim'
+
+#[[plugins]]
+#repo='Shougo/ddc-mocword'
+
+# 入力中の単語を補完の対象にするfilter
+[[plugins]]
+repo='Shougo/ddc-matcher_head'
+# 補完候補を適切にソートするfilter
+[[plugins]]
+repo='Shougo/ddc-sorter_rank'
+# 補完候補の重複を防ぐためのfilter
+[[plugins]]
+repo='Shougo/ddc-converter_remove_overlap'
+
+#### dein/lazy.toml
+###[[plugins]]
+###repo = 'neovim/nvim-lspconfig'
+###on_event = 'BufEnter'
+###hook_source= '''
+###lua << EOF
+###local lsp_installer = require("nvim-lsp-installer")
+###lsp_installer.on_server_ready(function(server)
+###  local opts = {}
+###  server:setup(opts)
+###end)
+###EOF
+###'''
+
+[[plugins]]
+repo = 'williamboman/nvim-lsp-installer'
+on_source = 'nvim-lspconfig'
+
+[[plugins]]
+repo='neovim/nvim-lspconfig'
+hook_add='''
+lua << EOF
+local nvim_lsp = require('lspconfig')
+local servers = { 'solargraph', 'tsserver' }
+for _, lsp in ipairs(servers) do
+  nvim_lsp[lsp].setup {
+    flags = {
+      debounce_text_changes = 150,
+      },
+    settings = {
+      solargraph = {
+        diagnostics = true
+      }
+    }
+  }
+end
+EOF
+'''
+
+[[plugins]]
+repo='Shougo/ddc-cmdline-history'
+[[plugins]]
+repo = 'Shougo/neco-vim'
+[[plugins]]
+repo = 'octaltree/cmp-look'
+
+
+#dein_lazy.toml これらのプラグインはもっぱら遅延読み込みで運用する。
+[[plugins]]
+repo = 'Shougo/ddc.vim'
+on_event = 'InsertEnter'
+depends = ['denops.vim']
+hook_add='''
 " pum.vim {{{
 call ddc#custom#patch_global('completionMenu', 'pum.vim')
 inoremap <silent><expr> <TAB>
@@ -69,11 +155,10 @@ function! CommandlinePost() abort
 endfunction
 " }}}
 
-call ddc#custom#patch_global('sourceOptions', {
-      \ '_': {
-      \   'matchers': ['matcher_head'],
-      \   'sorters': ['sorter_rank']},
-      \ })
+"call ddc#custom#patch_global('sourceOptions', {
+"      \ '_': { 'matchers': ['matcher_head'],
+"      \   'sorters': ['sorter_rank']},
+"      \ })
 
 " Change source options
 " Customize global settings
@@ -81,8 +166,8 @@ call ddc#custom#patch_global('sources', [
       \ 'nvim-lsp',
       \ 'around',
       \ 'file',
-      \ 'look',
       \ ])
+      "\ 'look',
       "\ 'cmdline-history',
 
 " ddc-cmdline-history
@@ -122,8 +207,9 @@ call ddc#custom#patch_filetype(
 
 " ddc-nvim-lsp {{{
 call ddc#custom#patch_global('sourceOptions', {
+      \ '_': { 'matchers': ['matcher_head'] },
       \ 'nvim-lsp': {
-      \   'mark': 'ddc-nvim-lsp',
+      \   'mark': 'lsp',
       \   'forceCompletionPattern': '\.\w*|:\w*|->\w*' },
       \ })
 
@@ -146,7 +232,7 @@ call ddc#custom#patch_global('sourceParams', {
       \   'convertCase': v:true,
       \   'dict': v:null
       \ }})
-" }}}
+"}`}}
 
 "" ddc-mocword {{{
 "call ddc#custom#patch_global('sourceOptions', {
@@ -169,66 +255,4 @@ inoremap <expr><S-TAB>  ddc#map#pum_visible() ? '<C-p>' : '<C-h>'
 " Use ddc.
 call ddc#enable()
 '''
-[[plugins]]
-repo='shun/ddc-vim-lsp'
 
-# DenoでVimプラグインを開発するためのプラグイン
-[[plugins]]
-repo='vim-denops/denops.vim'
-# ポップアップウィンドウを表示するプラグイン
-[[plugins]]
-repo='Shougo/pum.vim'
-hook_add='''
-'''
-
-# カーソル周辺の既出単語を補完するsource
-[[plugins]]
-repo='Shougo/ddc-around'
-
-# ファイル名を補完するsource
-[[plugins]]
-repo='Shougo/ddc-file'
-
-[[plugins]]
-repo='Shougo/ddc-nvim-lsp'
-
-#[[plugins]]
-#repo='Shougo/ddc-mocword'
-
-# 入力中の単語を補完の対象にするfilter
-[[plugins]]
-repo='Shougo/ddc-matcher_head'
-# 補完候補を適切にソートするfilter
-[[plugins]]
-repo='Shougo/ddc-sorter_rank'
-# 補完候補の重複を防ぐためのfilter
-[[plugins]]
-repo='Shougo/ddc-converter_remove_overlap'
-
-#[[plugins]]
-#repo='neovim/nvim-lspconfig'
-#hook_add='''
-#lua << EOF
-#local nvim_lsp = require('lspconfig')
-#local servers = { 'solargraph', 'tsserver' }
-#for _, lsp in ipairs(servers) do
-#  nvim_lsp[lsp].setup {
-#    flags = {
-#      debounce_text_changes = 150,
-#      },
-#    settings = {
-#      solargraph = {
-#        diagnostics = true
-#      }
-#    }
-#  }
-#end
-#EOF
-#'''
-
-[[plugins]]
-repo='Shougo/ddc-cmdline-history'
-[[plugins]]
-repo = 'Shougo/neco-vim'
-[[plugins]]
-repo = 'octaltree/cmp-look'

@@ -39,7 +39,11 @@ hook_add = '''
   endfunction
 
   "nnoremap <silent> ' :<C-u>:BLinesWithPreview  def <CR>
-  nnoremap <silent> ? :<C-u>:BLinesWithPreview<CR>
+  "nnoremap <silent> ? :<C-u>:BLinesWithPreview<CR>
+  " NOTE: ここでのシングルクォートによるremapは、
+  " ハイライト一覧の閲覧「:so $VIMRUNTIME/syntax/hitest.vim」実行時にバッティングします。
+  " ハイライト一覧を見たい場合、このnnoremap は一旦コメントアウトしましょう...。
+  nnoremap <silent> ' :<C-u>:BLinesWithPreview<CR>
   command! -bang -nargs=* BLinesWithPreview
         \ call fzf#vim#grep(
         \   'rg --with-filename --line-number --no-heading --smart-case . '.fnameescape(expand('%:p')),

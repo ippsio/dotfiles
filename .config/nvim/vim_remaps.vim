@@ -24,6 +24,8 @@ vnoremap v $h
 nnoremap <silent> <Space><Space> mz:call <SID>hi_word()<CR>
 xnoremap <silent> <Space><Space> mz:call <SID>hi_selected()<CR>
 
+nnoremap <f3>  mz:call <SID>grep_word()<CR>
+xnoremap <f3>  mz:call <SID>grep_selected()<CR>
 nnoremap F       mz:call <SID>grep_z_register()<CR>
 
 " ESCでハイライト解除
@@ -49,6 +51,20 @@ endfunction
 " Zレジスタの内容をgrep(可能ならripgrep)
 function s:grep_z_register()
   call feedkeys(":Grep " . escape(@z, '\()[]{}*+') . "\<CR>", "n")
+endfunction
+
+" カーソル下にある単語をGrep
+function s:grep_word()
+  normal "zyiw
+  call feedkeys(":Grep " . escape(@z, '\()[]{}*+') . "\<CR>", "n")
+  normal `z
+endfunction
+
+"" ビジュアルモードで選択中の文字をGrep
+function s:grep_selected()
+  normal gv"zy
+  call feedkeys(":Grep " . escape(@z, '\()[]{}*+') . "\<CR>", "n")
+  normal `z
 endfunction
 
 " /で検索モードに入った際、/{pattern}の入力中は「/」や「?」をタイプすると自動で\エスケープする。

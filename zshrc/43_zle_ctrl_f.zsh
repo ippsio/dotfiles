@@ -5,13 +5,17 @@ zle_ctrl_f() {
   if [[ ! -z "${LBUFFER// /}" ]]; then
     CHUNK="$(echo "${LBUFFER}"| awk '{ print $NF }')" # awk '{ print $NF }'=最後の要素
     if ( ! type "${CHUNK}" > /dev/null 2>&1 ); then
-      # CHUNK はコマンドじゃない場合。つまりlsとかvimとかpythonとか、実行できるようなものじゃない場合。
+      # CHUNK がコマンドじゃない場合。つまりlsとかvimとかpythonとか、実行できるようなものじゃない場合。
       LBUFFER=$(echo "${LBUFFER}"| awk '{ NF--; print }')  # 先頭から最後-1番目までの全要素
       ARG="${CHUNK}"
     fi
   fi
 
-  COMPLETION=$(fzf_list_file ${ARG})
+  if [[ "${LBUFFER:0:2}" == "cd" ]]; then
+    COMPLETION=$(fzf_list_dir ${ARG:-./})
+  else
+    COMPLETION=$(fzf_list_file ${ARG})
+  fi
 
   if [[ -z "${COMPLETION}" ]]; then
     BUFFER="${BUFFER_WAS}"

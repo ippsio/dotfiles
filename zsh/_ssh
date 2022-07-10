@@ -1,2 +1,0 @@
-function _ssh { compadd $(fgrep 'Host ' ~/.ssh/config | grep -v '*' |  awk '{print $2}' | sort | fzf) }
-function _ls { compadd $(fgrep 'Host ' ~/.ssh/config | grep -v '*' |  awk '{print $2}' | sort | fzf) }

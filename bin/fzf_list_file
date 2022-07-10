@@ -16,7 +16,7 @@ FIND_CMD="find -s ${HOME_AS_HOME}"\
 " -not -regex '.*/.git/.*'"\
 " -not -regex '.*\.DS_Store'"
 
-FZF_RESULT=$(eval ${FIND_CMD} \
+FZF_RESULT=$(eval ${FIND_CMD} 2>/dev/null \
   | home_as_tilde \
   | fzf \
     +m \
