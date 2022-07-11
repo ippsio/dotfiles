@@ -1,43 +1,32 @@
 #!/bin/bash
-
-if [[ -e "$(home_as_home "${1:-.}")" ]]; then
-  HOME_AS_HOME=$(home_as_home "${1:-.}")
-else
-  FZF_QUERY="$1"
-  HOME_AS_HOME=$(home_as_home .)
-fi
-HOME_AS_TILDE=$(home_as_tilde "${HOME_AS_HOME}")
+arg="$(echo ${1:-.}| sed -r 's#/+#/#g')"
+[[ ! -e "${arg}" ]] && FZF_QUERY="$1"
 
 FZF_PROMPT="$(basename $0)"
 FZF_HEADER="C-g:ripgrep, C-/:TogglePreview"
 
-FIND_CMD="find -s ${HOME_AS_HOME}"\
-" -not -regex '.*/.git'"\
-" -not -regex '.*/.git/.*'"\
-" -not -regex '.*\.DS_Store'"
-
-FZF_RESULT=$(eval ${FIND_CMD} 2>/dev/null \
-  | home_as_tilde \
-  | fzf \
-    +m \
-    --info=inline \
-    --query="${FZF_QUERY}" \
-    --prompt="${FZF_PROMPT} (dir='${HOME_AS_TILDE}') > " \
-    --header="${FZF_HEADER}" \
-    --bind "ctrl-/:toggle-preview" \
-    --bind "ctrl-g:execute(rg_fzf_vim . ${HOME_AS_HOME} < /dev/tty > /dev/tty)" \
-    --preview='bat $(home_as_home {}) --color=always --style=numbers --line-range :100'\
+FIND_RESULT=$(find -s ${arg} \
+  -not -regex '.*/.git' \
+  -not -regex '.*/.git/.*' \
+  -not -regex '.*\.DS_Store' \
+  -maxdepth 2 2>/dev/null| grep -v "^${arg}$")
+CANDIDATES=$(printf "${arg}/..\n${FIND_RESULT}"| sed -r 's#^(\.\/\/)##'| sed -r 's#/+#/#g')
+FZF_RESULT=$(echo "${CANDIDATES}" \
+  | fzf +m \
+  --prompt="${FZF_PROMPT} (dir='$(home_as_tilde ${arg})') > " \
+  --preview-window=right:60%:wrap \
+  --preview='
+    home_as_tilde $(realpath {})
+    echo "---"
+    bat $(home_as_home {}) --color=always --style=numbers --line-range :100
+  '\
+  --query="${FZF_QUERY}" \
+  --header="${FZF_HEADER}" \
+  --bind "ctrl-/:toggle-preview" \
+  --bind "ctrl-g:execute(rg_fzf_vim . ${HOME_AS_HOME} < /dev/tty > /dev/tty)" \
 )
 
-if [[ -z "${FZF_RESULT}" ]]; then
-  #echo -n "$1"
-  exit 1
-else
-  FZF_RESULT=$(home_as_home "${FZF_RESULT}")
-  if [[ -d "${FZF_RESULT}" && "${FZF_RESULT: -1}" != "/" ]]; then
-    FZF_RESULT="${FZF_RESULT}/"
-  fi
-  echo -n "${FZF_RESULT}"
-  exit 0
-fi
+relative_path="$(realpath --relative-to=. ${FZF_RESULT:-${arg}})"
+[[ -d ${relative_path} ]] && relative_path="${relative_path}/"
+echo -n "${relative_path}"
 
