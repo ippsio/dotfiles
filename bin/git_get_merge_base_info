@@ -16,7 +16,7 @@ csv_load() {
   grep "^$1	" ${CSV}| head -n 1 || echo "";
 }
 csv_write() {
-  echo "$1	$2	$3	$4	$(date +'%Y-%m-%d %H:%M:%S')" >> ${CSV}i
+  echo "$1	$2	$3	$4	$(date +'%Y-%m-%d %H:%M:%S')" >> ${CSV}
 }
 
 if [[ ! -z "${BRANCH2}" ]]; then

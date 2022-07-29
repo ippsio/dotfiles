@@ -32,11 +32,12 @@ COMMANDS=$(cat << EOF
 1, edit (neovim)     - 	git_diff_fzf "${MERGE_BASE_BRANCH}"
 2, git log           - 	git_log_fzf  "${MERGE_BASE_BRANCH}.."
 3, tig               - 	tig          "${MERGE_BASE_BRANCH}.."
-4, git diff          - 	git diff     "${MERGE_BASE_BRANCH}..." | nvim -R
-5, git diff(compact) - 	git diff     "${MERGE_BASE_BRANCH}..." --unified=0| nvim -R
-6, pull git branch   - 	set -x; git fetch origin --prune; git merge --ff; set +x; read
-7, open pull request - 	open https://github.com/$(git_reponame)/pull/${PR_NO}
-8, show pull request - 	git_pr_search_fzf "${CURRENT_BRANCH}"
+5, git diff          - 	git diff     "${MERGE_BASE_BRANCH}..." | nvim -R
+4, git diff(delta)   - 	git -c delta.side-by-side=true diff "${MERGE_BASE_BRANCH}..."
+6, git diff(compact) - 	git diff     "${MERGE_BASE_BRANCH}..." --unified=0| nvim -R
+7, pull git branch   - 	set -x; git fetch origin --prune; git merge --ff; set +x; read
+8, open pull request - 	open https://github.com/$(git_reponame)/pull/${PR_NO}
+9, show pull request - 	git_pr_search_fzf "${CURRENT_BRANCH}"
 EOF
 )
 

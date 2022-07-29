@@ -9,7 +9,8 @@ FIND_RESULT=$(find -s ${arg} \
   -not -regex '.*/.git' \
   -not -regex '.*/.git/.*' \
   -not -regex '.*\.DS_Store' \
-  -maxdepth 2 2>/dev/null| grep -v "^${arg}$")
+  -maxdepth 5 2>/dev/null| grep -v "^${arg}$")
+  # -maxdepth 2 2>/dev/null| grep -v "^${arg}$")
 CANDIDATES=$(printf "${arg}/..\n${FIND_RESULT}"| sed -r 's#^(\.\/\/)##'| sed -r 's#/+#/#g')
 FZF_RESULT=$(echo "${CANDIDATES}" \
   | fzf +m \

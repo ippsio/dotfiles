@@ -11,6 +11,16 @@ type_or_inst() {
     return 1
   fi
 }
+type_or_cask_inst() {
+  if ( type "$1" > /dev/null 2>&1 ); then
+    echo -n "$1 ok, "
+    return 0
+  else
+    echo "$1 not found. install."
+    brew install --cask ${2:-$1}
+    return 1
+  fi
+}
 nodir_then_gitclone() {
   if [ -d $1 ]; then
     echo -n "$2 ok, "
@@ -68,6 +78,7 @@ type_or_inst rbenv
 type_or_inst ruby-build
 type_or_inst nodenv
 type_or_inst deno
+type_or_cask_inst stats
 nodir_then_gitclone "${TMUX_PLUGINS}/tpm" "tmux-plugins/tpm"
 nodir_then_gitclone "${ZINIT_ROOT}" "zdharma/zinit.git" "${ZINIT_ROOT}/bin"
 nodir_then_gitclone "${HOME}/setting_box" "ippsio/setting_box.git"
