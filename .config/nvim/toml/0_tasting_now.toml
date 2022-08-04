@@ -134,9 +134,13 @@ hook_add='''
 let g:loaded_matchparen = 1
 '''
 
-# カーソル下の単語に線を引く。
+# カーソル下の単語に下線を引いたり、背景色を変えたりする。
 [[plugins]]
 repo='itchyny/vim-cursorword'
+hook_add='''
+hi CursorWord0 ctermbg=58
+hi CursorWord1 ctermbg=58
+'''
 
 [[plugins]]
 repo = 'rhysd/accelerated-jk'
