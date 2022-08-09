@@ -3,7 +3,7 @@
 # git_grep_fzf_vim
 # git grep earch + fzf filter +  edit with vim .
 ARGS=${@:-.}
-GIT_GREP_CMD="git grep --line-number --color=always --extended-regexp ${ARGS}"
+GIT_GREP_CMD="git grep --line-number --color=always --extended-regexp \"${ARGS}\""
 FZF_PROMPT="$(basename $0)"
 FZF_HEADER="enter:nvim"
 

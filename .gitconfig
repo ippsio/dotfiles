@@ -109,11 +109,15 @@
   compactionHeuristic = true
 
 [pager]
+  # git-delta が 追加されてないと、deltaは使えないよ。
   # diff-highlight が PATHに追加されてないと、diff-highlightは使えないよ。
-  log =  (type diff-highlight >/dev/null 2>&1) && (diff-highlight | less --quiet) || less --quiet
-  show = (type diff-highlight >/dev/null 2>&1) && (diff-highlight | less --quiet) || less --quiet
-  #diff = (type diff-highlight >/dev/null 2>&1) && (diff-highlight | less --quiet) || less --quiet
-  diff = delta
+  # log =  delta
+  # show = delta
+  # diff = delta
+
+  log =  ((type diff-highlight >/dev/null 2>&1) && (diff-highlight | less --quiet)) || less --quiet
+  show = ((type diff-highlight >/dev/null 2>&1) && (diff-highlight | less --quiet)) || less --quiet
+  diff = ((type diff-highlight >/dev/null 2>&1) && (diff-highlight | less --quiet)) || less --quiet
 
 [delta]
   #diff-so-fancy=true
@@ -121,6 +125,10 @@
   keep-plus-minus-markers=true
   navigate = true
   side-by-side = true
+  pager = "bat"
+  paging = "always"
+  wrap-max-lines = "unlimited"
+  wrap-right-percent = 1
 
   commit-decoration-style = bold box ul
   dark = true

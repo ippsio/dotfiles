@@ -62,6 +62,7 @@ eval "${GIT_LOG_CMD}" \
     }' \
   | fzf --ansi --info=inline --prompt="${_FZF_PROMPT}" --no-clear --tabstop=1 --header="${_FZF_HEADER}" --no-sort --delimiter='\t' \
   --bind "enter:execute(git log -1 -p --stat ${DIFF_MERGES} --pretty=fuller --abbrev-commit {2} ${file}| nvim -R -c \"set ft=diff nomod nolist nospell nu\" > /dev/tty)" \
+  --bind "tab:execute(git log -1 -p {2} ${file} < /dev/tty > /dev/tty)" \
   --bind "ctrl-y:execute(echo -n {2}| pbcopy)" \
   --bind "ctrl-/:toggle-preview" \
   --bind "ctrl-p:execute:(git_pr_search_fzf {2})" \

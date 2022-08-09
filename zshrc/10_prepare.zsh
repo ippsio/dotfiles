@@ -12,7 +12,7 @@ type_or_inst() {
   fi
 }
 type_or_cask_inst() {
-  if ( type "$1" > /dev/null 2>&1 ); then
+  if ( brew list --cask| grep -E "^${1}$" > /dev/null 2>&1 ); then
     echo -n "$1 ok, "
     return 0
   else
