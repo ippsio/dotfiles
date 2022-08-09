@@ -1,13 +1,13 @@
 "filetype off
-runtime! nvimvar.vim
-runtime! setting.vim
+runtime! vars.vim
+runtime! settings.vim
 runtime! remaps.vim
 
 "syntax enable
 runtime! dein.vim
 filetype plugin indent on
 syntax enable
-runtime! autocmd.vim
+runtime! autocmds.vim
 
-runtime! highlight.vim
+runtime! highlights.vim
 
