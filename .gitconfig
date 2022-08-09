@@ -109,48 +109,9 @@
   compactionHeuristic = true
 
 [pager]
-  # git-delta が 追加されてないと、deltaは使えないよ。
-  # diff-highlight が PATHに追加されてないと、diff-highlightは使えないよ。
-  # log =  delta
-  # show = delta
-  # diff = delta
-
   log =  ((type diff-highlight >/dev/null 2>&1) && (diff-highlight | less --quiet)) || less --quiet
   show = ((type diff-highlight >/dev/null 2>&1) && (diff-highlight | less --quiet)) || less --quiet
   diff = ((type diff-highlight >/dev/null 2>&1) && (diff-highlight | less --quiet)) || less --quiet
-
-[delta]
-  #diff-so-fancy=true
-  #diff-highlight=true
-  keep-plus-minus-markers=true
-  navigate = true
-  side-by-side = true
-  pager = "bat"
-  paging = "always"
-  wrap-max-lines = "unlimited"
-  wrap-right-percent = 1
-
-  commit-decoration-style = bold box ul
-  dark = true
-  file-decoration-style = none
-  file-style = omit
-  hunk-header-decoration-style = "yellow" box ul
-  hunk-header-file-style = yellow
-  hunk-header-line-number-style = yellow
-  hunk-header-style = file line-number syntax
-  line-numbers = true
-  line-numbers-left-style = 168
-  line-numbers-minus-style = bold 168
-  line-numbers-plus-style = bold 123
-  line-numbers-right-style = 123
-  line-numbers-zero-style = "#999999"
-  minus-emph-style = normal "#80002a"
-  minus-style = normal "#330011"
-  plus-emph-style = syntax "#003300"
-  plus-style = syntax "#001a00"
-  syntax-theme = Nord
-[interactive]
-  diffFilter = delta --color-only
 
 [pull]
   ff = only
