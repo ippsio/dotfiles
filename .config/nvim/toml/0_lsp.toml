@@ -18,6 +18,7 @@ mason_lspconfig.setup {
     'vimls',
     'pylsp',
     'solargraph',
+    'tsserver',
   }
 }
 mason_lspconfig.setup_handlers({
