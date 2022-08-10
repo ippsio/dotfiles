@@ -78,3 +78,8 @@ export FZF_DEFAULT_OPTS=\
 " --color header:191:reverse"
 
 # " --preview-window=bottom:60%"\
+
+# ---------------------
+# FZF
+# ---------------------
+export MOCWORD_DATA=dotfiles/mocword_db/mocword.sqlite

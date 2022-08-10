@@ -1,3 +1,11 @@
+#[[plugins]]
+#repo = 'cespare/vim-toml'
+#on_ft = ['toml']
+
+[[plugins]]
+repo = 'leshill/vim-json'
+on_ft = ['json']
+
 [[plugins]]
 repo = 'rcmdnk/vim-markdown'
 on_ft = ['markdown']
@@ -25,4 +33,28 @@ hook_add = '''
   let g:vim_markdown_json_frontmatter=0
   set nofoldenable
 '''
+
+[[plugins]]
+repo = 'leafgarland/typescript-vim'
+on_ft = ['typescript']
+
+[[plugins]]
+repo = 'stephpy/vim-yaml'
+on_ft = ['yaml']
+
+[[plugins]]
+repo='mechatroner/rainbow_csv'
+on_ft = ['csv', 'tsv']
+
+[[plugins]]
+repo ='ap/vim-css-color'
+on_ft = ['css', 'scss']
+
+[[plugins]]
+repo='stsewd/tree-sitter-rst'
+on_ft = ['rst']
+
+[[plugins]]
+repo = 'kchmck/vim-coffee-script'
+on_ft = ['coffee']
 

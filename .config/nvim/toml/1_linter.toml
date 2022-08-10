@@ -1,5 +1,6 @@
 [[plugins]]
 repo = 'dense-analysis/ale'
+on_ft = ['rb', 'json']
 hook_add = '''
   let g:ale_linters = {
   \   'ruby': ['rubocop'],

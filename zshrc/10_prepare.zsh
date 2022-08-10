@@ -21,6 +21,16 @@ type_or_cask_inst() {
     return 1
   fi
 }
+type_or_cargo_inst() {
+  if ( type "$1" > /dev/null 2>&1 ); then
+    echo -n "$1 ok, "
+    return 0
+  else
+    echo "$1 not found. install."
+    cargo install ${2:-$1}
+    return 1
+  fi
+}
 nodir_then_gitclone() {
   if [ -d $1 ]; then
     echo -n "$2 ok, "
@@ -78,6 +88,9 @@ type_or_inst rbenv
 type_or_inst ruby-build
 type_or_inst nodenv
 type_or_inst deno
+type_or_inst rustc rust
+type_or_inst cargo
+type_or_cargo_inst mocword
 type_or_cask_inst stats
 nodir_then_gitclone "${TMUX_PLUGINS}/tpm" "tmux-plugins/tpm"
 nodir_then_gitclone "${ZINIT_ROOT}" "zdharma/zinit.git" "${ZINIT_ROOT}/bin"

@@ -22,6 +22,9 @@ augroup vimrc-highlight
   autocmd BufNewFile,BufRead *.csv setlocal filetype=csv
   autocmd BufNewFile,BufRead *.tsv setlocal filetype=tsv
 
+  " .tomlなファイルのファイルタイプはvimとして扱った方が個人的にシンタックスハイライトが好み
+  autocmd BufNewFile,BufRead *.toml setlocal filetype=vim
+
   autocmd BufRead,BufEnter,BufWinEnter * call DoWellByFileType()
   fun DoWellByFileType()
     if &ft == ""
@@ -88,22 +91,6 @@ augroup FileTypeRuby
   " </p>
   au FileType eruby setlocal indentexpr=
 augroup END
-
-
-
-""" if has('mac')
-"""   augroup MyIMEGroup
-"""     autocmd!
-"""     """ " IMEをOFFにする(102=英数key)（インサートモード抜け時とフォーカス取得／開放時）
-"""     """ au InsertLeave,FocusGained,FocusLost * :call system('osascript -e "tell application \"System Events\" to key code 102"')
-"""
-"""     " IMEをOFFにする(102=英数key)（インサートモード抜け時だけで十分かもしれない）
-"""     " au InsertLeave * :call system('osascript -e "tell application \"System Events\" to key code 102"')
-"""
-"""     " もしかしてこれってかなりvimの動きを遅くするのかも？
-"""     " というわけでちょっとコメントアウトして様子を見てみる。
-"""     " au InsertLeave * :call system('osascript -e "tell application \"System Events\" to key code 102"')
-""" endif
 
 augroup AutocmdEventVisualize
    autocmd!

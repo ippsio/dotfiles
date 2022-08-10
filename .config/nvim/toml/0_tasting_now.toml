@@ -1,21 +1,3 @@
-#[[plugins]]
-#repo = 'autozimu/LanguageClient-neovim'
-#branch = 'next'
-#build = 'bash install.sh'
-#hook_add = ''' set hidden
-#let g:LanguageClient_serverCommands = {
-#    \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
-#    \ 'javascript': ['/usr/local/bin/javascript-typescript-stdio'],
-#    \ 'javascript.jsx': ['tcp://127.0.0.1:2089'],
-#    \ 'python': ['pyls'],
-#    \ '#ruby': ['~/.rbenv/shims/solargraph', 'stdio'],
-#    \ }
-#
-#nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
-#nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
-#nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
-#'''
-
 [[plugins]]
 repo = 'Shougo/echodoc.vim'
 hook_add='''
@@ -38,22 +20,6 @@ hook_add='''
   highlight link EchoDocPopup Pmenu
 '''
 
-#######[[plugins]]
-#######repo = 'davidhalter/jedi-vim'
-#######on_ft = 'python'
-#######hook_add = '''
-#######set completeopt=menuone                        " 補完候補を呼び出すとき常にポップアップメニューを使う
-#######autocmd! User jedi-vim call s:jedivim_hook()   " vim-plugの遅延ロード呼び出し
-#######function! s:jedivim_hook()              " jedi-vimを使うときだけ呼び出す処理を関数化
-#######  let g:jedi#auto_initialization    = 0 " 自動で実行される初期化処理を無効
-#######  let g:jedi#auto_vim_configuration = 0 " 'completeopt' オプションを上書きしない
-#######  let g:jedi#popup_on_dot           = 0 " ドット(.)を入力したとき自動で補完しない
-#######  let g:jedi#popup_select_first     = 0 " 補完候補の1番目を選択しない
-#######  let g:jedi#show_call_signatures   = 0 " 関数の引数表示を無効(ポップアップのバグを踏んだことがあるため)
-#######  autocmd FileType python setlocal omnifunc=jedi#completions   " 補完エンジンはjediを使う
-#######endfunction
-#######'''
-
 [[plugins]]
 repo = 'Shougo/neosnippet.vim'
 hook_add = '''
@@ -73,11 +39,6 @@ endif
 
 [[plugins]]
 repo = 'Shougo/neosnippet-snippets'
-
-
-# inoremap <esc>でコンフリクト。escで補完を抜けた後一発でノーマルモードに戻れなくなるためコメントアウト。
-#[[plugins]]
-#repo = 'Townk/vim-autoclose'
 
 [[plugins]]
 repo = 'nvim-treesitter/nvim-treesitter'

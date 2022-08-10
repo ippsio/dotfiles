@@ -1,7 +1,14 @@
-[[plugins]]
-repo = 'leafgarland/typescript-vim'
-on_ft = ['typescript']
-
+# Features
+# Tsuquyomi works as a client for TSServer (which is an editor service bundled into TypeScript).
+# So, installing Tsuquyomi, your vim gets the following features provided by TSServer:
+#
+# Completion (omni-completion)
+# Navigate to the location where a symbol is defined.
+# Show location(s) where a symbol is referenced.
+# Display a list of syntax and semantics errors to Vim quickfix window.
+# and so on,,,
+# Relevant plugins
+# Tsuquyomi does not provide syntax-highlight nor indentation. You can use the following Vim plugins for writing .ts:
 [[plugins]]
 repo = 'Quramy/tsuquyomi'
 on_ft = ['js', 'typescript']

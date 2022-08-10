@@ -2,3 +2,5 @@
 .DS_Store
 .config/hub
 node_modules
+mocword_db
+

@@ -1,53 +1,48 @@
-####[[plugins]]
-####repo='mattn/vim-lsp-settings'
-####hook_add = '''
-####let g:lsp_log_file = expand('~/vim-lsp.log')
-####  " Show diagnostics message to status line
-####  let g:lsp_diagnostics_echo_cursor = 1
-####
-####  let g:lsp_diagnostics_signs_enabled = 0
-####  let g:lsp_diagnostics_highlights_enabled = 1
-####  "let g:lsp_diagnostics_virtual_text_enabled = 0
-####  let g:lsp_diagnostics_virtual_text_prefix = "    "
-####  "let g:lsp_diagnostics_float_cursor = 1
-####
-####  "hi Flake8_Error ctermfg=9 ctermbg=1
-####  "hi DiffChange ctermfg=1 ctermbg=052
-####  "hi link LspWarningHighlight DiffChange
-####  hi LspWarningText        ctermfg=1  ctermbg=9
-####  hi LspWarningHighlight   ctermfg=1 ctermbg=052
-####  hi LspWarningVirtualText ctermfg=1  ctermbg=9
-####
-####  hi LspErrorHighlight ctermfg=1  ctermbg=052
-####  hi LspInformationHighlight ctermfg=1  ctermbg=052
-####  hi LspHintHighlight ctermfg=1  ctermbg=052
-####
-####  "hi link LspErrorVirtualText Error
-####  hi LspInformationVirtualText ctermfg=9 ctermbg=1
-####  hi LspHintVirtualText ctermfg=9 ctermbg=1
-####
-####  "let g:lsp_settings_filetype_ruby = ['solargraph', 'steep', 'typeprof']
-####  "let g:lsp_settings_filetype_ruby = ['solargraph', 'typeprof']
-####  let g:lsp_settings_filetype_ruby = ['typeprof']
-####
-####  """" Enable flake8
-####  """let g:lsp_settings = {
-####  """\  'pylsp-all': {
-####  """\    'workspace_config': {
-####  """\      'pylsp': {
-####  """\        'configurationSources': ['flake8'],
-####  """\        'plugins': {
-####  """\          'flake8': { 'enabled': 1 },
-####  """\          'mccabe': { 'enabled': 0 },
-####  """\          'pycodestyle': { 'enabled': 0 },
-####  """\          'pyflakes': { 'enabled': 0 },
-####  """\        }
-####  """\      }
-####  """\    }
-####  """\  }
-####  """\}
-####'''
+[[plugins]]
+repo = 'neovim/nvim-lspconfig'
+on_event = 'BufEnter'
+hook_source = '''
+lua << EOF
+local nvim_lsp = require('lspconfig')
+local on_attach = function (client, bufnr)
+  --local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
+  local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+  local opts = { noremap=true, silent=true }
+end
+
+local mason_lspconfig = require('mason-lspconfig')
+mason_lspconfig.setup {
+  ensure_installed = {
+    'vimls',
+    'pylsp',
+    'solargraph',
+  }
+}
+mason_lspconfig.setup_handlers({
+  function(server_name)
+  local opts = {}
+  opts.on_attach = function(_, bufnr)
+    local bufopts = { silent = true, buffer = bufnr }
+    --vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
+    --vim.keymap.set('n', 'gtD', vim.lsp.buf.type_definition, bufopts)
+    --vim.keymap.set('n', 'grf', vim.lsp.buf.references, bufopts)
+    --vim.keymap.set('n', '<space>p', vim.lsp.buf.format, bufopts)
+   end
+  nvim_lsp[server_name].setup(opts)
+  end})
+EOF
+'''
 
 [[plugins]]
-repo='prabirshrestha/vim-lsp'
+repo='williamboman/mason.nvim'
+on_source = 'nvim-lspconfig'
+hook_source='''
+lua << EOF
+require("mason").setup()
+EOF
+'''
+
+[[plugins]]
+repo='williamboman/mason-lspconfig.nvim'
+on_source = 'nvim-lspconfig'
 

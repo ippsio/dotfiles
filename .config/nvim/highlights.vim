@@ -120,7 +120,7 @@ hi qfFileName ctermfg=118
 hi QuickFixLine ctermfg=222 ctermbg=69
 
 " vimContinue
-hi vimContinue ctermfg=200 ctermbg=124
+hi vimContinue ctermfg=70 ctermbg=54
 hi vimOperParen ctermfg=222
 hi vimUserFunc ctermfg=10
 " 例）
