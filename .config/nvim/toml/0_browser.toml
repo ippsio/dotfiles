@@ -1,0 +1,5 @@
+[[plugins]]
+repo = 'raghur/vim-ghost'
+hook_post_update='''
+call :GhostInstall
+'''

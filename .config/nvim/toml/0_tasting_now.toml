@@ -87,22 +87,6 @@ hook_add = '''
   " \ }
 '''
 
-
-# 対応する括弧をいいかんじにする
-[[plugins]]
-repo='itchyny/vim-parenmatch'
-hook_add='''
-let g:loaded_matchparen = 1
-'''
-
-# カーソル下の単語に下線を引いたり、背景色を変えたりする。
-[[plugins]]
-repo='itchyny/vim-cursorword'
-hook_add='''
-hi CursorWord0 ctermbg=58
-hi CursorWord1 ctermbg=58
-'''
-
 [[plugins]]
 repo = 'rhysd/accelerated-jk'
 on_map = {n = '<Plug>'}

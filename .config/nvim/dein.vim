@@ -42,6 +42,7 @@ if dein#load_state('~/.cache/dein')
   call dein#load_toml('~/.config/nvim/toml/1_rb.toml', {'lazy': 1})
   call dein#load_toml('~/.config/nvim/toml/1_typescript.toml', {'lazy': 1})
   call dein#load_toml('~/.config/nvim/toml/1_py.toml', {'lazy': 1})
+  call dein#load_toml('~/.config/nvim/toml/0_browser.toml', {'lazy': 0})
 
   if has('nvim')
     call dein#remote_plugins()
