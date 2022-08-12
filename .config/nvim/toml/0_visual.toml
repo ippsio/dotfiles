@@ -31,6 +31,7 @@ hook_add='''
 repo='itchyny/vim-parenmatch'
 hook_add='''
 let g:loaded_matchparen = 1
+let g:parenmatch_highlight = 1
 
 "  if !get(g:, 'parenmatch_highlight', 1) | return | endif
 "  highlight ParenMatch term=underline cterm=underline gui=underline
