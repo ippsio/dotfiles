@@ -1,0 +1,16 @@
+[[plugins]]
+repo = 'Shougo/context_filetype.vim'
+
+[[plugins]]
+repo = 'nvim-treesitter/nvim-treesitter'
+hook_add ='''
+lua <<EOF
+require'nvim-treesitter.configs'.setup {
+  highlight = {
+    enable = true,
+    disable = { }
+  }
+}
+EOF
+'''
+

@@ -34,14 +34,16 @@ let g:loaded_matchparen = 1
 
 "  if !get(g:, 'parenmatch_highlight', 1) | return | endif
 "  highlight ParenMatch term=underline cterm=underline gui=underline
-highlight ParenMatch term=NONE cterm=NONE gui=NONE
-highlight ParenMatch ctermbg=57
+hi ParenMatch term=NONE cterm=NONE gui=NONE
+hi ParenMatch ctermbg=57
 '''
 
 # カーソル下の単語に下線を引いたり、背景色を変えたりする。
 [[plugins]]
 repo='itchyny/vim-cursorword'
 hook_add='''
+hi CursorWord0 term=NONE cterm=NONE gui=NONE
+hi CursorWord1 term=NONE cterm=NONE gui=NONE
 hi CursorWord0 ctermbg=58
 hi CursorWord1 ctermbg=58
 '''
