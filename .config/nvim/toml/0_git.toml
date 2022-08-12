@@ -13,6 +13,11 @@ hook_add = '''
       Gvdiffsplit HEAD^
     endif
   endfunction
+  augroup FugitiveAutocmd
+    autocmd!
+    " fugitive の blame だけになった時、quitする。
+    autocmd WinEnter * if winnr('$') == 1 && expand('%p') =~ '.fugitiveblame' | quit | endif
+  augroup END
 '''
 
 [[plugins]]

@@ -2,47 +2,15 @@
 [[plugins]]
 repo = 'itchyny/lightline.vim'
 hook_add = '''
-  if !has('gui_running')
-    set t_Co=256
-  endif
-
   set laststatus=2
-  "let g:lightline_colorscheme = 'Tomorrow_Night_Bright'
-  let g:lightline_colorscheme = 'powerline'
   let g:lightline = {
-    \  'colorscheme': g:lightline_colorscheme,
-    \  'inactive': {
-    \    'left': [ ['mode', 'paste'], ['readonly', 'filepath']],
-    \    'right': [ [ 'lineinfo' ]]
-    \  },
-    \  'active': {
-    \    'left': [ ['mode', 'paste'], ['readonly', 'filepath']],
-    \    'right': [ [ 'lineinfo' ], ['info'], ['lsp_errors', 'lsp_warnings'] ]
-    \  },
-    \  'mode_map': {
-    \    'n': 'N',
-    \    'i': 'I',
-    \    'R': 'R',
-    \    'v': 'V',
-    \    'V': 'V',
-    \    "\<C-v>": 'V',
-    \    'c': 'C',
-    \    's': 'S',
-    \    'S': 'S',
-    \    "\<C-s>": 'S',
-    \    't': 'TERMINAL'
-    \  },
+    \  'colorscheme': 'powerline',
+    \  'inactive': {'left': [ ['mode', 'paste'], ['readonly', 'filepath']], 'right': [ [ 'lineinfo' ]] },
+    \  'active': {  'left': [ ['mode', 'paste'], ['readonly', 'filepath']], 'right': [ [ 'lineinfo' ], ['info']] },
     \  'component': { 'lineinfo': '%l/%L(%p%%):%v%<', 'info': '%{%StrGitMergeBase()%}(%{%StrUnderCursor()%} 0x%02B)' . &fileformat . '|' . &fileencoding . '%<'},
     \  'component_function': { 'filepath': 'FileName', 'git': 'StrGitMergeBase'},
-    \  'component_expand': {
-    \    'lsp_warnings': 'lightline_lsp#warnings',
-    \    'lsp_errors':   'lightline_lsp#errors',
-    \  },
-    \  'component_type': {
-    \    'lsp_warnings': 'warning',
-    \    'lsp_errors':   'errors',
-    \  },
     \ }
+    "\ 'mode_map': {'n': 'N', 'i': 'I', 'R': 'R', 'v': 'V', 'V': 'V', "\<C-v>": 'V', 'c': 'C', 's': 'S', 'S': 'S', "\<C-s>": 'S', 't': 'TERMINAL' },
 
   function! FileName()
     return substitute(expand("%:p"), $HOME, "~", "g") . ( &modified ? '|+' : '')
