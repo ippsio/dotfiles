@@ -1,5 +1,5 @@
 # ===================================================
-# [ddc-source]
+# DDC SOURCE
 # ===================================================
 # [ddc-source] カーソル周辺の既出単語を補完するsource
 [[plugins]]
@@ -29,7 +29,7 @@ repo = 'Shougo/neco-vim'
 repo = 'octaltree/cmp-look'
 
 # ===================================================
-# [ddc-filter]
+# DDC FILTER
 # ===================================================
 # [ddc-filter] 入力中の単語を補完の対象にするfilter
 [[plugins]]
@@ -48,7 +48,7 @@ repo='Shougo/ddc-converter_remove_overlap'
 repo='tani/ddc-fuzzy'
 
 # ===================================================
-# [ddc]
+# DDC
 # ===================================================
 [[plugins]]
 repo='vim-denops/denops.vim'
