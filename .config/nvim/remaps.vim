@@ -95,6 +95,8 @@ cnoremap <C-a> <Home>
 cnoremap <C-e> <End>
 "nnoremap <C-a> 0 ノーマルモードでのC-aは、数値のインクリメントという既存機能がある。この機能は活かしたいのでnnoremap <C-a>は何も設定しない。
 nnoremap <C-e> $
+nnoremap l e
+nnoremap h b
 
 " カーソルの上下を、<C-p>、<C-n>にする。
 " コマンドモードのwildmenu表示中に、選択肢をカーソルキーで上下移動したい時がある。
