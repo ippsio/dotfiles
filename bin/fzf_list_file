@@ -1,8 +1,15 @@
 #!/bin/bash
-ARG="$(echo ${1:-.}| sed -r 's#/+#/#g'| home_as_tilde)"
-[[ ! -e "$(home_as_home ${ARG})" ]] && exit
+if [[ "$1" == "" ]]; then
+  ARG="."
+else
+  ARG="$(echo $1| sed -r 's#/+#/#g'| home_as_tilde)"
+  [[ ! -e "$(home_as_home ${ARG})" ]] && exit
+  FZF_QUERY="${ARG}"
+  # if [[ "${ARG}" != */ ]]; then
+  #   FZF_QUERY="${FZF_QUERY} "
+  # fi
+fi
 
-FZF_QUERY="${ARG}"
 FZF_PROMPT="$(basename $0)"
 FZF_HEADER="C-g:ripgrep, C-/:TogglePreview"
 
