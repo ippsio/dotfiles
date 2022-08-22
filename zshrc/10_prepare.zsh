@@ -1,6 +1,4 @@
 #!/usr/bin/env zsh
-readonly VERBOSE=1
-
 type_or_inst() {
   if ( type "$1" > /dev/null 2>&1 ); then
     echo -n "$1 ok, "
@@ -90,6 +88,8 @@ type_or_inst nodenv
 type_or_inst deno
 type_or_inst rustc rust
 type_or_inst cargo
+type_or_inst java openjdk
+type_or_inst mvn maven
 type_or_cargo_inst mocword
 type_or_cask_inst stats
 nodir_then_gitclone "${TMUX_PLUGINS}/tpm" "tmux-plugins/tpm"

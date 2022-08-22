@@ -1,33 +1,42 @@
 #!/bin/bash
-arg="$(echo ${1:-.}| sed -r 's#/+#/#g')"
-[[ ! -e "${arg}" ]] && FZF_QUERY="$1"
+ARG="$(echo ${1:-.}| sed -r 's#/+#/#g'| home_as_tilde)"
+[[ ! -e "$(home_as_home ${ARG})" ]] && exit
 
+FZF_QUERY="${ARG}"
 FZF_PROMPT="$(basename $0)"
 FZF_HEADER="C-g:ripgrep, C-/:TogglePreview"
 
-FIND_RESULT=$(find -s ${arg} \
-  -not -regex '.*/.git' \
-  -not -regex '.*/.git/.*' \
-  -not -regex '.*\.DS_Store' \
-  -maxdepth 5 2>/dev/null| grep -v "^${arg}$")
-  # -maxdepth 2 2>/dev/null| grep -v "^${arg}$")
-CANDIDATES=$(printf "${arg}/..\n${FIND_RESULT}"| sed -r 's#^(\.\/\/)##'| sed -r 's#/+#/#g')
-FZF_RESULT=$(echo "${CANDIDATES}" \
-  | fzf +m \
-  --prompt="${FZF_PROMPT} (dir='$(home_as_tilde ${arg})') > " \
-  --preview-window=right:60%:wrap \
-  --preview='
-    home_as_tilde $(realpath {})
-    echo "---"
-    bat $(home_as_home {}) --color=always --style=numbers --line-range :100
-  '\
-  --query="${FZF_QUERY}" \
-  --header="${FZF_HEADER}" \
-  --bind "ctrl-/:toggle-preview" \
-  --bind "ctrl-g:execute(rg_fzf_vim . ${HOME_AS_HOME} < /dev/tty > /dev/tty)" \
-)
+FIND_OPTS="-not -regex '.*/.git' -not -regex '.*/.git/.*' -not -regex '.*\.DS_Store'"
+FIND_OPTS="${FIND_OPTS} -maxdepth 5"
+FIND_CMD="find -s ${ARG} ${FIND_OPTS} 2>/dev/null"
 
-relative_path="$(realpath --relative-to=. ${FZF_RESULT:-${arg}})"
-[[ -d ${relative_path} ]] && relative_path="${relative_path}/"
-echo -n "${relative_path}"
+FZF_RESULT=$(eval "${FIND_CMD}"| grep -v "^${ARG}$"| sed 's#//#/#'| sed 's#^./##' \
+  | home_as_tilde\
+  | fzf +m \
+    --query="${FZF_QUERY}" \
+    --header="${FZF_HEADER}" \
+    --prompt="${FZF_PROMPT} (dir='$(home_as_tilde ${ARG})') > " \
+    --bind "ctrl-/:toggle-preview" \
+    --bind "ctrl-g:execute(rg_fzf_vim . ${HOME_AS_HOME} < /dev/tty > /dev/tty)" \
+    --preview-window=right:60%:wrap --preview='
+      home_as_tilde $(realpath {})
+      echo "---"
+      bat $(home_as_home {}) --color=always --style=numbers --line-range :100
+    ')
+FZF_EXIT_CD=$?
+[[ $FZF_EXIT_CD != 0 ]] && exit
+
+FZF_RESULT=$(home_as_home ${FZF_RESULT})
+RETURN_RELATIVE_PATH=false
+
+if ${RETURN_RELATIVE_PATH}; then
+  RELATIVE_PATH="$(realpath --relative-to=. ${FZF_RESULT:-$(home_as_home ${ARG})})"
+  if [[ -d ${RELATIVE_PATH} ]]; then
+    RELATIVE_PATH="${RELATIVE_PATH}/"
+  fi
+  echo -n "${RELATIVE_PATH}"
+
+else
+  echo -n "${FZF_RESULT}"
+fi
 

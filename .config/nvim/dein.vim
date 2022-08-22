@@ -1,11 +1,7 @@
-" -----------------------------------------------------
-" dein load definition
-" -----------------------------------------------------
 if &compatible
   set nocompatible
 endif
 
-" Add the dein installation directory into runtimepath
 set runtimepath+=~/.cache/dein/repos/github.com/Shougo/dein.vim
 
 if dein#load_state('~/.cache/dein')
@@ -13,7 +9,6 @@ if dein#load_state('~/.cache/dein')
   call dein#add('~/.cache/dein/repos/github.com/Shougo/dein.vim')
 
   let ar = []
-  call add(ar, '~/dotfiles/.config/nvim/toml/0_ddc.toml')
   call add(ar, '~/dotfiles/.config/nvim/toml/0_fzf.toml')
   call add(ar, '~/dotfiles/.config/nvim/toml/0_cursor.toml')
   call add(ar, '~/dotfiles/.config/nvim/toml/0_visual.toml')
@@ -28,6 +23,7 @@ if dein#load_state('~/.cache/dein')
   endfor
 
   let ar = []
+  call add(ar, '~/dotfiles/.config/nvim/toml/1_ddc.toml')
   call add(ar, '~/dotfiles/.config/nvim/toml/1_lsp.toml')
   call add(ar, '~/dotfiles/.config/nvim/toml/1_syntax.toml')
   call add(ar, '~/dotfiles/.config/nvim/toml/1_linter.toml')

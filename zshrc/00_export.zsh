@@ -83,3 +83,11 @@ export FZF_DEFAULT_OPTS=\
 # FZF
 # ---------------------
 export MOCWORD_DATA=dotfiles/mocword_db/mocword.sqlite
+
+# ---------------------
+# Java
+# ---------------------
+export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
+# For compilers to find openjdk you may need to set:
+export CPPFLAGS="-I/opt/homebrew/opt/openjdk/include"
+

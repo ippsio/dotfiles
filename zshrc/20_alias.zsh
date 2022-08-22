@@ -1,4 +1,4 @@
-alias ll='ls -Ulah'
+alias ll='ls -Ulah -D "%Y-%m-%d %H:%M:%S" --color=auto'
 alias ls='ls -G'
 alias vim='nvim'
 alias chrome='open -a Google\ Chrome.app'

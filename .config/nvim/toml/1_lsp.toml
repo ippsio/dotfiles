@@ -7,16 +7,25 @@ call popup_preview#enable()
 '''
 
 [[plugins]]
+repo='williamboman/mason.nvim'
+on_source = 'nvim-lspconfig'
+
+[[plugins]]
+repo='williamboman/mason-lspconfig.nvim'
+on_source = 'nvim-lspconfig'
+
+[[plugins]]
 repo = 'neovim/nvim-lspconfig'
 on_event = 'BufEnter'
 hook_source = '''
 lua << EOF
 local nvim_lsp = require('lspconfig')
-local on_attach = function (client, bufnr)
-  local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
-  local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
-  local opts = { noremap=true, silent=true }
-end
+local on_attach =
+  function (client, bufnr)
+    local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
+    local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+    local opts = { noremap=true, silent=true }
+  end
 
 require("mason").setup()
 
@@ -27,6 +36,8 @@ mason_lspconfig.setup {
     'pylsp',
     'solargraph',
     'tsserver',
+    'sqls',
+    'jdtls'
   }
 }
 mason_lspconfig.setup_handlers({
@@ -52,17 +63,4 @@ mason_lspconfig.setup_handlers({
   end})
 EOF
 '''
-
-[[plugins]]
-repo='williamboman/mason.nvim'
-on_source = 'nvim-lspconfig'
-#hook_source='''
-#lua << EOF
-#require("mason").setup()
-#EOF
-#'''
-
-[[plugins]]
-repo='williamboman/mason-lspconfig.nvim'
-on_source = 'nvim-lspconfig'
 

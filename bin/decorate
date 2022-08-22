@@ -27,7 +27,8 @@ declare -A t=(
 if [[ -z $1 ]]; then
   for key in ${(k)t}; do
     fg_bg_csv="${t[${key//-/}]}"
-    printf '%s=%s/' ${key} $(_decorate "${fg_bg_csv}")
+    # printf '%s=%s/\n' ${key} $(_decorate "${fg_bg_csv}")
+    printf '%s=%s\n' ${key} $(_decorate "${fg_bg_csv}")
   done
 else
   fg_bg_csv="${t[${1//-/}]}"
