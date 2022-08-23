@@ -8,7 +8,7 @@ FZF_PROMPT="$(basename $0)"
 FZF_HEADER="enter:nvim"
 
 # NOTE: sed -e\ 's/:/\t/'{1,1} の意味は「行頭から2つ目のコロンまではタブ文字に置換。それ以外は置換しない」
-eval "${GIT_GREP_CMD}" \
+FZF_REZULT=$(eval "${GIT_GREP_CMD}" \
   | sed -e\ "s/:/\t/"{1,1} \
   | cat -n \
   | fzf -m \
@@ -18,6 +18,7 @@ eval "${GIT_GREP_CMD}" \
     --tabstop=2 \
     --prompt="${FZF_PROMPT} > " \
     --header="${GIT_GREP_CMD}" \
+    --bind "ctrl-c:print-query" \
     --bind "ctrl-p:toggle-preview" \
     --bind "ctrl-/:toggle-preview" \
     --bind="enter:execute(nvim {2} +{3} < /dev/tty > /dev/tty)" \
@@ -26,10 +27,26 @@ eval "${GIT_GREP_CMD}" \
       # 原則、検索ヒットした行の15行前から表示。
       from=$(expr {3} - 15);
       [[ ${from} -lt 1 ]] && from=1;
-      bat \
+      echo "$(realpath {2}| home_as_tilde)";
+      echo "---";
+
+      git blame {2}| awk "{
+        R = substr(\$1, 1, 2)
+        G = substr(\$1, 3, 2)
+        B = substr(\$1, 5, 2)
+        ANSI_COLOR = (R * 6 / 256 * 36) + (G * 6 / 256 * 6) + (B * 6 / 256)
+        printf(\"\033[38;5;%dm%s\033[0m\", ANSI_COLOR, \$1);
+        sub(/^[0-9a-fA-F]*/, \"\", \$0);
+        printf \"%s\n\", \$0
+      }"\
+      | bat \
         --color=always \
         --style=numbers,header \
         --line-range ${from}: \
-        --highlight-line {3} {2}
-      '
+        --highlight-line {3}
+      ')
+
+if [[ ! -z "${FZF_REZULT}" ]]; then
+  echo "QUERY> ${FZF_REZULT}"
+fi
 

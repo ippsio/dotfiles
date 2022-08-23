@@ -5,8 +5,7 @@ SEARCH_WORD=${1:-.} HOME_AS_HOME=$(realpath ${2:-$(pwd)}| home_as_home)
 HOME_AS_TILDE=$(echo ${HOME_AS_HOME}| sed -e "s#^${HOME}#~#")
 
 # `man test` => -L: True if file exists and is a symbolic link.
-if [ -L $0 ] && basename $(readlink $0)
-then
+if [ -L $0 ] && basename $(readlink $0); then
   _ME=$(basename $(readlink $0))
 else
   _ME=$(basename $0)
@@ -20,10 +19,11 @@ else
   GLOB="-g $(basename ${HOME_AS_HOME})"
 fi
 
-RG_CMD="cd ${DIR} && rg --hidden --line-number ${GLOB} ${SEARCH_WORD}"
+RG_CMD="rg --color=never --hidden --line-number ${GLOB} ${SEARCH_WORD}"
 FZF_PROMPT="${_ME}: '${RG_CMD}' > "
 FZF_HEADER="enter:nvim"
 
+cd ${DIR} && \
 eval "${RG_CMD}"\
   | perl -pe 's/(^.*):(\d+):(.*)$/\1	\2	\3/' \
   | fzf \

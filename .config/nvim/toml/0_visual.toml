@@ -43,9 +43,7 @@ hi ParenMatch ctermbg=57
 [[plugins]]
 repo='itchyny/vim-cursorword'
 hook_add='''
-hi CursorWord0 term=NONE cterm=NONE gui=NONE
-hi CursorWord1 term=NONE cterm=NONE gui=NONE
-hi CursorWord0 ctermbg=58
-hi CursorWord1 ctermbg=58
+hi CursorWord0 ctermbg=18
+hi CursorWord1 ctermbg=18
 '''
 
