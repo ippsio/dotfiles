@@ -91,14 +91,15 @@ type_or_inst cargo
 type_or_inst java openjdk
 type_or_inst mvn maven
 type_or_cargo_inst mocword
-type_or_cask_inst stats
+[[ ! -d /Applications/Stats.app ]] && type_or_cask_inst stats
 nodir_then_gitclone "${TMUX_PLUGINS}/tpm" "tmux-plugins/tpm"
 nodir_then_gitclone "${ZINIT_ROOT}" "zdharma/zinit.git" "${ZINIT_ROOT}/bin"
 nodir_then_gitclone "${HOME}/setting_box" "ippsio/setting_box.git"
 # Universal ctags. It is for vim-scripts/taglist.vim
 # type_or_inst universal-ctags
 ( ctags --version|grep "Universal Ctags" 2>&1 > /dev/null ) || brew install universal-ctags
-chk_pynvim_or_install
+# pynvimは必要なものだけど、zsh起動するたびにチェックするのは処理的に遅いのでコメントアウト
+# chk_pynvim_or_install
 
 # check link.
 chkfile_or_dlink ~/.config/nvim          ~/dotfiles/.config/nvim
