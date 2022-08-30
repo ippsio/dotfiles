@@ -1,57 +1,21 @@
 #!/bin/bash
-DIR=~/notes
-_ME=$( [ -L $0 ] && basename $(readlink $0) || basename $0)
-_FZF_PROMPT1="${_ME} (${DIR/${HOME}/~}) > "
-_FZF_PROMPT2="${_ME} 検索文字を入力 > "
-_FZF_HEADER1="[description] select type  [keybindings] enter: select, jk:down,up"
-_FZF_HEADER2="[description] select file  [keybindings] enter: select, jk:down,up"
-[ ! -d ${DIR} ] && mkdir -p ${DIR} && echo "maybe ${DIR} created."
+KIND="memo"
+BASE_DIR=~/notes
+NOTE_DIR=${BASE_DIR}/${KIND}/$(LC_ALL=C date '+%Y_%m')
+FILE=$(LC_ALL=C date '+%Y_%m%d_%a').md
 
-function exec_find() {
-  _DIR=$1
-  _TYPE=$2
-  cd ${DIR} && find ${_DIR} -type f \
-    | fgrep "/${_TYPE}/" \
-    | sed -e "s#^${HOME}#~#" \
-    | sort -r \
-    | fzf --prompt="${_FZF_PROMPT1}"  \
-          --header="${_FZF_HEADER2}" \
-      --bind change:top \
-      --bind 'j:down' --bind 'k:up' --bind 'i:unbind(i,j,k)' \
-      --bind 'enter:execute(f=$(echo {}| sed -e "s#^~#${HOME}#"); nvim -c 5 $f < /dev/tty > /dev/tty)' \
-      --preview='f=$(echo {}| sed -e "s#^~#${HOME}#"); bat $f --color=always --style=numbers'
-}
+[ ! -d ${BASE_DIR} ] && ( mkdir -p ${BASE_DIR} && cd ${BASE_DIR} && git init && cd .. || exit $? )
+[ ! -d ${NOTE_DIR} ] && mkdir -p ${NOTE_DIR}
+[ ! -f ${NOTE_DIR}/${FILE} ] && echo -e "\n# ${KIND} $(LC_ALL=C date '+%Y/%m/%d(%a)')\n\n---\n" >> ${NOTE_DIR}/${FILE}
 
-while true;
-do
-  KIND=$(echo "memo,最新状況,検索する" \
-    | sed -e "s/,/\n/g" \
-    | fzf --prompt="${_FZF_PROMPT1}" --header="${_FZF_HEADER1}" --bind 'j:down' --bind 'k:up' )
+CMD="find ${BASE_DIR} -type f| fgrep '/${KIND}/'| sort -r"
+cd ${BASE_DIR} && eval "${CMD}" \
+  | sed -e "s#^${HOME}#~#" \
+  | fzf \
+    --info=inline \
+    --prompt="($( [ -L $0 ] && basename $(readlink $0) || basename $0))" --header="${CMD}" \
+    --bind 'j:down' --bind 'k:up' --bind 'i:unbind(i,j,k)' \
+    --bind 'enter:execute(f=$(echo {}| sed -e "s#^~#${HOME}#"); nvim -c 5 $f < /dev/tty > /dev/tty)' \
+    --preview='f=$(echo {}| sed -e "s#^~#${HOME}#"); bat $f --color=always --style=numbers'
 
-  [[ ${KIND} == "" ]] && exit 1
-
-  if [[ "${KIND}" == "検索する" ]]; then
-    cd ${DIR} && git_grep_fzf_vim "$(echo ''|fzf --prompt=\"${_FZF_PROMPT2}\" --print-query --bind 'j:down' --bind 'k:up' --bind 'i:unbind(i,j,k)')"
-    continue
-
-  elif [[ "${KIND}" == "最新状況" ]]; then
-    NOTE_DIR=${DIR}/${KIND}
-    NEW_NOTE=note.md
-    BEGINNING="\n# ${KIND}\n\n---\n"
-  else
-    NOTE_DIR=${DIR}/${KIND}/$(LC_ALL=C date '+%Y_%m')
-    NEW_NOTE=$(LC_ALL=C date '+%Y_%m%d_%a').md
-    BEGINNING="\n# ${KIND} $(LC_ALL=C date '+%Y/%m/%d(%a)')\n\n---\n"
-  fi
-
-  [ ! -d ${NOTE_DIR} ] && mkdir -p ${NOTE_DIR}
-  [ ! -f ${NOTE_DIR}/${NEW_NOTE} ] && echo -e "${BEGINNING}" >> ${NOTE_DIR}/${NEW_NOTE}
-  exec_find "${DIR}" "${KIND}"
-
-  if ( ! (cd ${DIR} && [ -d .git ] || git rev-parse --git-dir > /dev/null 2>&1) ); then
-    echo "Consider 'git init' on [${DIR}]"
-  else
-    cd ${DIR} && git add -A && git commit -m "$(date '+%Y/%m/%d(%a) %H時%M分%S秒')" && git log --oneline -1
-  fi
-done
-
+cd ${BASE_DIR} && git add -A && git status --porcelain| grep "^[MA]" 1>/dev/null && git commit -m "$(date '+%Y/%m/%d(%a) %H時%M分%S秒')" 1>/dev/null

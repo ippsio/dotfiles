@@ -52,10 +52,15 @@ on_source = 'ddc.vim'
 repo='Shougo/ddc-converter_remove_overlap'
 on_source = 'ddc.vim'
 
-# [ddc-filter] Fuzzy Finder な filter
+## [ddc-filter] Fuzzy Finder な filter
 [[plugins]]
 repo='tani/ddc-fuzzy'
 on_source = 'ddc.vim'
+
+# # [ddc-filter] Fuzzy Finder な filterその２。
+# [[plugins]]
+# repo='matsui54/ddc-matcher_fuzzy'
+# on_source = 'ddc.vim'
 
 # ===================================================
 # DDC
@@ -75,10 +80,16 @@ depends = ['denops.vim']
 hook_add='''
 " pum.vim {{{
 call ddc#custom#patch_global('completionMenu', 'pum.vim')
+" <Tab>: completion.
 inoremap <silent><expr> <TAB>
       \ pum#visible() ? '<Cmd>call pum#map#insert_relative(+1)<CR>' :
       \ (col('.') <= 1 <Bar><Bar> getline('.')[col('.') - 2] =~# '\s') ?
       \ '<TAB>' : ddc#manual_complete()
+
+" <C-space>: completion.
+inoremap <silent><expr> <C-space>
+      \ ddc#map#pum_visible() ? '<C-n>' : ddc#map#manual_complete()
+
 inoremap <Tab>   <Cmd>call pum#map#insert_relative(+1)<CR>
 inoremap <S-Tab> <Cmd>call pum#map#insert_relative(-1)<CR>
 inoremap <C-n>   <Cmd>call pum#map#insert_relative(+1)<CR>
@@ -106,40 +117,45 @@ inoremap <PageDown> <Cmd>call pum#map#insert_relative_page(+1)<CR>
 inoremap <PageUp>   <Cmd>call pum#map#insert_relative_page(-1)<CR>
 
 call ddc#custom#patch_global('autoCompleteEvents', ['InsertEnter', 'TextChangedI', 'TextChangedP', 'CmdlineEnter', 'CmdlineChanged', ])
-"nnoremap :       <Cmd>call CommandlinePre()<CR>:
-"function! CommandlinePre() abort
-"  " Note: It disables default command line completion!
-"  cnoremap <expr> <Tab>
-"  \ pum#visible() ? '<Cmd>call pum#map#insert_relative(+1)<CR>' :
-"  \ ddc#manual_complete()
-"  cnoremap <S-Tab> <Cmd>call pum#map#insert_relative(-1)<CR>
-"  cnoremap <C-y>   <Cmd>call pum#map#confirm()<CR>
-"  cnoremap <C-e>   <Cmd>call pum#map#cancel()<CR>
-"
-"  " Overwrite sources
-"  let s:prev_buffer_config = ddc#custom#get_buffer()
-"  "call ddc#custom#patch_buffer('sources', ['nvim-lsp', 'cmdline', 'around', 'cmdline-history'])
-"  call ddc#custom#patch_buffer('sources', ['nvim-lsp', 'cmdline', 'around'])
-"
-"  autocmd User DDCCmdlineLeave ++once call CommandlinePost()
-"
-"  " Enable command line completion
-"  call ddc#enable_cmdline_completion()
-"  call ddc#enable()
-"endfunction
-"function! CommandlinePost() abort
-"  " Restore sources
-"  call ddc#custom#set_buffer(s:prev_buffer_config)
-"  cunmap <Tab>
-"endfunction
-"" }}}
+
+"""" コマンドライン
+"""nnoremap :       <Cmd>call CommandlinePre()<CR>:
+"""function! CommandlinePre() abort
+"""  " Note: It disables default command line completion!
+"""  cnoremap <expr> <Tab>
+"""  \ pum#visible() ? '<Cmd>call pum#map#insert_relative(+1)<CR>' :
+"""  \ ddc#manual_complete()
+"""  cnoremap <S-Tab> <Cmd>call pum#map#insert_relative(-1)<CR>
+"""  cnoremap <C-y>   <Cmd>call pum#map#confirm()<CR>
+"""  cnoremap <C-e>   <Cmd>call pum#map#cancel()<CR>
+"""
+"""  " Overwrite sources
+"""  let s:prev_buffer_config = ddc#custom#get_buffer()
+"""  "call ddc#custom#patch_buffer('sources', ['nvim-lsp', 'cmdline', 'around', 'cmdline-history'])
+"""  call ddc#custom#patch_buffer('sources', ['nvim-lsp', 'cmdline', 'around'])
+"""
+"""  autocmd User DDCCmdlineLeave ++once call CommandlinePost()
+"""
+"""  " Enable command line completion
+"""  call ddc#enable_cmdline_completion()
+"""  call ddc#enable()
+"""endfunction
+"""function! CommandlinePost() abort
+"""  " Restore sources
+"""  call ddc#custom#set_buffer(s:prev_buffer_config)
+"""  cunmap <Tab>
+"""endfunction
+"""" }}}
+
+"call ddc#custom#patch_global('sourceOptions', {
+"  \ '_': { 'minAutoCompleteLength': 2, 'matchers': ['matcher_fuzzy'], 'sorters': ['sorter_fuzzy'], 'converters': ['converter_fuzzy'] }, })
 
 call ddc#custom#patch_global('sourceOptions', {
-  \ '_': { 'matchers': ['matcher_fuzzy'],
-  \ 'sorters': ['sorter_fuzzy'],
-  \ 'converters': ['converter_fuzzy']
-  \ }, })
-"\ '_': { 'matchers': ['matcher_head'], 'sorters': ['sorter_rank']}, })
+  \ '_': { 'minAutoCompleteLength': 2, 'matchers': ['matcher_fuzzy'], 'sorters': ['sorter_rank'], 'converters': ['converter_fuzzy'] }, })
+"call ddc#custom#patch_global('filterParams', { 'matcher_fuzzy': {'camelcase': v:true}, })
+
+"call ddc#custom#patch_global('sourceOptions', {
+" \ '_': { 'matchers': ['matcher_head'], 'sorters': ['sorter_rank']}, })
 
 " Change source options
 " Customize global settings

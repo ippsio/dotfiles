@@ -1,5 +1,5 @@
 #!/bin/bash
-if [[ "$1" == "" ]]; then
+if [[ "$1" == "" || "$1" == "./" ]]; then
   ARG="."
 else
   ARG="$(echo $1| sed -r 's#/+#/#g'| home_as_tilde)"
@@ -28,7 +28,7 @@ FZF_RESULT=$(eval "${FIND_CMD}"| grep -v "^${ARG}$"| sed 's#//#/#'| sed 's#^./##
       bat $(home_as_home {}) --color=always --style=numbers --line-range :100
     ')
 FZF_EXIT_CD=$?
-[[ $FZF_EXIT_CD != 0 ]] && exit
+[[ $FZF_EXIT_CD != 0 ]] && echo -n "$1" && exit
 
 FZF_RESULT=$(home_as_home ${FZF_RESULT})
 RETURN_RELATIVE_PATH=false

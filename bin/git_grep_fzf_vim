@@ -2,14 +2,33 @@
 
 # git_grep_fzf_vim
 # git grep earch + fzf filter +  edit with vim .
-ARGS=${@:-.}
-GIT_GREP_CMD="git grep --line-number --color=always --extended-regexp \"${ARGS}\""
+#ARGS=${1:-.}
+#GIT_GREP_CMD="git grep --line-number --color=always --extended-regexp \"${ARGS}\""
+
+PARAMS=""
+while (( $# > 0 )); do
+  case $1 in
+    -B | -A | -C)
+      if [[ -z "$2" ]] || [[ "$2" =~ ^-+ ]]; then
+        echo "'${1}' requires an argument." 1>&2
+        exit 1
+      else
+        PARAMS="${PARAMS}$1 $2 "
+        shift
+      fi
+      ;;
+    *)
+      PARAMS="${PARAMS}\"$1\" "
+      ;;
+  esac
+  shift
+done
+GIT_GREP_CMD="git grep --null --line-number --color=always --extended-regexp ${PARAMS}"
 FZF_PROMPT="$(basename $0)"
 FZF_HEADER="enter:nvim"
-
-# NOTE: sed -e\ 's/:/\t/'{1,1} の意味は「行頭から2つ目のコロンまではタブ文字に置換。それ以外は置換しない」
 FZF_REZULT=$(eval "${GIT_GREP_CMD}" \
-  | sed -e\ "s/:/\t/"{1,1} \
+  | perl -pe "s/\x0/\t/g" \
+  | grep -v '\-\-' \
   | cat -n \
   | fzf -m \
     --ansi \

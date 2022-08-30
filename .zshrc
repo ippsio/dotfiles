@@ -1,10 +1,15 @@
 #!/usr/bin/env zsh
-autoload -Uz compinit && compinit
-# zmodload zsh/zprof && zprof #zprof 見たい時はコメントアウト外す。
-
 # zsh起動時にtmux起動
 (type "tmux" > /dev/null 2>&1) && [[ -z "$TMUX" && ! -z "$PS1" ]] \
   && for i in {0..128}; do [[ -z $(tmux ls -f "#{==:#{session_name},${i}}") ]] && tmux new-session -s ${i} && echo "bye." && sleep 1 && exit; done
+
+autoload -Uz compinit && compinit -u
+# zmodload zsh/zprof && zprof #zprof 見たい時はコメントアウト外す。
+
+# zsh補完
+#zstyle ':completion:*' menu select interactive
+zstyle ':completion:*' menu select=3
+setopt menu_complete
 
 START=$(~/dotfiles/bin/epocms_perl)
 
