@@ -74,7 +74,7 @@ hook_add = '''
         \   'rg --color=always --with-filename --line-number --no-heading --hidden --sortr path --ignore=.git ' . shellescape(<q-args>),
         \   1,
         \   fzf#vim#with_preview(
-        \     {'options': '--prompt="filter > " --info=inline --layout reverse --with-nth=1.. --nth=1.. --delimiter=":"'}
+        \     {'options': '--prompt="filter > " --info=inline --layout reverse --with-nth=1.. --nth=1.. --delimiter=":" --preview-window=down,70%'}
         \   )
         \ )
 '''
