@@ -49,7 +49,27 @@ FZF_REZULT=$(eval "${GIT_GREP_CMD}" \
       echo "$(realpath {2}| home_as_tilde)";
       echo "---";
 
-      git blame {2}| awk "{
+      # このawkスクリプトは、ファイル名部分(下記例ではsome_dir/some-file.rb) を削除しています。
+      # ```
+      # awk "{ printf \"%s%s\n\", substr(\$0, 0, index(\$0, \" \") - 1), substr(\$0, index(\$0, \" (\")) }"\
+      # ```
+      # ここで消したいファイル名部分は、awk的には$2 です。
+      # 単純にawk '{ $2=""; print $0 }' とした場合、コミッターの名前部分等に半角スペースの崩れが発生し、
+      # 体裁が悪化しました。
+      # 期待する例）
+      # > b2bef2bc7b4 some_dir/some-file.rb (William Henry Gates 2018-09-21 19:03:22 +0900  27)     [*1..3].each do |word|
+      # > b4fecr54i00 some_dir/some-file.rb (Mark Gonzales       2018-09-21 19:03:22 +0900  28)       puts word
+      # > 505aff35276 some_dir/some-file.rb (Peat Sampras        2018-09-21 19:03:22 +0900  29)     end
+      #
+      # 体裁が崩れた例）
+      # > b2bef2bc7b4 some_dir/some-file.rb (William Henry Gates 2018-09-21 19:03:22 +0900  27)     [*1..3].each do |word|
+      # > b4fecr54i00 some_dir/some-file.rb (Mark Gonzales 2018-09-21 19:03:22 +0900  28)       puts word
+      # > 505aff35276 some_dir/some-file.rb (Peat Sampras 2018-09-21 19:03:22 +0900  29)     end
+      #
+      # そこでsubstr を用いてファイル名以外の部分のみをprintするように実装しました。
+      git blame --show-name {2} \
+        | awk "{ printf \"%s%s\n\", substr(\$0, 0, index(\$0, \" \") - 1), substr(\$0, index(\$0, \" (\")) }"\
+        | awk "{
         # コミットハッシュに色付けする。色付けにはコミットハッシュの先頭2バイト(00〜FF) を用いる。
         H1 = toupper(substr(\$1, 1, 1))
         H2 = toupper(substr(\$1, 2, 1))
