@@ -26,10 +26,10 @@ done
 GIT_GREP_CMD="git grep --null --line-number --color=always --extended-regexp ${PARAMS}"
 FZF_PROMPT="$(basename $0)"
 FZF_HEADER="enter:nvim"
-FZF_REZULT=$(eval "${GIT_GREP_CMD}" \
+EVAL_RESULT=$(eval "${GIT_GREP_CMD}")
+COUNT=$(echo "${EVAL_RESULT}"| grep -v '\-\-'| wc -l| tr -d ' ')
+FZF_REZULT=$(echo "${EVAL_RESULT}"| grep -v '\-\-' \
   | perl -pe "s/\x0/\t/g" \
-  | grep -v '\-\-' \
-  | cat -n \
   | fzf -m \
     --ansi \
     --info=inline \
@@ -54,7 +54,7 @@ FZF_REZULT=$(eval "${GIT_GREP_CMD}" \
       # awk "{ printf \"%s%s\n\", substr(\$0, 0, index(\$0, \" \") - 1), substr(\$0, index(\$0, \" (\")) }"\
       # ```
       # ここで消したいファイル名部分は、awk的には$2 です。
-      # 単純にawk '{ $2=""; print $0 }' とした場合、コミッターの名前部分等に半角スペースの崩れが発生し、
+      # 単純にawk ’{ $2=””; print $0 }’ とした場合、コミッターの名前部分等に半角スペースの崩れが発生し、
       # 体裁が悪化しました。
       # 期待する例）
       # > b2bef2bc7b4 some_dir/some-file.rb (William Henry Gates 2018-09-21 19:03:22 +0900  27)     [*1..3].each do |word|
