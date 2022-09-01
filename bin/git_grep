@@ -36,4 +36,6 @@ done
 GIT_GREP_CMD="git grep --null --line-number --color=always --extended-regexp ${PARAMS}| perl -pe 's/\x0/\t/g'| grep -v '\-\-'"
 FZF_PROMPT="$(basename $0) ${PARAMS}"
 FZF_HEADER="enter:nvim"
-eval "${GIT_GREP_CMD}"
+GIT_GREP_RESULT=$(eval "${GIT_GREP_CMD}")
+echo "${GIT_GREP_RESULT}"| awk -v GREP_RESULT_COUNT="$(echo "${GIT_GREP_RESULT}"| wc -l| tr -d ' ')" '{ printf "(%3d/%d)	%s\n", NR, GREP_RESULT_COUNT, $0 }'
+
