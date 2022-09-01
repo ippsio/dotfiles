@@ -20,6 +20,9 @@ zle_space() {
   if $(is_git_repo); then
     # git grep
     [[ $BUFFER =~ '^gg+$' ]] \
+      && BUFFER="git_grep " && zle end-of-line && return
+
+    [[ $BUFFER =~ '^git_grep +$' ]] \
       && BUFFER="git_grep_fzf_vim " && zle end-of-line && return
 
     # git

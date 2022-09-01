@@ -1,0 +1,39 @@
+#!/bin/bash
+
+# git_grep_fzf_vim
+# git grep earch + fzf filter +  edit with vim .
+#ARGS=${1:-.}
+#GIT_GREP_CMD="git grep --line-number --color=always --extended-regexp \"${ARGS}\""
+
+SEARCH_WORD=""
+PARAMS=""
+while (( $# > 0 )); do
+  case $1 in
+    -B | -A | -C)
+      if [[ -z "$2" ]] || [[ "$2" =~ ^-+ ]]; then
+        echo "'${1}' requires an argument." 1>&2
+        exit 1
+      else
+        PARAMS="${PARAMS}$1 $2 "
+        shift
+      fi
+      ;;
+    *)
+      SEARCH_WORD="$1"
+      PARAMS="${PARAMS}\"$1\" "
+      ;;
+  esac
+  shift
+done
+# git grep に --nullオプションを付与すると、結果の区切り文字がNULL文字となる。
+# git grep に --nullオプションを付与しないと、結果の区切り文字が':'、または'-'となる。
+# ファイル名に'-' が含まれる場合、区切り文字も'-'だと処理上面倒くさい。
+# そういう理由で区切り文字はNULL文字とする。
+# ただし区切り文字がNULL文字のままだとまた色々都合が悪い。
+# そのためNULL文字はperlで置換する（タブ文字にする）。
+# ファイルとファイルの区切りは '--' となるが、これは検索結果的には邪魔である。
+# そのため grep -v で'--' の行を除去する。
+GIT_GREP_CMD="git grep --null --line-number --color=always --extended-regexp ${PARAMS}| perl -pe 's/\x0/\t/g'| grep -v '\-\-'"
+FZF_PROMPT="$(basename $0) ${PARAMS}"
+FZF_HEADER="enter:nvim"
+eval "${GIT_GREP_CMD}"

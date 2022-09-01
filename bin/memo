@@ -8,8 +8,10 @@ FILE=$(LC_ALL=C date '+%Y_%m%d_%a').md
 [ ! -d ${NOTE_DIR} ] && mkdir -p ${NOTE_DIR}
 [ ! -f ${NOTE_DIR}/${FILE} ] && echo -e "\n# ${KIND} $(LC_ALL=C date '+%Y/%m/%d(%a)')\n\n---\n" >> ${NOTE_DIR}/${FILE}
 
-CMD="find ${BASE_DIR} -type f| fgrep '/${KIND}/'| sort -r"
-cd ${BASE_DIR} && eval "${CMD}" \
+#CMD="rg --files --hidden -g '${BASE_DIR}/${KIND}/**/*' --sortr=path"
+CMD="rg --files --hidden -g '*.md' --sortr=path ${BASE_DIR}/${KIND}"
+#cd ${BASE_DIR} && eval "${CMD}" \
+eval "${CMD}" \
   | sed -e "s#^${HOME}#~#" \
   | fzf \
     --info=inline \

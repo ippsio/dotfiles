@@ -5,6 +5,7 @@
 #ARGS=${1:-.}
 #GIT_GREP_CMD="git grep --line-number --color=always --extended-regexp \"${ARGS}\""
 
+SEARCH_WORD=""
 PARAMS=""
 while (( $# > 0 )); do
   case $1 in
@@ -18,6 +19,7 @@ while (( $# > 0 )); do
       fi
       ;;
     *)
+      SEARCH_WORD="$1"
       PARAMS="${PARAMS}\"$1\" "
       ;;
   esac
@@ -32,7 +34,7 @@ done
 # ファイルとファイルの区切りは '--' となるが、これは検索結果的には邪魔である。
 # そのため grep -v で'--' の行を除去する。
 GIT_GREP_CMD="git grep --null --line-number --color=always --extended-regexp ${PARAMS}| perl -pe 's/\x0/\t/g'| grep -v '\-\-'"
-FZF_PROMPT="$(basename $0)"
+FZF_PROMPT="$(basename $0) ${PARAMS}"
 FZF_HEADER="enter:nvim"
 GIT_GREP_RESULT=$(eval "${GIT_GREP_CMD}")
 FZF_REZULT=$(echo "${GIT_GREP_RESULT}" \
@@ -45,15 +47,19 @@ FZF_REZULT=$(echo "${GIT_GREP_RESULT}" \
     --prompt="${FZF_PROMPT} > " \
     --header="${GIT_GREP_CMD}" \
     --bind "ctrl-c:print-query" \
-    --bind "ctrl-p:toggle-preview" \
+    --bind "ctrl-f:page-down" \
+    --bind "ctrl-b:page-up" \
     --bind "ctrl-/:toggle-preview" \
     --bind="enter:execute(nvim {2} +{3} < /dev/tty > /dev/tty)" \
-    --preview-window"=bottom:65%"\
+    --preview-window"=wrap:bottom:65%"\
     --preview='
       # 原則、検索ヒットした行の15行前から表示。
       from=$(expr {3} - 15);
       [[ ${from} -lt 1 ]] && from=1;
       echo "$(realpath {2}| home_as_tilde)";
+      Q='$(echo "${SEARCH_WORD}"| sed -E "s/[ ]+/\|/g")'
+      Q="$Q|"$(echo {q}| sed -E "s/[ ]+/\|/g");
+      echo "[${Q}]"
       echo "---";
 
       # このawkスクリプトは、ファイル名部分(下記例ではsome_dir/some-file.rb) を削除しています。
@@ -96,13 +102,18 @@ FZF_REZULT=$(echo "${GIT_GREP_RESULT}" \
 
         # 残りの情報を出力。
         printf \"%s\n\", \$0
+
       }"\
+      | rg --smart-case --passthru --color=always "${Q:- }" \
       | bat \
+        --wrap auto \
         --color=always \
         --style=numbers,header \
         --line-range ${from}: \
         --highlight-line {3}
       ')
+      #| rg --smart-case --passthru --color=always "${Q:- }" \
+      #| ( [[ ! -z {q} ]] && perl -pe "s/("{q}")/\033\[38;5;21;48;5;16m\1\033\[0m/g" || echo ) \
 
 if [[ ! -z "${FZF_REZULT}" ]]; then
   echo "QUERY> ${FZF_REZULT}"
