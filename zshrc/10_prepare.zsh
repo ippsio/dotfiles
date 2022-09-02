@@ -9,6 +9,7 @@ if [[ -e "${CACHE_FILE}" ]]; then
   [[ "${current_day}" == "${cached_day}" ]] && [[ "${current_md5}" == "${cached_md5}" ]] && return
 fi
 
+do_cache=1
 type_or_inst() {
   if ( type "$1" > /dev/null 2>&1 ); then
     echo -n "$1 ok, "
@@ -16,6 +17,7 @@ type_or_inst() {
   else
     echo "$1 not found. install."
     brew install ${2:-$1}
+    do_cache=0
     return 1
   fi
 }
@@ -26,6 +28,7 @@ type_or_cask_inst() {
   else
     echo "$1 not found. install."
     brew install --cask ${2:-$1}
+    do_cache=0
     return 1
   fi
 }
@@ -36,6 +39,7 @@ type_or_cargo_inst() {
   else
     echo "$1 not found. install."
     cargo install ${2:-$1}
+    do_cache=0
     return 1
   fi
 }
@@ -46,6 +50,7 @@ nodir_then_gitclone() {
   else
     echo "$2 not found. git clone."
     git clone https://github.com/$2 ${3:-$1}
+    do_cache=0
     return 1
   fi
 }
@@ -56,6 +61,7 @@ chk_pynvim_or_install() {
   else
     echo "pynvim not found. install."
     python3 -m pip install pynvim --user
+    do_cache=0
     return 1
   fi
 }
@@ -66,6 +72,7 @@ chkfile_or_flink() {
   else
     echo "$1 not found. link! ($1<-$2)"
     ln -s $2 $1
+    do_cache=0
     return 1
   fi
 }
@@ -76,6 +83,7 @@ chkfile_or_dlink() {
   else
     echo "$1 not found. link! ($1<-$2)"
     ln -s $2 $1
+    do_cache=0
     return 1
   fi
 }
@@ -125,5 +133,7 @@ chkfile_or_flink ~/.tigrc                ~/dotfiles/.tigrc
 chkfile_or_flink ~/.tmux.conf            ~/dotfiles/.tmux.conf
 chkfile_or_flink ~/.zshrc                ~/dotfiles/.zshrc
 
-echo "$(date +'%Y%m%d') $(cd $(dirname $0) && md5sum $(basename $0))" > "${CACHE_FILE}"
+if [ ${do_cache} -eq 1 ]; then
+  echo "$(date +'%Y%m%d') $(cd $(dirname $0) && md5sum $(basename $0))" > "${CACHE_FILE}"
+fi
 
