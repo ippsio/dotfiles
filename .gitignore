@@ -3,4 +3,5 @@
 .config/hub
 node_modules
 mocword_db
+zshrc/10_prepare.zsh.cache
 

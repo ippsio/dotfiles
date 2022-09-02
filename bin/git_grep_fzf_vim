@@ -33,7 +33,7 @@ done
 # そのためNULL文字はperlで置換する（タブ文字にする）。
 # ファイルとファイルの区切りは '--' となるが、これは検索結果的には邪魔である。
 # そのため grep -v で'--' の行を除去する。
-GIT_GREP_CMD="git grep --null --line-number --color=always --extended-regexp ${PARAMS}| perl -pe 's/\x0/\t/g'| grep -v '\-\-'"
+GIT_GREP_CMD="git grep --show-function --null --line-number --color=always --extended-regexp ${PARAMS}| perl -pe 's/\x0/\t/g'| grep -v '\-\-'"
 FZF_PROMPT="$(basename $0) ${PARAMS}"
 FZF_HEADER="enter:nvim"
 GIT_GREP_RESULT=$(eval "${GIT_GREP_CMD}")

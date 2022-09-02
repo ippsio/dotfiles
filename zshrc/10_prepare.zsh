@@ -1,4 +1,14 @@
 #!/usr/bin/env zsh
+
+readonly CACHE_FILE="$0.cache"
+if [[ -e "${CACHE_FILE}" ]]; then
+  current_day=$(date +'%Y%m%d')
+  current_md5=$(md5sum $0| awk '{ print $1 }')
+  cached_day=$(cat ${CACHE_FILE}| awk '{ print $1}')
+  cached_md5=$(cat ${CACHE_FILE}| awk '{ print $2}')
+  [[ "${current_day}" == "${cached_day}" ]] && [[ "${current_md5}" == "${cached_md5}" ]] && return
+fi
+
 type_or_inst() {
   if ( type "$1" > /dev/null 2>&1 ); then
     echo -n "$1 ok, "
@@ -98,8 +108,7 @@ nodir_then_gitclone "${HOME}/setting_box" "ippsio/setting_box.git"
 # Universal ctags. It is for vim-scripts/taglist.vim
 # type_or_inst universal-ctags
 ( ctags --version|grep "Universal Ctags" 2>&1 > /dev/null ) || brew install universal-ctags
-# pynvimは必要なものだけど、zsh起動するたびにチェックするのは処理的に遅いのでコメントアウト
-# chk_pynvim_or_install
+chk_pynvim_or_install
 
 # check link.
 chkfile_or_dlink ~/.config/nvim          ~/dotfiles/.config/nvim
@@ -115,4 +124,6 @@ chkfile_or_flink ~/.pryrc                ~/dotfiles/.pryrc
 chkfile_or_flink ~/.tigrc                ~/dotfiles/.tigrc
 chkfile_or_flink ~/.tmux.conf            ~/dotfiles/.tmux.conf
 chkfile_or_flink ~/.zshrc                ~/dotfiles/.zshrc
+
+echo "$(date +'%Y%m%d') $(cd $(dirname $0) && md5sum $(basename $0))" > "${CACHE_FILE}"
 

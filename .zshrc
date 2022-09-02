@@ -4,7 +4,10 @@
   && for i in {0..128}; do [[ -z $(tmux ls -f "#{==:#{session_name},${i}}") ]] && tmux new-session -s ${i} && echo "bye." && sleep 1 && exit; done
 
 autoload -Uz compinit && compinit -u
-# zmodload zsh/zprof && zprof #zprof 見たい時はコメントアウト外す。
+
+#zprof 見たい場合はtrue。見たくない場合はfalse。
+SHOW_ME_PROFILE=false
+${SHOW_ME_PROFILE} && zmodload zsh/zprof && zprof
 
 # zsh補完
 #zstyle ':completion:*' menu select interactive
@@ -49,6 +52,6 @@ source ~/dotfiles/zshrc/60_zsh_plugin_manage.zsh
 fast-theme spa > /dev/null 2>&1
 
 # profiling
-( type "zprof" > /dev/null 2>&1 ) && zprof| less # zprof
-printf "\n.zshrc load finished (%dms).\n" $(expr $(~/dotfiles/bin/epocms_perl) - $START)
+( type "zprof" > /dev/null 2>&1 ) && zprof # zprof
+printf "zshrc load finished (%dms).\n" $(expr $(~/dotfiles/bin/epocms_perl) - $START)
 
