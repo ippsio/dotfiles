@@ -1,0 +1,4 @@
+#!/bin/bash
+curl -OL https://github.com/high-moctane/mocword-data/releases/download/eng20200217/mocword.sqlite.gz
+gzip -d ${MOCWORD_DB}/mocword.sqlite.gz
+

@@ -80,9 +80,9 @@ export FZF_DEFAULT_OPTS=\
 # " --preview-window=bottom:60%"\
 
 # ---------------------
-# FZF
+# mocword
 # ---------------------
-export MOCWORD_DATA=dotfiles/mocword_db/mocword.sqlite
+export MOCWORD_DB=~/.cache/mocword_db/mocword.sqlite
 
 # ---------------------
 # Java

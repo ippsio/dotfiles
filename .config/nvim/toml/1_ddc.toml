@@ -160,7 +160,6 @@ call ddc#custom#patch_global('sourceOptions', {
 " Change source options
 " Customize global settings
 call ddc#custom#patch_global('sources', [ 'nvim-lsp', 'around', 'file', ])
-"call ddc#custom#patch_global('sources', [ 'nvim-lsp', 'around', 'file', 'mocword', 'look', 'cmdline-history',])
 
 " ddc-cmdline-history
 call ddc#custom#patch_global('sourceOptions', {
