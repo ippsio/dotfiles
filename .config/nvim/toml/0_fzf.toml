@@ -140,14 +140,14 @@ hook_add = '''
     \   .            'printf \\\"%s\n\\\", \\\$0; '
     \   .          ' }\" '
     \   .        '| rg --smart-case --passthru --color=always \"\${query}\" '
-    \   .        '| bat --wrap auto --color=always --line-range \$line_range: --highlight-line \$lineno '
+    \   .        '| bat --wrap auto --style plain --color=always --line-range \$line_range: --highlight-line \$lineno '
     \   .      '); [[ -z \$git_repo ]] && ('
     \   .        ' cat \$file '
     \   .        '| rg --smart-case --passthru --color=always \"\${query}\" '
-    \   .        '| bat --wrap auto --color=always --line-range \$line_range: --highlight-line \$lineno '
+    \   .        '| bat --wrap auto --style plain --color=always --line-range \$line_range: --highlight-line \$lineno '
     \   .      ')'
     \   .    '); "',
-    \   'window': { 'width': 0.95, 'height': 0.95 }
+    \   'window': { 'width': 0.95, 'height': 0.99 }
     \   })
 '''
 
