@@ -31,6 +31,13 @@ setopt hist_verify # `!!`を実行したときにいきなり実行せずコマ�
 setopt ignore_eof # CTRL-D でログアウトしないようにする
 unsetopt LIST_BEEP # Turn off autocomplete beeps
 
+### eval XXenv
+eval "$(pyenv init --path)"
+eval "$(rbenv init -)"
+eval "$(direnv hook zsh)"
+eval "$(nodenv init -)"
+eval "$(goenv init -)"
+
 ## source
 source ~/dotfiles/zshrc/00_export.zsh
 source ~/dotfiles/zshrc/10_prepare.zsh
@@ -38,13 +45,6 @@ source ~/dotfiles/zshrc/20_alias.zsh
 source ~/dotfiles/zshrc/30_prompt.zsh
 source ~/dotfiles/zshrc/40_zle_key_bindings.zsh
 source ~/dotfiles/zshrc/50_existing_command_hacking.zsh
-
-### eval XXenv
-eval "$(pyenv init --path)"
-eval "$(rbenv init -)"
-eval "$(direnv hook zsh)"
-eval "$(nodenv init -)"
-eval "$(goenv init -)"
 
 # zsh-plugin manager
 source ~/dotfiles/zshrc/60_zsh_plugin_manage.zsh
