@@ -33,7 +33,7 @@ done
 # そのためNULL文字はperlで置換する（タブ文字にする）。
 # ファイルとファイルの区切りは '--' となるが、これは検索結果的には邪魔である。
 # そのため grep -v で'--' の行を除去する。
-GIT_GREP_CMD="git grep --show-function --null --line-number --color=always --extended-regexp ${PARAMS}| perl -pe 's/\x0/\t/g'| grep -v '\-\-'"
+GIT_GREP_CMD="git grep --show-function --null --line-number --color=always --extended-regexp "${PARAMS}"| perl -pe 's/\x0/\t/g'| grep -v '\-\-'"
 FZF_PROMPT="$(basename $0) ${PARAMS}"
 FZF_HEADER="enter:nvim"
 GIT_GREP_RESULT=$(eval "${GIT_GREP_CMD}")
@@ -52,70 +52,8 @@ FZF_REZULT=$(echo "${GIT_GREP_RESULT}" \
     --bind "ctrl-/:toggle-preview" \
     --bind="enter:execute(nvim {2} +{3} < /dev/tty > /dev/tty)" \
     --preview-window"=wrap:bottom:65%"\
-    --preview='
-      # 原則、検索ヒットした行の15行前から表示。
-      from=$(expr {3} - 15);
-      [[ ${from} -lt 1 ]] && from=1;
-      echo "$(realpath {2}| home_as_tilde)";
-      Q='$(echo "${SEARCH_WORD}"| sed -E "s/[ ]+/\|/g")'
-      Q="$Q|"$(echo {q}| sed -E "s/[ ]+/\|/g");
-      echo "[${Q}]"
-      echo "---";
-
-      # このawkスクリプトは、ファイル名部分(下記例ではsome_dir/some-file.rb) を削除しています。
-      # ```
-      # awk "{ printf \"%s%s\n\", substr(\$0, 0, index(\$0, \" \") - 1), substr(\$0, index(\$0, \" (\")) }"\
-      # ```
-      # ここで消したいファイル名部分は、awk的には$2 です。
-      # 単純にawk ’{ $2=””; print $0 }’ とした場合、コミッターの名前部分等に半角スペースの崩れが発生し、
-      # 体裁が悪化しました。
-      # 期待する例）
-      # > b2bef2bc7b4 some_dir/some-file.rb (William Henry Gates 2018-09-21 19:03:22 +0900  27)     [*1..3].each do |word|
-      # > b4fecr54i00 some_dir/some-file.rb (Mark Gonzales       2018-09-21 19:03:22 +0900  28)       puts word
-      # > 505aff35276 some_dir/some-file.rb (Peat Sampras        2018-09-21 19:03:22 +0900  29)     end
-      #
-      # 体裁が崩れた例）
-      # > b2bef2bc7b4 some_dir/some-file.rb (William Henry Gates 2018-09-21 19:03:22 +0900  27)     [*1..3].each do |word|
-      # > b4fecr54i00 some_dir/some-file.rb (Mark Gonzales 2018-09-21 19:03:22 +0900  28)       puts word
-      # > 505aff35276 some_dir/some-file.rb (Peat Sampras 2018-09-21 19:03:22 +0900  29)     end
-      #
-      # そこでsubstr を用いてファイル名以外の部分のみをprintするように実装しました。
-      git blame --show-name {2} \
-        | awk "{ printf \"%s%s\n\", substr(\$0, 0, index(\$0, \" \") - 1), substr(\$0, index(\$0, \" (\")) }"\
-        | awk "{
-        # コミットハッシュに色付けする。色付けにはコミットハッシュの2文字目からの2バイト(00〜FF) を用いる。
-        # git blame の仕様上、1バイト目には 0-9, A-F の他、^（ハット）が含まれるケースがあるようだ。
-        # ファイル名が変わった等の履歴があった場合、^ が付加されるような気がする。
-        H1 = toupper(substr(\$1, 1, 1))
-        H2 = toupper(substr(\$1, 2, 1))
-
-        # 16進数と10進数の変換表。gawkには進数変換用の組み込み関数があるらしいです。いいなぁ。
-        H[\"0\"] =  0; H[\"1\"] =  1; H[\"2\"] =  2; H[\"3\"] =  3; H[\"4\"] =  4; H[\"5\"] =  5; H[\"6\"] = 6; H[\"7\"] = 7; H[\"8\"] = 8; H[\"9\"] = 9;
-        H[\"A\"] = 10; H[\"B\"] = 11; H[\"C\"] = 12; H[\"D\"] = 13; H[\"E\"] = 14; H[\"F\"] = 15;
-
-        # 16進数の10進変換
-        COLOR = H[H1] * 16 + H[H2]
-
-        # 色付きのコミットハッシュ
-        printf(\"\033[38;5;%dm%s\033[0m\", COLOR, \$1);
-
-        # 入力された文字列($0)からコミットハッシュ部分だけを削除。するとこれ以降の$0にはコミットハッシュが含まれなくなります。
-        sub(/^[0-9a-fA-F]*/, \"\", \$0);
-
-        # 残りの情報を出力。
-        printf \"%s\n\", \$0
-
-      }"\
-      | rg --smart-case --passthru --color=always "${Q:- }" \
-      | bat \
-        --wrap auto \
-        --color=always \
-        --style=numbers,header \
-        --line-range ${from}: \
-        --highlight-line {3}
-      ')
-      #| rg --smart-case --passthru --color=always "${Q:- }" \
-      #| ( [[ ! -z {q} ]] && perl -pe "s/("{q}")/\033\[38;5;21;48;5;16m\1\033\[0m/g" || echo ) \
+    --preview="git_blame_colored {2} {3} ${SEARCH_WORD} {q}"
+  )
 
 if [[ ! -z "${FZF_REZULT}" ]]; then
   echo "QUERY> ${FZF_REZULT}"
