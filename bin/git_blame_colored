@@ -1,10 +1,18 @@
 #!/bin/bash
 
+HIGHLIGHT_STANDARD=5
 file="$1"
 line_highlight="${2:-1}"
 query=$(echo "${3} ${4} ${5} ${6} ${7} ${8} ${9} ${10}"| xargs echo| sed "s/^[[:blank:]]*//"| sed -E "s/[[:blank:]]+$//g"| sed -E "s/[[:blank:]]+/\|/g");
-line_from=$(($line_highlight - 5 <= 0 ? 1 : $line_highlight - 5 ));
-line_to=$(($line_from + 127));
+if [ ${2:-1} -le ${HIGHLIGHT_STANDARD} ]; then
+  line_from=1
+  line_highlight="${2:-1}"
+else
+  line_from=$(( ${line_highlight} - ${HIGHLIGHT_STANDARD} + 1))
+  line_highlight=${HIGHLIGHT_STANDARD}
+fi
+
+line_to=$(($line_from + $(tput lines)));
 git_repo=$(git remote get-url origin 2> /dev/null| grep -Eo "([a-zA-Z0-9_+-]+)\/([a-zA-Z0-9_+-]+)(.git)?$");
 git_branch=$(git branch --show-current 2> /dev/null);
 echo "GIT={${git_repo}  $git_branch}";
@@ -14,7 +22,7 @@ if [[ -z $file ]]; then
   echo "No results"
 else
   if [[ ! -z $git_repo ]]; then
-    git blame --show-name $file \
+    git blame -L ${line_from},${line_to} --show-name $file \
       | awk '{ printf "%s%s\n", substr($0, 0, index($0, " ") - 1), substr($0, index($0, " (")) }' \
       | awk '
         BEGIN {
@@ -24,10 +32,12 @@ else
         } {
           HASH=$1; H1 = toupper(substr(HASH, 2, 1)); H2 = toupper(substr(HASH, 3, 1));
           COLOR = H[H1] * 16 + H[H2];
+          if (16  <= COLOR && COLOR <=  18) { COLOR = COLOR +  10 }
+          if (232 <= COLOR && COLOR <= 237) { COLOR = COLOR - 200 }
           printf("\033[38;5;%dm", COLOR);
           printf("%s", HASH);
 
-          if (!( HASH in PR_NO)) { "~/dotfiles/bin/git_pr_no_by_hash " HASH | getline var; PR[HASH] = var };
+          if (!( HASH in PR_NO)) { "git_pr_no_by_hash " HASH | getline var; PR[HASH] = var };
           printf("%s", PR[HASH]);
 
           printf("\033[0m");
@@ -36,7 +46,7 @@ else
           printf "%s\n", $0;
         }' \
       | rg --smart-case --passthru --color=always "${query}" \
-      | bat --wrap auto --no-pager --style plain --color=always --line-range $line_from: --highlight-line $line_highlight;
+      | bat --wrap auto --no-pager --style plain --color=always --highlight-line ${line_highlight};
   fi
 fi
 

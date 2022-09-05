@@ -79,6 +79,7 @@ hook_add = '''
     \   'source': 'git_grep ' . shellescape(<q-args>),
     \   'sink*': function('s:EditFile'),
     \   'options': ' -m --delimiter="\t" --tabstop=3 --ansi --prompt "filter > " --info=inline --layout reverse --with-nth=1.. --nth=1.. '
+    \   . ' --bind "tab:execute(git_pr_open_by_file_line {2} {3})" '
     \   . ' --preview-window="wrap:down:75%" --preview "git_blame_colored {2} {3} ' . shellescape(<q-args>) . ' {q}"',
     \   'window': { 'width': 0.95, 'height': 0.99 }
     \   })

@@ -1,0 +1,30 @@
+#!/bin/bash
+
+file=$1
+line=$2
+commit=$(git blame -L ${line},${line} ${file}| awk '{ print $1 }')
+
+FZF_PROMPT="commit='${commit}' > "
+FZF_HEADER="enter:neovim, tab:open browser"
+
+TEMPLATE="
+echo '# commit: '${commit}' に関するpull request です。';
+echo '\033[48;5;27m- Author: ['{3}']\033[0m';
+echo '\033[48;5;27m- Title: ['{4}']\033[0m';
+echo '- No: ['{1}']  State: ['{2}']';
+echo '- Created_at: ['{7}']  Updated_at: ['{8}']  Closed_at:  ['{9}']';
+echo '---------------------------------------------------';
+echo {5};
+"
+git_pr_search_hash "${commit}"| \
+  fzf \
+    --info=inline \
+    --no-sort \
+    --prompt="${FZF_PROMPT}" \
+    --header="${FZF_HEADER}" \
+    --delimiter='\t' \
+    --bind "enter:execute(($TEMPLATE)| strip_color| sed -e 's/\r//g'| nvim -Ro -c \"set ft=markdown\" > /dev/tty)" \
+    --bind "tab:execute(open '{6}')" \
+    --preview-window=down:85% \
+    --preview="$TEMPLATE"
+

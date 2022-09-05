@@ -8,7 +8,7 @@ fi
 SPACE="%20"
 #Q="$1"
 #Q="type:pr${SPACE}repo:$(git_reponame)"
-Q="is:open${SPACE}type:pr${SPACE}repo:$(git_reponame)"
+Q="type:pr${SPACE}repo:$(git_reponame)"
 Q="${Q}${SPACE}$1"
 AUTHZ_TOKEN=$(cat ~/.config/hub| grep "oauth_token:"| awk '{ print $2 }')
 HTTP_HEADER="Authorization: token ${AUTHZ_TOKEN}"
