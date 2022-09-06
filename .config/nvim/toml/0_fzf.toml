@@ -62,11 +62,12 @@ hook_add = '''
         \     fzf#wrap(
         \       {
         \         'dir': s:GetDir(<q-args>),
-        \         'source': 'find -s -E . -not -regex ".*(\.DS_Store|/*.git/).*" -and -type f'
+        \         'source': 'rg --files --no-ignore --hidden --binary --glob !.git/ --glob !.DS_Store --sort=path'
         \       }
         \     )
         \   )
         \ )
+"rg --smart-case --passthru --color=always "${query}
 
   function! s:EditFile(args0)
     let l:list = split(a:args0[0], "\t")
@@ -78,9 +79,18 @@ hook_add = '''
     \ call fzf#run({
     \   'source': 'git_grep ' . shellescape(<q-args>),
     \   'sink*': function('s:EditFile'),
-    \   'options': ' -m --delimiter="\t" --tabstop=3 --ansi --prompt "filter > " --info=inline --layout reverse --with-nth=1.. --nth=1.. '
+    \   'options': '-m'
+    \   . ' --delimiter="\t" '
+    \   . ' --tabstop=3 '
+    \   . ' --ansi '
+    \   . ' --prompt "filter > " '
+    \   . ' --info=inline '
+    \   . ' --layout reverse '
+    \   . ' --with-nth=1.. '
+    \   . ' --nth=1.. '
     \   . ' --bind "tab:execute(git_pr_open_by_file_line {2} {3})" '
-    \   . ' --preview-window="wrap:down:75%" --preview "git_blame_colored {2} {3} ' . shellescape(<q-args>) . ' {q}"',
+    \   . ' --preview-window="wrap:down:75%" '
+    \   . ' --preview "git_blame_colored {2} {3} ' . shellescape(<q-args>) . ' {q}"',
     \   'window': { 'width': 0.95, 'height': 0.99 }
     \   })
 

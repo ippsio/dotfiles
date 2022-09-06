@@ -11,15 +11,22 @@ TEMPLATE="
 echo '# commit: '${commit}' に関するpull request です。';
 echo '\033[48;5;27m- Author: ['{3}']\033[0m';
 echo '\033[48;5;27m- Title: ['{4}']\033[0m';
-echo '- No: ['{1}']  State: ['{2}']';
+echo '- No: ['{1}']  State: ['{2}'] Merged_at: ['{10}']';
 echo '- Created_at: ['{7}']  Updated_at: ['{8}']  Closed_at:  ['{9}']';
 echo '---------------------------------------------------';
 echo {5};
 "
-git_pr_search_hash "${commit}"| \
-  fzf \
+pr_no=$(git_pr_no_by_hash ${commit}| sed -E 's/[# ]//g')
+if [[ ! -z "${pr_no}" ]]; then
+  github_api_result=$(git_pr_show_by_pr_no "${pr_no}")
+else
+  github_api_result=$(git_pr_search_hash "${commit}")
+fi
+echo "${github_api_result}" \
+  | fzf --tac \
     --info=inline \
     --no-sort \
+    --with-nth=1..4,9,10 \
     --prompt="${FZF_PROMPT}" \
     --header="${FZF_HEADER}" \
     --delimiter='\t' \

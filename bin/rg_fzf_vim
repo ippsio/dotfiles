@@ -19,7 +19,7 @@ else
   GLOB="-g $(basename ${HOME_AS_HOME})"
 fi
 
-RG_CMD="rg --color=never --hidden --line-number ${GLOB} ${SEARCH_WORD}"
+RG_CMD="rg --color=never --no-ignore --hidden --line-number ${GLOB} ${SEARCH_WORD}"
 FZF_PROMPT="${_ME}: '${RG_CMD}' > "
 FZF_HEADER="enter:nvim"
 

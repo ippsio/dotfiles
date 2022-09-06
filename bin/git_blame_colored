@@ -16,7 +16,7 @@ line_to=$(($line_from + $(tput lines)));
 git_repo=$(git remote get-url origin 2> /dev/null| grep -Eo "([a-zA-Z0-9_+-]+)\/([a-zA-Z0-9_+-]+)(.git)?$");
 git_branch=$(git branch --show-current 2> /dev/null);
 echo "GIT={${git_repo}  $git_branch}";
-echo "FILE=${file}";
+echo "FILE=$(realpath ${file}| home_as_tilde)";
 echo "QUERY=${query}";
 if [[ -z $file ]]; then
   echo "No results"

@@ -33,32 +33,38 @@ done
 # そのためNULL文字はperlで置換する（タブ文字にする）。
 # ファイルとファイルの区切りは '--' となるが、これは検索結果的には邪魔である。
 # そのため grep -v で'--' の行を除去する。
-GIT_GREP_CMD="git grep --show-function --null --line-number --color=always --extended-regexp "${PARAMS}"| perl -pe 's/\x0/\t/g'| grep -v '\-\-'"
+GIT_GREP_CMD="git grep --null --line-number --color=always --extended-regexp "${PARAMS}"| perl -pe 's/\x0/\t/g'| grep -v '\-\-'"
 FZF_PROMPT="$(basename $0) ${PARAMS}"
 FZF_HEADER="enter:nvim"
 GIT_GREP_RESULT=$(eval "${GIT_GREP_CMD}")
-FZF_REZULT=$(echo "${GIT_GREP_RESULT}" \
-  | awk -v GREP_RESULT_COUNT="$(echo "${GIT_GREP_RESULT}"| wc -l| tr -d ' ')" '{ printf "(%3d/%d)	%s\n", NR, GREP_RESULT_COUNT, $0 }' \
-  | fzf -m \
-    --ansi \
-    --info=inline \
-    --delimiter='	' \
-    --tabstop=2 \
-    --prompt="${FZF_PROMPT} > " \
-    --header="${GIT_GREP_CMD}" \
-    --bind "ctrl-c:print-query" \
-    --bind "ctrl-f:page-down" \
-    --bind "ctrl-b:page-up" \
-    --bind "ctrl-/:toggle-preview" \
-    --bind "tab:execute(git_pr_show_by_file_line {2} {3})" \
-    --bind "ctrl-o:execute(git_pr_open_by_file_line {2} {3})" \
-    --bind "ctrl-p:execute(git_pr_open_by_file_line {2} {3})" \
-    --bind="enter:execute(nvim {2} +{3} < /dev/tty > /dev/tty)" \
-    --preview-window"=wrap:bottom:65%"\
-    --preview="git blame -L {3},{3} {2}| awk '{ print \$1 }'; git_blame_colored {2} {3} ${SEARCH_WORD} {q}"
-  )
+GIT_GREP_EXIT_CD=$?
+if [[ "${GIT_GREP_EXIT_CD}" != 0 ]]; then
+  echo "Not found"
+  exit ${GIT_GREP_EXIT_CD}
+else
+  FZF_REZULT=$(echo "${GIT_GREP_RESULT}" \
+    | awk -v GREP_RESULT_COUNT="$(echo "${GIT_GREP_RESULT}"| wc -l| tr -d ' ')" '{ printf "(%3d/%d)	%s\n", NR, GREP_RESULT_COUNT, $0 }' \
+    | fzf -m \
+      --ansi \
+      --info=inline \
+      --delimiter='	' \
+      --tabstop=2 \
+      --prompt="${FZF_PROMPT} > " \
+      --header="${GIT_GREP_CMD}" \
+      --bind "ctrl-c:print-query" \
+      --bind "ctrl-f:page-down" \
+      --bind "ctrl-b:page-up" \
+      --bind "ctrl-/:toggle-preview" \
+      --bind "tab:execute(git_pr_show_by_file_line {2} {3})" \
+      --bind "ctrl-o:execute(git_pr_open_by_file_line {2} {3})" \
+      --bind "ctrl-p:execute(git_pr_open_by_file_line {2} {3})" \
+      --bind="enter:execute(nvim {2} +{3} < /dev/tty > /dev/tty)" \
+      --preview-window"=wrap:bottom:65%"\
+      --preview="git_blame_colored {2} {3} \"${SEARCH_WORD}\" {q}"
+    )
 
-if [[ ! -z "${FZF_REZULT}" ]]; then
-  echo "QUERY> ${FZF_REZULT}"
+  if [[ ! -z "${FZF_REZULT}" ]]; then
+    echo "QUERY> ${FZF_REZULT}"
+  fi
 fi
 

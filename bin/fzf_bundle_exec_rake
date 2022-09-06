@@ -2,13 +2,37 @@
 
 # bundle exec rakeで実行するタスクの候補を表示する。
 # プレビューとして、タスクのソースコードを表示する。
+RG_CMD="rg --line-number --color=never --hidden -g '*.rake' --sort=path '(namespace .*do|task_with_logger)'"
+RG_RESULT=$(eval "${RG_CMD}")
+if [[ -z ${RG_RESULT} ]]; then
+  echo "Not found."
+  exit $?
+fi
 
-files=$(rg --files --color=never --hidden -g '*.rake' --sort=path) || return
 target=$(
-  rg --line-number --color=never --hidden -g '*.rake' --sort=path "(namespace .*do|task_with_logger)" \
+  echo "${RG_RESULT}" \
+    | grep -Ev " *# *namespace .*do" \
+    | grep -Ev " *# *task_with_logger .*" \
     | awk -F ':' '{ for (i=1;i<=NF;i++) { sub(",", " ", $i); gsub("'"'"'", " ", $i); printf "%s ", $i}; printf "\n" }' \
     | awk '{ for (i=1;i<=NF;i++) { printf "%s ", $i}; printf "\n" }' \
-    | awk 'BEGIN { NS=""; TASK="" } { if ($3 == "namespace") { NS=$4;} else { TASK=$4; FILE=$1; LINE=$2; printf "\033[38;5;33m%s:%s\033[0m\t%s %s\n", NS, TASK, FILE, LINE } }' \
+    | awk '
+      BEGIN {
+        NAMESPACE = "@NAMESPACE_NOT_SET@";
+        FILE = "";
+        TASK = ""
+      } {
+        if (FILE != $1) {
+          NAMESPACE = "@NAMESPACE_NOT_SET@";
+          FILE = $1;
+        }
+        if ($3 == "namespace") {
+          NAMESPACE=$4
+        } else {
+          LINE = $2;
+          TASK = $4;
+          printf "\033[38;5;33m%s:%s\033[0m\t%s %s\n", NAMESPACE, TASK, FILE, LINE
+        }
+      }' \
     | fzf --info=inline \
       --nth=1 \
       --ansi \
@@ -17,7 +41,7 @@ target=$(
       --bind "ctrl-v:execute(nvim {2} +{3} < /dev/tty > /dev/tty)" \
       --bind 'ctrl-/:toggle-preview' \
       --preview 'bat --color=always --line-range {3}: --highlight-line {3} {2}' \
-      --preview-window=right:60%:wrap)
+      --preview-window=down:70%:wrap)
 ret_cd=$?
 if [ ${ret_cd} -eq 0 ]; then
   echo "${target}"|awk '{ print $1 }'

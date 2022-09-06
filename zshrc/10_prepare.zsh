@@ -6,7 +6,10 @@ if [[ -e "${CACHE_FILE}" ]]; then
   current_md5=$(md5sum $0| awk '{ print $1 }')
   cached_day=$(cat ${CACHE_FILE}| awk '{ print $1}')
   cached_md5=$(cat ${CACHE_FILE}| awk '{ print $2}')
-  [[ "${current_day}" == "${cached_day}" ]] && [[ "${current_md5}" == "${cached_md5}" ]] && return
+  if [[ "${current_day}" == "${cached_day}" ]] && [[ "${current_md5}" == "${cached_md5}" ]]; then
+    echo "$(basename $0) has been cached(${cached_day}, ${cached_md5})"
+    return
+  fi
 fi
 
 do_cache=1
