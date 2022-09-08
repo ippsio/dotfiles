@@ -58,21 +58,23 @@ GIT_LOG="git log"\
 " {7}"
 GIT_LOG=$(escape_SQ "${GIT_LOG}")
 
-echo "${L0_hyphen_hyphen}
+L_ALL=$(echo "${L0_hyphen_hyphen}
 ${L1_local_develop}
 ${L2_remote_develop}
 ${L3_local_without_develop}
 ${L4_local_not_checkedout}
-${L5_remote_without_develop}" \
+${L5_remote_without_develop}")
+echo "${L_ALL}" \
   | perl -pe 's/^[\r\n]+$//' \
   | awk -F '	' \
+    -v count=$(echo "${L_ALL}"| chop_blank_line| wc -l| tr -d ' ') \
     -v deco_git_objectname=$(decorate -git_objectname) \
     -v deco_git_authordate=$(decorate -git_authordate) \
     -v deco_git_an=$(decorate -git_an) \
     -v deco_git_refname=$(decorate -git_refname) \
     -v deco_git_s=$(decorate -git_s) \
     '{
-       printf "%s",                         "\033[2m"; printf "%+2s", NR; # awk-NR is fzf-{1}: index no
+       printf "%s",                         "\033[2m"; printf "(%+2s/%s)", NR, count; # awk-NR is fzf-{1}: index no
        printf "%s", "	"                     "\033[2m" $1 "\033[0m"; # awk-$1 is fzf-{2}: tag information about the branch.
        printf "%s", "	" deco_git_objectname "\033[2m" $2 "\033[0m"; # awk-$1 is fzf-{3}: %(objectname:short)
        printf "%s", "	" deco_git_authordate "\033[2m" $3 "\033[0m"; # awk-$2 is fzf-{4}: date part of %(authordate)

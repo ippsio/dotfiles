@@ -7,6 +7,7 @@
 
 SEARCH_WORD=""
 PARAMS=""
+NO_FZF=false
 while (( $# > 0 )); do
   case $1 in
     -B | -A | -C)
@@ -17,6 +18,9 @@ while (( $# > 0 )); do
         PARAMS="${PARAMS}$1 $2 "
         shift
       fi
+      ;;
+    --no-fzf)
+      NO_FZF=true
       ;;
     *)
       SEARCH_WORD="$1"
@@ -42,29 +46,36 @@ if [[ "${GIT_GREP_EXIT_CD}" != 0 ]]; then
   echo "Not found"
   exit ${GIT_GREP_EXIT_CD}
 else
-  FZF_REZULT=$(echo "${GIT_GREP_RESULT}" \
-    | awk -v GREP_RESULT_COUNT="$(echo "${GIT_GREP_RESULT}"| wc -l| tr -d ' ')" '{ printf "(%3d/%d)	%s\n", NR, GREP_RESULT_COUNT, $0 }' \
-    | fzf -m \
-      --ansi \
-      --info=inline \
-      --delimiter='	' \
-      --tabstop=2 \
-      --prompt="${FZF_PROMPT} > " \
-      --header="${GIT_GREP_CMD}" \
-      --bind "ctrl-c:print-query" \
-      --bind "ctrl-f:page-down" \
-      --bind "ctrl-b:page-up" \
-      --bind "ctrl-/:toggle-preview" \
-      --bind "tab:execute(git_pr_show_by_file_line {2} {3})" \
-      --bind "ctrl-o:execute(git_pr_open_by_file_line {2} {3})" \
-      --bind "ctrl-p:execute(git_pr_open_by_file_line {2} {3})" \
-      --bind="enter:execute(nvim {2} +{3} < /dev/tty > /dev/tty)" \
-      --preview-window"=wrap:bottom:65%"\
-      --preview="git_blame_colored {2} {3} \"${SEARCH_WORD}\" {q}"
-    )
+  GIT_GREP_RESULT_WITH_INDEX=$(echo "${GIT_GREP_RESULT}"\
+    | awk -v GREP_RESULT_COUNT="$(echo "${GIT_GREP_RESULT}"| wc -l| tr -d ' ')" '{ printf "(%3d/%d)	%s\n", NR, GREP_RESULT_COUNT, $0 }')
 
-  if [[ ! -z "${FZF_REZULT}" ]]; then
-    echo "QUERY> ${FZF_REZULT}"
+  if ${NO_FZF}; then
+    echo "${GIT_GREP_RESULT_WITH_INDEX}"
+    exit 0
+  else
+    FZF_REZULT=$(echo "${GIT_GREP_RESULT_WITH_INDEX}" \
+      | fzf -m \
+        --ansi \
+        --info=inline \
+        --delimiter='	' \
+        --tabstop=2 \
+        --prompt="${FZF_PROMPT} > " \
+        --header="${GIT_GREP_CMD}" \
+        --bind "ctrl-c:print-query" \
+        --bind "ctrl-f:page-down" \
+        --bind "ctrl-b:page-up" \
+        --bind "ctrl-/:toggle-preview" \
+        --bind "tab:execute(git_pr_show_by_file_line {2} {3})" \
+        --bind "ctrl-o:execute(git_pr_open_by_file_line {2} {3})" \
+        --bind "ctrl-p:execute(git_pr_open_by_file_line {2} {3})" \
+        --bind="enter:execute(nvim {2} +{3} < /dev/tty > /dev/tty)" \
+        --preview-window"=wrap:bottom:65%"\
+        --preview="git_blame_colored {2} {3} \"${SEARCH_WORD}\" {q}"
+      )
+
+    if [[ ! -z "${FZF_REZULT}" ]]; then
+      echo "QUERY> ${FZF_REZULT}"
+    fi
   fi
 fi
 

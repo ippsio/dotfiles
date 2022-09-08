@@ -13,7 +13,6 @@ function +vi-git-set-message-hook() {
   [[ "$1" != "0" ]] && return 0 # process when only for 1st messsge of zstyle formats, actionformats
 
   # obtain git command results
-  local git_remote="$(git remote get-url origin 2> /dev/null)"
   local git_status="$(git status --porcelain --branch --ahead-behind 2> /dev/null)"
   local git_XY="$(echo -e ${git_status}| sed -e "s/^\(..\).*$/\1/")"
 
@@ -21,7 +20,7 @@ function +vi-git-set-message-hook() {
   [[ "${stash_9}" == "0" ]] && stash_9=""
 
   # collect results
-  local repo_1=$(echo ${git_remote}| egrep -o "([a-zA-Z0-9_+-]+)\/([a-zA-Z0-9_+-]+)(.git)?$")
+  local repo_1=$(git_reponame)
   [ -z ${repo_1} ] && repo_1="NOT_SPECIFIED"
   local ahead_7=$(echo -e ${git_status}| egrep "ahead [0-9]*"| sed -e "s/^.*\[ahead \([0-9]*\).*/\1/")
   [ -z ${ahead_7} ] && ahead_7=0

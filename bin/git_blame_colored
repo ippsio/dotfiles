@@ -1,19 +1,25 @@
 #!/bin/bash
+readonly HIGHLIGHT_STANDARD=5
 
-HIGHLIGHT_STANDARD=5
-file="$1"
-line_highlight="${2:-1}"
-query=$(echo "${3} ${4} ${5} ${6} ${7} ${8} ${9} ${10}"| xargs echo| sed "s/^[[:blank:]]*//"| sed -E "s/[[:blank:]]+$//g"| sed -E "s/[[:blank:]]+/\|/g");
-if [ ${2:-1} -le ${HIGHLIGHT_STANDARD} ]; then
+file="$1";
+shift
+arg_line_highlight="${1:-1}"
+shift
+while (( $# > 0 )); do
+  [[ -z "${PARAMS}" ]] && PARAMS="$1" || PARAMS="${PARAMS} $1"
+  shift
+done
+query=$(echo "${PARAMS}"| sed -E "s/[[:blank:]]+$//g"| sed -E "s/[[:blank:]]+/\|/g");
+if [ ${arg_line_highlight} -le ${HIGHLIGHT_STANDARD} ]; then
   line_from=1
-  line_highlight="${2:-1}"
+  line_highlight="${arg_line_highlight}"
 else
-  line_from=$(( ${line_highlight} - ${HIGHLIGHT_STANDARD} + 1))
+  line_from=$(( ${arg_line_highlight} - ${HIGHLIGHT_STANDARD} + 1))
   line_highlight=${HIGHLIGHT_STANDARD}
 fi
 
 line_to=$(($line_from + $(tput lines)));
-git_repo=$(git remote get-url origin 2> /dev/null| grep -Eo "([a-zA-Z0-9_+-]+)\/([a-zA-Z0-9_+-]+)(.git)?$");
+git_repo=$(git_reponame);
 git_branch=$(git branch --show-current 2> /dev/null);
 echo "GIT={${git_repo}  $git_branch}";
 echo "FILE=$(realpath ${file}| home_as_tilde)";
@@ -32,13 +38,14 @@ else
         } {
           HASH=$1; H1 = toupper(substr(HASH, 2, 1)); H2 = toupper(substr(HASH, 3, 1));
           COLOR = H[H1] * 16 + H[H2];
+          # 色の調整。暗い色は見にくい。
           if (16  <= COLOR && COLOR <=  18) { COLOR = COLOR +  10 }
           if (232 <= COLOR && COLOR <= 237) { COLOR = COLOR - 200 }
           printf("\033[38;5;%dm", COLOR);
           printf("%s", HASH);
 
           if (!( HASH in PR_NO)) { "git_pr_no_by_hash " HASH | getline var; PR[HASH] = var };
-          printf("%s", PR[HASH]);
+          printf(" #%-6s", PR[HASH]);
 
           printf("\033[0m");
           sub(/[\^a-f0-9]+/, "", $0); # コミットハッシュ部分削除

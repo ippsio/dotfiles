@@ -1,2 +1,2 @@
 #!/bin/bash
-git remote get-url origin 2> /dev/null| grep -Eo "([a-zA-Z0-9+-]+)\/([a-zA-Z0-9+-]+)"
+git remote get-url origin 2>/dev/null| awk -F '[:/]' '{ printf "%s/%s\n",$(NF-1),$(NF) }'| sed 's/\.git$//'

@@ -2,7 +2,6 @@
 repo = 'tpope/vim-fugitive'
 hook_add = '''
   nnoremap <silent> <space>a :Git blame<CR>
-
   command! -nargs=0 GD call s:GitDiff()
   function! s:GitDiff()
     if $GIT_MERGE_BASE != ""

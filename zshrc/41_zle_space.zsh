@@ -7,6 +7,13 @@ zle_space() {
   [[ $LBUFFER =~ ' [A-Z0-9]+$' ]] \
   && zle _expand_alias
 
+  # cd
+  for file in $(ls ~/.compl_candidates/); do
+    [[ $BUFFER =~ "^${file}+[ ]$" ]] \
+    && BUFFER="$(cat ~/.compl_candidates/${file}| sed '/^$/d'| fzf --info=inline --bind 'j:down' --bind 'k:up')" \
+    && zle end-of-line && return
+  done
+
   # ssh
   [[ $BUFFER =~ '^ssh+[ ]$' ]] \
   && BUFFER="ssh $(fgrep 'Host ' ~/.ssh/config | grep -v '*' | awk '{print $2}' | sort | fzf)" \
@@ -31,7 +38,7 @@ zle_space() {
 
     # git status
     [[ $BUFFER =~ '^gs+$' || $BUFFER =~ '^gst+$' || $BUFFER =~ '^git st+$' ]] \
-      && BUFFER="git status " && zle end-of-line && return
+      && BUFFER="git status -s " && zle end-of-line && return
 
     # git checkout + completion
     [[ $BUFFER =~ '^gco+$' || $BUFFER =~ '^git co+$' ]] \
@@ -83,7 +90,7 @@ zle_space() {
 
   # bundle exec rails c
   [[ $BUFFER =~ '^c+$' || $BUFFER =~ '^rc+$' ]] \
-  && BUFFER="bundle exec rails c" && zle end-of-line && return
+  && BUFFER="bundle exec rails c" && zle end-of-line && zle accept-line && return
 
   #  bundle exec rake + completion
   [[ $BUFFER =~ '^rake+$' ]] \
@@ -91,7 +98,7 @@ zle_space() {
 
   # bundle exec rails s
   [[ $BUFFER =~ '^rs+$' || $BUFFER =~ '^bers+$' ]] \
-  && BUFFER="bundle exec rails s -b 0.0.0.0" && zle end-of-line && return
+  && BUFFER="bundle exec rails s -b 0.0.0.0" && zle end-of-line && zle accept-line return
 
   # rg
   [[ $BUFFER =~ '^rgg+$' ]] \
@@ -102,16 +109,21 @@ zle_space() {
   && BUFFER=$(docker_exec) && zle end-of-line && return
 
   # docker-compose
-  [[ $BUFFER =~ '^dc+$' ]] && BUFFER="docker-compose " && zle end-of-line && return
+  if [[ -e docker-compose.yml ]]; then
+    [[ $BUFFER =~ '^dc+$' ]] && BUFFER="docker-compose " && zle end-of-line && return
 
-  # docker-compose up -d
-  [[ $BUFFER =~ '^dcu+$' ]] && BUFFER="docker-compose up -d" && zle end-of-line && return
+    # docker-compose up -d
+    [[ $BUFFER =~ '^dcu+$' ]] && BUFFER="docker-compose up -d" && zle end-of-line && return
 
-  # docker-compose down
-  [[ $BUFFER =~ '^dcd+$' ]] && BUFFER="docker-compose down" && zle end-of-line && return
+    # docker-compose down
+    [[ $BUFFER =~ '^dcd+$' ]] && BUFFER="docker-compose down" && zle end-of-line && return
 
-  # docker-compose logs -f
-  [[ $BUFFER =~ '^dcl+$' ]] && BUFFER="docker-compose logs -f" && zle end-of-line && return
+    # docker-compose logs -f
+    [[ $BUFFER =~ '^dcl+$' ]] && BUFFER="docker-compose logs -f" && zle end-of-line && return
+
+    # docker-compose ps
+    [[ $BUFFER =~ '^dcp+$' ]] && BUFFER="docker-compose ps" && zle end-of-line && return
+  fi
 
   zle self-insert
 }

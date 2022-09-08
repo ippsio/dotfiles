@@ -1,0 +1,2 @@
+#!/bin/bash
+git_pr_get $1| jq -r "[.number, .state, .user.login, .title, .body, .html_url, .created_at, .updated_at, .closed_at, .merged_at] | @tsv"

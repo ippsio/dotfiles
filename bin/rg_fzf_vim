@@ -1,48 +1,27 @@
 #!/bin/bash
-# rg_fzf_vim
-# rg search + fzf filter +  edit with vim .
-SEARCH_WORD=${1:-.} HOME_AS_HOME=$(realpath ${2:-$(pwd)}| home_as_home)
-HOME_AS_TILDE=$(echo ${HOME_AS_HOME}| sed -e "s#^${HOME}#~#")
-
-# `man test` => -L: True if file exists and is a symbolic link.
 if [ -L $0 ] && basename $(readlink $0); then
   _ME=$(basename $(readlink $0))
 else
   _ME=$(basename $0)
 fi
-
-if [ -d ${HOME_AS_HOME} ]; then
-  DIR=${HOME_AS_HOME}
-  GLOB=""
-else
-  DIR=$(dirname ${HOME_AS_HOME})
-  GLOB="-g $(basename ${HOME_AS_HOME})"
-fi
-
-RG_CMD="rg --color=never --no-ignore --hidden --line-number ${GLOB} ${SEARCH_WORD}"
-FZF_PROMPT="${_ME}: '${RG_CMD}' > "
-FZF_HEADER="enter:nvim"
-
-cd ${DIR} && \
-eval "${RG_CMD}"\
-  | perl -pe 's/(^.*):(\d+):(.*)$/\1	\2	\3/' \
+rg_wrap $@ \
   | fzf \
     -m \
     --info=inline \
     --ansi \
     --delimiter='	' \
     --tabstop=2 \
-    --prompt="${FZF_PROMPT}" \
+    --prompt="(${_ME})" \
     --header="${FZF_HEADER}" \
-    --bind "enter:execute(nvim {1} +{2} < /dev/tty > /dev/tty)" \
+    --bind "enter:execute(nvim {2} +{3} < /dev/tty > /dev/tty)" \
     --bind='ctrl-/:toggle-preview' \
     --preview='
       # 原則、検索ヒットした行の5行前から表示。
-      from=$(expr {2} - 5);
+      from=$(expr {3} - 5);
       [[ ${from} -lt 1 ]] && from=1;
       bat \
         --color=always \
         --style=numbers,header \
         --line-range ${from}: \
-        --highlight-line {2} {1}
+        --highlight-line {3} {2}
       '

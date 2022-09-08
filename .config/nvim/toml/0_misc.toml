@@ -85,4 +85,3 @@ hook_add = '''
   vmap ,d :call ClipDiff()<CR>
 '''
 
-
