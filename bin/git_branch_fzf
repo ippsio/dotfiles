@@ -1,104 +1,39 @@
 #!/bin/bash
 COMMIT_LOG_ROWS=15
-# rich branch selector.
-# -------------------------
 ( ! is_git_repo ) && echo "Not a git repository. " && exit 1
 _ME=$( [ -L $0 ] && basename $(readlink $0) || basename $0)
-
 GIT_BRANCH_CMD="git branch --all --sort=-authordate --color=always --format='%(objectname:short)	%(authordate:format:%Y-%m-%d	%H:%M:%S(%a))	%(authorname)	%(refname:short)	%(subject)'"
-GIT_LOG="git log --oneline -$(( ${COMMIT_LOG_ROWS} - 2 )) --abbrev-commit --decorate=full --date=format-local:'%Y/%m/%d %H:%M:%S' --pretty=format:'%h	(%cd)	%an	%d	%s'"
-GIT_LOG=$(escape_SQ "${GIT_LOG}")
-
+GIT_LOG=$(escape_SQ "git log --oneline -$(( ${COMMIT_LOG_ROWS} - 2 )) --abbrev-commit --decorate=full --date=format-local:'%Y/%m/%d %H:%M:%S' --pretty=format:'%h	(%cd)	%an	%d	%s'")
 GIT_BRANCH_RESULT=$(eval "${GIT_BRANCH_CMD}")
-L_ALL="$(echo "${GIT_BRANCH_RESULT}"| grep -E '	(develop|origin/develop)	')
+L_ALL="$(git log --oneline -1| awk '{ gsub(/[0-9a-f]/, "o", $1); print $1 }')	oooo-oo-oo	oo:oo:oo(oo)	ooooooooooooooooooo	-- 	現在の変更を取り消す。
+$(echo "${GIT_BRANCH_RESULT}"| grep -E '	(develop|origin/develop)	')
 $(echo "${GIT_BRANCH_RESULT}"| grep -E '	(master|origin/master)	')
 $(echo "${GIT_BRANCH_RESULT}"| grep -Ev '	(HEAD|origin/HEAD|develop|origin/develop|master|origin/master)	')"
-
-echo "${L_ALL}" \
-  | awk -F '	' \
-    -v count=$(echo "${L_ALL}"| chop_blank_line| wc -l| tr -d ' ') \
-    -v deco_git_objectname=$(decorate -git_objectname) \
-    -v deco_git_authordate=$(decorate -git_authordate) \
-    -v deco_git_an=$(decorate -git_an) \
-    -v deco_git_refname=$(decorate -git_refname) \
-    -v deco_git_s=$(decorate -git_s) \
-    '{
-      if (NR == 1) {
-        tmp1=$1; gsub(/[0-9a-f]/, "-", tmp1)
-        tmp2=$2; gsub(/[0-9]/, "-", tmp2)
-        tmp3=$3; gsub(/[0-9]/, "-", tmp3); sub(/[月火水曜木金土日]/, "--", tmp3)
-        tmp4=$4; gsub(/./, "-", tmp4)
-        tmp5 = " local"
-        tmp6 = "-- "
-        tmp7 = "現在の変更を取り消す。"
-        # printf "%s	%s	%s	%s	%s	%s	%s\n", tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7
-        printf "%s",                         "\033[2m"; printf "(%+2s/%s)", NR, count; # awk-NR is fzf-{1}: index no
-        printf "%s", "	" deco_git_objectname "\033[2m" tmp1 "\033[0m"; # awk-$1 is fzf-{3}: %(objectname:short)
-        printf "%s", "	" deco_git_authordate "\033[2m" tmp2 "\033[0m"; # awk-$2 is fzf-{4}: date part of %(authordate)
-        printf "%s", "	" deco_git_authordate "\033[2m" tmp3 "\033[0m"; # awk-$3 is fzf-{5}: time part of %(authordate)
-        printf "%s", "	" deco_git_an                   tmp4 "\033[0m"; # awk-$4 is fzf-{6}: %(authorname)
-        printf "%s", "	"                     "\033[2m" tmp5 "\033[0m"; # awk-$1 is fzf-{2}: tag information about the branch.
-        printf "%s", "	" deco_git_refname              tmp6 "\033[0m"; # awk-$5 is fzf-{7}: %(refname:short)
-        printf "%s", "	" deco_git_s          "\033[2m" tmp7 "\033[0m"; # awk-$6 is fzf-{8}: %(subject)
-        printf "\n";
-      }
-
-      commit_mes = $6
-      if (index($5, "origin/") > 0) {
-        branchname = substr($5, length("origin/") + 1);
-        taginfo = "origin"
-
-      } else {
-        branchname = $5
-        taginfo = " local"
-      }
-
-      printf "%s",                         "\033[2m"; printf "(%+2s/%s)", NR, count; # awk-NR is fzf-{1}: index no
-      printf "%s", "	" deco_git_objectname "\033[2m" $1 "\033[0m"; # awk-$1 is fzf-{3}: %(objectname:short)
-      printf "%s", "	" deco_git_authordate "\033[2m" $2 "\033[0m"; # awk-$2 is fzf-{4}: date part of %(authordate)
-      printf "%s", "	" deco_git_authordate "\033[2m" $3 "\033[0m"; # awk-$3 is fzf-{5}: time part of %(authordate)
-      printf "%-35s", "	" deco_git_an                   $4 "\033[0m"; # awk-$4 is fzf-{6}: %(authorname)
-      printf "%s", "	"                     "\033[2m" taginfo "\033[0m"; # awk-$1 is fzf-{2}: tag information about the branch.
-      printf "%s", "	" deco_git_refname              branchname "\033[0m"; # awk-$5 is fzf-{7}: %(refname:short)
-      printf "%s", "	" deco_git_s          "\033[2m" commit_mes "\033[0m"; # awk-$6 is fzf-{8}: %(subject)
-      printf "\n";
-    }' \
- | fzf --ansi --prompt="$_ME > " --no-sort --info=inline --tabstop=1 --delimiter="	" --nth=1,2,3,4,6,7 \
+echo "${L_ALL}" | awk -F '	' -v count=$(echo "${L_ALL}"| chop_blank_line| wc -l| tr -d ' ') -v deco_git_objectname=$(decorate -git_objectname) -v deco_git_authordate=$(decorate -git_authordate) \
+    -v deco_git_an=$(decorate -git_an) -v deco_git_refname=$(decorate -git_refname) -v deco_git_s=$(decorate -git_s) '{
+      if (index($5, "origin/") > 0) { taginfo = "origin"; branchname = substr($5, length("origin/") + 1); } else { taginfo = " local"; branchname = $5; }
+      printf "%s", "\033[2m"; printf "(%+2s/%s)", NR, count;
+      printf "%s", "	" deco_git_objectname "\033[2m" $1 "\033[0m";
+      printf "%s", "	" deco_git_authordate "\033[2m" $2 "	" $3 "\033[0m";
+      printf "%-35s", "	" deco_git_an $4 "\033[0m";
+      printf "%s", "	" "\033[2m" taginfo "\033[0m";
+      printf "%s", "	" deco_git_refname branchname "\033[0m";
+      printf "%s", "	" deco_git_s "\033[2m" $6 "\033[0m\n";
+    }'| fzf --ansi --prompt="$_ME > " --no-sort --info=inline --tabstop=1 --delimiter="	" --nth=1,5,6,7 \
    --bind "tab:execute(cd $(git_root); git_log_fzf {7})" \
    --bind "ctrl-l:execute(cd $(git_root); git_log_fzf {7})" \
-   --preview="
-      cd $(git_root);
-      # --------------------------------------------------
-      # Git log.
-      # --------------------------------------------------
-      if [[ {6} == 'origin' ]]; then
-        branch='{6}/{7}'
-      else
-        branch='{7}'
-      fi
-      decorate -verbose_log; echo ${GIT_LOG} "'"${branch}"'"; printf '\033[0m';
-      echo;
-      eval ${GIT_LOG}  "'${branch}'" \
-        | awk -F '\t' \
-          -v deco_git_hash=$(escape_SQ $(decorate -git_hash)) \
-          -v deco_git_cd=$(escape_SQ $(decorate -git_cd)) \
-          -v deco_git_an=$(escape_SQ $(decorate -git_an)) \
-          -v deco_git_d=$(escape_SQ $(decorate -git_d)) \
-          -v deco_git_s=$(escape_SQ $(decorate -git_s)) \
-          '{
-            if (\"{7}\"!=\"--\") {
-              printf \"%2s\", NR;
-              printf \"	\"; printf \"%s\", deco_git_hash \$1 \"\033[0m\"; # %h
-              printf \"	\"; printf \"%s\", deco_git_cd   \$2 \"\033[0m\"; # (%cd)
-              printf \"	\"; printf \"%-35s\", deco_git_an   \$3 \"\033[0m\"; # %an
-              printf \"	\"; printf \"%s\", deco_git_d    \$4 \"\033[0m\"; # %d
-                            printf \"%s\", deco_git_s    \$5 \"\033[0m\"; # %s
-              printf \"\n\";
-            }
-          }'
-      echo;
-      horizontal_line;
-     "\
-   --preview-window down,15 \
+   --preview-window down,15 --preview="cd $(git_root);
+             [[ {6} == 'origin' ]] && branch='{6}/{7}' || branch='{7}'
+             decorate -verbose_log; echo ${GIT_LOG} "'"${branch}"'"; printf '\033[0m\n';
+             eval ${GIT_LOG} "'${branch}'"| awk -F '\t' -v deco_git_hash=$(escape_SQ $(decorate -git_hash)) -v deco_git_cd=$(escape_SQ $(decorate -git_cd)) \
+                 -v deco_git_an=$(escape_SQ $(decorate -git_an)) -v deco_git_d=$(escape_SQ $(decorate -git_d)) -v deco_git_s=$(escape_SQ $(decorate -git_s)) '{
+                   if (\"{7}\"!=\"--\") {
+                     printf \"%2s\", NR;
+                     printf \"	\"; printf \"%s\", deco_git_hash \$1 \"\033[0m\"; # %h
+                     printf \"	\"; printf \"%s\", deco_git_cd   \$2 \"\033[0m\"; # (%cd)
+                     printf \"	\"; printf \"%-35s\", deco_git_an   \$3 \"\033[0m\"; # %an
+                     printf \"	\"; printf \"%s\", deco_git_d    \$4 \"\033[0m\"; # %d
+                                   printf \"%s\", deco_git_s    \$5 \"\033[0m\n\"; # %s
+                   } }' "\
  | awk -F '	' '{ printf "%s", $7; }'
 
