@@ -44,7 +44,10 @@ else
           printf("\033[38;5;%dm", COLOR);
           printf("%s", HASH);
 
-          if (!( HASH in PR_NO)) { "git_pr_no_by_hash " HASH | getline var; PR[HASH] = var };
+          if (!( HASH in PR)) {
+            "git_pr_no_by_hash " HASH | getline var
+            PR[HASH] = var
+          }
           printf(" #%-6s", PR[HASH]);
 
           printf("\033[0m");

@@ -12,6 +12,44 @@ hook_add = '''
     \ }
     "\ 'mode_map': {'n': 'N', 'i': 'I', 'R': 'R', 'v': 'V', 'V': 'V', "\<C-v>": 'V', 'c': 'C', 's': 'S', 'S': 'S', "\<C-s>": 'S', 't': 'TERMINAL' },
 
+"let g:lightline = {
+"  \ 'colorscheme': 'powerline',
+"  \ 'active': {
+"  \ 'left': [ [ 'mode', 'paste' ],
+"  \ [ 'fugitive', 'readonly', 'filename', 'modified' ],
+"  \ [ 'ale' ] ]
+"  \ },
+"  \ 'component': {
+"  \ 'readonly': '%{&filetype=="help"?"":&readonly?"ro":""}',
+"  \ 'modified': '%{&filetype=="help"?"":&modified?"+":&modifiable?"":"-"}',
+"  \ 'fugitive': '%{exists("*FugitiveHead()")?FugitiveHead():""}'
+"  \ },
+"  \ 'component_visible_condition': {
+"  \ 'readonly': '(&filetype!="help"&& &readonly)',
+"  \ 'modified': '(&filetype!="help"&&(&modified||!&modifiable))',
+"  \ 'fugitive': '(exists("*FugitiveHead()") && ""!=FugitiveHead())'
+"  \ },
+"  \ 'component_function': {
+"  \ 'ale': 'LinterStatus'
+"  \ }
+"  \ }
+
+function! LinterStatus() abort
+  let l:counts = ale#statusline#Count(bufnr(''))
+
+  let l:all_errors = l:counts.error + l:counts.style_error
+  let l:all_non_errors = l:counts.total - l:all_errors
+
+  return l:counts.total == 0 ? 'OK' : printf(
+  \ '%dW %dE',
+  \ all_non_errors,
+  \ all_errors
+  \)
+endfunction
+
+
+
+
   function! FileName()
     return substitute(expand("%:p"), $HOME, "~", "g") . ( &modified ? '|+' : '')
   endfunction

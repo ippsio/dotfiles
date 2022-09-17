@@ -1,71 +1,20 @@
 #!/bin/bash
-
+COMMIT_LOG_ROWS=15
 # rich branch selector.
 # -------------------------
 ( ! is_git_repo ) && echo "Not a git repository. " && exit 1
 _ME=$( [ -L $0 ] && basename $(readlink $0) || basename $0)
-difference() { (printf '%s\n' $@ | sort -u; printf '%s\n' ${2}) | sort | uniq -u; };
 
-# L1) ローカルブランチ(developのみ)
-L1_local_develop_ARGS=$(git branch --list develop| grep -Ev '(HEAD ->|HEAD detached at)'| sed -r 's/[ \*]+//')
-# L2) リモートブランチ(origin/developのみ)
-L2_remote_develop_ARGS=$(git branch --remotes --list origin/develop| grep -Ev '(HEAD ->|HEAD detached at)'| sed -r 's/[ \*]+//')
-# L3) ローカルブランチ(develop以外の全て)
-L3_local_without_develop_ARGS="$(git branch| grep -Ev '(HEAD ->|HEAD detached at)'| sed -r 's/[ \*]+//')"
-L3_local_without_develop_ARGS=$(difference "${L3_local_without_develop_ARGS}" "${L1_local_develop_ARGS}")
-L3_local_without_develop_ARGS=$(difference "${L3_local_without_develop_ARGS}" "${L2_remote_develop_ARGS}")
-L3_local_without_develop_ARGS=$(echo "${L3_local_without_develop_ARGS}"| awk '{ printf " " $1 }')
-# L4) リモートブランチのうち、ローカルにない存在しないものから、ブランチ名の接頭辞'origin/' を除去しもの。
-L4_local_not_checkedout_ARGS=$(git branch --remotes| grep -Ev '(HEAD ->|HEAD detached at)'| sed -r 's/[ \*]+//'| sed -r 's#^origin/##')
-L4_local_not_checkedout_ARGS=$(difference "${L4_local_not_checkedout_ARGS}" "${L1_local_develop_ARGS}")
-L4_local_not_checkedout_ARGS=$(difference "${L4_local_not_checkedout_ARGS}" "${L3_local_without_develop_ARGS}")
-L4_local_not_checkedout_ARGS=$(echo "${L4_local_not_checkedout_ARGS}"| sed -r 's#^#origin/#g'| awk '{ printf " " $1 }')
-# L5) リモートブランチ(origin/develop以外の全て)
-L5_remote_without_develop_ARGS=$(git branch --remotes| grep -Ev '(HEAD ->|HEAD detached at)'| sed -r 's/[ \*]+//')
-L5_remote_without_develop_ARGS=$(difference "${L5_remote_without_develop_ARGS}" "${L2_remote_develop_ARGS}")
-L5_remote_without_develop_ARGS=$(echo "${L5_remote_without_develop_ARGS}"| awk '{ printf " " $1 }')
-
-TAGINFO_FIXED='------'
-TAGINFO_LOCAL_BRANCH='local+'
-TAGINFO_REMOTE_BRANCH='remote'
-TAGINFO_NOT_ON_LOCAL='local-'
-# git branchコマンドの共通部分
-GIT_BRANCH_CMD="git branch --sort=-authordate --color=always --format='%(objectname:short)	%(authordate:format:%Y-%m-%d	%H:%M:%S(%a))	%(authorname)	%(refname:short)	%(subject)'"
-L0_hyphen_hyphen="${TAGINFO_FIXED}	xxxxxxxxxx	xxxx-xx-xx	xx:xx:xx(XX)	xxxxxx	-- 	現在の変更を取り消す。"
-if [[ ! -z ${L1_local_develop_ARGS} ]]; then
-  L1_local_develop=$(eval "${GIT_BRANCH_CMD} --list ${L1_local_develop_ARGS}"| perl -pe "s/^/${TAGINFO_LOCAL_BRANCH}	/")
-fi
-if [[ ! -z ${L2_remote_develop_ARGS} ]]; then
-  L2_remote_develop=$(eval "${GIT_BRANCH_CMD} --remotes --list ${L2_remote_develop_ARGS}"| perl -pe "s/^/${TAGINFO_REMOTE_BRANCH}	/")
-fi
-if [[ ! -z ${L3_local_without_develop_ARGS} ]]; then
-  L3_local_without_develop=$(eval "${GIT_BRANCH_CMD} --list ${L3_local_without_develop_ARGS}"| perl -pe "s/^/${TAGINFO_LOCAL_BRANCH}	/")
-fi
-if [[ ! -z ${L4_local_not_checkedout_ARGS} ]]; then
-  L4_local_not_checkedout=$(eval "${GIT_BRANCH_CMD} --remotes --list ${L4_local_not_checkedout_ARGS}" | perl -pe "s/^/${TAGINFO_NOT_ON_LOCAL}	/"| perl -pe 's#	origin/(.*	)#	\1#')
-fi
-if [[ ! -z ${L5_remote_without_develop_ARGS} ]]; then
-  L5_remote_without_develop=$(eval "${GIT_BRANCH_CMD} --remotes --list ${L5_remote_without_develop_ARGS}" | perl -pe "s/^/${TAGINFO_REMOTE_BRANCH}	/")
-fi
-
-GIT_LOG="git log"\
-" --oneline "\
-" --abbrev-commit"\
-" --decorate=full"\
-" --date=format-local:'%Y/%m/%d %H:%M:%S'"\
-" --pretty=format:'%h	(%cd)	%an	%d	%s'"\
-" -13"\
-" {7}"
+GIT_BRANCH_CMD="git branch --all --sort=-authordate --color=always --format='%(objectname:short)	%(authordate:format:%Y-%m-%d	%H:%M:%S(%a))	%(authorname)	%(refname:short)	%(subject)'"
+GIT_LOG="git log --oneline -$(( ${COMMIT_LOG_ROWS} - 2 )) --abbrev-commit --decorate=full --date=format-local:'%Y/%m/%d %H:%M:%S' --pretty=format:'%h	(%cd)	%an	%d	%s'"
 GIT_LOG=$(escape_SQ "${GIT_LOG}")
 
-L_ALL=$(echo "${L0_hyphen_hyphen}
-${L1_local_develop}
-${L2_remote_develop}
-${L3_local_without_develop}
-${L4_local_not_checkedout}
-${L5_remote_without_develop}")
+GIT_BRANCH_RESULT=$(eval "${GIT_BRANCH_CMD}")
+L_ALL="$(echo "${GIT_BRANCH_RESULT}"| grep -E '	(develop|origin/develop)	')
+$(echo "${GIT_BRANCH_RESULT}"| grep -E '	(master|origin/master)	')
+$(echo "${GIT_BRANCH_RESULT}"| grep -Ev '	(HEAD|origin/HEAD|develop|origin/develop|master|origin/master)	')"
+
 echo "${L_ALL}" \
-  | perl -pe 's/^[\r\n]+$//' \
   | awk -F '	' \
     -v count=$(echo "${L_ALL}"| chop_blank_line| wc -l| tr -d ' ') \
     -v deco_git_objectname=$(decorate -git_objectname) \
@@ -74,16 +23,46 @@ echo "${L_ALL}" \
     -v deco_git_refname=$(decorate -git_refname) \
     -v deco_git_s=$(decorate -git_s) \
     '{
-       printf "%s",                         "\033[2m"; printf "(%+2s/%s)", NR, count; # awk-NR is fzf-{1}: index no
-       printf "%s", "	"                     "\033[2m" $1 "\033[0m"; # awk-$1 is fzf-{2}: tag information about the branch.
-       printf "%s", "	" deco_git_objectname "\033[2m" $2 "\033[0m"; # awk-$1 is fzf-{3}: %(objectname:short)
-       printf "%s", "	" deco_git_authordate "\033[2m" $3 "\033[0m"; # awk-$2 is fzf-{4}: date part of %(authordate)
-       printf "%s", "	" deco_git_authordate "\033[2m" $4 "\033[0m"; # awk-$3 is fzf-{5}: time part of %(authordate)
-       printf "%s", "	" deco_git_an                   $5 "\033[0m"; # awk-$4 is fzf-{6}: %(authorname)
-       printf "%s", "	" deco_git_refname              $6 "\033[0m"; # awk-$5 is fzf-{7}: %(refname:short)
-       printf "%s", "	" deco_git_s          "\033[2m" $7 "\033[0m"; # awk-$6 is fzf-{8}: %(subject)
-       printf "\n";
-     }' \
+      if (NR == 1) {
+        tmp1=$1; gsub(/[0-9a-f]/, "-", tmp1)
+        tmp2=$2; gsub(/[0-9]/, "-", tmp2)
+        tmp3=$3; gsub(/[0-9]/, "-", tmp3); sub(/[月火水曜木金土日]/, "--", tmp3)
+        tmp4=$4; gsub(/./, "-", tmp4)
+        tmp5 = " local"
+        tmp6 = "-- "
+        tmp7 = "現在の変更を取り消す。"
+        # printf "%s	%s	%s	%s	%s	%s	%s\n", tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7
+        printf "%s",                         "\033[2m"; printf "(%+2s/%s)", NR, count; # awk-NR is fzf-{1}: index no
+        printf "%s", "	" deco_git_objectname "\033[2m" tmp1 "\033[0m"; # awk-$1 is fzf-{3}: %(objectname:short)
+        printf "%s", "	" deco_git_authordate "\033[2m" tmp2 "\033[0m"; # awk-$2 is fzf-{4}: date part of %(authordate)
+        printf "%s", "	" deco_git_authordate "\033[2m" tmp3 "\033[0m"; # awk-$3 is fzf-{5}: time part of %(authordate)
+        printf "%s", "	" deco_git_an                   tmp4 "\033[0m"; # awk-$4 is fzf-{6}: %(authorname)
+        printf "%s", "	"                     "\033[2m" tmp5 "\033[0m"; # awk-$1 is fzf-{2}: tag information about the branch.
+        printf "%s", "	" deco_git_refname              tmp6 "\033[0m"; # awk-$5 is fzf-{7}: %(refname:short)
+        printf "%s", "	" deco_git_s          "\033[2m" tmp7 "\033[0m"; # awk-$6 is fzf-{8}: %(subject)
+        printf "\n";
+      }
+
+      commit_mes = $6
+      if (index($5, "origin/") > 0) {
+        branchname = substr($5, length("origin/") + 1);
+        taginfo = "origin"
+
+      } else {
+        branchname = $5
+        taginfo = " local"
+      }
+
+      printf "%s",                         "\033[2m"; printf "(%+2s/%s)", NR, count; # awk-NR is fzf-{1}: index no
+      printf "%s", "	" deco_git_objectname "\033[2m" $1 "\033[0m"; # awk-$1 is fzf-{3}: %(objectname:short)
+      printf "%s", "	" deco_git_authordate "\033[2m" $2 "\033[0m"; # awk-$2 is fzf-{4}: date part of %(authordate)
+      printf "%s", "	" deco_git_authordate "\033[2m" $3 "\033[0m"; # awk-$3 is fzf-{5}: time part of %(authordate)
+      printf "%-35s", "	" deco_git_an                   $4 "\033[0m"; # awk-$4 is fzf-{6}: %(authorname)
+      printf "%s", "	"                     "\033[2m" taginfo "\033[0m"; # awk-$1 is fzf-{2}: tag information about the branch.
+      printf "%s", "	" deco_git_refname              branchname "\033[0m"; # awk-$5 is fzf-{7}: %(refname:short)
+      printf "%s", "	" deco_git_s          "\033[2m" commit_mes "\033[0m"; # awk-$6 is fzf-{8}: %(subject)
+      printf "\n";
+    }' \
  | fzf --ansi --prompt="$_ME > " --no-sort --info=inline --tabstop=1 --delimiter="	" --nth=1,2,3,4,6,7 \
    --bind "tab:execute(cd $(git_root); git_log_fzf {7})" \
    --bind "ctrl-l:execute(cd $(git_root); git_log_fzf {7})" \
@@ -92,9 +71,14 @@ echo "${L_ALL}" \
       # --------------------------------------------------
       # Git log.
       # --------------------------------------------------
-      decorate -verbose_log; echo ${GIT_LOG}; printf '\033[0m';
+      if [[ {6} == 'origin' ]]; then
+        branch='{6}/{7}'
+      else
+        branch='{7}'
+      fi
+      decorate -verbose_log; echo ${GIT_LOG} "'"${branch}"'"; printf '\033[0m';
       echo;
-      eval ${GIT_LOG}\
+      eval ${GIT_LOG}  "'${branch}'" \
         | awk -F '\t' \
           -v deco_git_hash=$(escape_SQ $(decorate -git_hash)) \
           -v deco_git_cd=$(escape_SQ $(decorate -git_cd)) \
@@ -106,7 +90,7 @@ echo "${L_ALL}" \
               printf \"%2s\", NR;
               printf \"	\"; printf \"%s\", deco_git_hash \$1 \"\033[0m\"; # %h
               printf \"	\"; printf \"%s\", deco_git_cd   \$2 \"\033[0m\"; # (%cd)
-              printf \"	\"; printf \"%s\", deco_git_an   \$3 \"\033[0m\"; # %an
+              printf \"	\"; printf \"%-35s\", deco_git_an   \$3 \"\033[0m\"; # %an
               printf \"	\"; printf \"%s\", deco_git_d    \$4 \"\033[0m\"; # %d
                             printf \"%s\", deco_git_s    \$5 \"\033[0m\"; # %s
               printf \"\n\";

@@ -1,5 +1,5 @@
 #!/bin/bash
-RG_RESULT=$(rg -C 1 --field-match-separator '\t' --field-context-separator '\t' --no-context-separator --color=always --no-ignore --hidden --vimgrep --no-column --glob !.git/ --glob !.DS_Store $@)
+RG_RESULT=$(rg --fixed-strings --field-match-separator '\t' --field-context-separator '\t' --no-context-separator --color=always --no-ignore --hidden --vimgrep --no-column --glob !.git/ --glob !.DS_Store "$@")
 RG_EXIT_CD=$?
 
 if [[ "${RG_EXIT_CD}" != 0 ]]; then

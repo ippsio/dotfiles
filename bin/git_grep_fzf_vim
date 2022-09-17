@@ -8,6 +8,7 @@
 SEARCH_WORD=""
 PARAMS=""
 NO_FZF=false
+USE_REGEX=false
 while (( $# > 0 )); do
   case $1 in
     -B | -A | -C)
@@ -18,6 +19,9 @@ while (( $# > 0 )); do
         PARAMS="${PARAMS}$1 $2 "
         shift
       fi
+      ;;
+    --extended-regex | -E)
+      USE_REGEX=true
       ;;
     --no-fzf)
       NO_FZF=true
@@ -37,7 +41,16 @@ done
 # そのためNULL文字はperlで置換する（タブ文字にする）。
 # ファイルとファイルの区切りは '--' となるが、これは検索結果的には邪魔である。
 # そのため grep -v で'--' の行を除去する。
-GIT_GREP_CMD="git grep --null --line-number --color=always --extended-regexp "${PARAMS}"| perl -pe 's/\x0/\t/g'| grep -v '\-\-'"
+
+# 正規表現を使いたいときはパラメタ -E か --extended-regexp を与えてもうらことにします。
+# GIT_GREP_CMD="git grep --null --line-number --color=always --extended-regexp "${PARAMS}"| perl -pe 's/\x0/\t/g'| grep -v '\-\-'"
+if ${USE_REGEX}; then
+  #GIT_GREP_CMD="git grep --null --line-number --color=always "${PARAMS}"| perl -pe 's/\x0/\t/g'| grep -v '\-\-'"
+  GIT_GREP_CMD="git grep --null --line-number --color=always "${PARAMS}"| perl -pe 's/\x0/\t/g'"
+else
+  #GIT_GREP_CMD="git grep --null --line-number --color=always --fixed-strings "${PARAMS}"| perl -pe 's/\x0/\t/g'| grep -v '\-\-'"
+  GIT_GREP_CMD="git grep --null --line-number --color=always --fixed-strings "${PARAMS}"| perl -pe 's/\x0/\t/g'"
+fi
 FZF_PROMPT="$(basename $0) ${PARAMS}"
 FZF_HEADER="enter:nvim"
 GIT_GREP_RESULT=$(eval "${GIT_GREP_CMD}")

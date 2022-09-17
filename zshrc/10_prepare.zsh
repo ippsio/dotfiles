@@ -68,6 +68,17 @@ chk_pynvim_or_install() {
     return 1
   fi
 }
+chk_or_pip_install() {
+  if ( type "$1" > /dev/null 2>&1 ); then
+    echo -n "$1 ok, "
+    return 0
+  else
+    echo "$1 not found. install."
+    python3 -m pip install ${2:-$1} --user
+    do_cache=0
+    return 1
+  fi
+}
 chkfile_or_flink() {
   if [ -L $1 ]; then
     echo -n "${1//${HOME}/~} ok, "
@@ -120,6 +131,10 @@ nodir_then_gitclone "${HOME}/setting_box" "ippsio/setting_box.git"
 # type_or_inst universal-ctags
 ( ctags --version|grep "Universal Ctags" 2>&1 > /dev/null ) || brew install universal-ctags
 chk_pynvim_or_install
+chk_or_pip_install diff-highlight
+
+# mkdir
+mkdir -p ~/.tmux/log/
 
 # check link.
 chkfile_or_dlink ~/.config/nvim          ~/dotfiles/.config/nvim

@@ -4,7 +4,7 @@ if [ -L $0 ] && basename $(readlink $0); then
 else
   _ME=$(basename $0)
 fi
-rg_wrap $@ \
+rg_wrap "$@" \
   | fzf \
     -m \
     --info=inline \
