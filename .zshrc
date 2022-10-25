@@ -9,11 +9,6 @@ autoload -Uz compinit && compinit -u
 SHOW_ME_PROFILE=false
 ${SHOW_ME_PROFILE} && zmodload zsh/zprof && zprof
 
-# zsh補完
-#zstyle ':completion:*' menu select interactive
-zstyle ':completion:*' menu select=3
-setopt menu_complete
-
 START=$(~/dotfiles/bin/epocms_perl)
 
 # history

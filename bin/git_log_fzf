@@ -60,7 +60,7 @@ eval "${GIT_LOG_CMD}" \
       printf "	"; printf deco_git_s;               printf "%s", $3; printf "%s", reset; # awk-$3 = fzf-{7} = %s
       printf "\n";
     }' \
-  | fzf --ansi --info=inline --prompt="${_FZF_PROMPT}" --no-clear --tabstop=1 --header="${_FZF_HEADER}" --no-sort --delimiter='\t' \
+  | fzf --ansi --info=inline --prompt="${_FZF_PROMPT} ${GIT_LOG_CMD}" --no-clear --tabstop=1 --header="${_FZF_HEADER}" --no-sort --delimiter='\t' \
   --bind "enter:execute(git log -1 -p --stat ${DIFF_MERGES} --pretty=fuller --abbrev-commit {2} ${file}| nvim -R -c \"set ft=diff nomod nolist nospell nu\" > /dev/tty)" \
   --bind "tab:execute(git log -1 -p {2} ${file} < /dev/tty > /dev/tty)" \
   --bind "ctrl-y:execute(echo -n {2}| pbcopy)" \

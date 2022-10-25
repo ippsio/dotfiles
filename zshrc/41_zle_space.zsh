@@ -8,11 +8,9 @@ zle_space() {
   && zle _expand_alias
 
   # cd
-  for file in $(ls ~/.compl_candidates/); do
-    [[ $BUFFER =~ "^${file}+[ ]$" ]] \
-    && BUFFER="$(cat ~/.compl_candidates/${file}| sed '/^$/d'| fzf --info=inline --bind 'j:down' --bind 'k:up')" \
-    && zle end-of-line && return
-  done
+  [[ $BUFFER =~ '^goto+$' ]] \
+    && BUFFER="$(goto)" \
+  && zle accept-line && return
 
   # ssh
   [[ $BUFFER =~ '^ssh+[ ]$' ]] \
@@ -89,16 +87,16 @@ zle_space() {
   && BUFFER="bundle exec rails " && zle end-of-line && return
 
   # bundle exec rails c
-  [[ $BUFFER =~ '^c+$' || $BUFFER =~ '^rc+$' ]] \
-  && BUFFER="bundle exec rails c" && zle end-of-line && zle accept-line && return
+  [[ $BUFFER =~ '^c+$' ]] \
+  && BUFFER="bundle exec rails c" && zle end-of-line && return
 
   #  bundle exec rake + completion
   [[ $BUFFER =~ '^rake+$' ]] \
   && BUFFER="bundle exec rake $(fzf_bundle_exec_rake)" && zle end-of-line && return
 
   # bundle exec rails s
-  [[ $BUFFER =~ '^rs+$' || $BUFFER =~ '^bers+$' ]] \
-  && BUFFER="bundle exec rails s -b 0.0.0.0" && zle end-of-line && zle accept-line return
+  [[ $BUFFER =~ '^rs+$' ]] \
+  && BUFFER="bundle exec rails s -b 0.0.0.0" && zle end-of-line && return
 
   # rg
   [[ $BUFFER =~ '^rgg+$' ]] \
@@ -124,6 +122,10 @@ zle_space() {
     # docker-compose ps
     [[ $BUFFER =~ '^dcp+$' ]] && BUFFER="docker-compose ps" && zle end-of-line && return
   fi
+
+  # goto
+  [[ $BUFFER =~ '^goto+$' ]] \
+  && BUFFER=$(docker_exec) && zle end-of-line && return
 
   zle self-insert
 }

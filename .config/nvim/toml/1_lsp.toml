@@ -43,22 +43,22 @@ mason_lspconfig.setup {
 mason_lspconfig.setup_handlers({
   function(server_name)
   local opts = {}
-  opts.on_attach = function(_, bufnr)
-    local bufopts = { silent = true, buffer = bufnr }
-    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
-    vim.keymap.set('n', 'gtD', vim.lsp.buf.type_definition, bufopts)
-    vim.keymap.set('n', 'grf', vim.lsp.buf.references, bufopts)
-    --vim.keymap.set('n', '<space>p', vim.lsp.buf.format, bufopts)
+    opts.on_attach = function(_, bufnr)
+      local bufopts = { silent = true, buffer = bufnr }
+      vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
+  --   vim.keymap.set('n', 'gtD', vim.lsp.buf.type_definition, bufopts)
+  --   vim.keymap.set('n', 'grf', vim.lsp.buf.references, bufopts)
+  --   --vim.keymap.set('n', '<space>p', vim.lsp.buf.format, bufopts)
 
-    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
-    --vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
-    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
-    vim.keymap.set('n', 'gs', vim.lsp.buf.signature_help, bufopts)
-    vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
-    vim.keymap.set('n', 'gx', vim.lsp.diagnostic.show_line_diagnostics, bufopts)
-    vim.keymap.set('n', 'g[', vim.lsp.diagnostic.goto_prev, bufopts)
-    vim.keymap.set('n', 'g]', vim.lsp.diagnostic.goto_next, bufopts)
-    end
+      vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
+  --   --vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
+  --   vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
+      vim.keymap.set('n', 'gs', vim.lsp.buf.signature_help, bufopts)
+  --   vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
+  --   vim.keymap.set('n', 'gx', vim.lsp.diagnostic.show_line_diagnostics, bufopts)
+  --   vim.keymap.set('n', 'g[', vim.lsp.diagnostic.goto_prev, bufopts)
+  --   vim.keymap.set('n', 'g]', vim.lsp.diagnostic.goto_next, bufopts)
+     end
   nvim_lsp[server_name].setup(opts)
   end})
 EOF

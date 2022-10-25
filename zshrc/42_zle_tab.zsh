@@ -20,6 +20,12 @@ function triggered_by_tab() {
     fi
   done
 
+  if $(is_git_repo); then
+    [[ $BUFFER =~ "^.*origin/+$" ]] \
+      && RBUFFER="$(git branch --show-current)" && zle end-of-line && return
+  fi
+
+
   # tig + completion
   [[ $BUFFER =~ '^tig +$' ]] \
   && zle autosuggest-clear \

@@ -47,7 +47,7 @@ hook_add = '''
   command! -bang -nargs=* BLinesWithPreview
         \ call fzf#vim#grep(
         \   'rg '
-        \     . '--color=always '
+        \     . '--color=never '
         \     . '--with-filename '
         \     . '--line-number '
         \     . '--no-heading '

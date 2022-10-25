@@ -34,6 +34,10 @@ on_source = 'ddc.vim'
 repo = 'octaltree/cmp-look'
 on_source = 'ddc.vim'
 
+[[plugins]]
+repo='vim-skk/denops-skkeleton.vim'
+on_source = 'ddc.vim'
+
 # ===================================================
 # DDC FILTER
 # ===================================================
@@ -147,52 +151,37 @@ call ddc#custom#patch_global('autoCompleteEvents', ['InsertEnter', 'TextChangedI
 """endfunction
 """" }}}
 
-"call ddc#custom#patch_global('sourceOptions', {
-"  \ '_': { 'minAutoCompleteLength': 2, 'matchers': ['matcher_fuzzy'], 'sorters': ['sorter_fuzzy'], 'converters': ['converter_fuzzy'] }, })
 
 call ddc#custom#patch_global('sourceOptions', {
-  \ '_': { 'minAutoCompleteLength': 2, 'matchers': ['matcher_fuzzy'], 'sorters': ['sorter_rank'], 'converters': ['converter_fuzzy'] }, })
+  \ 'nvim-lsp': { 'mark': 'lsp', 'forceCompletionPattern': '\.\w*|:\w*|->\w*' },
+  \ 'mocword': { 'mark': 'mocword', 'minAutoCompleteLength': 3, 'isVolatile': v:true, },
+  \ 'look': { 'converters': ['loud', 'matcher_head'], 'matchers': [], 'mark': 'look', 'isVolatile': v:true, },
+  \ 'around': {'mark': 'ddc-arround'},
+  \ 'cmdline-history': {'mark': 'ddc-cmdline-history'},
+  \ 'skkeleton': { 'mark': 'skkeleton', 'matchers': ['skkeleton'], 'sorters': []},
+  \ 'file': { 'mark': 'ddc-file', 'isVolatile': v:true, 'forceCompletionPattern': '\S/\S*', },
+  \ '_': { 'minAutoCompleteLength': 2, 'matchers': ['matcher_fuzzy'], 'sorters': ['sorter_rank'], 'converters': ['converter_fuzzy']},
+  \ })
 "call ddc#custom#patch_global('filterParams', { 'matcher_fuzzy': {'camelcase': v:true}, })
 
 "call ddc#custom#patch_global('sourceOptions', {
 " \ '_': { 'matchers': ['matcher_head'], 'sorters': ['sorter_rank']}, })
 
-" Change source options
-" Customize global settings
-call ddc#custom#patch_global('sources', [ 'nvim-lsp', 'around', 'file', ])
+call ddc#custom#patch_global('sources', [ 'nvim-lsp', 'around', 'file', 'skkeleton', ])
 
 " ddc-cmdline-history
-call ddc#custom#patch_global('sourceOptions', {
-\ 'cmdline-history': {'mark': 'ddc-cmdline-history'}, })
 
 " ddc-arround
-call ddc#custom#patch_global('sourceOptions', {
-\ 'around': {'mark': 'ddc-arround'}, })
 call ddc#custom#patch_global('sourceParams', {
-\ 'around': {'maxSize': 500}, })
+\ 'around': {'maxSize': 500},
+\ 'nvim-lsp': { 'kindLabels': { 'Class': 'c' } },
+\ 'look': { 'convertCase': v:true, 'dict': v:null },
+\ })
 
 " ddc-file
-call ddc#custom#patch_global('sourceOptions', {
-\ 'file': { 'mark': 'ddc-file', 'isVolatile': v:true, 'forceCompletionPattern': '\S/\S*', }})
 call ddc#custom#patch_filetype(['ps1', 'dosbatch', 'autohotkey', 'registry'], {
 \ 'sourceOptions': { 'file': { 'forceCompletionPattern': '\S\\\S*', }, },
 \ 'sourceParams': { 'file': { 'mode': 'win32', }, }})
-
-" ddc-nvim-lsp
-call ddc#custom#patch_global('sourceOptions', {
-\ 'nvim-lsp': { 'mark': 'lsp', 'forceCompletionPattern': '\.\w*|:\w*|->\w*' }, })
-call ddc#custom#patch_global('sourceParams', {
-\ 'nvim-lsp': { 'kindLabels': { 'Class': 'c' } }, })
-
-" cmp-look
-call ddc#custom#patch_global('sourceOptions', {
-\ 'look': { 'converters': ['loud', 'matcher_head'], 'matchers': [], 'mark': 'look', 'isVolatile': v:true, }})
-call ddc#custom#patch_global('sourceParams', {
-\ 'look': { 'convertCase': v:true, 'dict': v:null }})
-
-" ddc-mocword
-call ddc#custom#patch_global('sourceOptions', {
-\ 'mocword': { 'mark': 'mocword', 'minAutoCompleteLength': 3, 'isVolatile': v:true, }})
 
 " <TAB>: completion.
 inoremap <silent><expr> <TAB>
@@ -202,6 +191,11 @@ inoremap <silent><expr> <TAB>
 
 " <S-TAB>: completion back.
 inoremap <expr><S-TAB>  ddc#map#pum_visible() ? '<C-p>' : '<C-h>'
+
+"imap <C-j> <Plug>(skkeleton-toggle)
+"cmap <C-j> <Plug>(skkeleton-toggle)
+"call skkeleton#config({'eggLikeNewline':v:true })
+"call skkeleton#config({'globalJisyo':'~/.skk/SKK-JISYO.L.gz' })
 
 " Use ddc.
 call ddc#enable()
