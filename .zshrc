@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 # zsh起動時にtmux起動
 (type "tmux" > /dev/null 2>&1) && [[ -z "$TMUX" && ! -z "$PS1" ]] \
-  && for i in {0..128}; do [[ -z $(tmux ls -f "#{==:#{session_name},${i}}") ]] && tmux new-session -s ${i} && echo "bye." && sleep 1 && exit; done
+  && for i in {1..128}; do [[ -z $(tmux ls -f "#{==:#{session_name},${i}}") ]] && tmux new-session -s ${i} && echo "bye." && sleep 1 && exit; done
 
 autoload -Uz compinit && compinit -u
 

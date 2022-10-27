@@ -25,29 +25,19 @@ augroup vimrc-highlight
   " .tomlなファイルのファイルタイプはvimとして扱った方が個人的にシンタックスハイライトが好み
   autocmd BufNewFile,BufRead *.toml setlocal filetype=vim
 
-  autocmd BufRead,BufEnter,BufWinEnter * call DoWellByFileType()
-  fun DoWellByFileType()
-    if &ft == ""
-      let &colorcolumn=join(range(0, 0), ",")
+  " ft=*.rb,pythonなら、コード規約遵守のための縦線を引く(120桁目位に）。
+  " autocmd BufRead,BufEnter,BufWinEnter * let &colorcolumn=join(range(0, 0), ",")
+  autocmd BufRead,BufEnter,BufWinEnter *.rb let &colorcolumn=join(range(121, 121), ",")
+  autocmd BufRead,BufEnter,BufWinEnter *.py let &colorcolumn=join(range(121, 121), ",")
 
-    elseif match(["ruby", "python"], &ft) >= 0
-      " ファイルタイプによって、コード規約遵守のための縦線を引く(120桁目位に）。
-      let &colorcolumn=join(range(121, 121), ",")
+  " ある行をコメントアウトしたくて「#」を打った瞬間、vimが気を利かせてインデントを整える事がある。これが好きじゃないので止まってもらう。
+  autocmd BufRead,BufEnter,BufWinEnter *.yaml setlocal indentkeys-=0#
+augroup END
 
-    elseif match(["yaml"], &ft) >= 0
-      let &colorcolumn=join(range(0, 0), ",")
-      " ymlの場合、ある行をコメントアウトしたくて「#」を打った瞬間にインデントが崩れることがある。
-      " 例えば docker-compose.yml など。
-      " これは想像よりもかなりしっかり崩れるので、この挙動はなんとか制御したい。防ぎたい。
-      " そのための対策として 「#」をどうにかする設定を以下でします。
-      " setlocal nosmartindent
-      " setlocal noautoindent
-      setlocal indentkeys-=0#
-
-    else
-      let &colorcolumn=join(range(0, 0), ",")
-    endif
-  endfun
+augroup fileTypeIndent
+  autocmd!
+  autocmd BufNewFile,BufRead *.toml setlocal tabstop=2 softtabstop=2 shiftwidth=2
+  autocmd BufNewFile,BufRead *.vim setlocal tabstop=2 softtabstop=2 shiftwidth=2
 augroup END
 
 """augroup aufugitive

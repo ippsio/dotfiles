@@ -1,0 +1,2 @@
+#!/bin/bash
+tmux ls| wc -l| tr -d ' '
