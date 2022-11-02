@@ -63,6 +63,15 @@ on_source = 'ddc.vim'
 # on_source = 'ddc.vim'
 
 # ===================================================
+# UI
+# ===================================================
+[[plugins]]
+repo='Shougo/ddc-ui-native'
+on_source='ddc.vim'
+hook_add='''
+'''
+
+# ===================================================
 # DDC
 # ===================================================
 [[plugins]]
@@ -150,7 +159,6 @@ call ddc#custom#patch_global('autoCompleteEvents', ['InsertEnter', 'TextChangedI
 call ddc#custom#patch_global('sourceOptions', {'around': {
   \ 'mark': 'ddc-arround'}, })
 
-
 call ddc#custom#patch_global('sourceOptions', {
   \ 'nvim-lsp': { 'mark': 'lsp', 'forceCompletionPattern': '\.\w*|:\w*|->\w*' }})
 
@@ -192,6 +200,12 @@ call ddc#custom#patch_global('sourceParams', {
 call ddc#custom#patch_filetype(['ps1', 'dosbatch', 'autohotkey', 'registry'], {
 \ 'sourceOptions': { 'file': { 'forceCompletionPattern': '\S\\\S*', }, },
 \ 'sourceParams': { 'file': { 'mode': 'win32', }, }})
+
+call ddc#custom#patch_global('ui', 'native')
+call ddc#custom#patch_global({
+\ 'keywordPattern': '[a-zA-Z_]\w*',
+\ 'smartCase': v:true,
+\ })
 
 " <TAB>: completion.
 inoremap <silent><expr> <TAB>

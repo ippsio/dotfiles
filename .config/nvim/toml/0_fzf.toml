@@ -93,10 +93,12 @@ hook_add = '''
     execute 'edit +' . l:list[2] . ' ' . l:list[1]
   endfunction
 
-  " ファイルの内容をripgrepで検索して、さらにfzfで絞り込む
+  " ファイルの内容をgit-grep、及びripgrepで検索して、さらにfzfで絞り込む
+  command! -bang -nargs=* Grepa
+    \   echo substitute(escape(<q-args>, '"'), '\"', '\\"', 'g')
   command! -bang -nargs=* Grep
     \ call fzf#run({
-    \   'source': 'git_grep ' . shellescape(<q-args>),
+    \   'source': 'unified_grep "' . <q-args> . '"',
     \   'sink*': function('s:EditFile'),
     \   'options': '-m'
     \   . ' --delimiter="\t" '
@@ -108,9 +110,8 @@ hook_add = '''
     \   . ' --with-nth=1.. '
     \   . ' --nth=1.. '
     \   . ' --bind "tab:execute(git_pr_open_by_file_line {2} {3})" '
-    \   . ' --preview-window="wrap:down:75%" '
-    \   . ' --preview "git_blame_colored {2} {3} ' . shellescape(<q-args>) . ' {q}"',
+    \   . ' --preview "git_blame_colored {2} {3} ' . shellescape(<q-args>) . ' {q}"'
+    \   . ' --preview-window="wrap:down:75%" ',
     \   'window': { 'width': 0.95, 'height': 0.99 }
     \   })
-
 '''

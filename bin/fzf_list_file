@@ -9,11 +9,7 @@ fi
 
 FZF_PROMPT="$(basename $0)"
 FZF_HEADER="C-g:ripgrep, C-/:TogglePreview"
-
-FIND_OPTS="-not -regex '.*/.git' -not -regex '.*/.git/.*' -not -regex '.*\.DS_Store'"
-FIND_OPTS="${FIND_OPTS} -maxdepth 5"
-FIND_CMD="find -s ${ARG} ${FIND_OPTS} 2>/dev/null"
-
+FIND_CMD="rg --files --hidden --sortr=path ${ARG} 2>/dev/null"
 FZF_RESULT=$(eval "${FIND_CMD}"| grep -v "^${ARG}$"| sed 's#//#/#'| sed 's#^./##' \
   | home_as_tilde\
   | fzf +m \

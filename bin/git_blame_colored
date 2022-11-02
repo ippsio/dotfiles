@@ -2,6 +2,7 @@
 readonly HIGHLIGHT_STANDARD=5
 
 file="$1";
+echo "$file"
 shift
 arg_line_highlight="${1:-1}"
 shift

@@ -1,0 +1,12 @@
+#!/bin/bash
+if ( is_git_repo ); then
+  git_grep "$@"
+  untracked_files=$(git status --short| grep "^??"| awk '{ printf "%s ", $2 }')
+  if [[ ! -z "${untracked_files}" ]]; then
+    echo "==ripgrep==(Because git-untracked file found)"
+    rg_wrap "$@" -- ${untracked_files}
+  fi
+else
+  # FIXME: maybe slow.
+  rg_wrap "$@"
+fi

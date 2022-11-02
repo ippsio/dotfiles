@@ -1,11 +1,14 @@
 #!/bin/bash
-RG_RESULT=$(rg --fixed-strings --field-match-separator '\t' --field-context-separator '\t' --no-context-separator --color=always --no-ignore --hidden --vimgrep --no-column --glob !.git/ --glob !.DS_Store "$@")
+SEARCH_WORD="$1"
+shift
+RG_CMD="rg --fixed-strings --field-match-separator '\t' --field-context-separator '\t' --no-context-separator --color=always --no-ignore --hidden --vimgrep --no-column --glob !.git/ --glob !.DS_Store \"${SEARCH_WORD}\" $@"
+RG_RESULT=$(eval "${RG_CMD}")
 RG_EXIT_CD=$?
 
 if [[ "${RG_EXIT_CD}" != 0 ]]; then
   echo "Not found"
   exit ${RG_EXIT_CD}
 else
-  echo "${RG_RESULT}"| awk -v GREP_RESULT_COUNT="$(echo "${RG_RESULT}"| wc -l| tr -d ' ')" '{ printf "(%3d/%d)	%s\n", NR, GREP_RESULT_COUNT, $0 }'
+  echo "${RG_RESULT}"| awk -v GREP_RESULT_COUNT="$(echo "${RG_RESULT}"| wc -l| tr -d ' ')" '{ printf "(%3d/%d:ripgrep)	%s\n", NR, GREP_RESULT_COUNT, $0 }'
   exit 0
 fi

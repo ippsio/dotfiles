@@ -21,41 +21,23 @@ echo {5};
 "
 
 if ( is_git_hash "$1" ); then
-  git_pr_search_hash "${commit}"| \
-    fzf \
-      --delimiter="	" \
-      --nth=1..3 \
-      --no-sort \
-      --prompt="${FZF_PROMPT}" \
-      --header="${FZF_HEADER}" \
-      --delimiter='\t' \
-      --bind "enter:execute(${TEMPLATE}| sed -e 's/\r//g'| nvim -Ro -c \"set ft=markdown\" > /dev/tty)" \
-      --bind "tab:execute(open '{6}')" \
-      --preview="${TEMPLATE}" \
-      --preview-window=down,75%
-
+  search_results=$(git_pr_search_hash "${commit}")
 elif ( is_git_branch "$1" ); then
-  git_pr_search_branch "${commit}"| \
-    fzf \
-      --no-sort \
-      --prompt="${FZF_PROMPT}" \
-      --header="${FZF_HEADER}" \
-      --delimiter='\t' \
-      --bind "enter:execute(${TEMPLATE}| sed -e 's/\r//g'| nvim -Ro -c \"set ft=markdown\" > /dev/tty)" \
-      --bind "tab:execute(open '{6}')" \
-      --preview="${TEMPLATE}" \
-      --preview-window=75%
-
+  search_results=$(git_pr_search_branch "${commit}")
 else
-  git_pr_search_author "${commit}"| \
-    fzf \
-      --no-sort \
-      --prompt="${FZF_PROMPT}" \
-      --header="${FZF_HEADER}" \
-      --delimiter='\t' \
-      --bind "enter:execute(${TEMPLATE}| sed -e 's/\r//g'| nvim -Ro -c \"set ft=markdown\" > /dev/tty)" \
-      --bind "tab:execute(open '{6}')" \
-      --preview="${TEMPLATE}" \
-      --preview-window=75%
+  search_results=$(git_pr_search_author "${commit}")
+fi
 
+if [[ ! -z ${search_results} ]]; then
+  echo "${search_results}"| fzf \
+    --delimiter="	" \
+    --nth=1..3 \
+    --no-sort \
+    --prompt="${FZF_PROMPT}" \
+    --header="${FZF_HEADER}" \
+    --delimiter='\t' \
+    --bind "enter:execute(($TEMPLATE)| strip_color| sed -e 's/\r//g'| nvim -Ro -c \"set ft=markdown\" > /dev/tty)" \
+    --bind "tab:execute(open '{6}')" \
+    --preview="${TEMPLATE}" \
+    --preview-window=down,75%
 fi

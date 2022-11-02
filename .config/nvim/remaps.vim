@@ -39,13 +39,18 @@ nmap <silent> <Esc> :<C-u>nohlsearch<CR>
 " F でハイライト中の文字(zレジスタの文字)をGrep。
 nnoremap F       mz:call <SID>grep_z_register()<CR>
 function s:grep_z_register()
-  call feedkeys(":Grep " . escape(@z, '\()[]{}*+') . "\<CR>", "n")
+  " NOTE: どうやら2回escapeすると期待動作する。1回escapeだと期待動作しない。理由は知らん。
+  let l:search_word = escape(@z, '\"$')
+  let l:search_word = escape(l:search_word, '\"$')
+  "echo l:search_word
+  call feedkeys(":Grep " . l:search_word . "\<CR>", "n")
 endfunction
 " <F3> でカーソル下の文字をGrep。
 nnoremap <f3>  mz:call <SID>grep_word()<CR>
 function s:grep_word()
   normal "zyiw
   call feedkeys(":Grep " . escape(@z, '\()[]{}*+') . "\<CR>", "n")
+  "call feedkeys(":Grep " . @z . "\<CR>", "n")
   normal `z
 endfunction
 

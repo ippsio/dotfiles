@@ -1,5 +1,5 @@
 #!/bin/bash
-FILE=~/.compl_candidates/goto
+FILE=~/.completion_candidates/goto
 COLOR=170
 idx=1
 while read line; do
