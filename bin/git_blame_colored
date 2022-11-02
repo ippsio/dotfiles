@@ -60,4 +60,3 @@ else
       | bat --wrap auto --no-pager --style plain --color=always --highlight-line ${line_highlight};
   fi
 fi
-

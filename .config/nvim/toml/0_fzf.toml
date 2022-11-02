@@ -94,8 +94,6 @@ hook_add = '''
   endfunction
 
   " ファイルの内容をgit-grep、及びripgrepで検索して、さらにfzfで絞り込む
-  command! -bang -nargs=* Grepa
-    \   echo substitute(escape(<q-args>, '"'), '\"', '\\"', 'g')
   command! -bang -nargs=* Grep
     \ call fzf#run({
     \   'source': 'unified_grep "' . <q-args> . '"',
