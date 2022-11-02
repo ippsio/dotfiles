@@ -22,11 +22,11 @@ zle_space() {
   && BUFFER="scp $(fgrep 'Host ' ~/.ssh/config | grep -v '*' | awk '{print $2}' | sort | fzf)" \
   && zle end-of-line && return
 
-  if $(is_git_repo); then
-    # git grep
-    [[ $BUFFER =~ '^gg+$' ]] \
-      && BUFFER="git_grep_fzf_vim " && zle end-of-line && return
+  # git grep(git_grep_fzf_vimでは、git管理外でも検索できるよう、-c grep.fallbackToNoIndex=true 付きにしてあります。)
+  [[ $BUFFER =~ '^gg+$' ]] \
+    && BUFFER="git_grep_fzf_vim " && zle end-of-line && return
 
+  if $(is_git_repo); then
     [[ $BUFFER =~ '^git_grep_fzf_vim +$' ]] \
       && BUFFER="git_grep " && zle end-of-line && return
 

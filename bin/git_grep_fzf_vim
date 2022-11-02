@@ -46,10 +46,10 @@ done
 # GIT_GREP_CMD="git grep --null --line-number --color=always --extended-regexp "${PARAMS}"| perl -pe 's/\x0/\t/g'| grep -v '\-\-'"
 if ${USE_REGEX}; then
   #GIT_GREP_CMD="git grep --null --line-number --color=always "${PARAMS}"| perl -pe 's/\x0/\t/g'| grep -v '\-\-'"
-  GIT_GREP_CMD="git grep --null --line-number --color=always "${PARAMS}"| perl -pe 's/\x0/\t/g'"
+  GIT_GREP_CMD="git -c grep.fallbackToNoIndex=true grep --null --line-number --color=always "${PARAMS}"| perl -pe 's/\x0/\t/g'"
 else
   #GIT_GREP_CMD="git grep --null --line-number --color=always --fixed-strings "${PARAMS}"| perl -pe 's/\x0/\t/g'| grep -v '\-\-'"
-  GIT_GREP_CMD="git grep --null --line-number --color=always --fixed-strings "${PARAMS}"| perl -pe 's/\x0/\t/g'"
+  GIT_GREP_CMD="git -c grep.fallbackToNoIndex=true grep --null --line-number --color=always --fixed-strings "${PARAMS}"| perl -pe 's/\x0/\t/g'"
 fi
 FZF_PROMPT="$(basename $0) ${PARAMS}"
 FZF_HEADER="enter:nvim"

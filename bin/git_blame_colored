@@ -28,35 +28,39 @@ echo "QUERY=${query}";
 if [[ -z $file ]]; then
   echo "No results"
 else
-  if [[ ! -z $git_repo ]]; then
-    git blame -L ${line_from},${line_to} --show-name $file \
-      | awk '{ printf "%s%s\n", substr($0, 0, index($0, " ") - 1), substr($0, index($0, " (")) }' \
-      | awk '
-        BEGIN {
-          H["0"] = 0; H["1"] = 1; H["2"] = 2; H["3"] = 3; H["4"] = 4; H["5"] = 5; H["6"] = 6; H["7"] = 7;
-          H["8"] = 8; H["9"] = 9; H["A"] = 10;H["B"] = 11; H["C"] = 12;H["D"] = 13;H["E"] = 14;H["F"] = 15;
-          PR[""] = "";
-        } {
-          HASH=$1; H1 = toupper(substr(HASH, 2, 1)); H2 = toupper(substr(HASH, 3, 1));
-          COLOR = H[H1] * 16 + H[H2];
-          # 色の調整。暗い色は見にくい。
-          if (16  <= COLOR && COLOR <=  18) { COLOR = COLOR +  10 }
-          if (232 <= COLOR && COLOR <= 237) { COLOR = COLOR - 200 }
-          printf("\033[38;5;%dm", COLOR);
-          printf("%s", HASH);
-
-          if (!( HASH in PR)) {
-            "git_pr_no_by_hash " HASH | getline var
-            PR[HASH] = var
-          }
-          printf(" #%-6s", PR[HASH]);
-
-          printf("\033[0m");
-          sub(/[\^a-f0-9]+/, "", $0); # コミットハッシュ部分削除
-          sub(/:[0-9]{2} \+[0-9]{4}/, "", $0); # コミット日時の秒とタイムゾーン部分削除
-          printf "%s\n", $0;
-        }' \
-      | rg --smart-case --passthru --color=always "${query}" \
-      | bat --wrap auto --no-pager --style plain --color=always --highlight-line ${line_highlight};
+  blame_result=$(git blame -L ${line_from},${line_to} --show-name ${file});
+  if [[ $? != 0 ]]; then
+    # ここに来るのは、例えばgitリポジトリじゃない場合等です。
+    blame_result=$(cat ${file}\
+      | awk -v file="${file}" -v line_from="${line_from}" -v line_to="${line_to}" '{ if (line_from <= NR && NR <= line_to) { printf "000000 %s %2d:%s\n", file, NR, $0 } }')
   fi
+  echo "${blame_result}" \
+    | awk '{ printf "%s%s\n", substr($0, 0, index($0, " ") - 1), substr($0, index($0, " (")) }' \
+    | awk '
+      BEGIN {
+        H["0"] = 0; H["1"] = 1; H["2"] = 2; H["3"] = 3; H["4"] = 4; H["5"] = 5; H["6"] = 6; H["7"] = 7;
+        H["8"] = 8; H["9"] = 9; H["A"] = 10;H["B"] = 11; H["C"] = 12;H["D"] = 13;H["E"] = 14;H["F"] = 15;
+        PR[""] = "";
+      } {
+        HASH=$1; H1 = toupper(substr(HASH, 2, 1)); H2 = toupper(substr(HASH, 3, 1));
+        COLOR = H[H1] * 16 + H[H2];
+        # 色の調整。暗い色は見にくい。
+        if (16  <= COLOR && COLOR <=  18) { COLOR = COLOR +  10 }
+        if (232 <= COLOR && COLOR <= 237) { COLOR = COLOR - 200 }
+        printf("\033[38;5;%dm", COLOR);
+        printf("%s", HASH);
+
+        if (!( HASH in PR)) {
+          "git_pr_no_by_hash " HASH | getline var
+          PR[HASH] = var
+        }
+        printf(" #%-6s", PR[HASH]);
+
+        printf("\033[0m");
+        sub(/[\^a-f0-9]+/, "", $0); # コミットハッシュ部分削除
+        sub(/:[0-9]{2} \+[0-9]{4}/, "", $0); # コミット日時の秒とタイムゾーン部分削除
+        printf "%s\n", $0;
+      }' \
+    | rg --smart-case --passthru --color=always "${query}" \
+    | bat --wrap auto --no-pager --style plain --color=always --highlight-line ${line_highlight};
 fi
