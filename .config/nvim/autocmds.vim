@@ -6,7 +6,6 @@
 """  """ " Quickfixのバッファから抜ける時は、Quickfixを自動的に閉じる。
 """  """ au BufLeave * if &filetype == 'qf' | ccl | endif
 """augroup END
-
 augroup vimrc-highlight
   " 大きなファイルだったら先頭の100行位でファイルタイプを解析する。
   autocmd!

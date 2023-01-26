@@ -87,7 +87,10 @@ set nofoldenable
 " t_Co 256色対応
 set number
 set signcolumn=yes
-"set cursorline
+set cursorline
+"set cursorlineopt="line,screenline,number"
+set cursorlineopt=screenline,number
+
 set guicursor=
 set wrap
 set textwidth=0
@@ -122,6 +125,6 @@ set infercase
 " [マウス]
 " mouse マウス利用可能なモードを設定する。
 if has("mouse")
-  set mouse=n
+  set mouse=a
 endif
 

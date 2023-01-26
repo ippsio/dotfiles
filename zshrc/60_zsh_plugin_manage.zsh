@@ -13,7 +13,7 @@ zinit light 'junegunn/fzf-bin'
 zinit ice src"shell/key-bindings.zsh"
 zinit light "junegunn/fzf"
 
-zinit ice src"shell/completion.zsh"
-zinit light "junegunn/fzf"
+# zinit ice src"shell/completion.zsh"
+# zinit light "junegunn/fzf"
 
-zinit light "zdharma/fast-syntax-highlighting"
+# zinit light "zdharma/fast-syntax-highlighting"

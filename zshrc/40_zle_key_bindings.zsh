@@ -14,6 +14,13 @@ if true; then
   bindkey "^I" triggered_by_tab
 fi
 
+# box_bracket_open() { [[ "${LBUFFER: -1}" != "\\" ]] && LBUFFER="${LBUFFER}\\[" || zle self-insert; }
+# zle -N box_bracket_open
+# bindkey "[" box_bracket_open
+# box_bracket_close() { [[ "${LBUFFER: -1}" != "\\" ]] && LBUFFER="${LBUFFER}\\]" || zle self-insert; }
+# zle -N box_bracket_close
+# bindkey "]" box_bracket_close
+
 # ctrl-d(=del)で前方削除
 bindkey "^[[3~" delete-char
 
@@ -21,15 +28,4 @@ bindkey "^[[3~" delete-char
 source ~/dotfiles/zshrc/43_zle_ctrl_f.zsh
 zle -N zle_ctrl_f
 bindkey "^F" zle_ctrl_f
-
-# ctrl-space
-zle_ctrl_space() {
-  A_COMMAND=$(echo "${BUFFER}"| awk '{ print $1 }')
-  COMMANDS=(vim nvim ls cp mv)
-  printf '%s\n' ${COMMANDS}| grep --line-regexp --silent "${A_COMMAND}" && zle_ctrl_f
-  return 0
-}
-
-zle -N zle_ctrl_space
-bindkey "^ " zle_ctrl_space
 

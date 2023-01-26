@@ -16,15 +16,16 @@ ssid="${wifi_info[2]}"   # wifi ssid name
 # echo "${WIFI_STR}"
 
 # Determine the signal from rssi of wifi
-(( $rssi > -100)) && signal="bad!"
+(( $rssi > -100)) && signal="weak"
 (( $rssi >  -80)) && signal="Fine"
 (( $rssi >  -50)) && signal="GOOD"
 
 MIN_LEN_LIMIT=12
 [[ ${#ssid} -lt ${MIN_LEN_LIMIT} ]] && LEN=${MIN_LEN_LIMIT} || LEN=${#ssid}
-if [[ "$(expr $(date +'%S') % 4 )" -lt 3 ]]; then
+if [[ "$(expr $(date +'%S') % 4 )" -lt 2 ]]; then
   printf "%${LEN}s\n" "${ssid}"
 else
   printf "%${LEN}s\n" "${rate}Mbps $signal"
+  # printf "%${LEN}s\n" "${rate}Mbps $rssi"
 fi
 

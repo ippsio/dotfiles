@@ -1,0 +1,31 @@
+#!/bin/bash
+readonly SUMMARY_MARK="<<<SUMMARY>>>"
+readonly SEARCH_WORD="$1"
+readonly TAB_CHAR="	"
+case "$2" in
+  -S) SG="S" ;;
+  -G) SG="G" ;;
+  *) SG="S" ;;
+esac
+GIT_LOG_CMD="git --no-pager log --oneline --date=iso --pretty='${SUMMARY_MARK}${TAB_CHAR}%h${TAB_CHAR}%ad${TAB_CHAR}%an${TAB_CHAR}%s${TAB_CHAR}${SUMMARY_MARK}' -p --unified=0 -${SG}'${SEARCH_WORD}'"
+eval "${GIT_LOG_CMD}"\
+  | awk -F "${TAB_CHAR}" -v V_SEARCH_WORD="${SEARCH_WORD}" -v V_SUMMARY_MARK="${SUMMARY_MARK}" '{
+      top6 = substr($1, 1, 6)
+      top1 = substr(top6, 1, 1)
+      if ($1 == V_SUMMARY_MARK && $NF == V_SUMMARY_MARK) {
+        COMMIT=$2; DATE=$3; NAME=$4; SUBJECT=$5
+      } else if (top6 == "+++ b/" || top6 == "--- a/") {
+        FILE = substr($1, 7)
+      } else if (index($0, V_SEARCH_WORD) != 0 && (top1 == "+" || top1 == "-")) {
+        printf " %s %s (%s)\t%s|%s\n", COMMIT, DATE, NAME, FILE, $0
+      }
+    }'
+echo
+echo "* Info: this results are based on the following command."
+echo "  ${GIT_LOG_CMD}"
+echo
+echo "* Tips: usage:"
+echo "  $(basename $0) \"SEARCH_WORD\"    : Works as -S without options."
+echo "  $(basename $0) \"SEARCH_WORD\" -S : Use -S<string> option for git log command."
+echo "  $(basename $0) \"SEARCH_WORD\" -G : Use -G<regex> option for git log command."
+

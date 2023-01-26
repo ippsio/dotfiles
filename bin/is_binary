@@ -1,0 +1,3 @@
+#!/bin/bash
+
+file --mime "$1"| grep --fixed-strings "charset=binary" >/dev/null 2>&1

@@ -32,7 +32,7 @@
 " hi Cursor ctermbg=1 ctermfg=240
 
 " 補完ポップアップ
-hi Pmenu ctermfg=195 ctermbg=236
+hi Pmenu ctermfg=195 ctermbg=237
 hi PmenuSel ctermfg=255 ctermbg=33
 hi PmenuSbar ctermbg=190
 hi PmenuThumb ctermbg=27
@@ -43,7 +43,7 @@ hi ColorColumn ctermbg=235
 
 " 検索単語
 "hi IncSearch guibg=#882200 guifg=#ff22ff
-hi Search ctermbg=89 ctermfg=201
+hi Search ctermbg=89 ctermfg=208
 
 " フォーカスのないウインドウ
 hi NormalNC ctermfg=251
@@ -68,7 +68,7 @@ hi rubyString ctermbg=232 ctermfg=69
 hi rubyTodo ctermbg=94
 
 " 行番号
-hi LineNr ctermfg=38
+hi LineNr ctermfg=136
 " directory
 "hi Directory ctermbg=16 ctermfg=75 cterm=bold
 hi Directory ctermbg=16 ctermfg=75

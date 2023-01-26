@@ -34,7 +34,7 @@ color help-group    011 237
 #------------------------------------------------------------
 # `diff --git a/xxxx b/xxxx`みたいな箇所(グレー地に白文字)
 #------------------------------------------------------------
-color diff-header      142     238
+color diff-header      226     92
 
 #----------------------------------------
 # `index acbd5f297b..4a56929e4e 100644`
@@ -42,16 +42,16 @@ color diff-header      142     238
 # `b/xxxx`
 # みたいな箇所
 #----------------------------------------
-color diff-index       249     238
-color "+++ "           244     235
-color "--- "           244     235
+color diff-index       249     56
+color "+++ "           244     56
+color "--- "           244     56
 
 #----------------------------------------------------------------------
 # `@@ -518,9 +518,7 @@` みたいな箇所(ダークグレー地に白文字)
 # その右隣のメソッド名やクラス名が表示されるところ(ダークグレー地に黄緑色文字)
 #----------------------------------------------------------------------
-color diff-chunk       249     235
-color diff-stat        149     235
+color diff-chunk       22     226
+color diff-stat        149      235
 
 #----------------------
 # diff old系(赤系)
@@ -261,6 +261,11 @@ bind main L         !sh -c "hash=$(git rev-parse --short %(commit)); \
                             echo '-------------------------------------------------'; \
                             echo"
 bind diff L         !sh -c "echo %(commit) | pbcopy"
-bind status - !bash -c "~/dotfiles/bin/tig/git_checkout_-- %(file)"
-bind stage  - !bash -c "~/dotfiles/bin/tig/git_checkout_-- %(file)"
+bind status - >bash -c "~/dotfiles/bin/tig/git_checkout_-- %(file)"
+bind stage  - >bash -c "~/dotfiles/bin/tig/git_checkout_-- %(file)"
+bind stage  h view-close-no-quit
+bind status D !rm %(file)
 
+bind diff [ :toggle diff-context -1		   # Decrease context (-U arg)
+bind diff ] :toggle diff-context +1		   # Increase context
+bind generic V :toggle split-view-height -10%   # Decrease split height

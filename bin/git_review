@@ -45,7 +45,7 @@ while true; do clear
   label "[pwd]";
   infoln " $(pwd| sed -e "s#$HOME#~#")"
   label "[merge_base_branch_info]";
-  for e in $(echo "${MERGE_BASE_INFO}"); do echo -n " {"; info "${e}"; echo -n "}"; done; echo
+  info "$(echo \"${MERGE_BASE_INFO}\"| awk -F '\n' '{ print $0 }')"; echo
 
   label "[branches]"
   infoln " ${MERGE_BASE_BRANCH}<=${CURRENT_BRANCH}"
@@ -126,6 +126,6 @@ while true; do clear
   horizontal_line; echo
 
   # command selector
-  ANS=$(echo "${COMMANDS}"| fzf --disabled --info=hidden --height=11 --prompt="COMMAND> " --bind "j:down" --bind "k:up" | awk -F '\t' '{ print $2 }')
+  ANS=$(echo "${COMMANDS}"| fzf --sync --disabled --info=hidden --height=11 --prompt="COMMAND> " --bind "j:down" --bind "k:up" | awk -F '\t' '{ print $2 }')
   [[ -z ${ANS} ]] && exit || eval ${ANS}
 done

@@ -60,6 +60,5 @@ if [[ -z "${MB_BRANCH}" ]]; then
   BY="manual-1"
   MB_BRANCH=$(git_branch_fzf)
 fi
-
 echo -e "MERGE_BASE_BRANCH=${MB_BRANCH}\nCURRENT_BRANCH=${BRANCH1}\nPR_NO=${PR_NUMBER}\nPR_TITLE=${PR_TITLE}\nBY=${BY}"
 

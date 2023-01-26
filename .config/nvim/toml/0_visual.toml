@@ -8,22 +8,17 @@ hook_add = '''
 '''
 
 # インサートモードで行番号をハイライトONし、状態をわかりやすくする
-[[plugins]]
-repo = 'cohama/vim-insert-linenr'
+#[[plugins]]
+#repo = 'cohama/vim-insert-linenr'
 
 # 無駄な空白をハイライト
 [[plugins]]
 repo = 'bronson/vim-trailing-whitespace'
 hook_add='''
-  "" defxを開いた時にハイライトされるのを防ぐ。
-  "let g:extra_whitespace_ignored_filetypes = ['defx']
-  "autocmd FileType defx match ExtraWhitespace /^^/
+  " hi ExtraWhitespace ctermbg=darkred
 
   " defxを開いた時にハイライトされるのを防ぐ。
-  augroup trailing-whitespace-vs-defx
-    autocmd!
-    autocmd BufRead,BufEnter,BufWinEnter * if match(["defx"], &ft) >= 0|match ExtraWhitespace /^^/ |endif
-  augroup END
+  let g:extra_whitespace_ignored_filetypes = ['defx']
 '''
 
 # 対応する括弧をいいかんじにする
@@ -43,7 +38,29 @@ hi ParenMatch ctermbg=57
 [[plugins]]
 repo='itchyny/vim-cursorword'
 hook_add='''
-hi CursorWord0 ctermbg=18
-hi CursorWord1 ctermbg=18
+"OPTIONS            *cursorword-options*
+"
+"  g:cursorword        *g:cursorword*
+"    Set this variable to 0 to disable this plugin globally.
+"
+"  b:cursorword        *b:cursorword*
+"    If you set this variable to 0, the plugin stops highlighting
+"    the word under the cursor in the buffer. This variable has
+"    priority over |g:cursorword|.
+"
+"  g:cursorword_highlight      *g:cursorword_highlight*
+"    Set this variable to 0 to disable the default highlighting
+"    style. If you set this variable to 0, you need to define your
+"    own style for the CursorWord |highlight-groups|.
+"
+"  g:cursorword_delay      *g:cursorword_delay*
+"    The delay duration in milliseconds for setting the word
+"    highlight after cursor motions. When the value is set to 0, the
+"    plugin highlights the word synchronously, but there is a
+"    performance sacrifice. The default value is 50.
+
+let g:cursorword_delay=50
+let g:cursorword_highlight=0
+hi CursorWord ctermbg=237 cterm=underline
 '''
 

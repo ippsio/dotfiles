@@ -1,7 +1,11 @@
 # vcs_info 設定
 autoload -Uz vcs_info
+
+# hook関数の登録。 ex) add-zsh-hook <hook名> <関数名>
 autoload -Uz add-zsh-hook
-autoload -Uz colors
+
+# zshでプロンプトをカラー表示する。
+# autoload -Uz colors
 
 zstyle ':vcs_info:*' max-exports 1
 zstyle ':vcs_info:*' enable git

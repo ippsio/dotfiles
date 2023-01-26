@@ -8,8 +8,8 @@ zle_space() {
   && zle _expand_alias
 
   # cd
-  [[ $BUFFER =~ '^goto+$' ]] \
-    && BUFFER="$(goto)" \
+  [[ $BUFFER =~ '^goto+$' || $BUFFER =~ '^g$' ]] \
+  && BUFFER="$(goto)" \
   && zle accept-line && return
 
   # ssh
@@ -29,10 +29,6 @@ zle_space() {
   if $(is_git_repo); then
     [[ $BUFFER =~ '^git_grep_fzf_vim +$' ]] \
       && BUFFER="git_grep " && zle end-of-line && return
-
-    # git
-    [[ $BUFFER =~ '^g+$' ]] \
-      && BUFFER="git " && zle end-of-line && return
 
     # git status
     [[ $BUFFER =~ '^gs+$' || $BUFFER =~ '^gst+$' || $BUFFER =~ '^git st+$' ]] \
@@ -89,6 +85,10 @@ zle_space() {
   # bundle exec rails c
   [[ $BUFFER =~ '^c+$' ]] \
   && BUFFER="bundle exec rails c" && zle end-of-line && return
+
+  # bundle exec rails c
+  [[ $BUFFER =~ '^sidekiq+$' ]] \
+  && BUFFER="bundle exec sidekiq -C config/sidekiq.yml" && zle end-of-line && return
 
   #  bundle exec rake + completion
   [[ $BUFFER =~ '^rake+$' ]] \

@@ -3,11 +3,18 @@ repo = 'vim-jp/vimdoc-ja'
 
 
 
-# 文字をシングルクォートとか（）で囲む
-[[plugins]]
-repo = 'tpope/vim-surround'
-hook_add='''
-'''
+# 他のキーバインドとしばしば競合する？
+# # 文字をシングルクォートとか（）で囲む
+# [[plugins]]
+# repo = 'tpope/vim-surround'
+# hook_add='''
+#   xmap " S"
+#   xmap ' S'
+#   xmap ) S)
+#   xmap } S}
+#   xmap ] S]
+#   xmap > S>
+# '''
 
 [[plugins]]
 repo = 'tpope/vim-repeat'
@@ -83,5 +90,14 @@ hook_add = '''
 repo = 'ippsio/clip_diff.vim'
 hook_add = '''
   vmap ,d :call ClipDiff()<CR>
+'''
+
+[[plugins]]
+repo = 'kana/vim-operator-user'
+
+[[plugins]]
+repo = 'kana/vim-operator-replace'
+hook_add = '''
+map _ <Plug>(operator-replace)
 '''
 

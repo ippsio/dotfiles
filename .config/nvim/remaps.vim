@@ -27,7 +27,7 @@ endfunction
 " space2度押しで選択中の文字をハイライト。
 xnoremap <silent> <Space><Space> mz:call <SID>hi_selected()<CR>
 function s:hi_selected()
-  silent normal gv"zy
+  silent normal! gv"zy
   let @/ = '\V' . substitute(escape(@z, '/\'), '\n', '\\n', 'g')
   call feedkeys(":silent set hlsearch\<CR>", "n")
   silent normal `z
@@ -40,8 +40,8 @@ nmap <silent> <Esc> :<C-u>nohlsearch<CR>
 nnoremap F       mz:call <SID>grep_z_register()<CR>
 function s:grep_z_register()
   " NOTE: どうやら2回escapeすると期待動作する。1回escapeだと期待動作しない。理由は知らん。
-  let l:search_word = escape(@z, '\"$')
-  let l:search_word = escape(l:search_word, '\"$')
+  let l:search_word = escape(@z, '\"$`')
+  let l:search_word = escape(l:search_word, '\"$`')
   "echo l:search_word
   call feedkeys(":Grep " . l:search_word . "\<CR>", "n")
 endfunction
@@ -117,5 +117,16 @@ nnoremap <silent> W :<C-u>:w<CR>:echo 'SAVED! ' . strftime("%Y/%m/%d %H:%M:%S") 
 
 " [その他]
 " ファイル名と行番号を表示する。ついでにファイル名をクリップボードにコピーする。
-nnoremap <silent> <C-g> :let @* = substitute(expand("%:p"), $HOME, "~", "g")<CR><C-g>
+" nnoremap <silent> <C-g> :let @* = substitute(expand("%:p"), $HOME, "~", "g")<CR><C-g>
+nnoremap <silent> <C-g> :call <SID>CopyFilename()<CR><C-g>
 
+function! s:CopyFilename()
+  let s:git_root = system('cd ' . expand('%:p:h') . '; git rev-parse --show-toplevel 2> /dev/null')[:-2]
+  if s:git_root != ''
+    "let @* = system('cd ' . expand('%:p:h') . '; git ls-files --full-name ' . expand('%:p'))
+    " FIXME: 
+    let @* = system('cd ' . expand('%:p:h') . '; git ls-files --full-name ' . expand('%:p'))
+  else
+    let @* = substitute(expand("%:p"), $HOME, "~", "g")
+  endif
+endfunction
