@@ -1,5 +1,5 @@
 #!/bin/bash
-#
+
 # 特定の文言を含むコミットを抽出します。
 # - q_shell_escaped: 特定の文言
 # - range: コミット範囲
@@ -11,7 +11,16 @@ while (( $# > 0 )); do
   case $1 in
     --range) range=" $2"; shift ;;
     --) shift; files=$@; break ;;
-    *) q_raw="$1" ;;
+    *)
+      if [[ ! -z "${q_raw}" ]]; then
+        echo "検索条件が2つ与えられましたね。引数誤りかも？(1) ${q_raw} 2) ${1}"
+        echo "(1) ${q_raw}"
+        echo "(2) ${1}"
+        exit 1
+      else
+        q_raw="$1"
+      fi
+      ;;
   esac
   shift
 done
@@ -21,35 +30,30 @@ if [[ -z "${q_raw}" ]]; then
 fi
 
 BS="\\"
-SQUARE_BRACKETS_OPEN="["
 q_shell_escaped=${q_raw}
-q_shell_escaped=${q_shell_escaped//${BS}${BS}/${BS}${BS}${BS}}
-q_shell_escaped=${q_shell_escaped//${BS}\t/${BS}${BS}t}
-q_shell_escaped=${q_shell_escaped//${BS}\n/${BS}${BS}n}
-q_shell_escaped=${q_shell_escaped//${BS}\r/${BS}${BS}r}
-q_shell_escaped=${q_shell_escaped//|/${BS}|}
-q_shell_escaped=${q_shell_escaped//(/${BS}\(}
-q_shell_escaped=${q_shell_escaped//)/${BS}\)}
-q_shell_escaped=${q_shell_escaped//${SQUARE_BRACKETS_OPEN}/${BS}${SQUARE_BRACKETS_OPEN}}
-q_shell_escaped=${q_shell_escaped//]/${BS}]}
+q_shell_escaped=${q_shell_escaped//${BS}\\/${BS}${BS}\\}
+q_shell_escaped=${q_shell_escaped//${BS}\t/${BS}${BS}\t}
+q_shell_escaped=${q_shell_escaped//${BS}\n/${BS}${BS}\n}
+q_shell_escaped=${q_shell_escaped//${BS}\r/${BS}${BS}\r}
+q_shell_escaped=${q_shell_escaped//\`/${BS}\`}
+q_shell_escaped=${q_shell_escaped//\?/${BS}\?}
+q_shell_escaped=${q_shell_escaped//\*/${BS}\*}
+q_shell_escaped=${q_shell_escaped//\^/${BS}\^}
+q_shell_escaped=${q_shell_escaped//\|/${BS}\|}
+q_shell_escaped=${q_shell_escaped//\(/${BS}\(}
+q_shell_escaped=${q_shell_escaped//\)/${BS}\)}
+q_shell_escaped=${q_shell_escaped//\[/${BS}\[}
+q_shell_escaped=${q_shell_escaped//\]/${BS}\]}
+q_shell_escaped=${q_shell_escaped//\./${BS}\.}
+q_shell_escaped=${q_shell_escaped//\-/${BS}\-}
+q_shell_escaped=${q_shell_escaped//\+/${BS}\+}
+q_shell_escaped=${q_shell_escaped//\$/${BS}\$}
 q_shell_escaped=${q_shell_escaped//</[<]}
 q_shell_escaped=${q_shell_escaped//>/[>]}
-q_shell_escaped=${q_shell_escaped//\`/${BS}\`}
-q_shell_escaped=${q_shell_escaped//./${BS}.}
-q_shell_escaped=${q_shell_escaped//\?/${BS}\?}
-q_shell_escaped=${q_shell_escaped//-/${BS}-}
-q_shell_escaped=${q_shell_escaped//+/${BS}+}
-q_shell_escaped=${q_shell_escaped//\*/${BS}*}
-q_shell_escaped=${q_shell_escaped//\^/${BS}^}
-q_shell_escaped=${q_shell_escaped//$/${BS}$}
-#q_shell_escaped=$(echo "${q_shell_escaped}"| sed -E "s%/%\/%g")
-#q_shell_escaped=$(echo "${q_shell_escaped}"| sed -E "s/'/'\"'\"'/g")
 
 fzf_prompt="[$(basename $0)] in=${range}, files=${files}, q_raw=${q_raw}, q_shell_escaped=${q_shell_escaped}"
 printf "%s\n" "${fzf_prompt}"
 
-# git_log_g_cmd="git --no-pager log --date=format:'%Y-%m-%d %H:%M' --pretty='%h%x09%ad%x09%an%x09%s' -G'${q_shell_escaped}'${range} -- ${files}"
-# git_log_g_res=$(eval "${git_log_g_cmd}")
 git_log_g_cmd="git --no-pager log --date=format:'%Y-%m-%d %H:%M' --pretty='%h%x09%ad%x09%an%x09%s' -G'${q_shell_escaped}'${range} -- ${files}"
 git_log_g_res=$(git --no-pager log --date=format:'%Y-%m-%d %H:%M' --pretty='%h%x09%ad%x09%an%x09%s' -G"${q_shell_escaped}"${range} -- ${files})
 if [[ -z "${git_log_g_res}" ]]; then
@@ -73,24 +77,12 @@ fi
 
     string_buffer=""
     git_log_patch_filename=""
-    git_log_patch_cmd="git --no-pager log --oneline -1 --patch --unified=0 ${git_log_h} -- ${files}| tail +2| grep -E '^(diff --git|\+|-)'"
-    git_log_patch_res=$(eval "${git_log_patch_cmd}")
-    for git_log_patch_res_1 in $(echo "${git_log_patch_res}"); do
+    for git_log_patch_res_1 in $(git --no-pager log --oneline -1 --patch --unified=0 ${git_log_h} -- ${files}| tail +2| grep -E '^(diff --git|\+|-)'| grep -Ev '^([\+]{3} b/|[\-]{3} a/)'); do
       if ( echo "${git_log_patch_res_1}"| grep -E "^diff --git a/.* b/.*">/dev/null 2>&1 ); then
         git_log_patch_filename_a=$(echo "${git_log_patch_res_1}"| sed -E 's/^(diff --git )a\/(.*) b\/(.*)$/\2/')
         git_log_patch_filename_b=$(echo "${git_log_patch_res_1}"| sed -E 's/^(diff --git )a\/(.*) b\/(.*)$/\3/')
         git_log_patch_filename=$(echo "${git_log_patch_filename_a}"$'\n'"${git_log_patch_filename_b}"| uniq| xargs echo)
       else
-        # if ( printf '%s\n' "${git_log_patch_res_1}"| grep --fixed-string "${q_raw}">/dev/null 2>&1 ); then
-        # printf '%s\n' "${git_log_patch_res_1}"| grep -E "${q_shell_escaped}" 2>/dev/null
-        #printf "%s\n" "${q_shell_escaped}"
-        #printf '%s\n' "${git_log_patch_res_1}"| grep -E "\\\$" 2>/dev/null
-        # printf "1)%s\n" "${q_shell_escaped}"
-        # printf "2)%s\n" "\\\$"
-        # printf "3)\\\$\n"
-        #echo "${q_shell_escaped}"
-        #
-        # printf '%s\n' "${git_log_patch_res_1}"| grep -E "${q_shell_escaped}" 2>/dev/null
         if ( printf '%s\n' "${git_log_patch_res_1}"| grep -E "${q_shell_escaped}">/dev/null 2>&1 ); then
           string_buffer+="${git_log_h}	${pull_request_no}	${git_log_ad}	${git_log_an}	${git_log_patch_filename}	|${git_log_patch_res_1}"$'\n'
         fi
@@ -104,7 +96,7 @@ fi
   echo "検索完了です"
 )| grep -E --color=always "$|${q_shell_escaped}"
 # )\
-#   
+#
 #   | fzf\
 #     --delimiter="\t"\
 #     --tabstop=2\
