@@ -13,9 +13,7 @@ while (( $# > 0 )); do
     --) shift; files=$@; break ;;
     *)
       if [[ ! -z "${q_raw}" ]]; then
-        echo "検索条件が2つ与えられましたね。引数誤りかも？(1) ${q_raw} 2) ${1}"
-        echo "(1) ${q_raw}"
-        echo "(2) ${1}"
+        echo "Usage: $(basename $0) 'searchword' --range commit1...commit2 -- files"
         exit 1
       else
         q_raw="$1"
@@ -29,12 +27,34 @@ if [[ -z "${q_raw}" ]]; then
   exit 0
 fi
 
+#\f      改ページ
+#\t      水平タブ
+#\v      垂直タブ
+#\\      文字としての\
+#\?      文字としての?
+#\'      シングルクォーテーション(')
+#\"      ダブルクォーテーション(")
+#\0      Null(ヌル)
+#\ooo    8進数の文字コードを持つ文字
+#\xhh    16進数の文字コードを持つ文字
+
 BS="\\"
 q_shell_escaped=${q_raw}
 q_shell_escaped=${q_shell_escaped//${BS}\\/${BS}${BS}\\}
 q_shell_escaped=${q_shell_escaped//${BS}\t/${BS}${BS}\t}
 q_shell_escaped=${q_shell_escaped//${BS}\n/${BS}${BS}\n}
 q_shell_escaped=${q_shell_escaped//${BS}\r/${BS}${BS}\r}
+q_shell_escaped=${q_shell_escaped//${BS}\a/${BS}${BS}\a}
+q_shell_escaped=${q_shell_escaped//${BS}\b/${BS}${BS}\b}
+q_shell_escaped=${q_shell_escaped//${BS}\f/${BS}${BS}\f}
+q_shell_escaped=${q_shell_escaped//${BS}\v/${BS}${BS}\v}
+q_shell_escaped=${q_shell_escaped//${BS}\?/${BS}${BS}\?}
+q_shell_escaped=${q_shell_escaped//${BS}\'/${BS}${BS}\'}
+q_shell_escaped=${q_shell_escaped//${BS}\"/${BS}${BS}\"}
+q_shell_escaped=${q_shell_escaped//${BS}\0/${BS}${BS}\0}
+q_shell_escaped=${q_shell_escaped//${BS}\o/${BS}${BS}\o}
+q_shell_escaped=${q_shell_escaped//${BS}\x/${BS}${BS}\x}
+
 q_shell_escaped=${q_shell_escaped//\`/${BS}\`}
 q_shell_escaped=${q_shell_escaped//\?/${BS}\?}
 q_shell_escaped=${q_shell_escaped//\*/${BS}\*}
