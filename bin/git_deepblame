@@ -12,18 +12,23 @@ while (( $# > 0 )); do
 done
 args="in=[${range}],files=[${files}],q=[${q}]"
 
-q=${q//\\/\\\\}
-q=${q//|/\\|}
-q=${q//)/\\)}
-q=${q//[/\\[}
-q=${q//]/\\]}
-q=${q//\`/\\\`}
-q=${q//./\\.}
-q=${q//?/\\\?}
-q=${q//\+/\\\+}
-q=${q//\*/\\*}
-q=${q//\^/\\^}
-q=${q//$/\\$}
+BS="\\"
+q=${q//${BS}/${BS}${BS}}
+q=${q//\t/${BS}t}
+q=${q//\n/${BS}n}
+q=${q//\r/${BS}r}
+q=${q//|/${BS}|}
+q=${q//(/${BS}(}
+q=${q//)/${BS})}
+q=${q//[/${BS}[}
+q=${q//]/${BS}]}
+q=${q//\`/${BS}\`}
+q=${q//./${BS}.}
+q=${q//\?/${BS}\?}
+q=${q//+/${BS}+}
+q=${q//\*/${BS}*}
+q=${q//\^/${BS}^}
+q=${q//$/${BS}$}
 
 # 特定の文言を含むコミットを抽出します。
 # - q: 特定の文言
@@ -36,6 +41,7 @@ if [[ -z "${git_log_g_res}" ]]; then
   exit 1
 fi
 
+(
 IFS=$'\n'
 for git_log_g_res_1 in $(echo "${git_log_g_res}"); do
   # １コミットの各要素を取得します(%h, %ad, %an, %s)。
@@ -66,5 +72,7 @@ for git_log_g_res_1 in $(echo "${git_log_g_res}"); do
   printf "%s\n" "${git_log_h}	${pull_request_no}	${git_log_ad}	${git_log_an}	${git_log_s}"
   printf "%s\n" "${string_buffer}"| grep -Ev "^$"
   echo "--"
-done| grep -E --color=always "$|${q}"| fzf --delimiter="\t" --tabstop=2 --ansi --info=inline --prompt="[$(basename $0)] ${args}" --header="${git_log_cmd1}" --bind="enter:execute(tig {1} -1 -G'${q}' -- {5})" --bind="#:execute(printf {1}| pbcopy; printf 'ハッシュ値({1})をコピーしましたよ。'; read )"
+done
+echo "検索が終わりました。"
+) | grep -E --color=always "$|${q}"| fzf --delimiter="\t" --tabstop=2 --ansi --info=inline --prompt="[$(basename $0)] ${args}" --header="${git_log_cmd1}" --bind="enter:execute(tig {1} -1 -G'${q}' -- {5})" --bind="#:execute(printf {1}| pbcopy; printf 'ハッシュ値({1})をコピーしましたよ。'; read )"
 
