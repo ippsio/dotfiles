@@ -72,6 +72,10 @@ zle_space() {
     # git push origin HEAD
     [[ $BUFFER =~ '^gps+$' || $BUFFER =~ '^git ps+$' ]] \
     && BUFFER="git push origin HEAD " && zle end-of-line && return
+
+    # git_deep_blame
+    [[ $BUFFER =~ '^gdb+$' || $BUFFER =~ '^db+$' ]] \
+    && BUFFER="git_deepblame " && zle end-of-line && return
   fi
 
   # bundle exec
