@@ -12,64 +12,59 @@ while (( $# > 0 )); do
 done
 args="in=[${range}],files=[${files}],q=[${q}]"
 
-q_escape="${q}"
-q_escape="${q_escape//|/\\\|}"
-q_escape="${q_escape//\(/\\(}"
-q_escape="${q_escape//\)/\\)}"
-q_escape="${q_escape//\[/\\[}"
-q_escape="${q_escape//\]/\\]}"
-q_escape="${q_escape//\`/\\\`}"
-q_escape="${q_escape//\"/\\\"}"
-q_escape="${q_escape//\./\\\.}"
-q_escape="${q_escape//\?/\\\?}"
-q_escape="${q_escape//\+/\\\+}"
-q_escape="${q_escape//\*/\\*}"
-q_escape="${q_escape//\^/\\^}"
-q_escape="${q_escape//$/\\\\\\$}"
+q=${q//\\/\\\\}
+q=${q//|/\\|}
+q=${q//)/\\)}
+q=${q//[/\\[}
+q=${q//]/\\]}
+q=${q//\`/\\\`}
+q=${q//./\\.}
+q=${q//?/\\\?}
+q=${q//\+/\\\+}
+q=${q//\*/\\*}
+q=${q//\^/\\^}
+q=${q//$/\\$}
 
-# 特定の文言を含むコミットを抽出する。
-# - q_escape: 特定の文言
+# 特定の文言を含むコミットを抽出します。
+# - q: 特定の文言
 # - range: コミット範囲
 # - files: ファイル
-git_log_cmd1="git --no-pager log --pretty=format:'%h' -G\"${q_escape}\"${range} -- ${files}| xargs echo"
-hash_list=( $(eval "${git_log_cmd1}") )
-if [[ "${#hash_list}" -eq 0 ]]; then
+git_log_g_cmd="git --no-pager log --date=format:'%Y-%m-%d %H:%M' --pretty='%h%x09%ad%x09%an%x09%s' -G'${q}'${range} -- ${files}"
+git_log_g_res=$(eval ${git_log_g_cmd})
+if [[ -z "${git_log_g_res}" ]]; then
   echo "not found."
   exit 1
 fi
 
-hash_idx_size=${#hash_list}
 IFS=$'\n'
-for a_hash in ${hash_list[@]}; do
-  # コミットごとに
-  git_log_cmd2="git log -1 --date=format:'%Y-%m-%d %H:%M' --pretty='%ad%x09%an%x09%s' ${a_hash} ${range} -- ${files}"
-  printf "git_log_cmd2=%s\n" "${git_log_cmd2}"
-  git_log_res2=$(eval "${git_log_cmd2}")
-  git_log_ad=$(echo "${git_log_res2}"| awk -F '\t' '{ printf "%s", $1 }')
-  git_log_an=$(echo "${git_log_res2}"| awk -F '\t' '{ printf "%s", $2 }'| sed -E 's/ //g')
-  git_log_s=$(echo "${git_log_res2}"| awk -F '\t' '{ printf "%s", $3 }')
+for git_log_g_res_1 in $(echo "${git_log_g_res}"); do
+  # １コミットの各要素を取得します(%h, %ad, %an, %s)。
+  git_log_h=$(echo "${git_log_g_res_1}"| awk -F '\t' '{ print $1 }')
+  git_log_ad=$(echo "${git_log_g_res_1}"| awk -F '\t' '{ printf "%s", $2 }')
+  git_log_an=$(echo "${git_log_g_res_1}"| awk -F '\t' '{ printf "%s", $3 }')
+  git_log_s=$(echo "${git_log_g_res_1}"| awk -F '\t' '{ printf "%s", $4 }')
   if ( echo "${git_log_s}"| grep -E '\(#[0-9]+\)"{0,1}$'>/dev/null 2>&1 ); then
     pull_request_no=$(echo "${git_log_s}"| sed -E 's/^.*\(#/(#/'| sed -E 's/"$//')
   else
     pull_request_no="(#.....)"
   fi
 
-  git_log_patch_filename=""
   string_buffer=""
-
-  git_log_cmd3="git --no-pager log --pretty='' -1 --patch --unified=0 ${a_hash} -- ${files}| grep -Ev '^$'"
-  printf "git_log_cmd3=%s\n" "${git_log_cmd3}"
-  for line in $(eval "${git_log_cmd3}"); do
-    if [[ ${line} =~ ^diff.* ]]; then
-      git_log_patch_filename=$(echo "${line}"| sed -E 's%^(diff --git )a/(.*) b/(.*)$%\2\n\3%'| uniq| xargs echo)
-    elif [[ ! -z $(printf "%s" "${line}"| grep -E "${q_escape}") ]]; then
-      string_buffer+=$(printf "%s %8s %s %s %s" "${a_hash}" "${pull_request_no}" "${git_log_ad}" "${git_log_an}" "${git_log_patch_filename} " "${line}"| grep -E "${q_escape}")$'\n'
+  git_log_patch_filename=""
+  git_log_patch_cmd="git --no-pager log --oneline -1 --patch --unified=0 ${git_log_h} -- ${files}| tail +2"
+  git_log_patch_res=$(eval "${git_log_patch_cmd}")
+  for git_log_patch_res_1 in $(echo "${git_log_patch_res}"); do
+    if ( echo "${git_log_patch_res_1}"| grep -E "^diff --git a/.* b/.*">/dev/null 2>&1 ); then
+      git_log_patch_filename_a=$(echo "${git_log_patch_res_1}"| sed -E 's/^(diff --git )a\/(.*) b\/(.*)$/\2/')
+      git_log_patch_filename_b=$(echo "${git_log_patch_res_1}"| sed -E 's/^(diff --git )a\/(.*) b\/(.*)$/\3/')
+      git_log_patch_filename=$(echo "${git_log_patch_filename_a}"$'\n'"${git_log_patch_filename_b}"| uniq| xargs echo)
+    elif ( printf "%s" "${git_log_patch_res_1}"| grep -E "${q}">/dev/null 2>&1 ); then
+      string_buffer+="${git_log_h}	${pull_request_no}	${git_log_ad}	${git_log_an}	${git_log_patch_filename}	|${git_log_patch_res_1}"$'\n'
     fi
   done
 
-  commit_info=$(printf "%s %8s %s %s %s %s   \n" "${a_hash}" "${pull_request_no}" "${git_log_ad}" "${git_log_an}" "${git_log_s//	/ }")
-  printf "%s\n" "${commit_info}"
-  printf "%s\n" "${string_buffer}"
-  echo "-------------------------------------------------------------------------------------------------------"
-done| grep -E --color=always "$|${q_escape}"| fzf --ansi --info=inline --prompt="[$(basename $0)] ${args}" --header="${git_log_cmd1}" --bind="enter:execute(tig {1} -1 -G'${q_escape}' -- {6})" --bind="#:execute(printf {1}| pbcopy; printf 'ハッシュ値({1})をコピーしましたよ。'; read )"
+  printf "%s\n" "${git_log_h}	${pull_request_no}	${git_log_ad}	${git_log_an}	${git_log_s}"
+  printf "%s\n" "${string_buffer}"| grep -Ev "^$"
+  echo "--"
+done| grep -E --color=always "$|${q}"| fzf --delimiter="\t" --tabstop=2 --ansi --info=inline --prompt="[$(basename $0)] ${args}" --header="${git_log_cmd1}" --bind="enter:execute(tig {1} -1 -G'${q}' -- {5})" --bind="#:execute(printf {1}| pbcopy; printf 'ハッシュ値({1})をコピーしましたよ。'; read )"
 
