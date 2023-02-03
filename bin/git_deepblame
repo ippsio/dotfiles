@@ -43,19 +43,19 @@ q_shell_escaped=${q_shell_escaped//\&/${BS}\&}
 q_shell_escaped=${q_shell_escaped//\*/${BS}\*}
 q_shell_escaped=${q_shell_escaped//\(/${BS}\(}
 q_shell_escaped=${q_shell_escaped//\)/${BS}\)}
-q_shell_escaped=${q_shell_escaped//\-/${BS}\-}
-q_shell_escaped=${q_shell_escaped//\+/${BS}\+}
-q_shell_escaped=${q_shell_escaped//\_/${BS}\_}
-q_shell_escaped=${q_shell_escaped//\=/${BS}\=}
+q_shell_escaped=${q_shell_escaped//\-/${BS}-}
+q_shell_escaped=${q_shell_escaped//\+/${BS}+}
+q_shell_escaped=${q_shell_escaped//\_/${BS}_}
+q_shell_escaped=${q_shell_escaped//\=/${BS}=}
 q_shell_escaped=${q_shell_escaped//\{/${BS}\{}
 q_shell_escaped=${q_shell_escaped//\}/${BS}\}}
-q_shell_escaped=${q_shell_escaped//\[/${BS}\[}
-q_shell_escaped=${q_shell_escaped//\]/${BS}\]}
-q_shell_escaped=${q_shell_escaped//\|/${BS}\|}
-q_shell_escaped=${q_shell_escaped//\?/${BS}\?}
-q_shell_escaped=${q_shell_escaped//\./${BS}\.}
-q_shell_escaped=${q_shell_escaped//\,/${BS}\,}
-q_shell_escaped=${q_shell_escaped//\//${BS}\/}
+q_shell_escaped=${q_shell_escaped//\[/${BS}[}
+q_shell_escaped=${q_shell_escaped//\]/${BS}]}
+q_shell_escaped=${q_shell_escaped//\|/${BS}|}
+q_shell_escaped=${q_shell_escaped//\?/${BS}?}
+q_shell_escaped=${q_shell_escaped//\./${BS}.}
+q_shell_escaped=${q_shell_escaped//\,/${BS},}
+q_shell_escaped=${q_shell_escaped//\//${BS}/}
 q_shell_escaped=${q_shell_escaped//\</[${BS}\<]}
 q_shell_escaped=${q_shell_escaped//\>/[${BS}\>]}
 
@@ -89,7 +89,8 @@ git_log_g_res_size=$(printf "%s" "${git_log_g_res}"| grep -Evc '^$')
 
     string_buffer=""
     git_log_patch_filename=""
-    for git_log_patch_res_1 in $(git --no-pager log --oneline -1 --patch --unified=0 ${git_log_h} -- ${files}| tail +2| grep -E '^(diff --git|\+|-)'| grep -Ev '^([\+]{3} b/|[\-]{3} a/)'); do
+    line_to_process=$(git --no-pager log --oneline -1 --patch --unified=0 ${git_log_h} -- ${files}| tail +2| grep -E "(^diff --git|^[\+|\-].*${q_shell_escaped})"| grep -Ev '^([\+]{3} b/|[\-]{3} a/)')
+    for git_log_patch_res_1 in $(printf "%s" "${line_to_process}"); do
       if ( echo "${git_log_patch_res_1}"| grep -E "^diff --git a/.* b/.*">/dev/null 2>&1 ); then
         git_log_patch_filename_a=$(echo "${git_log_patch_res_1}"| sed -E 's/^(diff --git )a\/(.*) b\/(.*)$/\2/')
         git_log_patch_filename_b=$(echo "${git_log_patch_res_1}"| sed -E 's/^(diff --git )a\/(.*) b\/(.*)$/\3/')
@@ -110,12 +111,11 @@ git_log_g_res_size=$(printf "%s" "${git_log_g_res}"| grep -Evc '^$')
     printf "%s\n" "${git_log_h}	${pull_request_no}	${git_log_ad}	${git_log_an}	${git_log_s}"
     printf "%s\n" "${string_buffer}"| grep -Ev "^$"
     time_millis=$(epocms)
-    elapsed_time_millis=$(( time_millis - start_time_millis ))
     single_commit_elapsed_time_millis=$(( time_millis - single_commit_start_time_millis ))
+    elapsed_time_millis=$(( time_millis - start_time_millis ))
     printf "  \_%dms (%s/%s) elapsed:%dms \n" "${single_commit_elapsed_time_millis}" "${git_log_g_res_idx}" "${git_log_g_res_size}" "${elapsed_time_millis}"
   done
-  time_millis=$(epocms)
-  elapsed_time_millis=$(( end_time_millis - start_time_millis ))
+  elapsed_time_millis=$(( $(epocms) - start_time_millis ))
   echo "検索完了です(${git_log_g_res_size}commits, ${elapsed_time_millis}ms)"
 )| grep -E --color=always "$|${q_shell_escaped}"| fzf\
      --delimiter="\t"\
