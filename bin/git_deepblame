@@ -1,5 +1,6 @@
 #!/bin/bash
 
+start_time_millis=$(epocms)
 # 特定の文言を含むコミットを抽出します。
 # - q_shell_escaped: 特定の文言
 # - range: コミット範囲
@@ -27,49 +28,36 @@ if [[ -z "${q_raw}" ]]; then
   exit 0
 fi
 
-#\f      改ページ
-#\t      水平タブ
-#\v      垂直タブ
-#\\      文字としての\
-#\?      文字としての?
-#\'      シングルクォーテーション(')
-#\"      ダブルクォーテーション(")
-#\0      Null(ヌル)
-#\ooo    8進数の文字コードを持つ文字
-#\xhh    16進数の文字コードを持つ文字
-
 BS="\\"
 q_shell_escaped=${q_raw}
-q_shell_escaped=${q_shell_escaped//${BS}\\/${BS}${BS}\\}
-q_shell_escaped=${q_shell_escaped//${BS}\t/${BS}${BS}\t}
-q_shell_escaped=${q_shell_escaped//${BS}\n/${BS}${BS}\n}
-q_shell_escaped=${q_shell_escaped//${BS}\r/${BS}${BS}\r}
-q_shell_escaped=${q_shell_escaped//${BS}\a/${BS}${BS}\a}
-q_shell_escaped=${q_shell_escaped//${BS}\b/${BS}${BS}\b}
-q_shell_escaped=${q_shell_escaped//${BS}\f/${BS}${BS}\f}
-q_shell_escaped=${q_shell_escaped//${BS}\v/${BS}${BS}\v}
-q_shell_escaped=${q_shell_escaped//${BS}\?/${BS}${BS}\?}
-q_shell_escaped=${q_shell_escaped//${BS}\'/${BS}${BS}\'}
-q_shell_escaped=${q_shell_escaped//${BS}\"/${BS}${BS}\"}
-q_shell_escaped=${q_shell_escaped//${BS}\0/${BS}${BS}\0}
-q_shell_escaped=${q_shell_escaped//${BS}\o/${BS}${BS}\o}
-q_shell_escaped=${q_shell_escaped//${BS}\x/${BS}${BS}\x}
-
+q_shell_escaped=${q_shell_escaped//\\/${BS}\\}
 q_shell_escaped=${q_shell_escaped//\`/${BS}\`}
-q_shell_escaped=${q_shell_escaped//\?/${BS}\?}
-q_shell_escaped=${q_shell_escaped//\*/${BS}\*}
+q_shell_escaped=${q_shell_escaped//\~/${BS}\~}
+q_shell_escaped=${q_shell_escaped//\!/${BS}\!}
+q_shell_escaped=${q_shell_escaped//\@/${BS}\@}
+q_shell_escaped=${q_shell_escaped//\#/${BS}\#}
+q_shell_escaped=${q_shell_escaped//\$/${BS}\$}
+q_shell_escaped=${q_shell_escaped//\%/${BS}\%}
 q_shell_escaped=${q_shell_escaped//\^/${BS}\^}
-q_shell_escaped=${q_shell_escaped//\|/${BS}\|}
+q_shell_escaped=${q_shell_escaped//\&/${BS}\&}
+q_shell_escaped=${q_shell_escaped//\*/${BS}\*}
 q_shell_escaped=${q_shell_escaped//\(/${BS}\(}
 q_shell_escaped=${q_shell_escaped//\)/${BS}\)}
-q_shell_escaped=${q_shell_escaped//\[/${BS}\[}
-q_shell_escaped=${q_shell_escaped//\]/${BS}\]}
-q_shell_escaped=${q_shell_escaped//\./${BS}\.}
 q_shell_escaped=${q_shell_escaped//\-/${BS}\-}
 q_shell_escaped=${q_shell_escaped//\+/${BS}\+}
-q_shell_escaped=${q_shell_escaped//\$/${BS}\$}
-q_shell_escaped=${q_shell_escaped//</[<]}
-q_shell_escaped=${q_shell_escaped//>/[>]}
+q_shell_escaped=${q_shell_escaped//\_/${BS}\_}
+q_shell_escaped=${q_shell_escaped//\=/${BS}\=}
+q_shell_escaped=${q_shell_escaped//\{/${BS}\{}
+q_shell_escaped=${q_shell_escaped//\}/${BS}\}}
+q_shell_escaped=${q_shell_escaped//\[/${BS}\[}
+q_shell_escaped=${q_shell_escaped//\]/${BS}\]}
+q_shell_escaped=${q_shell_escaped//\|/${BS}\|}
+q_shell_escaped=${q_shell_escaped//\?/${BS}\?}
+q_shell_escaped=${q_shell_escaped//\./${BS}\.}
+q_shell_escaped=${q_shell_escaped//\,/${BS}\,}
+q_shell_escaped=${q_shell_escaped//\//${BS}\/}
+q_shell_escaped=${q_shell_escaped//\</[${BS}\<]}
+q_shell_escaped=${q_shell_escaped//\>/[${BS}\>]}
 
 fzf_prompt="[$(basename $0)] in=${range}, files=${files}, q_raw=${q_raw}, q_shell_escaped=${q_shell_escaped}"
 printf "%s\n" "${fzf_prompt}"
@@ -80,10 +68,14 @@ if [[ -z "${git_log_g_res}" ]]; then
   echo "not found."
   exit 1
 fi
+git_log_g_res_size=$(printf "%s" "${git_log_g_res}"| grep -Evc '^$')
 
 (
+  git_log_g_res_idx=0
   IFS=$'\n'
   for git_log_g_res_1 in $(echo "${git_log_g_res}"); do
+    git_log_g_res_idx=$(( git_log_g_res_idx + 1 ))
+    single_commit_start_time_millis=$(epocms)
     # １コミットの各要素を取得します(%h, %ad, %an, %s)。
     git_log_h=$(echo "${git_log_g_res_1}"| awk -F '\t' '{ print $1 }')
     git_log_ad=$(echo "${git_log_g_res_1}"| awk -F '\t' '{ printf "%s", $2 }')
@@ -104,26 +96,34 @@ fi
         git_log_patch_filename=$(echo "${git_log_patch_filename_a}"$'\n'"${git_log_patch_filename_b}"| uniq| xargs echo)
       else
         if ( printf '%s\n' "${git_log_patch_res_1}"| grep -E "${q_shell_escaped}">/dev/null 2>&1 ); then
-          string_buffer+="${git_log_h}	${pull_request_no}	${git_log_ad}	${git_log_an}	${git_log_patch_filename}	|${git_log_patch_res_1}"$'\n'
+          git_log_patch_res_1_head1="${git_log_patch_res_1:0:1}"
+          if [[ "${git_log_patch_res_1_head1}" == "+" ]]; then
+            readable_label="追加"
+          elif [[ "${git_log_patch_res_1_head1}" == "-" ]]; then
+            readable_label="削除"
+          fi
+          string_buffer+="${git_log_h}	${pull_request_no}	${git_log_ad}	${git_log_an}	${git_log_patch_filename}	|${readable_label}|${git_log_patch_res_1}"$'\n'
         fi
       fi
     done
 
     printf "%s\n" "${git_log_h}	${pull_request_no}	${git_log_ad}	${git_log_an}	${git_log_s}"
     printf "%s\n" "${string_buffer}"| grep -Ev "^$"
-    echo "--"
+    time_millis=$(epocms)
+    elapsed_time_millis=$(( time_millis - start_time_millis ))
+    single_commit_elapsed_time_millis=$(( time_millis - single_commit_start_time_millis ))
+    printf "  \_%dms (%s/%s) elapsed:%dms \n" "${single_commit_elapsed_time_millis}" "${git_log_g_res_idx}" "${git_log_g_res_size}" "${elapsed_time_millis}"
   done
-  echo "検索完了です"
-)| grep -E --color=always "$|${q_shell_escaped}"
-# )\
-#
-#   | fzf\
-#     --delimiter="\t"\
-#     --tabstop=2\
-#     --ansi\
-#     --info=inline\
-#     --prompt="${fzf_prompt} "\
-#     --header="${git_log_cmd1}"\
-#     --bind="enter:execute(tig {1} -1 -G'${q_shell_escaped}' -- {5})"\
-#     --bind="#:execute(printf {1}| pbcopy; printf 'ハッシュ値({1})をコピーしましたよ。'; read )"
-# 
+  time_millis=$(epocms)
+  elapsed_time_millis=$(( end_time_millis - start_time_millis ))
+  echo "検索完了です(${git_log_g_res_size}commits, ${elapsed_time_millis}ms)"
+)| grep -E --color=always "$|${q_shell_escaped}"| fzf\
+     --delimiter="\t"\
+     --tabstop=2\
+     --ansi\
+     --info=inline\
+     --prompt="${fzf_prompt} "\
+     --header="${git_log_g_res_size}commits hits..."\
+     --bind="enter:execute(tig {1} -1 -G'${q_shell_escaped}' -- {5})"\
+     --bind="#:execute(printf {1}| pbcopy; printf 'ハッシュ値({1})をコピーしましたよ。'; read )"
+
