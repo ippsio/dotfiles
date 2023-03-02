@@ -1,10 +1,4 @@
 [[plugins]]
-repo = 'raghur/vim-ghost'
-hook_post_update='''
-call :GhostInstall
-'''
-
-[[plugins]]
 repo='tyru/open-browser.vim'
 hook_add='''
 nmap @ <Nop>

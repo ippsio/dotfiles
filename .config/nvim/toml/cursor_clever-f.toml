@@ -1,0 +1,5 @@
+[[plugins]]
+repo = 'rhysd/clever-f.vim'
+hook_add='''
+  let g:clever_f_mark_direct = 1
+'''

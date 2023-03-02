@@ -62,7 +62,6 @@ q_shell_escaped=${q_shell_escaped//\>/[${BS}\>]}
 fzf_prompt="[$(basename $0)] in=${range}, files=${files}, q_raw=${q_raw}, q_shell_escaped=${q_shell_escaped}"
 printf "%s\n" "${fzf_prompt}"
 
-git_log_g_cmd="git --no-pager log --date=format:'%Y-%m-%d %H:%M' --pretty='%h%x09%ad%x09%an%x09%s' -G'${q_shell_escaped}'${range} -- ${files}"
 git_log_g_res=$(git --no-pager log --date=format:'%Y-%m-%d %H:%M' --pretty='%h%x09%ad%x09%an%x09%s' -G"${q_shell_escaped}"${range} -- ${files})
 if [[ -z "${git_log_g_res}" ]]; then
   echo "not found."
@@ -113,7 +112,7 @@ git_log_g_res_size=$(printf "%s" "${git_log_g_res}"| grep -Evc '^$')
     time_millis=$(epocms)
     single_commit_elapsed_time_millis=$(( time_millis - single_commit_start_time_millis ))
     elapsed_time_millis=$(( time_millis - start_time_millis ))
-    printf "  \_%dms (%s/%s) elapsed:%dms \n" "${single_commit_elapsed_time_millis}" "${git_log_g_res_idx}" "${git_log_g_res_size}" "${elapsed_time_millis}"
+    printf "... %dms (%s/%s) elapsed:%dms \n" "${single_commit_elapsed_time_millis}" "${git_log_g_res_idx}" "${git_log_g_res_size}" "${elapsed_time_millis}"
   done
   elapsed_time_millis=$(( $(epocms) - start_time_millis ))
   echo "検索完了です(${git_log_g_res_size}commits, ${elapsed_time_millis}ms)"
@@ -124,6 +123,6 @@ git_log_g_res_size=$(printf "%s" "${git_log_g_res}"| grep -Evc '^$')
      --info=inline\
      --prompt="${fzf_prompt} "\
      --header="${git_log_g_res_size}commits hits..."\
-     --bind="enter:execute(tig {1} -1 -G'${q_shell_escaped}' -- {5})"\
+     --bind="enter:execute(tig {1} -1 -G\"${q_shell_escaped}\" -- {5})"\
      --bind="#:execute(printf {1}| pbcopy; printf 'ハッシュ値({1})をコピーしましたよ。'; read )"
 

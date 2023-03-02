@@ -1,0 +1,9 @@
+# カーソル下の単語に下線を引いたり、背景色を変えたりする。
+[[plugins]]
+repo='itchyny/vim-cursorword'
+hook_add='''
+let g:cursorword_delay=50
+let g:cursorword_highlight=0
+hi CursorWord ctermbg=237 cterm=underline
+'''
+

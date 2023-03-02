@@ -23,6 +23,10 @@ on_source = 'ddc.vim'
 # [ddc-source] コマンド履歴補完
 
 [[plugins]]
+repo='Shougo/ddc-source-nvim-lsp'
+on_source = 'ddc.vim'
+
+[[plugins]]
 repo='Shougo/ddc-cmdline-history'
 on_source = 'ddc.vim'
 
@@ -71,6 +75,18 @@ on_source='ddc.vim'
 hook_add='''
 '''
 
+[[plugins]]
+repo='Shougo/ddc-ui-pum'
+on_source='ddc.vim'
+hook_add='''
+'''
+
+[[plugins]]
+repo='Shougo/pum.vim'
+hook_add='''
+'''
+on_source='ddc.vim'
+
 # ===================================================
 # DDC
 # ===================================================
@@ -78,17 +94,14 @@ hook_add='''
 repo='vim-denops/denops.vim'
 
 [[plugins]]
-repo='Shougo/pum.vim'
-hook_add='''
-'''
-
-[[plugins]]
 repo = 'Shougo/ddc.vim'
 on_event = 'InsertEnter'
 depends = ['denops.vim']
 hook_add='''
 " pum.vim {{{
-call ddc#custom#patch_global('completionMenu', 'pum.vim')
+"call ddc#custom#patch_global('completionMenu', 'pum.vim')
+"
+
 " <Tab>: completion.
 inoremap <silent><expr> <TAB>
       \ pum#visible() ? '<Cmd>call pum#map#insert_relative(+1)<CR>' :
@@ -201,10 +214,10 @@ call ddc#custom#patch_filetype(['ps1', 'dosbatch', 'autohotkey', 'registry'], {
 \ 'sourceOptions': { 'file': { 'forceCompletionPattern': '\S\\\S*', }, },
 \ 'sourceParams': { 'file': { 'mode': 'win32', }, }})
 
-call ddc#custom#patch_global('ui', 'native')
+"call ddc#custom#patch_global('ui', 'native')
+call ddc#custom#patch_global('ui', 'pum')
 call ddc#custom#patch_global({
 \ 'keywordPattern': '[a-zA-Z_]\w*',
-\ 'smartCase': v:true,
 \ })
 
 " <TAB>: completion.

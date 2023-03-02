@@ -65,6 +65,10 @@ nnoremap <space>\| :<C-u>vnew<CR>
 " ウインドウの高さの統一
 nnoremap <space>= <C-w>=
 
+" [jumplist]
+nnoremap <Backspace> <C-u><C-o>
+nnoremap <Del> <C-u><C-i>
+
 " VISUALモードで連続ペーストできるようにする
 " この設定をしたい理由：
 "  'abc def 123' という文字列がある時、

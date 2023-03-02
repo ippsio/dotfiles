@@ -1,0 +1,18 @@
+[[plugins]]
+repo = 'airblade/vim-gitgutter'
+hook_add = '''
+"set signcolumn=yes
+" 変更マーク
+"let g:gitgutter_sign_added              = '+'
+"let g:gitgutter_sign_modified           = '~'
+"let g:gitgutter_sign_removed            = 'X'
+"let g:gitgutter_sign_removed_first_line = '_^'
+"let g:gitgutter_sign_modified_removed   = '~R'
+
+"" 変更マークのハイライト
+"hi SignColumn             ctermbg=none
+"hi GitGutterAdd           ctermfg=118 ctermbg=23  "cterm=bold " an added line
+"hi GitGutterChange        ctermfg=11  ctermbg=59  "cterm=bold " a changed line
+"hi GitGutterDelete        ctermfg=8   ctermbg=232 "cterm=bold " at least one removed line
+"hi GitGutterChangeDelete  ctermfg=8   ctermbg=232 "cterm=bold " a changed line followed by at least one removed line
+'''

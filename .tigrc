@@ -110,7 +110,7 @@ set split-view-width = 70%
 set split-view-height = 60%
 
 # 長い行をラップするか
-set wrap-lines = no
+set wrap-lines = yes
 # 行の描画のための文字グラフィックスの種類 [ascii|default|utf-8|<bool>]
 #
 # line-graphics (mixed) [ascii|default|utf-8|auto|<bool>]

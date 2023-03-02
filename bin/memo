@@ -2,13 +2,13 @@
 KIND="memo"
 BASE_DIR=~/notes
 NOTE_DIR=${BASE_DIR}/${KIND}/$(LC_ALL=C date '+%Y_%m')
-FILE=$(LC_ALL=C date '+%Y_%m%d_%a').md
+FILE=$(LC_ALL=C date '+%Y_%m%d_%a').txt
 
 [ ! -d ${BASE_DIR} ] && ( mkdir -p ${BASE_DIR} && cd ${BASE_DIR} && git init && cd .. || exit $? )
 [ ! -d ${NOTE_DIR} ] && mkdir -p ${NOTE_DIR}
 [ ! -f ${NOTE_DIR}/${FILE} ] && echo -e "\n# ${KIND} $(LC_ALL=C date '+%Y/%m/%d(%a)')\n\n---\n" >> ${NOTE_DIR}/${FILE}
 
-CMD="rg --files --hidden -g '*.md' --sortr=path ${BASE_DIR}/${KIND}"
+CMD="rg --files --hidden -g '*.md' -g '*.txt' --sortr=path ${BASE_DIR}/${KIND}"
 eval "${CMD}" \
   | sed -e "s#^${HOME}#~#" \
   | fzf \

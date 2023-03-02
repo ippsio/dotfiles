@@ -10,7 +10,6 @@ on_ft = ['ruby', 'rake', 'eruby', 'slim']
 repo = 'vim-scripts/ruby-matchit'
 on_ft = ['ruby', 'rake', 'eruby', 'slim']
 
-# slimのハイライト
 [[plugins]]
 repo = 'slim-template/vim-slim'
 on_ft = ['slim']
@@ -21,29 +20,6 @@ hook_add='''
   autocmd FileType ruby,slim
   \ setlocal dictionary+=~/.cache/dein/repos/github.com/takkii/ruby-dictionary3/autoload/source/ruby_method_deoplete
 '''
-
-#[[plugins]]
-#repo='vim-scripts/taglist.vim'
-#hook_add='''
-#  set tags=.tags;
-#  nnoremap <S-t> :TlistToggle<CR>
-#  let Tlist_Show_One_File=1
-#  let Tlist_Use_Right_Window=1
-#  let Tlist_Exit_OnlyWindow=1
-#  let Tlist_WinWidth=50
-#  let Tlist_Highlight_Tag_On_BufEnter=1
-#  let Tlist_Inc_Winwidth=1
-#  let Tlist_Max_Tag_Length = 10
-#  let Tlist_Max_Submenu_Items = 25
-#  let Tlist_Display_Prototype = 1
-#  let Tlist_Enable_Fold_Column = 0
-#  let Tlist_Display_Tag_Scope = 1
-#  let Tlist_Process_File_Always = 1
-#  let Tlist_GainFocus_On_ToggleOpen=1
-#  let Tlist_Close_On_Select=1
-#  let Tlist_Auto_Highlight_Tag=1
-#'''
-#on_ft = ['ruby']
 
 [[plugins]]
 repo='AndrewRadev/splitjoin.vim'

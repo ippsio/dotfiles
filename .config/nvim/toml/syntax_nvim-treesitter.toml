@@ -1,0 +1,17 @@
+[[plugins]]
+repo = 'nvim-treesitter/nvim-treesitter'
+merged = 0
+on_event = 'BufRead'
+hook_post_update = 'TSUpdate'
+#hook_source = 'source ~/.config/nvim/plugins/nvim-treesitter.lua'
+hook_source ='''
+lua <<EOF
+require'nvim-treesitter.configs'.setup {
+  highlight = {
+    enable = true,
+    disable = { }
+  }
+}
+EOF
+'''
+

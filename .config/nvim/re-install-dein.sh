@@ -1,9 +1,10 @@
 #!/bin/sh
-CD=~/.cache/dein
-CDDT=${CD}_$(date +'%Y%m%d_%H%M%S')
+CDDT=~/.cache/dein_$(date +'%Y%m%d_%H%M%S')
 mkdir -p ${CDDT}
-rm -rf ${CD}
-ln -sF ${CDDT} ${CD}
-curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh -o ${CD}/installer.sh
-sh ${CD}/installer.sh ${CD}
-
+rm -rf ~/.cache/dein
+ln -sF ${CDDT} ~/.cache/dein
+sh -c "curl https://raw.githubusercontent.com/Shougo/dein-installer.vim/master/installer.sh -o ~/.cache/dein/installer.sh"
+sh ~/.cache/dein/installer.sh "~/.cache/dein" --use-vim-config
+rm ~/.vimrc
+rm ~/.vimrc.pre-dein-vim
+rm ~/.vimrc-*.pre-dein-vim

@@ -1,0 +1,6 @@
+[[plugins]]
+repo = 'ippsio/clip_diff.vim'
+hook_add = '''
+  vmap ,d :call ClipDiff()<CR>
+'''
+

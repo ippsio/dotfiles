@@ -1,0 +1,7 @@
+# 無駄な空白をハイライト
+[[plugins]]
+repo = 'bronson/vim-trailing-whitespace'
+hook_add='''
+" defxを開いた時にハイライトされるのを防ぐ。
+let g:extra_whitespace_ignored_filetypes = ['defx']
+'''

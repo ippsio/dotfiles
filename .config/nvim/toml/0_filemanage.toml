@@ -6,19 +6,8 @@ nnoremap <silent>sf :<C-u>Defx -listed -resume -show-ignored-files
       \ -buffer-name=tab`tabpagenr()`
       \ `expand('%:p:h')` -search=`expand('%:p')`<CR>
 
-" fiというキーがしょっちゅう誤爆するので、閉じておく。
-"nnoremap <silent>fi :<C-u>Defx -new `expand('%:p:h')` -search=`expand('%:p')`<CR>
-
 autocmd FileType defx call s:defx_my_settings()
 function! s:defx_my_settings() abort
-  " Preview
-  " augroup ftplugin-my-defx
-  "   autocmd! * <buffer>
-  "   autocmd CursorMoved <buffer> call defx#call_action("preview", [])
-  "   autocmd BufHidden \[defx\]* pclose
-  " augroup END
-
-  " Define mappings
   nnoremap <silent><buffer><expr> <CR> defx#do_action('open')
   nnoremap <silent><buffer><expr> c defx#do_action('copy')
   nnoremap <silent><buffer><expr> m defx#do_action('move')
