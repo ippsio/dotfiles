@@ -1,6 +1,19 @@
 #!/bin/bash
+perl_epocms() { perl -MTime::HiRes -e 'printf("%.0f\n",Time::HiRes::time()*1000)'; }
 
-start_time_millis=$(epocms)
+hline() {
+  if ( tput cols>/dev/null 2&>1 ); then
+    # fzfの動作上、ちょっと減らしたほうが見た目が良い気がしたので-10。
+    col_size=$(( $(tput cols) - 10 ))
+  else
+    # 数字の根拠は特になし。適当です。
+    col_size=16
+  fi
+  eval printf '%.0s-' "{1..${col_size}}"
+  echo
+}
+
+start_time_millis=$(perl_epocms)
 # 特定の文言を含むコミットを抽出します。
 # - q_shell_escaped: 特定の文言
 # - range: コミット範囲
@@ -62,7 +75,9 @@ q_shell_escaped=${q_shell_escaped//\>/[${BS}\>]}
 fzf_prompt="[$(basename $0)] in=${range}, files=${files}, q_raw=${q_raw}, q_shell_escaped=${q_shell_escaped}"
 printf "%s\n" "${fzf_prompt}"
 
-git_log_g_res=$(git --no-pager log --date=format:'%Y-%m-%d %H:%M' --pretty='%h%x09%ad%x09%an%x09%s' -G"${q_shell_escaped}"${range} -- ${files})
+git_log_g_res_cmd="git --no-pager log --date=format:'%Y-%m-%d %H:%M' --pretty='%h	%ad	%an	%s' -G\"${q_shell_escaped}\"${range} -- ${files}"
+printf "%s\n" "${git_log_g_res_cmd}"
+git_log_g_res=$(eval "${git_log_g_res_cmd}")
 if [[ -z "${git_log_g_res}" ]]; then
   echo "not found."
   exit 1
@@ -74,7 +89,7 @@ git_log_g_res_size=$(printf "%s" "${git_log_g_res}"| grep -Evc '^$')
   IFS=$'\n'
   for git_log_g_res_1 in $(echo "${git_log_g_res}"); do
     git_log_g_res_idx=$(( git_log_g_res_idx + 1 ))
-    single_commit_start_time_millis=$(epocms)
+    single_commit_start_time_millis=$(perl_epocms)
     # １コミットの各要素を取得します(%h, %ad, %an, %s)。
     git_log_h=$(echo "${git_log_g_res_1}"| awk -F '\t' '{ print $1 }')
     git_log_ad=$(echo "${git_log_g_res_1}"| awk -F '\t' '{ printf "%s", $2 }')
@@ -109,20 +124,24 @@ git_log_g_res_size=$(printf "%s" "${git_log_g_res}"| grep -Evc '^$')
 
     printf "%s\n" "${git_log_h}	${pull_request_no}	${git_log_ad}	${git_log_an}	${git_log_s}"
     printf "%s\n" "${string_buffer}"| grep -Ev "^$"
-    time_millis=$(epocms)
+    time_millis=$(perl_epocms)
     single_commit_elapsed_time_millis=$(( time_millis - single_commit_start_time_millis ))
     elapsed_time_millis=$(( time_millis - start_time_millis ))
-    printf "... %dms (%s/%s) elapsed:%dms \n" "${single_commit_elapsed_time_millis}" "${git_log_g_res_idx}" "${git_log_g_res_size}" "${elapsed_time_millis}"
+    # printf "... %dms (%s/%s) elapsed:%dms \n" "${single_commit_elapsed_time_millis}" "${git_log_g_res_idx}" "${git_log_g_res_size}" "${elapsed_time_millis}"
+    printf "(%s/%s)\n" "${git_log_g_res_idx}" "${git_log_g_res_size}"
+    hline
   done
-  elapsed_time_millis=$(( $(epocms) - start_time_millis ))
+  elapsed_time_millis=$(( $(perl_epocms) - start_time_millis ))
   echo "検索完了です(${git_log_g_res_size}commits, ${elapsed_time_millis}ms)"
-)| grep -E --color=always "$|${q_shell_escaped}"| fzf\
-     --delimiter="\t"\
-     --tabstop=2\
-     --ansi\
-     --info=inline\
-     --prompt="${fzf_prompt} "\
-     --header="${git_log_g_res_size}commits hits..."\
-     --bind="enter:execute(tig {1} -1 -G\"${q_shell_escaped}\" -- {5})"\
-     --bind="#:execute(printf {1}| pbcopy; printf 'ハッシュ値({1})をコピーしましたよ。'; read )"
+)| grep -E --color=always "$|${q_shell_escaped}"
+# 最終行のところ、fzfやtigを使ってるならさらに以下を追記しても良いです。
+# )| grep -E --color=always "$|${q_shell_escaped}"
+#      --delimiter="\t"\
+#      --tabstop=2\
+#      --ansi\
+#      --info=inline\
+#      --prompt="${fzf_prompt} "\
+#      --header="${git_log_g_res_size}commits hits..."\
+#      --bind="enter:execute(tig {1} -1 -G\"${q_shell_escaped}\" -- {5})"\
+#      --bind="#:execute(printf {1}| pbcopy; printf 'ハッシュ値({1})をコピーしましたよ。'; read )"
 

@@ -159,7 +159,7 @@ function +vi-git-set-message-hook() {
 
 
   # 追跡ブランチの有無
-  has_tracking_branch_10=$(git config --local branch.${hook_com[branch]}.remote >/dev/null 2>&1 || echo "!!!THIS_BRANCH_HAS_NO_TRACKING-BRANCH!!!")
+  has_tracking_branch_10=$(git config --local branch.${hook_com[branch]}.remote >/dev/null 2>&1 || echo "!NO_TRACKING-BRANCH!")
 
   # misc (%m) に追加
   hook_com[misc]="${repo_1} ${hook_com[branch]} ${untracked_3} ${unstaged_4} ${unmerged_5} ${index_6} ${ahead_7} ${behind_8} ${stash_9} ${has_tracking_branch_10} ${hook_com[action]}"
@@ -169,29 +169,35 @@ function _precmd_vcs_info_msg() {
   LANG=en_US.UTF-8 vcs_info
   psvar=();
   [[ -z ${vcs_info_msg_0_} ]] && return
+  IFS_WAS="${IFS}"
+  IFS=' '
   idx=1; for a_misc in `echo ${vcs_info_msg_0_}`; do; psvar[$idx]=${a_misc}; idx=`echo "$idx+1" | bc`; done
+  IFS="${IFS_WAS}"
 }
 
 add-zsh-hook precmd _precmd_vcs_info_msg
 
 # MARK DEFINITIONS
 # _text_worktree="wtree"
-_text_worktree="worktree"
+# _text_worktree="worktree"
+_text_worktree=""
 #_mark_deleted="x"
 _mark_untracked="?"
 _mark_unstaged="m"
 _mark_unmerged="!"
 # _text_staged="stage"
-_text_staged="index"
+# _text_staged="index"
+_text_staged=""
 _mark_staged="+"
 # _text_repo="repo"
-_text_repo="repo"
+# _text_repo="repo"
+_text_repo=""
 ## # そういう文字が使えるフォント環境の場合
-## _mark_ahead="$(echo '\u2191')"  # ↑
-## _mark_behind="$(echo '\u2193')" # ↓
-## _mark_stash="stash"
-## _mark_branch="" # VCS_BRANCH_ICON                $'\uF126 '             # 
-## _mark_git_repo="" # VCS_GIT_GITHUB_ICON            $'\uF113 '             # 
+#_mark_ahead="$(echo '\u2191')"  # ↑
+#_mark_behind="$(echo '\u2193')" # ↓
+#_mark_stash="stash"
+#_mark_branch="" # VCS_BRANCH_ICON                $'\uF126 '             # 
+#_mark_git_repo="" # VCS_GIT_GITHUB_ICON            $'\uF113 '             # 
 
 # じゃない場合
 _mark_ahead="^"
@@ -214,12 +220,12 @@ _unmerged="%(5v| ${_mark_unmerged}%5v]|)"
 GIT_WORKING_TREE="%K{193}%F{241}${_untracked}${_unstaged}${_unmerged}%f%k"
 
 # git stage
-_staged="%(6v| ${_text_staged}[${_mark_staged}%6v]|)%k"
+_staged="%(6v|${_text_staged}[${_mark_staged}%6v]|)%k"
 # GIT_STAGE="%K{90}%F{255}${_staged}%f%k"
 GIT_STAGE="%K{61}%F{153}${_staged}%f%k"
 
 # git local repositry
-_ahead="%(7v| ${_text_repo}[${_mark_ahead}%7v|)"
+_ahead="%(7v|${_text_repo}[${_mark_ahead}%7v|)"
 _behind="%(8v| ${_mark_behind}%8v]|)"
 GIT_LOCAL_REPO="%K{90}%F{200}${_ahead}${_behind}%f%k"
 

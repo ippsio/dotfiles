@@ -15,4 +15,24 @@ hook_add = '''
 "hi GitGutterChange        ctermfg=11  ctermbg=59  "cterm=bold " a changed line
 "hi GitGutterDelete        ctermfg=8   ctermbg=232 "cterm=bold " at least one removed line
 "hi GitGutterChangeDelete  ctermfg=8   ctermbg=232 "cterm=bold " a changed line followed by at least one removed line
+
+" 行ハイライトは結構見にくいと感じたので、コメントアウト
+" 起動時に差分行の行ハイライトを自動的に有効にする
+" let g:gitgutter_highlight_lines = 1
+
+" 行番号のハイライト
+"let g:gitgutter_highlight_linenrs = 1
+
+augroup GitGutter
+  autocmd!
+  " 何かバッファを開いたら、gitgutterのサイン表示に利用するgitの比較元ハッシュを更新する
+  autocmd BufEnter * call s:UpdateMergeBase()
+  function! s:UpdateMergeBase()
+    if $GIT_MERGE_BASE != ""
+      let g:gitgutter_diff_base = $GIT_MERGE_BASE
+    endif
+    GitGutter
+  endfunction
+augroup END
+
 '''

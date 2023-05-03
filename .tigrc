@@ -110,7 +110,10 @@ set split-view-width = 70%
 set split-view-height = 60%
 
 # 長い行をラップするか
-set wrap-lines = yes
+# tigは'1'で行単位のステージ/アンステージができるのですが、wrap-lines=yesだとそれが使えないようです(Staging is not supported for wrapped linesという警告が表示されます)。
+# それは不便なのでwrap-linesはnoにします。
+# set wrap-lines = yes
+set wrap-lines = no
 # 行の描画のための文字グラフィックスの種類 [ascii|default|utf-8|<bool>]
 #
 # line-graphics (mixed) [ascii|default|utf-8|auto|<bool>]
@@ -232,6 +235,8 @@ bind main    M      ?git merge
 #--------------
 bind generic C      !git commit
 bind main    C      !git commit
+bind generic + !git commit --amend
+bind main + !git commit --amend
 
 #--------------
 # git rebase
@@ -264,7 +269,7 @@ bind diff L         !sh -c "echo %(commit) | pbcopy"
 bind status - >bash -c "~/dotfiles/bin/tig/git_checkout_-- %(file)"
 bind stage  - >bash -c "~/dotfiles/bin/tig/git_checkout_-- %(file)"
 bind stage  h view-close-no-quit
-bind status D !rm %(file)
+bind status D ?rm %(file)
 
 bind diff [ :toggle diff-context -1		   # Decrease context (-U arg)
 bind diff ] :toggle diff-context +1		   # Increase context

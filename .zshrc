@@ -1,7 +1,17 @@
 #!/usr/bin/env zsh
 # zsh起動時にtmux起動
-(type "tmux" > /dev/null 2>&1) && [[ -z "$TMUX" && ! -z "$PS1" ]] \
-  && for i in {1..128}; do [[ -z $(tmux ls -f "#{==:#{session_name},${i}}") ]] && tmux new-session -s ${i} && echo "bye." && sleep 1 && exit; done
+if (type "tmux" > /dev/null 2>&1); then
+  if [[ -z "$TMUX" && ! -z "$PS1" ]]; then
+    for i in {1..128}; do
+      if [[ -z $(tmux ls -f "#{==:#{session_name},${i}}") ]]; then
+        tmux new-session -s ${i}
+        echo "bye."
+        sleep 1
+        # exit
+      fi
+    done
+  fi
+fi
 
 autoload -Uz compinit && compinit -u
 
@@ -9,7 +19,7 @@ autoload -Uz compinit && compinit -u
 SHOW_ME_PROFILE=false
 ${SHOW_ME_PROFILE} && zmodload zsh/zprof && zprof
 
-START=$(~/dotfiles/bin/epocms_perl)
+START=$(~/dotfiles/bin/epocms_c)
 
 # history
 HISTFILE=~/.zsh_history
@@ -45,9 +55,9 @@ source ~/dotfiles/zshrc/50_existing_command_hacking.zsh
 # zsh-plugin manager
 source ~/dotfiles/zshrc/60_zsh_plugin_manage.zsh
 # theme (fast-theme -l to show theme list.)
-fast-theme spa > /dev/null 2>&1
+#fast-theme  > /dev/null 2>&1
 
 # profiling
 ( type "zprof" > /dev/null 2>&1 ) && zprof # zprof
-printf "zshrc load finished (%dms).\n" $(expr $(~/dotfiles/bin/epocms_perl) - $START)
+printf "zshrc load finished (%dms).\n" $(expr $(~/dotfiles/bin/epocms_c) - $START)
 

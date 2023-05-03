@@ -19,7 +19,6 @@ if dein#load_state('~/.cache/dein')
     \ '~/dotfiles/.config/nvim/toml/visual_vim-insert-linenr.toml',
     \ '~/dotfiles/.config/nvim/toml/visual_vim-indent-guides.toml',
     \ '~/dotfiles/.config/nvim/toml/visual_vim-trailing-whitespace.toml',
-    \ '~/dotfiles/.config/nvim/toml/cursor_clever-f.toml',
     \ '~/dotfiles/.config/nvim/toml/cursor_accelerated-jk.toml',
     \ '~/dotfiles/.config/nvim/toml/fzf.toml',
     \ '~/dotfiles/.config/nvim/toml/vimproc.toml',

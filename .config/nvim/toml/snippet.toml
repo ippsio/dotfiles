@@ -1,5 +1,6 @@
 [[plugins]]
 repo = 'Shougo/neosnippet.vim'
+on_source = 'ddc.vim'
 hook_add = '''
 "imap <C-k>     <Plug>(neosnippet_expand_or_jump)
 smap <C-k>     <Plug>(neosnippet_expand_or_jump)
@@ -17,3 +18,4 @@ endif
 
 [[plugins]]
 repo = 'Shougo/neosnippet-snippets'
+on_source = 'ddc.vim'

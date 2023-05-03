@@ -2,12 +2,9 @@
 
 # bundle exec rakeで実行するタスクの候補を表示する。
 # プレビューとして、タスクのソースコードを表示する。
-RG_CMD="rg --line-number --color=never --hidden -g '*.rake' --sort=path '^ *(namespace .*do|task_with_logger|desc)'"
+RG_CMD="rg --line-number --color=never --hidden -g '*.rake' --sort=path '^ *(namespace .*do|task(_[a-z]*)|desc)'"
 RG_RESULT=$(eval "${RG_CMD}")
-if [[ -z ${RG_RESULT} ]]; then
-  echo "Not found."
-  exit $?
-fi
+[[ -z ${RG_RESULT} ]] && echo "Not found." && exit $?
 
 RG_RESULT=$(echo "${RG_RESULT}"| sed "s/:/ /g")
 RG_RESULT=$(echo "${RG_RESULT}"| sed "s/'/ /g")
@@ -19,42 +16,35 @@ RG_RESULT=$(echo "${RG_RESULT}"| sed -E "s/ +/\t/g")
 # -------------------|---|----------------|---------------------|----------------|---|------
 # lib/tasks/abc.rake  23  namespace        import_something      do
 # lib/tasks/abc.rake  24  desc             csvファイルを読み込む
-# lib/tasks/abc.rake  25  task_with_logger exec                  environment  do
+# lib/tasks/abc.rake  25  task             exec                  environment  do
 # lib/tasks/xyz.rake  41  namespace        change_some_record    do
 # lib/tasks/abc.rake  42  desc             レコードを削除する
-# lib/tasks/xyz.rake  43  task_with_logger exec                  environment  do
+# lib/tasks/xyz.rake  43  task             exec                  environment  do
 # lib/tasks/xyz.rake  62  desc             レコードを更新する
-# lib/tasks/xyz.rake  63  task_with_logger update_some_record    environment  do
+# lib/tasks/xyz.rake  63  task             update_some_record    environment  do
 
-target=$(echo "${RG_RESULT}"| awk -F '\t' -v COLOR='\033[38;5;33m' -v COLOR_RESET='\033[0m' '
-      BEGIN { INDEX = 0; NAMESPACE = ""; FILE = ""; TASK = ""; DESC = ""; LINE_TO_HIGHLIGHT = "" }
-      {
-        if (FILE != $1) { FILE = $1; NAMESPACE = "" }
+target=$(echo "${RG_RESULT}"| awk -F '\t' '
+  BEGIN { INDEX = 0; NAMESPACE = ""; FILE = ""; TASK = ""; DESC = ""; LINE_TO_HIGHLIGHT = "" }
+  {
+    if (FILE != $1) { FILE = $1; NAMESPACE = "" }
 
-        if ($3 == "namespace") {
-          NAMESPACE=$4
-        } else if ($3 == "desc") {
-          LINE_TO_HIGHLIGHT = $2; DESC=$4" "$5" "$6" "$7" "$8" "$9
-        } else if ($3 == "task_with_logger") {
-          if (LINE_TO_HIGHLIGHT == "") { LINE_TO_HIGHLIGHT = $2 }
-          INDEX++;
-          printf "(%d) %s %s\t", INDEX, FILE, LINE_TO_HIGHLIGHT
-          printf "%s", COLOR
-          printf "%s:%s", NAMESPACE, $4
-          printf "%s", COLOR_RESET
-          printf "\t%s", DESC
-          printf "\n"
-          LINE_TO_HIGHLIGHT = ""; DESC=""
-        }
-      }' \
-    | fzf --info=inline --ansi --tabstop=4 --bind change:top \
-      --bind "ctrl-v:execute(nvim {2} +{3} < /dev/tty > /dev/tty)" \
-      --bind 'ctrl-/:toggle-preview' \
-      --preview 'git_blame_colored {2} {3}' \
-      --preview-window=down:70%:wrap)
-      #--preview 'bat --color=always --line-range {3}: --highlight-line {3} {2}' \
-ret_cd=$?
-if [ ${ret_cd} -eq 0 ]; then
-  echo "${target}"|awk '{ print $4 }'
-fi
+    if ($3 == "namespace") {
+      NAMESPACE=$4
+    } else if ($3 == "desc") {
+      DESC=$4" "$5" "$6" "$7" "$8" "$9
+    } else if (match($1, /task(_[a-z])*/ )) {
+      LINE_TO_HIGHLIGHT = $2
+      INDEX++;
+      printf "(%d) %s %s\t%s%s:%s\t%s\t%s\n", INDEX, FILE, LINE_TO_HIGHLIGHT, "\033[38;5;33m", NAMESPACE, $4, "\033[0m", DESC
+      LINE_TO_HIGHLIGHT = ""; DESC=""
+    }
+  }'| fzf --prompt="$(basename $0) " \
+    --info=inline --ansi --tabstop=4 --bind change:top \
+    --bind "ctrl-v:execute(nvim {2} +{3} < /dev/tty > /dev/tty)" \
+    --bind 'ctrl-/:toggle-preview' \
+    --preview 'git_blame_colored {2} {3}' \
+    --preview-window=down:70%:wrap \
+)
+    #--preview 'bat --color=always --line-range {3}: --highlight-line {3} {2}' \
+[[ $? -eq 0 ]] && printf "%s" "${target}"|awk '{ print $4 }'
 

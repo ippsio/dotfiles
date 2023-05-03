@@ -49,8 +49,8 @@ hi Search ctermbg=89 ctermfg=208
 hi NormalNC ctermfg=251
 
 " コメント
-hi Comment ctermbg=23 ctermfg=123
-hi vimLineComment ctermbg=23 ctermfg=123
+hi Comment ctermbg=236 ctermfg=6
+hi vimLineComment ctermbg=236 ctermfg=6
 hi vimCommentString ctermbg=23 ctermfg=123
 hi vimCommentTitle ctermbg=23
 hi vimCommentTitleLeader ctermbg=23
@@ -63,7 +63,7 @@ hi Constant ctermfg=105
 hi PreProc ctermfg=170
 
 " ruby
-hi rubySymbol ctermbg=52 ctermfg=196
+hi rubySymbol ctermbg=0 ctermfg=170
 hi rubyString ctermbg=232 ctermfg=69
 hi rubyTodo ctermbg=94
 
@@ -99,7 +99,7 @@ hi markdownError guibg=#222622
 
 "hi Function guifg=#ffff00 guibg=#444400
 " hi Statement guifg=#ffff00 ctermfg=226 cterm=bold
-hi Statement ctermfg=226
+hi Statement ctermfg=178
 
 " vimdiffの色設定
 hi DiffAdd     ctermfg=123 ctermbg=023

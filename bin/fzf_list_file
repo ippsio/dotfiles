@@ -6,16 +6,17 @@ else
   [[ ! -e "$(home_as_home ${ARG})" ]] && exit
   FZF_QUERY="${ARG}"
 fi
+ARG_AS_REALPATH=$(cd "${ARG}" && pwd)
 
 FZF_PROMPT="$(basename $0)"
 FZF_HEADER="C-g:ripgrep, C-/:TogglePreview"
-FIND_CMD="rg --files --hidden --sortr=path ${ARG} 2>/dev/null"
+FIND_CMD="rg --files --hidden --no-ignore --sortr=path ${ARG} 2>/dev/null"
 FZF_RESULT=$(eval "${FIND_CMD}"| grep -v "^${ARG}$"| sed 's#//#/#'| sed 's#^./##' \
   | home_as_tilde\
   | fzf +m \
     --query="${FZF_QUERY}" \
     --header="${FZF_HEADER}" \
-    --prompt="${FZF_PROMPT} (dir='$(home_as_tilde ${ARG})') > " \
+    --prompt="${FZF_PROMPT} (dir='$(home_as_tilde ${ARG_AS_REALPATH})') > " \
     --bind "ctrl-/:toggle-preview" \
     --bind "ctrl-g:execute(rg_fzf_vim . ${HOME_AS_HOME} < /dev/tty > /dev/tty)" \
     --preview-window=right:60%:wrap \

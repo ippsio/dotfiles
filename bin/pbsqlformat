@@ -1,0 +1,26 @@
+#!/bin/bash
+set -eu
+use_own_rule=true
+
+# sqlformat で整形
+# 無い場合は brew install sqlparse 等でインストール
+before_format="$(pbpaste)"
+after_format=$(echo "${before_format}"| sqlformat -r -k upper -)
+
+# 独自の整形処理(自分好みに整形してね)
+if ( ${use_own_rule} ); then
+  IFS=$'\n'
+  after_format=$(for line in $(echo "${after_format}"); do
+    line=$(echo "${line}"| sed -E 's/^[ ]+//')
+
+    # 行末がカンマなら この行は改行しない。
+    [[ "${line: -1}" == "," ]] && printf "%s " "${line}" || printf "%s\n" "${line}";
+  done)
+fi
+
+# 結果出力
+printf "[before]\n%s\n---\n[after]\n%s\n" "${before_format}" "${after_format}"
+
+# 結果をクリップボードにコピー
+# printf "%s" "${after_format}"| pbcopy
+

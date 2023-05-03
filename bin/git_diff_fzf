@@ -132,6 +132,6 @@ target=$(echo "$files" | \
       decorate -verbose_log '${GIT_DIFF_COLORED}';
       echo;
       eval '${GIT_DIFF_COLORED}';
-    " --preview-window=bottom:75%)
+    " --preview-window=bottom:75%,hidden)
     echo $target | awk '{print $3}'
 
