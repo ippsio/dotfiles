@@ -24,4 +24,3 @@ hook_add = '''
 map _ <Plug>(operator-replace)
 '''
 
-

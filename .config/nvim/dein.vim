@@ -31,7 +31,6 @@ if dein#load_state('~/.cache/dein')
 
   let lazy1_ar = [
     \ '~/dotfiles/.config/nvim/toml/0_filemanage.toml',
-    \ '~/dotfiles/.config/nvim/toml/quickrun.toml',
     \ '~/dotfiles/.config/nvim/toml/snippet.toml',
     \ '~/dotfiles/.config/nvim/toml/0_misc.toml',
     \ '~/dotfiles/.config/nvim/toml/doc_vimdoc-ja.toml',
