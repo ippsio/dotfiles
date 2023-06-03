@@ -117,6 +117,9 @@ zle_space() {
     # docker-compose up -d
     [[ $BUFFER =~ '^dcu+$' ]] && BUFFER="docker-compose up -d" && zle end-of-line && return
 
+    # docker-compose up -d; docker-compose logs -f
+    [[ $BUFFER =~ '^dcul+$' ]] && BUFFER="docker-compose up -d; docker-compose logs -f" && zle end-of-line && return
+
     # docker-compose down
     [[ $BUFFER =~ '^dcd+$' ]] && BUFFER="docker-compose down" && zle end-of-line && return
 

@@ -42,7 +42,6 @@ function s:grep_z_register()
   " NOTE: どうやら2回escapeすると期待動作する。1回escapeだと期待動作しない。理由は知らん。
   let l:search_word = escape(@z, '\"$`')
   let l:search_word = escape(l:search_word, '\"$`')
-  "echo l:search_word
   call feedkeys(":Grep " . l:search_word . "\<CR>", "n")
 endfunction
 

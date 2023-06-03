@@ -7,7 +7,7 @@ if (type "tmux" > /dev/null 2>&1); then
         tmux new-session -s ${i}
         echo "bye."
         sleep 1
-        # exit
+        exit
       fi
     done
   fi
