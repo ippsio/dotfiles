@@ -111,24 +111,38 @@ zle_space() {
   && BUFFER=$(docker_exec) && zle end-of-line && return
 
   # docker-compose
-  if [[ -e docker-compose.yml ]]; then
-    [[ $BUFFER =~ '^dc+$' ]] && BUFFER="docker-compose " && zle end-of-line && return
+  dc_files=()
+  dc_files+=(docker-compose-m1.yml)
+  dc_files+=(docker-compose_m1.yml)
+  dc_files+=(docker-compose-arm.yml)
+  dc_files+=(docker-compose_arm.yml)
+  dc_files+=(docker-compose.yml)
+  for dc_file in ${dc_files}; do
+    if [[ -e ${dc_file} ]]; then
+      if [[ "${dc_file}" == "docker-compose.yml" ]]; then
+        docker_compose="docker-compose"
+      else
+        docker_compose="docker-compose -f ${dc_file}"
+      fi
+      # docker-compose
+      [[ $BUFFER =~ '^dc+$' ]] && BUFFER="${docker_compose} " && zle end-of-line && return
 
-    # docker-compose up -d
-    [[ $BUFFER =~ '^dcu+$' ]] && BUFFER="docker-compose up -d" && zle end-of-line && return
+      # docker-compose up -d
+      [[ $BUFFER =~ '^dcu+$' ]] && BUFFER="${docker_compose} up -d" && zle end-of-line && return
 
-    # docker-compose up -d; docker-compose logs -f
-    [[ $BUFFER =~ '^dcul+$' ]] && BUFFER="docker-compose up -d; docker-compose logs -f" && zle end-of-line && return
+      # docker-compose up -d; docker-compose logs -f
+      [[ $BUFFER =~ '^dcul+$' ]] && BUFFER="${docker_compose} up -d; ${docker_compose} logs -f" && zle end-of-line && return
 
-    # docker-compose down
-    [[ $BUFFER =~ '^dcd+$' ]] && BUFFER="docker-compose down" && zle end-of-line && return
+      # docker-compose down
+      [[ $BUFFER =~ '^dcd+$' ]] && BUFFER="${docker_compose} down" && zle end-of-line && return
 
-    # docker-compose logs -f
-    [[ $BUFFER =~ '^dcl+$' ]] && BUFFER="docker-compose logs -f" && zle end-of-line && return
+      # docker-compose logs -f
+      [[ $BUFFER =~ '^dcl+$' ]] && BUFFER="${docker_compose} logs -f" && zle end-of-line && return
 
-    # docker-compose ps
-    [[ $BUFFER =~ '^dcp+$' ]] && BUFFER="docker-compose ps" && zle end-of-line && return
-  fi
+      # docker-compose ps
+      [[ $BUFFER =~ '^dcp+$' ]] && BUFFER="${docker_compose} ps" && zle end-of-line && return
+    fi
+  done
 
   # goto
   [[ $BUFFER =~ '^goto+$' ]] \
