@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
-# emacs like
-bindkey -e
+# vi like
+bindkey -v
 
 # space
 source ~/dotfiles/zshrc/41_zle_space.zsh
