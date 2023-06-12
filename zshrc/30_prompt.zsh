@@ -62,7 +62,7 @@ zstyle ':vcs_info:git+set-message:*' hooks git-set-message-hook
 # 上記を参考にすると、merge時の競合を解決しないといけないものはたぶんこれ。
 # local unmerged_5=$(                     echo "${git_XY}"| egrep -c "^([DAU][DAU])")
 # </worktreeの変更>
-function +vi-git-set-message-hook() {
++vi-git-set-message-hook() {
   [[ $(git rev-parse --is-inside-work-tree 2> /dev/null) != "true" ]] && return 1
   [[ "$1" != "0" ]] && return 0 # process when only for 1st messsge of zstyle formats, actionformats
 
@@ -88,111 +88,112 @@ function +vi-git-set-message-hook() {
   hook_com[misc]="${repo_1} ${hook_com[branch]} ${untracked_3} ${unstaged_4} ${unmerged_5} ${index_6} ${ahead_7} ${behind_8} ${stash_9} ${has_tracking_branch_10} ${hook_com[action]}"
 }
 
-function _precmd_vcs_info_msg() {
-  LANG=en_US.UTF-8 vcs_info
-  psvar=( $(echo "${vcs_info_msg_0_}") );
-}
+my_precmd_hook() { return 0; }
+my_chpwd_hook() { return 0; }
+my_periodic_hook() { return 0; }
+my_preexec_hook() { return 0; }
+my_zshaddhistory_hook() { return 0; }
 
-function redraw_vi_mode {
-  label=${1}
-  color=${2:-255}
-  color_resetter=${3}
-  PROMPT=$(echo -e "$PROMPT"| sed -E "s/%K{[0-9]+}vi-(KEYMAP|VISUAL|NORMAL|INSERT) %#/%K{$2}$label %#${color_resetter}/")
-}
-
-function zle-keymap-select zle-line-init zle-line-pre-redraw {
+readonly REGEX_BINDING_PART="%K{[0-9]+}(vi-VISUAL|vi-NORMAL|vi-INSERT) %#"
+update_binding_part() {
   if [[ $REGION_ACTIVE -ne 0 ]]; then
-    redraw_vi_mode "vi-VISUAL" 38 ""
+    PROMPT=$(echo -e "$PROMPT"| sed -E "s/${REGEX_BINDING_PART}/%K{34}vi-VISUAL %#/")
     zle reset-prompt
   elif [[ $KEYMAP = vicmd ]]; then
-    redraw_vi_mode "vi-NORMAL" 8 ""
+    PROMPT=$(echo -e "$PROMPT"| sed -E "s/${REGEX_BINDING_PART}/%K{54}vi-NORMAL %#/")
     zle reset-prompt
   elif [[ $KEYMAP = main ]]; then
-    redraw_vi_mode "vi-INSERT" 1 ""
+    PROMPT=$(echo -e "$PROMPT"| sed -E "s/${REGEX_BINDING_PART}/%K{25}vi-INSERT %#/")
     zle reset-prompt
   fi
+  return 0
 }
+
+zle-line-init() { update_binding_part; return 0; }
+zle-line-pre-redraw() { update_binding_part; return 0; }
+zle-keymap-select() { update_binding_part; return 0; }
 
 precmd() {
-# git basic infomations.
-_mark_git_repo=""
-_mark_branch=""
-GIT_REPO_BRANCH="%K{118}%F{0}"\
-"%(1v|[${_mark_git_repo}%1v|)"\
-"%f%k"\
-"%K{220}%F{0}"\
-"%(2v| ${_mark_branch}%2v]|)"\
-"%f%k"
+  LANG=en_US.UTF-8 vcs_info
+  psvar=( $(echo "${vcs_info_msg_0_}") )
 
-# git working_tree
-_text_worktree=""
-_mark_untracked="?"
-_mark_unstaged="m"
-_mark_unmerged="!"
-GIT_WORKING_TREE="%K{193}%F{241}"\
-"%(3v|${_text_worktree}[${_mark_untracked}%3v|)"\
-"%(4v| ${_mark_unstaged}%4v|)"\
-"%(5v| ${_mark_unmerged}%5v]|)"\
-"%f%k"
+  # git basic infomations.
+  _mark_git_repo=""
+  _mark_branch=""
+  GIT_REPO_BRANCH="%K{118}%F{0}"
+  GIT_REPO_BRANCH+="%(1v|[${_mark_git_repo}%1v|)"
+  GIT_REPO_BRANCH+="%f%k"
+  GIT_REPO_BRANCH+="%K{220}%F{0}"
+  GIT_REPO_BRANCH+="%(2v| ${_mark_branch}%2v]|)"
+  GIT_REPO_BRANCH+="%f%k"
 
-# git stage
-_text_staged=""
-_mark_staged="+"
-GIT_STAGE="%K{61}%F{153}"\
-"%(6v|${_text_staged}[${_mark_staged}%6v]|)%k"\
-"%f%k"
+  # git working_tree
+  _text_worktree=""
+  _mark_untracked="?"
+  _mark_unstaged="m"
+  _mark_unmerged="!"
+  GIT_WORKING_TREE="%K{193}%F{241}"
+  GIT_WORKING_TREE+="%(3v|${_text_worktree}[${_mark_untracked}%3v|)"
+  GIT_WORKING_TREE+="%(4v| ${_mark_unstaged}%4v|)"
+  GIT_WORKING_TREE+="%(5v| ${_mark_unmerged}%5v]|)"
+  GIT_WORKING_TREE+="%f%k"
 
-# git local repositry
-_text_repo=""
-_mark_ahead="^"
-_mark_behind="v"
-GIT_LOCAL_REPO="%K{90}%F{200}"\
-"%(7v|${_text_repo}[${_mark_ahead}%7v|)"\
-"%(8v| ${_mark_behind}%8v]|)"\
-"%f%k"
+  # git stage
+  _text_staged=""
+  _mark_staged="+"
+  GIT_STAGE="%K{61}%F{153}"
+  GIT_STAGE+="%(6v|${_text_staged}[${_mark_staged}%6v]|)%k"
+  GIT_STAGE+="%f%k"
 
-# 9v,10v,11v,12v,13vって....。たぶんもっといいやり方あるんだろうけど、調べるのが面倒臭かったんです..
-_mark_stash="stash"
-GIT_CAUTION="%K{1}"\
-"%(9v| ${_mark_stash}%9v |)"\
-"%(10v| %10v |)%(11v| %11v |)%(12v| %12v |)%(13v| %13v |)"\
-"%k"
+  # git local repositry
+  _text_repo=""
+  _mark_ahead="^"
+  _mark_behind="v"
+  GIT_LOCAL_REPO="%K{90}%F{200}"
+  GIT_LOCAL_REPO+="%(7v|${_text_repo}[${_mark_ahead}%7v|)"
+  GIT_LOCAL_REPO+="%(8v| ${_mark_behind}%8v]|)"
+  GIT_LOCAL_REPO+="%f%k"
 
-# others
-EXIT_CD="%K{red}%(?..[\$?=%?])%k"
-NUMBER_OF_JOBS="%(1j|%F{226}bg-jobs(%j)%f|)"
-CURRENT_DIRECTORY="%K{237}%F{255}[%~] %f%k"
+  # 9v,10v,11v,12v,13vって....。たぶんもっといいやり方あるんだろうけど、調べるのが面倒臭かったんです..
+  _mark_stash="stash"
+  GIT_CAUTION="%K{1}"
+  GIT_CAUTION+="%(9v| ${_mark_stash}%9v |)"
+  GIT_CAUTION+="%(10v| %10v |)%(11v| %11v |)%(12v| %12v |)%(13v| %13v |)"
+  GIT_CAUTION+="%k"
 
-CHUNK1="${GIT_WORKING_TREE}${GIT_STAGE}${GIT_LOCAL_REPO}"
-CHUNK2="${GIT_REPO_BRANCH}"
-CHUNK3="${EXIT_CD}${NUMBER_OF_JOBS}${CURRENT_DIRECTORY}${GIT_CAUTION}%K{238}%k"
-CHUNK4="%K{255}vi-KEYMAP %# "
+  # others
+  EXIT_CD="%K{red}%(?..[\$?=%?])%k"
+  NUMBER_OF_JOBS="%(1j|%F{226}bg-jobs(%j)%f|)"
+  CURRENT_DIRECTORY="%K{237}%F{255}[%~] %f%k"
 
-PROMPT=$'\n'
-[[ ! -z "${CHUNK1}" ]] && PROMPT+="${CHUNK1}"
-[[ ! -z "${CHUNK2}" ]] && PROMPT+="${CHUNK2}"
-[[ ! -z "${CHUNK3}" ]] && PROMPT+=$'\n'"${CHUNK3}"
-[[ ! -z "${CHUNK4}" ]] && PROMPT+=$'\n'"${CHUNK4}"
+  CHUNK1="${GIT_WORKING_TREE}${GIT_STAGE}${GIT_LOCAL_REPO}"
+  CHUNK2="${GIT_REPO_BRANCH}"
+  CHUNK3="${EXIT_CD}${NUMBER_OF_JOBS}${CURRENT_DIRECTORY}${GIT_CAUTION}%K{238}%k"
+  CHUNK4="%K{25}vi-INSERT %# "
 
-redraw_vi_mode "vi-INSERT" 31 ""
+  PROMPT=$'\n'
+  [[ ! -z "${CHUNK1}" ]] && PROMPT+="${CHUNK1}"
+  [[ ! -z "${CHUNK2}" ]] && PROMPT+="${CHUNK2}"
+  [[ ! -z "${CHUNK3}" ]] && PROMPT+=$'\n'"${CHUNK3}"
+  [[ ! -z "${CHUNK4}" ]] && PROMPT+=$'\n'"${CHUNK4}"
 }
 
-## 現在のプロンプトにはVCSの情報を表示
-#current-rprompt() {
-#  redraw_vi_mode "vi-INSERT" 31 ""
-#}
-##add-zsh-hook precmd current-rprompt
-
 ## 以前のプロンプトにはコマンドラインを確定した時刻を表示
-update-rprompt-accpet-line() {
-  redraw_vi_mode "vi-INSERT" 78 "%k%k"
+my-accept-line() {
+  PROMPT=$(echo -e "$PROMPT"| sed -E "s/${REGEX_BINDING_PART}/%#/")
   zle .reset-prompt
   zle .accept-line
 }
-# zshのprecmdフックに、_precmd_vcs_info_msg関数を追加する。
-add-zsh-hook precmd _precmd_vcs_info_msg
+
+# zshのフック登録
+add-zsh-hook precmd my_precmd_hook
+add-zsh-hook chpwd my_chpwd_hook
+add-zsh-hook periodic my_periodic_hook
+add-zsh-hook preexec my_preexec_hook
+add-zsh-hook zshaddhistory my_zshaddhistory_hook
 
 zle -N zle-line-init
 zle -N zle-keymap-select
 zle -N zle-line-pre-redraw
-zle -N accept-line update-rprompt-accpet-line
+zle -N accept-line my-accept-line
+
