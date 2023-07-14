@@ -36,8 +36,8 @@ endfunction
 nmap <silent> <Esc> :<C-u>nohlsearch<CR>
 
 " [検索]
-" <F4> でハイライト中の文字(zレジスタの文字)をGrep。
-nnoremap <F4>       mz:call <SID>grep_z_register()<CR>
+" <F3> でハイライト中の文字(zレジスタの文字)をGrep。
+nnoremap <F3>       mz:call <SID>grep_z_register()<CR>
 function s:grep_z_register()
   " NOTE: どうやら2回escapeすると期待動作する。1回escapeだと期待動作しない。理由は知らん。
   let l:search_word = escape(@z, '\"$`')
@@ -110,10 +110,9 @@ nnoremap <silent> <C-g> :call <SID>CopyFilename()<CR><C-g>
 function! s:CopyFilename()
   let s:git_root = system('cd ' . expand('%:p:h') . '; git rev-parse --show-toplevel 2> /dev/null')[:-2]
   if s:git_root != ''
-    "let @* = system('cd ' . expand('%:p:h') . '; git ls-files --full-name ' . expand('%:p'))
-    " FIXME: 
-    let @* = system('cd ' . expand('%:p:h') . '; git ls-files --full-name ' . expand('%:p'))
+    let l:file = system('cd ' . expand('%:p:h') . '; git ls-files --full-name ' . expand('%:p'))
   else
-    let @* = substitute(expand("%:p"), $HOME, "~", "g")
+    let l:file = substitute(expand("%:p"), $HOME, "~", "g")
   endif
+  let @* = substitute(l:file, "[\\n|\\r]", "", "g")
 endfunction

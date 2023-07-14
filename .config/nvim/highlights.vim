@@ -102,10 +102,10 @@ hi markdownError guibg=#222622
 hi Statement ctermfg=178
 
 " vimdiffの色設定
-hi DiffAdd     ctermfg=123 ctermbg=023
-hi DiffAdded   ctermfg=123 ctermbg=023
-hi DiffRemoved ctermfg=210 ctermbg=052
-hi DiffChange  ctermfg=210 ctermbg=052
+hi DiffAdd     ctermfg=123 ctermbg=031
+hi DiffAdded   ctermfg=123 ctermbg=031
+hi DiffRemoved ctermfg=210 ctermbg=240
+hi DiffChange  ctermfg=210 ctermbg=240
 hi DiffText    ctermfg=168 ctermbg=125
 hi DiffDelete  ctermfg=238 ctermbg=234
 

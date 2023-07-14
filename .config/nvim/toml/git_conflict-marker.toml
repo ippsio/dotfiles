@@ -14,4 +14,3 @@ highlight ConflictMarkerTheirs ctermbg=4
 highlight ConflictMarkerEnd cterm=bold ctermfg=18 ctermbg=4
 highlight ConflictMarkerCommonAncestorsHunk ctermbg=166
 '''
-
