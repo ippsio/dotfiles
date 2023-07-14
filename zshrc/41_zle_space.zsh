@@ -8,9 +8,15 @@ zle_space() {
   && zle _expand_alias
 
   # cd
-  [[ $BUFFER =~ '^goto+$' || $BUFFER =~ '^g$' ]] \
-  && BUFFER="$(goto)" \
-  && zle accept-line && return
+  if [[ $BUFFER =~ '^goto+$' || $BUFFER =~ '^g$' ]]; then
+    BUFFER="$(goto)"
+    if [[ ! -z "${BUFFER}" ]]; then
+      zle accept-line
+      return
+    else
+      return
+    fi
+  fi
 
   # ssh
   [[ $BUFFER =~ '^ssh+[ ]$' ]] \
@@ -74,7 +80,7 @@ zle_space() {
     && BUFFER="git push origin HEAD " && zle end-of-line && return
 
     # git_deep_blame
-    [[ $BUFFER =~ '^gdb+$' || $BUFFER =~ '^db+$' ]] \
+    [[ $BUFFER =~ '^gb+$' ]] \
     && BUFFER="git_deepblame " && zle end-of-line && return
   fi
 
