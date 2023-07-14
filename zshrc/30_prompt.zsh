@@ -103,7 +103,7 @@ update_binding_part() {
     PROMPT=$(echo -e "$PROMPT"| sed -E "s/${REGEX_BINDING_PART}/%K{54}vi-NORMAL %#/")
     zle reset-prompt
   elif [[ $KEYMAP = main ]]; then
-    PROMPT=$(echo -e "$PROMPT"| sed -E "s/${REGEX_BINDING_PART}/%K{25}vi-INSERT %#/")
+    PROMPT=$(echo -e "$PROMPT"| sed -E "s/${REGEX_BINDING_PART}/%K{17}vi-INSERT %#/")
     zle reset-prompt
   fi
   return 0
@@ -169,7 +169,9 @@ precmd() {
   CHUNK1="${GIT_WORKING_TREE}${GIT_STAGE}${GIT_LOCAL_REPO}"
   CHUNK2="${GIT_REPO_BRANCH}"
   CHUNK3="${EXIT_CD}${NUMBER_OF_JOBS}${CURRENT_DIRECTORY}${GIT_CAUTION}%K{238}%k"
-  CHUNK4="%K{25}vi-INSERT %# "
+  CHUNK4="%# "
+  # viモードの場合、これを指定しても良い。
+  #CHUNK4="%K{25}vi-INSERT %# "
 
   PROMPT=$'\n'
   [[ ! -z "${CHUNK1}" ]] && PROMPT+="${CHUNK1}"
@@ -192,8 +194,10 @@ add-zsh-hook periodic my_periodic_hook
 add-zsh-hook preexec my_preexec_hook
 add-zsh-hook zshaddhistory my_zshaddhistory_hook
 
-zle -N zle-line-init
-zle -N zle-keymap-select
-zle -N zle-line-pre-redraw
+# viモードの場合、これを使っても良い。
+# zle -N zle-line-init
+# zle -N zle-keymap-select
+# zle -N zle-line-pre-redraw
+
 zle -N accept-line my-accept-line
 
