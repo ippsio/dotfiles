@@ -42,35 +42,43 @@ if [[ -z "${q_raw}" ]]; then
 fi
 
 BS="\\"
-q_shell_escaped=${q_raw}
-q_shell_escaped=${q_shell_escaped//\\/${BS}\\}
-q_shell_escaped=${q_shell_escaped//\`/${BS}\`}
-q_shell_escaped=${q_shell_escaped//\~/${BS}\~}
-q_shell_escaped=${q_shell_escaped//\!/${BS}\!}
-q_shell_escaped=${q_shell_escaped//\@/${BS}\@}
-q_shell_escaped=${q_shell_escaped//\#/${BS}\#}
-q_shell_escaped=${q_shell_escaped//\$/${BS}\$}
-q_shell_escaped=${q_shell_escaped//\%/${BS}\%}
-q_shell_escaped=${q_shell_escaped//\^/${BS}\^}
-q_shell_escaped=${q_shell_escaped//\&/${BS}\&}
-q_shell_escaped=${q_shell_escaped//\*/${BS}\*}
-q_shell_escaped=${q_shell_escaped//\(/${BS}\(}
-q_shell_escaped=${q_shell_escaped//\)/${BS}\)}
-q_shell_escaped=${q_shell_escaped//\-/${BS}-}
-q_shell_escaped=${q_shell_escaped//\+/${BS}+}
-q_shell_escaped=${q_shell_escaped//\_/${BS}_}
-q_shell_escaped=${q_shell_escaped//\=/${BS}=}
-q_shell_escaped=${q_shell_escaped//\{/${BS}\{}
-q_shell_escaped=${q_shell_escaped//\}/${BS}\}}
-q_shell_escaped=${q_shell_escaped//\[/${BS}[}
-q_shell_escaped=${q_shell_escaped//\]/${BS}]}
-q_shell_escaped=${q_shell_escaped//\|/${BS}|}
-q_shell_escaped=${q_shell_escaped//\?/${BS}?}
-q_shell_escaped=${q_shell_escaped//\./${BS}.}
-q_shell_escaped=${q_shell_escaped//\,/${BS},}
-q_shell_escaped=${q_shell_escaped//\//${BS}/}
-q_shell_escaped=${q_shell_escaped//\</[${BS}\<]}
-q_shell_escaped=${q_shell_escaped//\>/[${BS}\>]}
+logic=0
+if [[ ${logic} == 0 ]]; then
+  q_shell_escaped=${q_raw}
+  q_shell_escaped=${q_shell_escaped//\\/${BS}\\}
+  q_shell_escaped=${q_shell_escaped//\`/${BS}\`}
+  q_shell_escaped=${q_shell_escaped//\~/${BS}\~}
+  q_shell_escaped=${q_shell_escaped//\!/${BS}\!}
+  q_shell_escaped=${q_shell_escaped//\@/${BS}\@}
+  q_shell_escaped=${q_shell_escaped//\#/${BS}\#}
+  q_shell_escaped=${q_shell_escaped//\$/${BS}\$}
+  q_shell_escaped=${q_shell_escaped//\%/${BS}\%}
+  q_shell_escaped=${q_shell_escaped//\^/${BS}\^}
+  q_shell_escaped=${q_shell_escaped//\&/${BS}\&}
+  q_shell_escaped=${q_shell_escaped//\*/${BS}\*}
+  q_shell_escaped=${q_shell_escaped//\(/${BS}\(}
+  q_shell_escaped=${q_shell_escaped//\)/${BS}\)}
+  q_shell_escaped=${q_shell_escaped//\-/${BS}-}
+  q_shell_escaped=${q_shell_escaped//\+/${BS}+}
+  q_shell_escaped=${q_shell_escaped//\_/${BS}_}
+  q_shell_escaped=${q_shell_escaped//\=/${BS}=}
+  q_shell_escaped=${q_shell_escaped//\{/${BS}\{}
+  q_shell_escaped=${q_shell_escaped//\}/${BS}\}}
+  q_shell_escaped=${q_shell_escaped//\[/${BS}[}
+  q_shell_escaped=${q_shell_escaped//\]/${BS}]}
+  q_shell_escaped=${q_shell_escaped//\|/${BS}|}
+  q_shell_escaped=${q_shell_escaped//\?/${BS}?}
+  q_shell_escaped=${q_shell_escaped//\./${BS}.}
+  q_shell_escaped=${q_shell_escaped//\,/${BS},}
+  q_shell_escaped=${q_shell_escaped//\//${BS}/}
+  q_shell_escaped=${q_shell_escaped//\</[${BS}\<]}
+  q_shell_escaped=${q_shell_escaped//\>/[${BS}\>]}
+else
+  q_shell_escaped=$(printf '%s\n' "${q_raw}"| sed -e 's/[^^]/[&]/g; s/\^/\\^/g')
+  q_shell_escaped="${q_shell_escaped//\`/\\\`}"
+  q_shell_escaped="${q_shell_escaped//\"/\\\"}"
+  q_shell_escaped="${q_shell_escaped}"
+fi
 
 fzf_prompt="[$(basename $0)] in=${range}, files=${files}, q_raw=${q_raw}, q_shell_escaped=${q_shell_escaped}"
 printf "%s\n" "${fzf_prompt}"
@@ -95,8 +103,8 @@ git_log_g_res_size=$(printf "%s" "${git_log_g_res}"| grep -Evc '^$')
     git_log_ad=$(echo "${git_log_g_res_1}"| awk -F '\t' '{ printf "%s", $2 }')
     git_log_an=$(echo "${git_log_g_res_1}"| awk -F '\t' '{ printf "%s", $3 }')
     git_log_s=$(echo "${git_log_g_res_1}"| awk -F '\t' '{ printf "%s", $4 }')
-    if ( echo "${git_log_s}"| grep -E '\(#[0-9]+\)"{0,1}$'>/dev/null 2>&1 ); then
-      pull_request_no=$(echo "${git_log_s}"| sed -E 's/^.*\(#/(#/'| sed -E 's/"$//')
+    if ( echo "${git_log_s}"| grep -Eo "[(]#[0-9]+[)]">/dev/null 2>&1 ); then
+      pull_request_no=$(echo "${git_log_s}"| grep -Eo "[(]#[0-9]+[)]"| tail -1)
     else
       pull_request_no="(#.....)"
     fi

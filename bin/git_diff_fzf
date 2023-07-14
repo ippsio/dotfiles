@@ -71,17 +71,23 @@ files=$(eval "${GIT_DIFF_NUMSTAT}" \
     printf "%s", deco_of[ext]; printf "%s", $3; printf "\033[0m";
     printf "\n";
   }')
-target=$(echo "$files" | \
-  fzf \
+
+target=$(
+  export GIT_MERGE_BASE=${commit1};\
+  cd $(git_root);\
+  diff_result=${GIT_DIFF_NO_COLOR};\
+  echo "$files" | \
+  fzf\
   --tabstop=1 \
   --ansi \
   --prompt="${_FZF_PROMPT}" \
   --header="${GIT_DIFF_NUMSTAT}${CR} (enter: nvim)  (tab: tig) (ctrl-d: git diff) (ctrl-l: git_log_fzf)   (ctrl-/: preview toggle)" \
   --nth=1,3 \
-  --bind="enter:execute(cd $(git_root) && env GIT_MERGE_BASE=${commit1} nvim {3} < /dev/tty > /dev/tty)" \
-  --bind="tab:execute(cd $(git_root); env GIT_MERGE_BASE=${commit1} tig ${commit1}${commit2_three_dots} -- {3} < /dev/tty > /dev/tty)" \
-  --bind="ctrl-d:execute(cd $(git_root); ${GIT_DIFF_NO_COLOR} < /dev/tty| nvim -R > /dev/tty)" \
-  --bind="ctrl-l:execute(cd $(git_root); git_log_fzf \"${commit1}${commit2_two_dots}\" \"{3}\")" \
+  --bind="ctrl-v:execute(nvim {3} >/dev/tty)" \
+  --bind="tab:execute(tig ${commit1}${commit2_three_dots} -- {3} </dev/tty >/dev/tty)" \
+  --bind="enter:execute(${GIT_DIFF_NO_COLOR}| tig >/dev/tty )" \
+  --bind="ctrl-d:execute(${GIT_DIFF_NO_COLOR}| nvim >/dev/tty)" \
+  --bind="ctrl-l:execute(git_log_fzf \"${commit1}${commit2_two_dots}\" \"{3}\")" \
   --bind='ctrl-/:toggle-preview' \
   --preview="
       # --------------------------------------------------

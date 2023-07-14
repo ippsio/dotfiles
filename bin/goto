@@ -9,6 +9,8 @@ candidates=$(while read line; do
   idx=$(( ${idx:-0} + 1 ))
   printf "${idx} ${COLOR}${tags}${COLOR0}${TAB}${select_options}\n"
 done < ${FILE})
-select_result=$(echo "${candidates}"| fzf --tabstop=1 --info=inline --prompt="goto " --header="$(home_as_tilde ${FILE})" --ansi --query="#")
+select_result=$(echo "${candidates}"| fzf-tmux -p --tabstop=1 --info=inline --prompt="goto " --header="$(home_as_tilde ${FILE})" --ansi --query="#")
 result=$(echo "${select_result}"| awk -F "${TAB}" '{ print $2 }')
-echo "${result}"
+if [[ ! -z "${result}" ]]; then
+  echo "${result}"
+fi
