@@ -8,20 +8,24 @@
 # .gitconfig の color設定は引き継がない
 set git-colors = no
 
+# 装飾について
+# 	Valid attributes include: *normal*, *blink*, *bold*, *dim*, *reverse*,
+# 	*standout*, and *underline*. Note, not all attributes may be supported
+#
 color default           default default
-color 'Refs: '          226     021
-color 'Author: '        140     default
-color 'AuthorDate: '    140     default
-color 'Commit: '        140     default
-color 'CommitDate: '    140     default
-color 'Merge: '         045     default bold
-color 'Date: '          041     default
+color commit            223     default
+color 'Refs: '          default default dim
+color 'Author: '        default default dim
+color 'AuthorDate: '    default default dim
+color 'Commit: '        default default dim
+color 'CommitDate: '    default default dim
+color 'Merge: '         default default dim
+color 'Date: '          default default dim
 
 color id                010     022
 color date              039     017
 color graph-commit      161     default
-color cursor            249     94
-#color cursor            052     202
+color cursor            default default underline standout
 color main-tracked      105     default bold
 color title-focus       234     250
 color title-blur        234     250
@@ -30,11 +34,12 @@ color author            079     default
 color help-group    011 237
 #color help-action   079 default
 
+color line-number       242 220
 
 #------------------------------------------------------------
 # `diff --git a/xxxx b/xxxx`みたいな箇所(グレー地に白文字)
 #------------------------------------------------------------
-color diff-header      226     92
+color diff-header      149 233
 
 #----------------------------------------
 # `index acbd5f297b..4a56929e4e 100644`
@@ -42,32 +47,32 @@ color diff-header      226     92
 # `b/xxxx`
 # みたいな箇所
 #----------------------------------------
-color diff-index       249     56
-color "+++ "           244     56
-color "--- "           244     56
+color diff-index       149 233
+color "+++ "           149 233
+color "--- "           149 233
 
 #----------------------------------------------------------------------
 # `@@ -518,9 +518,7 @@` みたいな箇所(ダークグレー地に白文字)
 # その右隣のメソッド名やクラス名が表示されるところ(ダークグレー地に黄緑色文字)
 #----------------------------------------------------------------------
-color diff-chunk       22     226
-color diff-stat        149    64
+color diff-chunk       149 234
+color diff-stat        049 235
 
 #----------------------
 # diff old系(赤系)
 #----------------------
-color diff-del           210   052
-color diff-del-highlight 211   124
+color diff-del           210   240
+color diff-del-highlight 211   124 standout
 #color "-"             203     053
 #color " -"            203     053
 
 #----------------------
 # new系(緑系)
 #----------------------
-color diff-add           123    023
-color diff-add-highlight 159    030
-#color "+"             047     024
-#color " +"            047     024
+color diff-add           123    031
+color diff-add-highlight 159    021 standout
+# color "+"             227     default standout
+# color "+"             227     default standout
 
 #-------------------------------------------------------
 # delimiterは、set wrap-lines = yesの時に、
@@ -156,6 +161,8 @@ set refresh-mode = auto
 #   <	Exit Tig after executing the command.
 #   >	Re-open Tig instantly in the last displayed view after executing the command.
 # set key to page-down/page-up
+
+bind generic S :source ~/.tigrc
 
 # ==================================
 # カーソル移動
@@ -257,14 +264,11 @@ bind generic P      none
 #------------------------------------------
 # <Hash>とは、#(シャープ)キーのこと。
 bind generic <Hash> none
-bind generic <Hash> +bash -c "hash=$(git rev-parse --short %(commit)| xargs -I {} echo -n \"{}\"); echo -n \"${hash}\"| pbcopy; echo -n \"hash [${hash}] copied to clipboard.\""
-bind main L         !sh -c "hash=$(git rev-parse --short %(commit)); \
-                            echo \"Copied=> commit=[${hash}]\"; \
-                            printf \"${hash}\" | pbcopy; \
-                            echo '-------------------------------------------------'; \
-                            git log --color=always ${hash}| head -7; \
-                            echo '-------------------------------------------------'; \
-                            echo"
+bind generic <Hash> +bash -c '\
+  hs=$(git log -1 --pretty="%h %s" %(commit));\
+  echo -n "$hs"|pbcopy;\
+  echo -n "COPIED [$hs]";'
+
 bind diff L         !sh -c "echo %(commit) | pbcopy"
 bind status - >bash -c "~/dotfiles/bin/tig/git_checkout_-- %(file)"
 bind stage  - >bash -c "~/dotfiles/bin/tig/git_checkout_-- %(file)"

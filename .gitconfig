@@ -41,6 +41,7 @@
   # };
   # ```
 
+  # 設定箇所対応表(git diff)
   # =============================================================================================
   #  % git diff
   # =============================================================================================
@@ -51,26 +52,15 @@
   #                     | @@ -105,7 +105,7 @@ set main-view-date-format = "%Y-%m-%d %H:%M"
   #                     | ~~~~~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   #                     |  ^                   ^
-  # diff.color.flag ----:--+                   |
+  # diff.color.frag ----:--+                   |
   # diff.color.func ----:----------------------+
   # diff.color.context  |  set vertical-split = auto
   # diff.color.old      | -set split-view-width = 50%
   # diff.color.new      | +set split-view-width = 70%
   # diff.color.context  | # 水平方向の分割表示時の下のビューの高さ
   # diff.color.context  | set split-view-height = 60%
-  meta = 149 238
-  frag = 149 235
-  func = 017 190 bold
-  context = 247
-  old = 210 052
-  oldMoved = 210 052
-  #oldMovedAlternative =       203 053
-  #oldMovedAlternativeDimmed = 203 053
-  new = 051 023
-  newMoved = 051 023
-  #newMovedAlternative =       047 024
-  #newMovedAlternativeDimmed = 047 024
 
+  # 設定箇所対応表(git log)
   # =============================================================================================
   #  % git log -1 --abbrev-commit --stat
   # =============================================================================================
@@ -89,6 +79,19 @@
   #                             |
   #                             |  bin/git_log_fzf | 24 +++++++++---------------
   #                             |  1 file changed, 9 insertions(+), 15 deletions(-)
+
+  meta = 144 235
+  frag = 144 235
+  func = 049 235
+  context = 247
+  old = 210 240
+  oldMoved = 210 240
+  #oldMovedAlternative =       203 053
+  #oldMovedAlternativeDimmed = 203 053
+  new = 051 031
+  newMoved = 051 031
+  #newMovedAlternative =       047 024
+  #newMovedAlternativeDimmed = 047 024
   commit = 223
 
 [color "decorate"]
@@ -99,11 +102,11 @@
   stash = magenta
 
 [color "diff-highlight"]
-  oldNormal = 210 052
-  newNormal = 051 023
+  oldNormal = 210 240
+  newNormal = 051 031
   # 単語差分ハイライト部分
-  oldHighlight = 211 124
-  newHighlight = 159 30
+  oldHighlight = 124 211
+  newHighlight = 021 159
 
 [diff]
   compactionHeuristic = true
