@@ -30,7 +30,8 @@ GIT_LOG="git log"\
 " ${commit1}${commit2_two_dots} -- {3}"
 GIT_LOG=$(escape_SQ "${GIT_LOG}")
 
-GIT_DIFF_NO_COLOR="git diff --no-color ${commit1}${commit2_three_dots} -- {3}"
+# GIT_DIFF_NO_COLOR="git diff --no-color ${commit1}${commit2_three_dots} -- {3}"
+GIT_DIFF_NO_COLOR="git diff --no-color ${commit1} -- {3}"
 GIT_DIFF_DELTA="git -c delta.side-by-side=true diff ${commit1}${commit2_three_dots} -- {3}"
 GIT_DIFF_COLORED="git diff --color=always ${commit1}${commit2_three_dots} -- {3}"
 ( type "diff-highlight" > /dev/null 2>&1 ) && GIT_DIFF_COLORED="${GIT_DIFF_COLORED}| diff-highlight"
