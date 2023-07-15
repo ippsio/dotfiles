@@ -1,0 +1,88 @@
+#!/bin/bash
+
+readonly JSON="$(git_root)/../pull_requests.json"
+readonly CURRENT_BRANCH=${1:-$(git_branch_current)}
+readonly BASE_BRANCH=$2
+readonly NOW=$(date +'%Y-%m-%dT%H:%M:%SZ')
+readonly DQ='"'
+json_load() {
+  content=$(cat $JSON 2>/dev/null)
+  if [[ -z "${content}" ]]; then
+    content=$(echo {}| jq ".pull_requests |= .+[]")
+  fi
+  echo "${content}"
+  return 0
+}
+
+json_select() {
+  json_load| jq ".pull_requests[] | select(.head == ${DQ}$1${DQ})"
+  return 0
+}
+
+json_add() {
+  add=$(json_load| jq ".pull_requests |= .+[$1]")
+  echo "$add"> $JSON
+  return 0
+}
+
+if [[ ! -z "${BASE_BRANCH}" ]]; then
+  res=$(echo {}\
+    | jq ".number=1"\
+    | jq ".base=${DQ}${BASE_BRANCH}${DQ}"\
+    | jq ".head=${DQ}${CURRENT_BRANCH}${DQ}"\
+    | jq ".user=${DQ}${DQ}"\
+    | jq ".title=${DQ}${DQ}"\
+    | jq ".created_at=${DQ}${DQ}"\
+  )
+  echo "${res}"
+  exit
+fi
+
+json_selected=$(json_select "${CURRENT_BRANCH}")
+if [[ ! -z "${json_selected}" ]]; then
+  echo "${json_selected}"| jq 'del(.fetch_tat)'
+  exit
+fi
+
+for pr_number in $(git_pr_search_branch "${CURRENT_BRANCH}"| awk -F '\t' '{ print $1 }'); do
+  [[ "${pr_number}" == "GIT_SEARCH_PR:PR_NOT_FOUND" ]] && continue
+  timer_clock_start_at=$(epocms)
+  json_git_pr_get=$(git_pr_get "${pr_number}")
+  timer_clock_end_at=$(epocms)
+  head_ref=$(echo "${json_git_pr_get}"| jq -r '.head.ref')
+  base_ref=$(echo "${json_git_pr_get}"| jq -r '.base.ref')
+  user=$(echo "${json_git_pr_get}"| jq -r '.user.login')
+  pr_title=$(echo "${json_git_pr_get}"| jq -r '.title')
+  created_at=$(echo "${json_git_pr_get}"| jq -r '.created_at')
+  fetch_tat=$(( timer_clock_end_at - timer_clock_start_at ))
+
+  [[ "$head_ref" != "${CURRENT_BRANCH}" ]] && continue
+  [[ -z "${base_ref}" ]] && continue
+
+  res=$(echo {}\
+    | jq ".number=${DQ}${pr_number}${DQ}"\
+    | jq ".base=${DQ}${base_ref}${DQ}"\
+    | jq ".head=${DQ}${head_ref}${DQ}"\
+    | jq ".user=${DQ}${user}${DQ}"\
+    | jq ".title=${DQ}${pr_title}${DQ}"\
+    | jq ".created_at=${DQ}${created_at}${DQ}"\
+    | jq ".fetched_at=${DQ}${NOW}${DQ}"\
+    | jq ".fetch_tat=${DQ}${fetch_tat}${DQ}"\
+  )
+  json_add "${res}"
+  echo "$res"
+  exit
+done
+
+base=$(git_branch_fzf)
+res=$(echo {}\
+  | jq ".number=${DQ}${DQ}"\
+  | jq ".base=${DQ}${base}${DQ}"\
+  | jq ".head=${DQ}${CURRENT_BRANCH}${DQ}"\
+  | jq ".user=${DQ}${DQ}"\
+  | jq ".title=${DQ}${DQ}"\
+  | jq ".created_at=${DQ}${DQ}"\
+  | jq ".fetched_at=${DQ}${NOW}${DQ}"\
+)
+echo "$res"
+
