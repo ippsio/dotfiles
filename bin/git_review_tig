@@ -1,0 +1,17 @@
+#!/bin/bash
+! $(is_git_repo) && echo "Not a git repository." && exit 1
+
+commit1=${args[0]}
+CURRENT_BRANCH=$(git_branch_current)
+REVIEW_JSON=$(git_get_review_json "${CURRENT_BRANCH}" "${commit1}")
+BASE_BRANCH=$(echo "${REVIEW_JSON}"| jq -r '.base')
+[[ "${BASE_BRANCH}" == "" ]] && echo "BASE_BRANCH empty. Bye" && exit 1
+BASE_BRANCH=origin/${BASE_BRANCH}
+MERGE_BASE=$(git rev-parse --short "$(git merge-base ${BASE_BRANCH} HEAD)")
+PR_NO=$(echo "${REVIEW_JSON}"| jq -r '.pr_number')
+(
+  echo "${REVIEW_JSON}"
+  echo "---"
+  git diff --stat=200 --stat-name-width=160 -p ${MERGE_BASE}
+)| GIT_MERGE_BASE=${MERGE_BASE} tig show
+

@@ -10,12 +10,12 @@ label() {  printf "\e[m\e[38;5;%dm\e[48;5;%dm" 187 100; echo -n "$1"; printf "\e
 verbose() { [[ ! -z "${arg_verbose}" ]] && (printf "\e[m\e[38;5;%dm\e[48;5;%dm" 245 234; echo -n "$1"; printf "\e[m"; echo;); }
 
 CURRENT_BRANCH=$(git_branch_current)
-MERGE_BASE_INFO=$(git_get_merge_base_info "${CURRENT_BRANCH}" "${commit1}")
-MERGE_BASE_BRANCH=$(echo "${MERGE_BASE_INFO}"| grep "MERGE_BASE_BRANCH="| awk -F '=' '{ print $2 }'| sed -e 's#^origin/##'| sed -e 's/ *//g')
+REVIEW_JSON=$(git_get_review_json "${CURRENT_BRANCH}" "${commit1}")
+MERGE_BASE_BRANCH=$(echo "${REVIEW_JSON}"| jq -r '.base')
 [[ "${MERGE_BASE_BRANCH}" == "" ]] && echo "MERGE_BASE_BRANCH empty. Bye" && exit 1
-MERGE_BASE_BRANCH=origin/${MERGE_BASE_BRANCH}
+MERGE_BASE_BRANCH="origin/${MERGE_BASE_BRANCH}"
 MERGE_BASE_COMMIT=$(git rev-parse --short "$(git merge-base ${MERGE_BASE_BRANCH} HEAD)")
-PR_NO=$(echo "${MERGE_BASE_INFO}"| grep "PR_NO="| awk -F '=' '{ print $2 }')
+PR_NO=$(echo "${REVIEW_JSON}"| jq '.pr_number')
 
 GIT_LOG_BASE_CMD="git --no-pager log --oneline --abbrev-commit --date=format-local:'%Y/%m/%d %H:%M' --pretty=format:'"\
 "%C($(git config --get color.diff.commit))%h%Creset "\
@@ -26,8 +26,7 @@ GIT_LOG_BASE_CMD="git --no-pager log --oneline --abbrev-commit --date=format-loc
 GIT_LOG_CMD="${GIT_LOG_BASE_CMD} ${MERGE_BASE_COMMIT}...HEAD"
 GIT_LOG_1_CMD="${GIT_LOG_BASE_CMD} ${MERGE_BASE_COMMIT} -1"
 GIT_LOG_3_CMD="${GIT_LOG_BASE_CMD} ${MERGE_BASE_COMMIT}...HEAD -3 --full-history --simplify-merges"
-#GIT_DIFF_STAT_CMD="git diff ${MERGE_BASE_COMMIT} --stat-graph-width=$(( $(tput cols) / 1 )) --color=always"
-GIT_DIFF_STAT_CMD="git diff ${MERGE_BASE_COMMIT} --stat=$(( $(tput cols) / 1 )) --color=always"
+GIT_DIFF_STAT_CMD="git diff --stat=$(( ($(tput cols) / 10) * 10 )) --stat-name-width=160 -p ${MERGE_BASE_COMMIT}"
 COMMANDS=$(cat << EOF
 1, edit (neovim)     - 	git_diff_fzf "${MERGE_BASE_BRANCH}"
 2, git log           - 	git_log_fzf  "${MERGE_BASE_BRANCH}.."
@@ -45,7 +44,7 @@ while true; do clear
   label "[pwd]";
   infoln " $(pwd| sed -e "s#$HOME#~#")"
   label "[merge_base_branch_info]";
-  info "$(echo \"${MERGE_BASE_INFO}\"| awk -F '\n' '{ print $0 }')"; echo
+  info "$(echo \"${REVIEW_JSON}\"| awk -F '\n' '{ print $0 }')"; echo
 
   label "[branches]"
   infoln " ${MERGE_BASE_BRANCH}<=${CURRENT_BRANCH}"
