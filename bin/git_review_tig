@@ -3,15 +3,16 @@
 
 commit1=${args[0]}
 CURRENT_BRANCH=$(git_branch_current)
-REVIEW_JSON=$(git_get_review_json "${CURRENT_BRANCH}" "${commit1}")
-BASE_BRANCH=$(echo "${REVIEW_JSON}"| jq -r '.base')
+review_json=$(git_get_review_json "${CURRENT_BRANCH}" "${commit1}")
+BASE_BRANCH=$(echo "${review_json}"| jq -r '.base')
 [[ "${BASE_BRANCH}" == "" ]] && echo "BASE_BRANCH empty. Bye" && exit 1
 BASE_BRANCH=origin/${BASE_BRANCH}
-MERGE_BASE=$(git rev-parse --short "$(git merge-base ${BASE_BRANCH} HEAD)")
-PR_NO=$(echo "${REVIEW_JSON}"| jq -r '.pr_number')
+merge_base_hash=$(git rev-parse --short "$(git merge-base ${BASE_BRANCH} HEAD)")
+merge_base_log=$(git log -1 --date="format:%Y-%m-%d %H:%M:%S" --pretty="(%h) %ad %an %s" ${merge_base_hash})
+review_json=$(echo "${review_json}"| jq ".merge_base=\"${merge_base_log}\"")
 (
-  echo "${REVIEW_JSON}"
+  echo "${review_json}"
   echo "---"
-  git diff --stat=200 --stat-name-width=160 -p ${MERGE_BASE}
-)| GIT_MERGE_BASE=${MERGE_BASE} tig show
+  git diff --stat=200 --stat-name-width=160 -p ${merge_base_hash}
+)| GIT_MERGE_BASE=${merge_base_hash} tig show
 

@@ -15,7 +15,7 @@ MERGE_BASE_BRANCH=$(echo "${REVIEW_JSON}"| jq -r '.base')
 [[ "${MERGE_BASE_BRANCH}" == "" ]] && echo "MERGE_BASE_BRANCH empty. Bye" && exit 1
 MERGE_BASE_BRANCH="origin/${MERGE_BASE_BRANCH}"
 MERGE_BASE_COMMIT=$(git rev-parse --short "$(git merge-base ${MERGE_BASE_BRANCH} HEAD)")
-PR_NO=$(echo "${REVIEW_JSON}"| jq '.pr_number')
+PR_NO=$(echo "${REVIEW_JSON}"| jq '.number')
 
 GIT_LOG_BASE_CMD="git --no-pager log --oneline --abbrev-commit --date=format-local:'%Y/%m/%d %H:%M' --pretty=format:'"\
 "%C($(git config --get color.diff.commit))%h%Creset "\
