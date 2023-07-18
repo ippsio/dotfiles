@@ -9,11 +9,9 @@ FILE=$(LC_ALL=C date '+%Y_%m%d_%a').txt
 [ ! -f ${NOTE_DIR}/${FILE} ] && echo -e "\n# ${KIND} $(LC_ALL=C date '+%Y/%m/%d(%a)')\n\n---\n" >> ${NOTE_DIR}/${FILE}
 
 CMD="rg --files --hidden -g '*.md' -g '*.txt' --sortr=path ${BASE_DIR}/${KIND}"
-# -x 100 と -y 100 は100という数字に根拠があるわけではありません。単に十分大きな値を設定したかっただけです。
-# これにより、ポップアップウインドウが右下に表示されるという挙動を狙ってます。
 eval "${CMD}" \
   | sed -e "s#^${HOME}#~#" \
-  | fzf-tmux -p 97%,95% -x 100 -y 100 \
+  | fzf\
     --info=inline \
     --prompt="($( [ -L $0 ] && basename $(readlink $0) || basename $0))" --header="${CMD}" \
     --bind 'j:down' --bind 'k:up' --bind 'i:unbind(i,j,k)' \
