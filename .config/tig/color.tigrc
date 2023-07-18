@@ -1,0 +1,70 @@
+set git-colors = no
+
+# 装飾について
+# 	Valid attributes include: *normal*, *blink*, *bold*, *dim*, *reverse*,
+# 	*standout*, and *underline*. Note, not all attributes may be supported
+color default           default default
+color commit            223     default
+color 'Refs: '          default 017
+color 'Author: '        default 017
+color 'AuthorDate: '    default 017
+color 'Commit: '        default 017 dim
+color 'CommitDate: '    default 017 dim
+color 'Merge: '         default 017 dim
+color 'Date: '          default 017 dim
+
+#color id                223 default
+color date              106     default
+color graph-commit      203     default
+color cursor            default default underline standout
+color main-tracked      105     default bold
+color title-blur        234     250 dim
+color title-focus       023     50
+color author            050     default
+color help-group        011     237
+color line-number       0       220
+
+#------------------------------------------------------------
+# `diff --git a/xxxx b/xxxx`みたいな箇所(グレー地に白文字)
+#------------------------------------------------------------
+color diff-header      149 233
+
+#----------------------------------------
+# `index acbd5f297b..4a56929e4e 100644`
+# `a/xxxx`
+# `b/xxxx`
+# みたいな箇所
+#----------------------------------------
+color diff-index       149 233
+color "+++ "           149 233
+color "--- "           149 233
+
+#----------------------------------------------------------------------
+# `@@ -518,9 +518,7 @@` みたいな箇所(ダークグレー地に白文字)
+# その右隣のメソッド名やクラス名が表示されるところ(ダークグレー地に黄緑色文字)
+#----------------------------------------------------------------------
+color diff-chunk       149 234
+color diff-stat        049 235
+
+#----------------------
+# diff old系(赤系)
+#----------------------
+color diff-del           210   240
+color diff-del-highlight 211   124 standout
+#color "-"             203     053
+#color " -"            203     053
+
+#----------------------
+# new系(緑系)
+#----------------------
+color diff-add           123    031
+color diff-add-highlight 159    021 standout
+# color "+"             227     default standout
+# color "+"             227     default standout
+
+#-------------------------------------------------------
+# delimiterは、set wrap-lines = yesの時に、
+# 1画面に収まりきらなかった文字を次の行に表示する際
+# 前の行からの続きであることを意味する「+」マークの事。
+#-------------------------------------------------------
+color delimiter       008     247

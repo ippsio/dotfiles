@@ -178,6 +178,12 @@ precmd() {
   [[ ! -z "${CHUNK2}" ]] && PROMPT+="${CHUNK2}"
   [[ ! -z "${CHUNK3}" ]] && PROMPT+=$'\n'"${CHUNK3}"
   [[ ! -z "${CHUNK4}" ]] && PROMPT+=$'\n'"${CHUNK4}"
+
+  if [[ "${VIRTUAL_ENV_PROMPT}" ]]; then
+    "${VIRTUAL_ENV}/"
+
+    RPROMPT="${VIRTUAL_ENV_PROMPT}"
+  fi
 }
 
 ## 以前のプロンプトにはコマンドラインを確定した時刻を表示

@@ -1,0 +1,90 @@
+# User-defined commands
+# ---------------------
+# These commands allow to run shell commands directly from within Tig.
+# Unless otherwise specified, commands are run in the foreground with
+# their console output shown (as if '!' was specified). When multiple
+# command options are specified their behavior are combined, e.g. "?<git
+# commit" will prompt the user whether to execute the command and will
+# exit Tig after completion.
+#
+#   !	Run the command in the foreground with output shown.
+#   @	Run the command in the background with no output.
+#   ?	Prompt the user before executing the command.
+#   +   Run the command synchronously, and echo the first line of output to the status bar.
+#   <	Exit Tig after executing the command.
+#   >	Re-open Tig instantly in the last displayed view after executing the command.
+# set key to page-down/page-up
+
+# カーソル移動
+bind generic <C-b> move-page-up
+bind generic <C-f> move-page-down
+bind generic <Up>   move-up
+bind generic <Down> move-down
+bind generic <Right> none
+bind generic <Left> none
+
+# 分割されたビューがある時は、分割元を１行、上下に移動
+bind generic <C-k> previous
+bind generic <C-j> next
+bind generic g      move-first-line
+bind generic G      move-last-line
+
+bind generic C      none # do not cherry-pick
+bind generic l      none # do now open log view
+
+# うっかりgit pushさせない
+bind generic P      none
+
+bind main C      none # do not cherry-pick
+bind main l      enter
+bind diff h      view-close
+bind diff l      view-blame
+bind blame l      view-blame
+bind blame h      back
+bind generic ? view-help
+bind status l      enter
+bind stage l      view-blame
+
+# grep
+bind generic E      view-grep
+
+#------------------------------------------
+# コミットハッシュをクリップボードにコピー
+#------------------------------------------
+# <Hash>とは、#(シャープ)キーのこと。
+bind generic <Hash> +bash -c '\
+  hs=$(git log -1 --pretty="%h %s" %(commit));\
+  echo -n "$hs"|pbcopy;\
+  echo -n "COPIED [$hs]";'
+
+bind generic h none
+
+#-------------------------------
+# diffビューで、前後のハンクに移動
+#-------------------------------
+bind diff    ]      :/^@@
+bind diff    [      :?^@@
+bind diff    g      :/^---$ # goto file list
+bind diff o none
+
+bind diff [ :toggle diff-context -1		   # Decrease context (-U arg)
+bind diff ] :toggle diff-context +1		   # Increase context
+
+#--------------
+# git commit
+#--------------
+bind stage C      !git commit
+
+#--------------
+# git rebase
+#--------------
+# main-viewで今のカーソルよりも上（未来）にある全コミットをリベース
+# diff-viewで今開いてるよりも上（未来）にある全コミットをリベース
+bind main    R !git rebase -i %(commit)~
+
+bind status - >bash -c "~/dotfiles/bin/tig/git_checkout_-- %(file)"
+bind stage  - >bash -c "~/dotfiles/bin/tig/git_checkout_-- %(file)"
+bind stage  h view-close-no-quit
+bind status D ?rm %(file)
+
+bind generic V :toggle split-view-height -10%   # Decrease split height

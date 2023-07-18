@@ -2,8 +2,8 @@ shell:
   program: /opt/homebrew/bin/zsh
   args:
     - -l
-    # - -c
-    # - "/opt/homebrew/bin/tmux a -t 0 || /opt/homebrew/bin/tmux -u"
+  # # - -c
+  # # - "/opt/homebrew/bin/tmux a -t 0 || /opt/homebrew/bin/tmux -u"
 # テーマ
 colors:
   primary:
@@ -29,20 +29,24 @@ colors:
     white:   '#feffff'
 # フォント
 font:
-  size: 18  # フォントサイズ
+  size: 15  # フォントサイズ
   normal:
-    family: 'Hack Nerd Font Mono'
+    family: 'Fira Mono for Powerline'
     style: Regular
   bold:
-    family: 'Hack Nerd Font Mono'
-    style: Bold
+    family: 'Fira Mono for Powerline'
+    style: Medium
   italic:
-    family: 'Hack Nerd Font Mono'
+    family: 'Fira Mono for Powerline'
     style: Italic
   bold_italic:
-    family: 'Hack Nerd Font Mono'
+    family: 'Fira Mono for Powerline'
     style: Bold Italic
 window:
   decorations: full         # ボーダーとタイトルバーを表示する
   startup_mode: Fullscreen  # フルスクリーンで起動する
-background_opacity: 0.95    # 背景を透過させる
+  opacity: 0.95    # 背景を透過させる
+key_bindings:
+  - { key: F11, chars: "\x14w"} # <ctrl-t>w
+  - { key: F12, chars: "\x14z"} # <ctrl-t>z
+

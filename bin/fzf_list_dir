@@ -18,8 +18,12 @@ FZF_RESULT=$(echo "${CANDIDATES}" \
     echo -n $(cd $(echo {}| sed -e "s#^~#${HOME}#"); pwd); echo '/';
     echo;
     ls -UlaFG --color=always $(echo {}| sed -e "s#^~#${HOME}#")
-  ')
+')
 
-relative_path="$(realpath --relative-to=. ${FZF_RESULT:-${arg}})"
-[[ -d ${relative_path} ]] && relative_path="${relative_path}/"
-echo -n "${relative_path}"
+# if [[ ! -z "${FZF_RESULT}" ]]; then
+#   relative_path="$(realpath --relative-to=\". ${FZF_RESULT:-${arg}}\")"
+#   [[ -d ${relative_path} ]] && relative_path="${relative_path}/"
+#   echo -n "${relative_path}"
+# fi
+
+echo -n "${FZF_RESULT}"

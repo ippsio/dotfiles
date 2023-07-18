@@ -114,6 +114,8 @@ set t_Co=256
 " showcmd コマンドを画面最下部に表示する
 set showcmd
 
+set showtabline=2
+
 " [検索/置換]
 " maxmempattern パターンマッチングに使うメモリ量の最大値(1は1kB。デフォルトでは1000)
 " ignorecase 小文字の検索でも大文字も見つかるようにする

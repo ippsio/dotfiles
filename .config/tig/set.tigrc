@@ -1,0 +1,69 @@
+# ======================
+# 単語単位で差分をハイライトできるように
+# ======================
+#set diff-highlight = true
+
+# ======================
+# 各viewの表示
+# ======================
+set main-view   = line-number:yes,interval=1 id:yes,color date author commit-title:graph=yes,refs=yes
+set blame-view  = date author id:yes,color line-number:yes,interval=1 text
+set pager-view  = line-number:yes,interval=1 text
+set stage-view  = line-number:yes,interval=1 text
+set log-view    = line-number:yes,interval=1 text
+set blob-view   = line-number:yes,interval=1 text
+set diff-view   = line-number:yes,interval=1 text:yes,commit-title-overflow=no
+set grep-view   = line-number:yes,interval=1 line-number:yes,interval=1 file-name line-number:yes,interval=1 text:yes,commit-title-overflow=no
+
+# ======================
+# main-viewの表示設定
+# ======================
+set main-view-date-display = custom
+set main-view-date-format = "%Y/%m/%d %H:%M(%a)"
+set blame-view-date-display = custom
+set blame-view-date-format = "%Y/%m/%d %H:%M(%a)"
+
+
+set vertical-split = yes
+# ======================
+# ビューの分割
+# ======================
+# ビューを水平方向あるいは垂直方向に分割するかどうか
+set vertical-split = yes
+# Width of the right-most view in a vertically split display
+set split-view-width = 80%
+# 水平方向の分割表示時の下のビューの高さ
+set split-view-height = 80%
+
+# 長い行をラップするか
+# tigは'1'で行単位のステージ/アンステージができるのですが、wrap-lines=yesだとそれが使えないようです(Staging is not supported for wrapped linesという警告が表示されます)。
+# それは不便なのでwrap-linesはnoにします。
+# set wrap-lines = yes
+set wrap-lines = no
+# 行の描画のための文字グラフィックスの種類 [ascii|default|utf-8|<bool>]
+#
+# line-graphics (mixed) [ascii|default|utf-8|auto|<bool>]
+#	   What type of character graphics for line drawing. "auto" means "utf-8" if the locale is UTF-8, "default" otherwise.
+set line-graphics = ascii
+#set line-graphics = default
+#set line-graphics = utf-8
+#set line-graphics = bool
+# truncation-delimiter (mixed) [utf-8|<string>]
+#	   A single character to draw where columns are truncated. The default is "~". The special value "utf-8" refers to the character "..." ("Midline Horizontal Ellipsis").
+#set truncation-delimiter=utf-8
+# タブごとの空白の数
+set tab-size = 2
+# diffビュー内の空白の変更を無視するか
+set ignore-space = at-eol
+# 検索での大文字小文字を無視するか
+set ignore-case = true
+# diffビューの中で使うdiffオプションの空白で区切られた文字列
+set diff-options = -m --first-parent
+# マウスサポートを有効にするかどうか
+set mouse = true
+# 選択された行数をエディタコマンドへ渡すかどうか
+set editor-line-number = yes
+# リポジトリ内の監視されているファイルへの修正に基づいて、どうやってビューがリフレッシュされるかを設定
+set refresh-mode = periodic
+set refresh-interval = 3
+
