@@ -114,6 +114,7 @@ set t_Co=256
 " showcmd コマンドを画面最下部に表示する
 set showcmd
 
+" [タブ表示]
 set showtabline=2
 
 " [検索/置換]

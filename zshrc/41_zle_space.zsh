@@ -12,10 +12,10 @@ zle_space() {
     BUFFER="$(goto)"
     if [[ ! -z "${BUFFER}" ]]; then
       zle accept-line
-      return
     else
-      return
+      BUFFER=""
     fi
+    return
   fi
 
   # ssh
@@ -149,10 +149,6 @@ zle_space() {
       [[ $BUFFER =~ '^dcp+$' ]] && BUFFER="${docker_compose} ps" && zle end-of-line && return
     fi
   done
-
-  # goto
-  [[ $BUFFER =~ '^goto+$' ]] \
-  && BUFFER=$(docker_exec) && zle end-of-line && return
 
   zle self-insert
 }

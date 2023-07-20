@@ -1,8 +1,8 @@
 [[plugins]]
-repo = 'kana/vim-gf-diff'
-depends = ['kana/vim-gf-user']
+repo = 'kana/vim-gf-user'
 on_ft = ['diff']
 
 [[plugins]]
-repo = 'kana/vim-gf-user'
+repo = 'kana/vim-gf-diff'
 on_ft = ['diff']
+depends = ['kana/vim-gf-user']

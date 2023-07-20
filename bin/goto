@@ -4,12 +4,24 @@ readonly COLOR="[38;5;170m"
 readonly COLOR0="[0m"
 readonly TAB="	"
 candidates=$(while read line; do
+  # NOTE: lineの定義内容はこんな感じ
+  # > 1行目:dotfiles #vim   ,cd,~/dotfiles/.config/nvim
+  # > 2行目:dotfiles        ,cd,~/dotfiles
+  # > 3行目:   (略)
   tags=$(echo "${line}"| awk -F ',' '{ print $1 }')
-  select_options=$(echo "${line}"| awk -F ',' '{ print $2 }')
+  cmd=$(echo "${line}"| awk -F ',' '{ print $2 }')
+  path=$(echo "${line}"| awk -F ',' '{ print $3 }')
   idx=$(( ${idx:-0} + 1 ))
-  printf "${idx} ${COLOR}${tags}${COLOR0}${TAB}${select_options}\n"
+  if [[ "${path: -2}" != "/*" ]]; then
+    printf "${idx} ${COLOR}${tags}${COLOR0}${TAB}${cmd} ${path}\n"
+  else
+    for grandchild in $(find ~/ghq/github.com -type d -maxdepth 2 -mindepth 2); do
+      basename_of_grandchild="#$(basename ${grandchild})"
+      printf "${idx} ${COLOR}${basename_of_grandchild} ${tags}${COLOR0}${TAB}${cmd} ${grandchild}\n"
+    done
+  fi
 done < ${FILE})
-select_result=$(echo "${candidates}"| fzf-tmux -p --tabstop=1 --info=inline --prompt="goto " --header="$(home_as_tilde ${FILE})" --ansi --query="#")
+select_result=$(echo "${candidates}"| fzf-tmux --tabstop=1 --info=inline --prompt="goto " --header="$(home_as_tilde ${FILE})" --ansi --query="#")
 result=$(echo "${select_result}"| awk -F "${TAB}" '{ print $2 }')
 if [[ ! -z "${result}" ]]; then
   echo "${result}"

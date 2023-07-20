@@ -27,9 +27,8 @@ colors:
     magenta: '#ff76ff'
     cyan:    '#5ffdff'
     white:   '#feffff'
-# フォント
 font:
-  size: 15  # フォントサイズ
+  size: 15
   normal:
     family: 'Fira Mono for Powerline'
     style: Regular
