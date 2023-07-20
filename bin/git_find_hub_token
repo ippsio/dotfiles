@@ -1,0 +1,14 @@
+#!/bin/bash
+if [[ ! -z "${HUB_TOKEN}" ]]; then
+  printf "${HUB_TOKEN}"
+  exit
+fi
+
+if [[ -e ~/.config/hub ]]; then
+  config_hub_outh_token=$(cat ~/.config/hub| grep "oauth_token:"| awk '{ print $2 }' 2>/dev/null)
+  if [[ ! -z "${config_hub_outh_token}" ]]; then
+    printf "${config_hub_outh_token}"
+    exit
+  fi
+fi
+

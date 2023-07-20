@@ -1,5 +1,5 @@
 #!/bin/bash
 readonly REPO=$(git_reponame)
-AUTHZ_TOKEN=$(cat ~/.config/hub| grep "oauth_token:"| awk '{ print $2 }')
+AUTHZ_TOKEN=$(git_find_hub_token)
 curl -X GET -s -H "Authorization: token ${AUTHZ_TOKEN}" https://api.github.com/repos/${REPO}/pulls/$1
 
