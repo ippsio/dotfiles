@@ -9,7 +9,7 @@ zle_space() {
 
   # cd
   if [[ $BUFFER =~ '^goto+$' || $BUFFER =~ '^g$' ]]; then
-    BUFFER="$(goto)"
+    BUFFER="$(goto_candidate_fzf)"
     if [[ ! -z "${BUFFER}" ]]; then
       zle accept-line
     else

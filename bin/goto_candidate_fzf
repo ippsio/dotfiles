@@ -3,6 +3,8 @@ readonly FILE=~/.completion_candidates/goto
 readonly COLOR="[38;5;170m"
 readonly COLOR0="[0m"
 readonly TAB="	"
+
+# 移動先フォルダの候補を作ります。
 candidates=$(while read line; do
   # NOTE: lineの定義内容はこんな感じ
   # > 1行目:dotfiles #vim   ,cd,~/dotfiles/.config/nvim
@@ -15,13 +17,28 @@ candidates=$(while read line; do
   if [[ "${path: -2}" != "/*" ]]; then
     printf "${idx} ${COLOR}${tags}${COLOR0}${TAB}${cmd} ${path}\n"
   else
+    sub_idx=0
     for grandchild in $(find ~/ghq/github.com -type d -maxdepth 2 -mindepth 2); do
+      sub_idx=$(( sub_idx + 1 ))
+      sub_idx_s=$(printf "%02d" "${sub_idx}")
       basename_of_grandchild="#$(basename ${grandchild})"
-      printf "${idx} ${COLOR}${basename_of_grandchild} ${tags}${COLOR0}${TAB}${cmd} ${grandchild}\n"
+      printf "${idx}-${sub_idx_s} ${COLOR}${basename_of_grandchild} ${tags}${COLOR0}${TAB}${cmd} ${grandchild}\n"
     done
   fi
 done < ${FILE})
-select_result=$(echo "${candidates}"| fzf-tmux --tabstop=1 --info=inline --prompt="goto " --header="$(home_as_tilde ${FILE})" --ansi --query="#")
+
+# 移動先を選択します。
+select_result=$(echo "${candidates}"\
+  | fzf-tmux \
+    --tabstop=1 \
+    --info=inline \
+    --prompt="$(basename $0) " \
+    --header="source file='$(home_as_tilde ${FILE})'" \
+    --ansi \
+    --query="#"
+)
+
+# 選択した移動先を返します。
 result=$(echo "${select_result}"| awk -F "${TAB}" '{ print $2 }')
 if [[ ! -z "${result}" ]]; then
   echo "${result}"
