@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# % df -k / 実行結果例
+# Filesystem     1024-blocks    Used Available Capacity iused      ifree %iused  Mounted on
+# /dev/disk3s3s1   971350180 8850156 308081144     3%  355382 3080811440    0%   /
+#df -k /| awk '{ if (NR==2) { printf "Avail %.0fG Used %.0fG", $4*1024/10^9, ($2-$4)*1024/10^9 }}'
+df -k /| awk '{ if (NR==2) { printf "free %.0fG", $4*1024/10^9 }}'
