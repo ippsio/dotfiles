@@ -1,3 +1,4 @@
+#!/bin/bash
 for session_name in $(tmux list-sessions -F "#{session_name}");
 do
   echo $(tmux list-windows -F "(W#{window_index}-#{window_panes}panes)");

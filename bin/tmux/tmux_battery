@@ -74,7 +74,7 @@ get_str_tmux_battery() {
       printf "#[${color_def}${bold}]%7s#[default]" "${prefix}${mark}${bat_percentage}"
     fi
   else
-    printf "#[${color_def}${bold}] %-6s#[default]" "${bat_remain}"
+    printf "#[${color_def}${bold}] %6s#[default]" "${bat_remain}"
   fi
 }
 

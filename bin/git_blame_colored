@@ -61,7 +61,7 @@ else
         printf("%s", HASH);
 
         if (!( HASH in PR)) {
-          "git_pr_no_by_hash " HASH | getline var
+          "git_pull_request_no_by_hash " HASH | getline var
           PR[HASH] = var
         }
         printf(" #%-6s", PR[HASH]);

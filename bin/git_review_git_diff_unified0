@@ -1,9 +1,9 @@
 #!/bin/bash
-! $(is_git_repo) && echo "Not a git repository." && exit 1
+! $(set -x; is_git_repo) && echo "Not a git repository." && exit 1
 
 commit1=${args[0]}
-CURRENT_BRANCH=$(git_branch_current)
-review_json=$(git_get_review_json "${CURRENT_BRANCH}" "${commit1}")
+CURRENT_BRANCH=$(set -x; git_branch_current)
+review_json=$(set -x; git_get_review_json "${CURRENT_BRANCH}" "${commit1}")
 BASE_BRANCH=$(echo "${review_json}"| jq -r '.base')
 [[ "${BASE_BRANCH}" == "" ]] && echo "BASE_BRANCH empty. Bye" && exit 1
 BASE_BRANCH=origin/${BASE_BRANCH}

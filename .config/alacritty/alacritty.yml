@@ -46,6 +46,7 @@ window:
   startup_mode: Fullscreen  # フルスクリーンで起動する
   opacity: 0.95    # 背景を透過させる
 key_bindings:
-  - { key: F11, chars: "\x14w"} # <ctrl-t>w
+  - { key: F10, chars: "\x14N"} # <ctrl-t>N
+  - { key: F11, chars: "\x14n"} # <ctrl-t>n
   - { key: F12, chars: "\x14z"} # <ctrl-t>z
 

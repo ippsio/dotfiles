@@ -52,11 +52,7 @@ bind generic E      view-grep
 # コミットハッシュをクリップボードにコピー
 #------------------------------------------
 # <Hash>とは、#(シャープ)キーのこと。
-bind generic <Hash> +bash -c '\
-  hs=$(git log -1 --pretty="%h %s" %(commit));\
-  echo -n "$hs"|pbcopy;\
-  echo -n "COPIED [$hs]";'
-
+bind generic <Hash> +bash -c "~/dotfiles/bin/tig/yank_commit_hash_subject %(commit)"
 bind generic h none
 
 #-------------------------------

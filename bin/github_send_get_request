@@ -1,6 +1,6 @@
 #!/bin/bash
-readonly REPO=$(git_reponame)
 readonly HEADER1="Accept: application/vnd.github.v3+json"
 readonly HEADER2="Authorization: token $(git_find_hub_token)"
-set -x; curl -X GET -s -H "${HEADER1}" -H "${HEADER2}" https://api.github.com/repos/${REPO}/pulls/$1
+readonly URL=$1
+curl -X GET -s -H "${HEADER1}" -H "${HEADER2}" "$URL"
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 COMMIT_LOG_ROWS=15
-( ! is_git_repo ) && echo "Not a git repository. " && exit 1
+! (set -x; is_git_repo) && echo "Not a git repository. " && exit 1
 _ME=$( [ -L $0 ] && basename $(readlink $0) || basename $0)
 GIT_BRANCH_CMD="git branch --all --sort=-authordate --color=always --format='%(objectname:short)	%(authordate:format:%Y-%m-%d	%H:%M:%S(%a))	%(authorname)	%(refname:short)	%(subject)'"
 GIT_LOG=$(escape_SQ "git log --oneline -$(( ${COMMIT_LOG_ROWS} - 2 )) --abbrev-commit --decorate=full --date=format-local:'%Y/%m/%d %H:%M:%S' --pretty=format:'%h	(%cd)	%an	%d	%s'")

@@ -107,7 +107,7 @@ command! -bang -nargs=* Grep
   \   . ' --layout reverse '
   \   . ' --with-nth=1.. '
   \   . ' --nth=1.. '
-  \   . ' --bind "tab:execute(git_pr_open_by_file_line {2} {3})" '
+  \   . ' --bind "tab:execute(git_pull_request_open_by_file_line {2} {3})" '
   \   . ' --preview "git_blame_colored {2} {3} ' . shellescape(<q-args>) . ' {q}"'
   \   . ' --preview-window="wrap:down:75%" ',
   \   'window': { 'width': 0.95, 'height': 0.99 }

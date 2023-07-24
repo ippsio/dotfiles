@@ -65,7 +65,7 @@ eval "${GIT_LOG_CMD}" \
   --bind "tab:execute(git log -1 -p {2} ${file} < /dev/tty > /dev/tty)" \
   --bind "ctrl-y:execute(echo -n {2}| pbcopy)" \
   --bind "ctrl-/:toggle-preview" \
-  --bind "ctrl-p:execute:(git_pr_search_fzf {2})" \
+  --bind "ctrl-p:execute:(git_pull_request_search_fzf {2})" \
   --preview="
       decorate -verbose_log \"${GIT_LOG_1_P_CMD}\";
       echo;

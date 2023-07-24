@@ -73,12 +73,13 @@ files=$(eval "${GIT_DIFF_NUMSTAT}" \
 
 target=$(
   export GIT_MERGE_BASE=${commit1};\
-  cd $(git_root);\
+  cd $(set -x; git_root);\
   diff_result=${GIT_DIFF_NO_COLOR};\
   echo "$files" | \
   fzf\
   --tabstop=1 \
   --ansi \
+  --info=inline \
   --prompt="${_FZF_PROMPT}" \
   --header="${GIT_DIFF_NUMSTAT}${CR} (enter: nvim)  (tab: tig) (ctrl-d: git diff) (ctrl-l: git_log_fzf)   (ctrl-/: preview toggle)" \
   --nth=1,3 \

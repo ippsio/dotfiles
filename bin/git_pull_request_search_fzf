@@ -21,11 +21,11 @@ echo {5};
 "
 
 if ( is_git_hash "$1" ); then
-  search_results=$(git_pr_search_hash "${commit}")
+  search_results=$(git_pull_request_search_with_hash "${commit}")
 elif ( is_git_branch "$1" ); then
-  search_results=$(git_pr_search_branch "${commit}")
+  search_results=$(git_pull_request_search_with_branch "${commit}")
 else
-  search_results=$(git_pr_search_author "${commit}")
+  search_results=$(git_pull_request_search_with_author "${commit}")
 fi
 
 if [[ ! -z ${search_results} ]]; then

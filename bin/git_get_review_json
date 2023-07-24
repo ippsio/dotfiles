@@ -1,7 +1,7 @@
 #!/bin/bash
 
-readonly JSON="$(git_root)/../pull_requests.json"
-readonly CURRENT_BRANCH=${1:-$(git_branch_current)}
+readonly JSON="$(set -x; git_root)/../pull_requests.json"
+readonly CURRENT_BRANCH=${1:-$(set -x; git_branch_current)}
 readonly BASE_BRANCH=$2
 readonly NOW=$(date +'%Y-%m-%dT%H:%M:%SZ')
 readonly DQ='"'
@@ -28,10 +28,11 @@ json_add() {
 if [[ ! -z "${BASE_BRANCH}" ]]; then
   res=$(echo {}\
     | jq ".number=1"\
+    | jq ".html_url=${DQ}${DQ}"\
+    | jq ".title=${DQ}${DQ}"\
     | jq ".base=${DQ}${BASE_BRANCH}${DQ}"\
     | jq ".head=${DQ}${CURRENT_BRANCH}${DQ}"\
     | jq ".user=${DQ}${DQ}"\
-    | jq ".title=${DQ}${DQ}"\
     | jq ".created_at=${DQ}${DQ}"\
   )
   echo "${res}"
@@ -44,16 +45,17 @@ if [[ ! -z "${json_selected}" ]]; then
   exit
 fi
 
-for pr_number in $(git_pr_search_branch "${CURRENT_BRANCH}"| awk -F '\t' '{ print $1 }'); do
+for pr_number in $(set -x; git_pull_request_search_with_branch "${CURRENT_BRANCH}"| awk -F '\t' '{ print $1 }'); do
   [[ "${pr_number}" == "GIT_SEARCH_PR:PR_NOT_FOUND" ]] && continue
   timer_clock_start_at=$(epocms)
-  json_git_pr_get=$(git_pr_get "${pr_number}")
+  json_git_pull_request_get=$(set -x; git_pull_request_get "${pr_number}")
   timer_clock_end_at=$(epocms)
-  head_ref=$(echo "${json_git_pr_get}"| jq -r '.head.ref')
-  base_ref=$(echo "${json_git_pr_get}"| jq -r '.base.ref')
-  user=$(echo "${json_git_pr_get}"| jq -r '.user.login')
-  pr_title=$(echo "${json_git_pr_get}"| jq -r '.title')
-  created_at=$(echo "${json_git_pr_get}"| jq -r '.created_at')
+  head_ref=$(echo "${json_git_pull_request_get}"| jq -r '.head.ref')
+  base_ref=$(echo "${json_git_pull_request_get}"| jq -r '.base.ref')
+  html_url=$(echo "${json_git_pull_request_get}"| jq -r '.html_url')
+  user=$(echo "${json_git_pull_request_get}"| jq -r '.user.login')
+  pr_title=$(echo "${json_git_pull_request_get}"| jq -r '.title')
+  created_at=$(echo "${json_git_pull_request_get}"| jq -r '.created_at')
   fetch_tat=$(( timer_clock_end_at - timer_clock_start_at ))
 
   [[ "$head_ref" != "${CURRENT_BRANCH}" ]] && continue
@@ -61,10 +63,11 @@ for pr_number in $(git_pr_search_branch "${CURRENT_BRANCH}"| awk -F '\t' '{ prin
 
   res=$(echo {}\
     | jq ".number=${DQ}${pr_number}${DQ}"\
+    | jq ".html_url=${DQ}${html_url}${DQ}"\
+    | jq ".title=${DQ}${pr_title}${DQ}"\
     | jq ".base=${DQ}${base_ref}${DQ}"\
     | jq ".head=${DQ}${head_ref}${DQ}"\
     | jq ".user=${DQ}${user}${DQ}"\
-    | jq ".title=${DQ}${pr_title}${DQ}"\
     | jq ".created_at=${DQ}${created_at}${DQ}"\
     | jq ".fetched_at=${DQ}${NOW}${DQ}"\
     | jq ".fetch_tat=${DQ}${fetch_tat}${DQ}"\
@@ -74,13 +77,14 @@ for pr_number in $(git_pr_search_branch "${CURRENT_BRANCH}"| awk -F '\t' '{ prin
   exit
 done
 
-base=$(git_branch_fzf)
+base=$(set -x; git_branch_fzf)
 res=$(echo {}\
   | jq ".number=${DQ}${DQ}"\
+  | jq ".html_url=${DQ}${DQ}"\
+  | jq ".title=${DQ}${DQ}"\
   | jq ".base=${DQ}${base}${DQ}"\
   | jq ".head=${DQ}${CURRENT_BRANCH}${DQ}"\
   | jq ".user=${DQ}${DQ}"\
-  | jq ".title=${DQ}${DQ}"\
   | jq ".created_at=${DQ}${DQ}"\
   | jq ".fetched_at=${DQ}${NOW}${DQ}"\
 )

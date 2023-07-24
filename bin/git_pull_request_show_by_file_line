@@ -16,11 +16,11 @@ echo '- Created_at: ['{7}']  Updated_at: ['{8}']  Closed_at:  ['{9}']';
 echo '---------------------------------------------------';
 echo {5};
 "
-pr_no=$(git_pr_no_by_hash ${commit}| sed -E 's/[# ]//g')
+pr_no=$(git_pull_request_no_by_hash ${commit}| sed -E 's/[# ]//g')
 if [[ ! -z "${pr_no}" ]]; then
-  github_api_result=$(git_pr_show_by_pr_no "${pr_no}")
+  github_api_result=$(git_pull_request_show_by_number "${pr_no}")
 else
-  github_api_result=$(git_pr_search_hash "${commit}")
+  github_api_result=$(git_pull_request_search_with_hash "${commit}")
 fi
 echo "${github_api_result}" \
   | fzf --tac \

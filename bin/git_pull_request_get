@@ -1,0 +1,3 @@
+#!/bin/bash
+(set -x; github_send_get_request "https://api.github.com/repos/$(git_reponame)/pulls/$1")
+
