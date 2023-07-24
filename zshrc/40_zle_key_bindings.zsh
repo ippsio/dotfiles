@@ -8,8 +8,8 @@ bindkey -e
 # space
 source ~/dotfiles/zshrc/41_zle_space.zsh
 execute_zle_space() {
-  zle_space
-  export zle_space_timer=$(epocms)
+  [[ -z ${zle_space_timer} ]] && export zle_space_timer=$(epocms)
+  zle_space && export zle_space_timer=$(epocms)
 }
 
 zle -N execute_zle_space
@@ -37,14 +37,17 @@ source ~/dotfiles/zshrc/43_zle_ctrl_f.zsh
 zle -N zle_ctrl_f
 bindkey "^F" zle_ctrl_f
 
-# zle_space関数終了後、200ミリ秒間はキー入力をスルーする。
+# zle_space関数終了後、300ミリ秒間はキー入力をスルーする。
 # 早くキー操作しすぎた場合、コマンドプロンプトに期待しないキー入力が入る。
 # この挙動を抑止する。
-readonly KEY_INPUT_THROUGH_MILLIS=200
+readonly KEY_INPUT_THROUGH_MILLIS=300
 zle_through_or_self_insert() {
   diff=$(( $(epocms) - ${zle_space_timer:-0} ))
   if [[ ${diff} -gt $KEY_INPUT_THROUGH_MILLIS ]]; then
+    # echo "IN    zle_space_timer=${zle_space_timer}, diff=${diff}" >> /tmp/key_through.log
     zle self-insert;
+  else
+    # echo "NOT-IN zle_space_timer=${zle_space_timer}, diff=${diff}" >> /tmp/key_through.log
   fi
 }
 

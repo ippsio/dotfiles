@@ -10,11 +10,11 @@ SPACE="%20"
 #Q="type:pr${SPACE}repo:$(git_reponame)"
 Q="type:pr${SPACE}repo:$(git_reponame)"
 Q="${Q}${SPACE}$1"
-AUTHZ_TOKEN=$(git_find_hub_token)
-HTTP_HEADER="Authorization: token ${AUTHZ_TOKEN}"
+HTTP_HEADER1="Accept: application/vnd.github.v3+json"
+HTTP_HEADER2="Authorization: token $(git_find_hub_token)"
 HTTP_URL="https://api.github.com/search/issues?q=${Q}"
 
-API_RES=$(curl -X GET -s -H "${HTTP_HEADER}" "${HTTP_URL}")
+API_RES=$(curl -X GET -s -H "${HTTP_HEADER1}" -H "${HTTP_HEADER2}" "${HTTP_URL}")
 echo "${API_RES}"
 exit
 RES=$(echo "$API_RES"| jq -r ".items[] \
