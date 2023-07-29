@@ -37,6 +37,11 @@ source ~/dotfiles/zshrc/43_zle_ctrl_f.zsh
 zle -N zle_ctrl_f
 bindkey "^F" zle_ctrl_f
 
+# ctrl-g
+source ~/dotfiles/zshrc/43_zle_ctrl_g.zsh
+zle -N zle_ctrl_g
+bindkey "^G" zle_ctrl_g
+
 # zle_space関数終了後、300ミリ秒間はキー入力をスルーする。
 # 早くキー操作しすぎた場合、コマンドプロンプトに期待しないキー入力が入る。
 # この挙動を抑止する。
