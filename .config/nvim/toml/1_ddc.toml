@@ -91,8 +91,6 @@ repo = 'Shougo/ddc.vim'
 on_event = 'InsertEnter'
 depends = ['denops.vim']
 hook_add='''
-" call ddc#custom#patch_global('completionMenu', 'pum.vim')
-
 " pum#visible() が真で、ポップアップの選択肢を上下移動します。
 " pum#visible() が偽で、｛カーソルが行頭、又はカーソル直前が空白｝なら、単に<Up>,<Down>します。そうでなければddcのポップアップを開きます。
 " [補足] col('.') <= 1 は、カーソルが行頭の場合、真です。
@@ -114,59 +112,41 @@ inoremap <silent><expr> <Down> pum#visible() ? '<Cmd>call pum#map#insert_relativ
 inoremap <silent><expr> <CR>   pum#visible() ? '<Cmd>call pum#map#confirm()<CR>' : '<CR>'
 inoremap <silent><expr> <Esc>  pum#visible() ? '<Cmd>call pum#map#cancel()<CR>' : '<Esc>'
 
-call ddc#custom#patch_global('autoCompleteEvents', ['InsertEnter', 'TextChangedI', 'TextChangedP', 'CmdlineEnter', 'CmdlineChanged', ])
+call ddc#custom#patch_global('autoCompleteEvents', [
+\ 'TextChangedI',
+\ 'TextChangedP',
+\ 'CmdlineEnter',
+\ 'CmdlineChanged',
+\ ])
 
-call ddc#custom#patch_global('sourceOptions', {'around': {
-  \ 'mark': 'ddc-arround'}, })
+call ddc#custom#patch_global('sources', [
+\ 'nvim-lsp',
+\ 'around',
+\ 'mocword',
+\ 'look',
+\ 'file',
+\ ])
 
-call ddc#custom#patch_global('sourceOptions', {
-  \ 'nvim-lsp': { 'mark': 'lsp', 'forceCompletionPattern': '\.\w*|:\w*|->\w*' }})
+call ddc#custom#patch_global('sourceOptions', {'_': {'minAutoCompleteLength': 2, 'matchers': ['matcher_fuzzy'], 'sorters': ['sorter_rank'], 'converters': ['converter_fuzzy']}})
+call ddc#custom#patch_global('sourceOptions', {'around': {'mark': 'ddc-arround'}, })
+call ddc#custom#patch_global('sourceOptions', {'nvim-lsp': {'mark': 'lsp', 'forceCompletionPattern': '\.\w*|:\w*|->\w*'}})
+call ddc#custom#patch_global('sourceOptions', {'mocword': {'mark': 'mocword', 'minAutoCompleteLength': 3, 'isVolatile': v:true}})
+call ddc#custom#patch_global('sourceOptions', {'look': {'converters': ['loud', 'matcher_head'], 'matchers': [], 'mark': 'look', 'isVolatile': v:true, }})
+call ddc#custom#patch_global('sourceOptions', {'cmdline-history': {'mark': 'ddc-cmdline-history'}})
+call ddc#custom#patch_global('sourceOptions', {'file': {'mark': 'ddc-file', 'isVolatile': v:true, 'forceCompletionPattern': '\S/\S*'}})
 
-call ddc#custom#patch_global('sourceOptions', {
-  \ 'mocword': { 'mark': 'mocword', 'minAutoCompleteLength': 3, 'isVolatile': v:true }})
+call ddc#custom#patch_global('filterParams', {'matcher_fuzzy': {'camelcase': v:true}, })
 
-call ddc#custom#patch_global('sourceOptions', {
-  \ 'look': { 'converters': ['loud', 'matcher_head'], 'matchers': [], 'mark': 'look', 'isVolatile': v:true, }})
-
-call ddc#custom#patch_global('sourceOptions', {
-  \ 'cmdline-history': {'mark': 'ddc-cmdline-history'}})
-
-call ddc#custom#patch_global('sourceOptions', {
-  \ 'file': { 'mark': 'ddc-file', 'isVolatile': v:true, 'forceCompletionPattern': '\S/\S*'}})
-
-call ddc#custom#patch_global('sourceOptions', {
-  \ '_': { 'minAutoCompleteLength': 2, 'matchers': ['matcher_fuzzy'], 'sorters': ['sorter_rank'], 'converters': ['converter_fuzzy']}})
-
-"call ddc#custom#patch_global('filterParams', { 'matcher_fuzzy': {'camelcase': v:true}, })
-
-"call ddc#custom#patch_global('sourceOptions', {
-" \ '_': { 'matchers': ['matcher_head'], 'sorters': ['sorter_rank']}, })
-
-"call ddc#custom#patch_global('sources', [ 'nvim-lsp', 'around', 'file', ])
-call ddc#custom#patch_global('sources', [ 'nvim-lsp', 'around', 'file', ])
-
-" ddc-cmdline-history
-
-" ddc-arround
-call ddc#custom#patch_global('sourceParams', {
-  \ 'around': {'maxSize': 500}})
-
-call ddc#custom#patch_global('sourceParams', {
-  \ 'nvim-lsp': { 'kindLabels': { 'Class': 'c' } }})
-
-call ddc#custom#patch_global('sourceParams', {
-  \ 'look': { 'convertCase': v:true, 'dict': v:null }})
+call ddc#custom#patch_global('sourceParams', {'around': {'maxSize': 500}})
+call ddc#custom#patch_global('sourceParams', {'nvim-lsp': {'kindLabels': {'Class': 'c'} }})
+call ddc#custom#patch_global('sourceParams', {'look': {'convertCase': v:true, 'dict': v:null}})
 
 " ddc-file
-call ddc#custom#patch_filetype(['ps1', 'dosbatch', 'autohotkey', 'registry'], {
-\ 'sourceOptions': { 'file': { 'forceCompletionPattern': '\S\\\S*', }, },
-\ 'sourceParams': { 'file': { 'mode': 'win32', }, }})
+call ddc#custom#patch_filetype(['ps1', 'dosbatch', 'autohotkey', 'registry'], {'sourceOptions': {'file': {'forceCompletionPattern': '\S\\\S*', }, }, })
+call ddc#custom#patch_filetype(['ps1', 'dosbatch', 'autohotkey', 'registry'], {'sourceParams': {'file': {'mode': 'win32', }, }})
 
-"call ddc#custom#patch_global('ui', 'native')
 call ddc#custom#patch_global('ui', 'pum')
-call ddc#custom#patch_global({
-\ 'keywordPattern': '[a-zA-Z_]\w*',
-\ })
+call ddc#custom#patch_global({'keywordPattern': '[a-zA-Z_]\w*', })
 
 " Use ddc.
 call ddc#enable()
