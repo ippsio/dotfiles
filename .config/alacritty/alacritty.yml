@@ -43,10 +43,9 @@ font:
     style: Bold Italic
 window:
   decorations: full         # ボーダーとタイトルバーを表示する
-  startup_mode: Fullscreen  # フルスクリーンで起動する
   opacity: 0.95    # 背景を透過させる
 key_bindings:
-  - { key: F10, chars: "\x14N"} # <ctrl-t>N
   - { key: F11, chars: "\x14n"} # <ctrl-t>n
+  - { key: F11, mods: Shift, chars: "\x14N"} # <ctrl-t>N
   - { key: F12, chars: "\x14z"} # <ctrl-t>z
 
