@@ -23,26 +23,26 @@ get_battery_percentage() {
     current_bat="$(awk -v cur="$_cur_cap" -v max="$_max_cap" 'BEGIN{ printf("%.2f\n", cur/max*100) }')"
   fi
 
-  percentage="${current_bat%%.*}"
-  [ -n "$percentage" ] && echo "$percentage%"
+  percentage="${current_bat}"
+  [ -n "$percentage" ] && echo "$percentage"
 }
 
 get_battery_remain() {
   local time_remain
-  time_remain="no est"
+  time_remain="..:.."
 
   if type "pmset" &>/dev/null; then
     time_remain="$(pmset -g ps | grep -o '[0-9]\+:[0-9]\+')"
-    [ -z "$time_remain" ] && time_remain="no est"
+    [ -z "$time_remain" ] && time_remain="..:.."
   elif type "ioreg" &>/dev/null; then
     local itte
     itte="$(ioreg -n AppleSmartBattery | awk '/InstantTimeToEmpty/{print $5}')"
     time_remain="$(awk -v remain="$itte" 'BEGIN{ printf("%dh%dm\n", remain/60, remain%60) }')"
-    [ -z "$time_remain" ] || [ "${time_remain%%h*}" -gt 10 ] && time_remain="no est"
+    [ -z "$time_remain" ] || [ "${time_remain%%h*}" -gt 10 ] && time_remain="..:.."
   fi
 
   echo "$time_remain"
-  [ "$time_remain" = "no est" ] && return 1
+  [[ "$time_remain" == "..:.." ]] && return 1
 }
 
 get_str_tmux_battery() {
@@ -51,31 +51,30 @@ get_str_tmux_battery() {
   bat_remain=$(get_battery_remain)
 
   local prefix="BAT"
-  local mark="="
-  local bold=""
+  local mark=" "
   if is_charging; then
     [[ $(expr $(date +'%S') % 2) -eq 1 ]] && mark=" " || mark="+"
-    bold=",bold"
   fi
 
-  local color_def
-  [[ "${color_def}" == "" ]] && [[ "${bat_percentage%%%*}" -ge "80" ]] && color_def="fg=colour58,bg=colour249"
-  [[ "${color_def}" == "" ]] && [[ "${bat_percentage%%%*}" -ge "60" ]] && color_def="bg=colour58"
-  [[ "${color_def}" == "" ]] && [[ "${bat_percentage%%%*}" -ge "40" ]] && color_def="bg=colour96"
-  [[ "${color_def}" == "" ]] && [[ "${bat_percentage%%%*}" -ge "20" ]] && color_def="bg=colour89"
-  [[ "${color_def}" == "" ]]                                           && color_def="bg=colour160"
-  # echo -e "#[${color_def}${bold}]${prefix}${mark}${bat_percentage}(${bat_remain})#[default]"
-
-  if [[ "$(expr $(date +'%S') % 4 )" -lt 3 ]]; then
-    if [[ "${bat_percentage%%%*}" -eq "100" ]]; then
-      printf "#[${color_def}${bold}]%7s#[default]" "${prefix}FULL"
-      # Q:why %7s?, A: because "BAT=96%".len => 7.
-    else
-      printf "#[${color_def}${bold}]%7s#[default]" "${prefix}${mark}${bat_percentage}"
-    fi
-  else
-    printf "#[${color_def}${bold}] %6s#[default]" "${bat_remain}"
+  if [[ ${bat_percentage} -ge 80 ]]; then
+    printf "#[fg=colour58,bg=colour249]"
+  elif [[ ${bat_percentage} -ge 60 ]] && [[ ${bat_percentage} -lt 80 ]]; then
+    printf "#[bg=colour58]"
+  elif [[ ${bat_percentage} -ge 40 ]] && [[ ${bat_percentage} -lt 60 ]]; then
+    printf "#[bg=colour96]"
+  elif [[ ${bat_percentage} -ge 20 ]] && [[ ${bat_percentage} -lt 40 ]]; then
+    printf "#[bg=colour89]"
+  elif [[ ${bat_percentage} -lt 20 ]]; then
+    printf "#[bg=colour160]"
   fi
+
+  printf "${prefix}${mark}${bat_percentage}%%"
+
+  # 画面幅が一定以上ならバッテリーの残時間（または残充電時間）も表示
+  if [[ $(~/dotfiles/bin/tmux/tmux_client_width) -gt 160 ]]; then
+    printf "(${bat_remain})"
+  fi
+  printf "#[default]"
 }
 
 get_str_tmux_battery

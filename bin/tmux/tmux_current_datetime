@@ -1,0 +1,7 @@
+#!/bin/bash
+client_width=$(~/dotfiles/bin/tmux/tmux_client_width)
+if [[ ${client_width} -gt 160 ]]; then
+  date +'%m/%d(%a)%H:%M:%S'
+elif [[ ${client_width} -gt 100 ]]; then
+  date +'%H:%M:%S'
+fi

@@ -1,14 +1,39 @@
 #!/usr/bin/env zsh
 # zsh起動時にtmux起動
+tmux_attach_to_first_session() {
+  unattached_sessions=$(tmux list-session| grep -Ev "\(attached\)")
+  if [[ ! -z "${unattached_sessions}" ]]; then
+    echo "Unattached tmux sessions found."
+    echo "${unattached_sessions}"
+    echo "Attached to the first one."
+    sleep 1
+    session_name=$(echo "${unattached_sessions}"| head -1| awk -F ':' '{ print $1 }')
+    tmux attach-session -t "${session_names}"
+    echo "bye."
+    sleep 1
+    return 0
+  else
+    return 1
+  fi
+}
+
+tmux_new_session() {
+  for i in {1..128}; do
+    if [[ -z $(tmux ls -f "#{==:#{session_name},${i}}") ]]; then
+      tmux new-session -s ${i}
+      echo "bye."
+      sleep 1
+      break
+    fi
+  done
+  return 0
+}
+
 if (type "tmux" > /dev/null 2>&1); then
   if [[ -z "$TMUX" && ! -z "$PS1" ]]; then
-    for i in {1..128}; do
-      if [[ -z $(tmux ls -f "#{==:#{session_name},${i}}") ]]; then
-        tmux new-session -s ${i}
-        echo "bye."
-        sleep 1
-        exit
-      fi
+    tmux_new_session
+    while true; do
+      tmux_attach_to_first_session || exit
     done
   fi
 fi

@@ -1,0 +1,36 @@
+#!/bin/bash
+obtain() { echo "$1"| grep "$2"| grep -Eo '[0-9]+'| xargs -I {} echo "scale=8; {} * ${3:-1}"| bc ; return 0; }
+
+vm_stat_results=$(vm_stat)
+page_size=$(obtain "${vm_stat_results}" "Mach Virtual Memory Statistics:" 1)
+multiple_factor=$(echo "scale=8; ${page_size} / ( 1024 ^ 3 )"| bc)
+free=$(obtain "${vm_stat_results}" "Pages free:" "${multiple_factor}" )
+active=$(obtain "${vm_stat_results}" 'Pages active:' "${multiple_factor}" )
+inactive=$(obtain "${vm_stat_results}" 'Pages inactive:' "${multiple_factor}" )
+speculative=$(obtain "${vm_stat_results}" 'Pages speculative:' "${multiple_factor}" )
+throttled=$(obtain "${vm_stat_results}" 'Pages throttled:' "${multiple_factor}" )
+wired=$(obtain "${vm_stat_results}" 'Pages wired down:' "${multiple_factor}" )
+purgeable=$(obtain "${vm_stat_results}" 'Pages purgeable:' "${multiple_factor}" )
+external=$(obtain "${vm_stat_results}" 'File-backed pages:' "${multiple_factor}" )
+compressed=$(obtain "${vm_stat_results}" 'Pages occupied by compressor:' "${multiple_factor}" )
+
+application=$(echo "scale=2; ${active} + ${inactive} + ${speculative} - ${purgeable} - ${external}"| bc)
+used=$(echo "scale=2; ${application} + ${wired} + ${compressed}"| bc)
+application=$(echo "scale=2; ${active} + ${inactive} + ${speculative}                            - ${purgeable} - ${external}"| bc)
+memsize=$(sysctl hw.memsize| grep -Eo "[0-9]+"| xargs -I {} echo "scale=8; {} / ( 1024 ^ 3 )"| bc)
+usage=$(echo "scale=2; ${used} * 100 / ${memsize}"| bc)
+
+printf "%s:%.2f\n" "free" "${free}"
+printf "%s:%.2f\n" "active" "${active}"
+printf "%s:%.2f\n" "inactive" "${inactive}"
+printf "%s:%.2f\n" "speculative" "${speculative}"
+printf "%s:%.2f\n" "throttled" "${throttled}"
+printf "%s:%.2f\n" "wired" "${wired}"
+printf "%s:%.2f\n" "purgeable" "${purgeable}"
+printf "%s:%.2f\n" "external" "${external}"
+printf "%s:%.2f\n" "compressed" "${compressed}"
+printf "%s:%.2f\n" "used" "${used}"
+printf "%s:%.2f\n" "application" "${application}"
+printf "%s:%.2f\n" "memsize" "${memsize}"
+printf "%s:%.0f\n" "usage" "${usage}"
+

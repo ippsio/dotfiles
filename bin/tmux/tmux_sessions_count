@@ -1,2 +1,2 @@
 #!/bin/bash
-tmux ls| wc -l| tr -d ' '
+tmux list-session| wc -l| tr -d ' '

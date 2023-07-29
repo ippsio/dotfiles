@@ -1,36 +1,55 @@
 #!/bin/bash
+readonly SLEEP_SECONDS=0.075
+readonly DISPLAY_PANE_MILLIS=100
 IFS=$'\n'
-window_pane_list=$(for window in $(tmux list-windows -F "#{window_index},#{?window_active,A,}" ); do
-  window_index=$(echo "${window}"| awk -F ',' '{ print $1 }')
-  window_active=$(echo "${window}"| awk -F ',' '{ print $2 }')
-  for pane in $(tmux list-panes -F "#{pane_index},#{?pane_active,A,}" -t "${window_index}" ); do
-    pane_index=$(echo "${pane}"| awk -F ',' '{ print $1 }')
-    pane_active=$(echo "${pane}"| awk -F ',' '{ print $2 }')
-    window_pane="${window_index},${pane_index}"
-    if [[ "${window_active}" == "A" && "${pane_active}" == "A" ]]; then
-      window_pane="${window_pane}A"
-    fi
-    echo "${window_pane}"
-  done
-done)
+LP_FORMAT=""
+LP_FORMAT="${LP_FORMAT}window #{window_index} #{?window_active,[active_window],               }"
+LP_FORMAT="${LP_FORMAT},"
+LP_FORMAT="${LP_FORMAT}pane #{pane_index} (#{pane_current_command}) #{?pane_active,[active_pane],}"
 
+pane_list=$(
+  for window_index in $(tmux list-windows -F "#{window_index}"); do
+    tmux list-pane -F "${idx} ${LP_FORMAT}" -t "${window_index}"
+  done| awk '{ printf "(%d),%s\n", NR, $0 }'
+)
 if [[ "$1" == "--reverse" ]]; then
-  window_pane_list=$(echo "${window_pane_list}"| tac)
-fi
-grep_a1_result=$(echo "${window_pane_list}"| grep -A 1 "A")
-grep_a1_result_count=$(echo "${grep_a1_result}"| wc -l| tr -d ' ')
-if [[ ${grep_a1_result_count} -eq 1 ]]; then
-  next_window_pane=$(echo "${window_pane_list}"| head -1)
-elif [[ ${grep_a1_result_count} -eq 2 ]]; then
-  next_window_pane=$(echo "${grep_a1_result}"| tail -n 1)
+  grep_result=$(echo "${pane_list}"| grep -E -B 1 "\[active_window\],.*\[active_pane\]")
+  grep_result_cnt=$(echo "${grep_result}"| wc -l| tr -d ' ')
+  if [[ ${grep_result_cnt} -eq 1 ]]; then
+    next_window_pane=$(echo "${pane_list}"| tail -n 1)
+  elif [[ ${grep_result_cnt} -eq 2 ]]; then
+    next_window_pane=$(echo "${grep_result}"| head -1)
+  fi
+else
+  grep_result=$(echo "${pane_list}"| grep -E -A 1 "\[active_window\],.*\[active_pane\]")
+  grep_result_cnt=$(echo "${grep_result}"| wc -l| tr -d ' ')
+  if [[ ${grep_result_cnt} -eq 1 ]]; then
+    next_window_pane=$(echo "${pane_list}"| head -1)
+  elif [[ ${grep_result_cnt} -eq 2 ]]; then
+    next_window_pane=$(echo "${grep_result}"| tail -n 1)
+  fi
 fi
 
-next_window_index=$(echo "${next_window_pane}"| awk -F ',' '{ print $1 }')
-next_pane_index=$(echo "${next_window_pane}"| awk -F ',' '{ print $2 }')
+next_window=$(echo "${next_window_pane}"| awk -F ',' '{ print $2 }')
+next_pane=$(echo "${next_window_pane}"| awk -F ',' '{ print $3 }')
+next_window_index=$(echo "${next_window}"| awk '{ print $2 }')
+next_pane_index=$(echo "${next_pane}"| awk '{ print $2 }')
+next_window_pane_index=$(echo "${next_window_pane}"| awk -F ',' '{ print $1 }')
 
 tmux select-window -t ${next_window_index}
 tmux select-pane -t ${next_pane_index}
-tmux set -g window-active-style "bg=colour52"
-tmux display-panes -d 200
-tmux set -g window-active-style "bg=colour0"
-
+tmux display-panes -d ${DISPLAY_PANE_MILLIS}
+tmux popup -E "
+  echo '[WINDOWS AND_PANES]'
+  echo '$pane_list'
+  echo
+  echo '[CURRENT WINDOW_PANE]'
+  echo '=> ${next_window_pane_index}'
+  tmux set -g window-active-style 'bg=colour52'
+  sleep ${SLEEP_SECONDS}
+  tmux set -g window-active-style 'bg=colour0'
+  sleep ${SLEEP_SECONDS}
+  tmux set -g window-active-style 'bg=colour52'
+  sleep ${SLEEP_SECONDS}
+  tmux set -g window-active-style 'bg=colour0'
+">/dev/null 2>&1

@@ -11,7 +11,7 @@ rate="${wifi_info[1]}"   # bandwidth of wifi wave
 ssid="${wifi_info[2]}"   # wifi ssid name
 
 # If the wifi rate (wifi bandwidth) is unavailable,
-[ "$rate" = 0 ] && echo "no_wifi" && exit 1
+[[ "$rate" -eq 0 ]] && echo "no_wifi" && exit 1
 # WIFI_STR=$(echo -e "${ssid} ${rate}Mbs(RSSI${rssi})")
 # echo "${WIFI_STR}"
 
@@ -21,11 +21,15 @@ ssid="${wifi_info[2]}"   # wifi ssid name
 (( $rssi >  -50)) && signal="GOOD"
 
 MIN_LEN_LIMIT=12
-[[ ${#ssid} -lt ${MIN_LEN_LIMIT} ]] && LEN=${MIN_LEN_LIMIT} || LEN=${#ssid}
-if [[ "$(expr $(date +'%S') % 4 )" -lt 2 ]]; then
-  printf "%${LEN}s\n" "${ssid}"
+if [[ ${#ssid} -lt ${MIN_LEN_LIMIT} ]]; then
+  LEN=${MIN_LEN_LIMIT}
 else
-  printf "%${LEN}s\n" "${rate}Mbps $signal"
+  LEN=${#ssid}
+fi
+if [[ "$(expr $(date +'%S') % 4 )" -lt 2 ]]; then
+  printf "%${LEN}s" "${ssid}"
+else
+  printf "%${LEN}s" "${rate}Mbps $signal"
   # printf "%${LEN}s\n" "${rate}Mbps $rssi"
 fi
 
