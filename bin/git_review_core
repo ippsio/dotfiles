@@ -1,0 +1,13 @@
+#!/bin/bash
+! $(set -x; is_git_repo) && echo "Not a git repository." && exit 1
+
+commit1=${args[0]}
+current_branch=$(set -x; git_branch_current)
+review_json=$(set -x; git_get_review_json "${current_branch}" "${commit1}")
+base_branch=$(echo "${review_json}"| jq -r '.base')
+[[ "${base_branch}" == "" ]] && echo "base_branch empty. Bye" && exit 1
+base_branch=origin/${base_branch}
+merge_base_hash=$(git rev-parse --short "$(git merge-base ${base_branch} HEAD)")
+merge_base_log=$(git log -1 --date="format:%Y-%m-%d %H:%M:%S" --pretty="(%h) %ad %an %s" ${merge_base_hash})
+review_json=$(echo "${review_json}"| jq ".merge_base=\"${merge_base_log}\"")
+

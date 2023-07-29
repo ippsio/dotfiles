@@ -1,18 +1,7 @@
 #!/bin/bash
-! $(set -x; is_git_repo) && echo "Not a git repository." && exit 1
-
-commit1=${args[0]}
-CURRENT_BRANCH=$(set -x; git_branch_current)
-review_json=$(set -x; git_get_review_json "${CURRENT_BRANCH}" "${commit1}")
-BASE_BRANCH=$(echo "${review_json}"| jq -r '.base')
-[[ "${BASE_BRANCH}" == "" ]] && echo "BASE_BRANCH empty. Bye" && exit 1
-BASE_BRANCH=origin/${BASE_BRANCH}
-merge_base_hash=$(git rev-parse --short "$(git merge-base ${BASE_BRANCH} HEAD)")
-merge_base_log=$(git log -1 --date="format:%Y-%m-%d %H:%M:%S" --pretty="(%h) %ad %an %s" ${merge_base_hash})
-review_json=$(echo "${review_json}"| jq ".merge_base=\"${merge_base_log}\"")
+source ~/dotfiles/bin/git_review_core || exit $?
 (
-  echo "${review_json}"
-  echo "---"
-  git diff --stat=200 --stat-name-width=160 -p ${BASE_BRANCH}
-)| GIT_MERGE_BASE=${BASE_BRANCH} tig show
-
+  echo "${review_json}";
+  echo "---";
+  git diff --stat=200 --stat-name-width=160 -p ${merge_base_hash}
+)| (set -x; export GIT_MERGE_BASE=${merge_base_hash}; tig show ${merge_base_hash}...HEAD)
