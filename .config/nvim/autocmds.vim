@@ -30,14 +30,15 @@ augroup vimrc-highlight
   autocmd BufRead,BufEnter,BufWinEnter *.rake let &colorcolumn=join(range(121, 121), ",")
   autocmd BufRead,BufEnter,BufWinEnter *.py let &colorcolumn=join(range(121, 121), ",")
 
-  " ある行をコメントアウトしたくて「#」を打った瞬間、vimが気を利かせてインデントを整える事がある。これが好きじゃないので止まってもらう。
-  autocmd BufRead,BufEnter,BufWinEnter *.yaml setlocal indentkeys-=0#
 augroup END
 
 augroup fileTypeIndent
   autocmd!
   autocmd BufNewFile,BufRead *.toml setlocal tabstop=2 softtabstop=2 shiftwidth=2
   autocmd BufNewFile,BufRead *.vim setlocal tabstop=2 softtabstop=2 shiftwidth=2
+  autocmd FileType vim setlocal indentexpr=
+  " ある行をコメントアウトしたくて「#」を打った瞬間、vimが気を利かせてインデントを整える事がある。これが好きじゃないので止まってもらう。
+  autocmd FileType yaml setlocal indentkeys=
 augroup END
 
 """augroup aufugitive

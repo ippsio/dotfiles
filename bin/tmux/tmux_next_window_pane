@@ -48,8 +48,4 @@ tmux popup -E "
   tmux set -g window-active-style 'bg=colour52'
   sleep ${SLEEP_SECONDS}
   tmux set -g window-active-style 'bg=colour0'
-  sleep ${SLEEP_SECONDS}
-  tmux set -g window-active-style 'bg=colour52'
-  sleep ${SLEEP_SECONDS}
-  tmux set -g window-active-style 'bg=colour0'
 ">/dev/null 2>&1
