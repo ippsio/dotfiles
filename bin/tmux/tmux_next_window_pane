@@ -1,6 +1,7 @@
 #!/bin/bash
-readonly SLEEP_SECONDS=0.075
-readonly DISPLAY_PANE_MILLIS=100
+readonly SHOW_MODAL=false
+readonly SLEEP_SECONDS=0.30
+readonly DISPLAY_PANE_MILLIS=10
 IFS=$'\n'
 LP_FORMAT=""
 LP_FORMAT="${LP_FORMAT}window #{window_index} #{?window_active,[active_window],               }"
@@ -38,14 +39,14 @@ next_window_pane_index=$(echo "${next_window_pane}"| awk -F ',' '{ print $1 }')
 
 tmux select-window -t ${next_window_index}
 tmux select-pane -t ${next_pane_index}
-tmux display-panes -d ${DISPLAY_PANE_MILLIS}
-tmux popup -E "
-  echo '[WINDOWS AND_PANES]'
-  echo '$pane_list'
-  echo
-  echo '[CURRENT WINDOW_PANE]'
-  echo '=> ${next_window_pane_index}'
-  tmux set -g window-active-style 'bg=colour52'
-  sleep ${SLEEP_SECONDS}
-  tmux set -g window-active-style 'bg=colour0'
-">/dev/null 2>&1
+if ${SHOW_MODAL}; then
+  tmux popup -E "
+    echo '[WINDOWS AND_PANES]'
+    echo '${pane_list}'
+    echo
+    echo '[CURRENT WINDOW_PANE]'
+    echo '=> ${next_window_pane}'
+    sleep ${SLEEP_SECONDS}
+    tmux display-panes -d 30
+  ">/dev/null 2>&1
+fi

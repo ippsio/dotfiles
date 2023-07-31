@@ -1,0 +1,14 @@
+# ===================================================
+# UI
+# ===================================================
+[[plugins]]
+repo='Shougo/ddc-ui-native'
+on_source='ddc.vim'
+
+[[plugins]]
+repo='Shougo/ddc-ui-pum'
+on_source='ddc.vim'
+
+[[plugins]]
+repo='Shougo/pum.vim'
+on_source='ddc.vim'

@@ -1,0 +1,27 @@
+# ===================================================
+# DDC FILTER
+# ===================================================
+# [ddc-filter] 入力中の単語を補完の対象にするfilter
+[[plugins]]
+repo='Shougo/ddc-matcher_head'
+on_source='ddc.vim'
+
+# [ddc-filter] 補完候補を適切にソートするfilter
+[[plugins]]
+repo='Shougo/ddc-sorter_rank'
+on_source='ddc.vim'
+
+# [ddc-filter] 補完候補の重複を防ぐためのfilter
+[[plugins]]
+repo='Shougo/ddc-converter_remove_overlap'
+on_source='ddc.vim'
+
+## [ddc-filter] Fuzzy Finder な filter
+[[plugins]]
+repo='tani/ddc-fuzzy'
+on_source='ddc.vim'
+
+# # [ddc-filter] Fuzzy Finder な filterその２。
+# [[plugins]]
+# repo='matsui54/ddc-matcher_fuzzy'
+# on_source='ddc.vim'

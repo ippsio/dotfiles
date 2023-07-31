@@ -1,0 +1,3 @@
+#!/bin/bash
+tmux resize-pane -Z
+~/dotfiles/bin/tmux/tmux_flash_pane 88 100

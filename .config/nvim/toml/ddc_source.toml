@@ -1,0 +1,19 @@
+# ===================================================
+# DDC SOURCE
+# ===================================================
+# [ddc-source] カーソル周辺の既出単語を補完するsource
+[[plugins]]
+repo='Shougo/ddc-around'
+on_source='ddc.vim'
+
+# [ddc-source] ファイル名を補完するsource
+[[plugins]]
+repo='Shougo/ddc-file'
+on_source='ddc.vim'
+
+# [ddc-source] nvim-lsp completion for ddc.vim
+[[plugins]]
+repo='Shougo/ddc-nvim-lsp'
+on_source='ddc.vim'
+# [ddc-source] コマンド履歴補完
+
