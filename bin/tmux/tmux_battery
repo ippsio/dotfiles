@@ -29,20 +29,20 @@ get_battery_percentage() {
 
 get_battery_remain() {
   local time_remain
-  time_remain="..:.."
+  time_remain="--:--"
 
   if type "pmset" &>/dev/null; then
     time_remain="$(pmset -g ps | grep -o '[0-9]\+:[0-9]\+')"
-    [ -z "$time_remain" ] && time_remain="..:.."
+    [ -z "$time_remain" ] && time_remain="--:--"
   elif type "ioreg" &>/dev/null; then
     local itte
     itte="$(ioreg -n AppleSmartBattery | awk '/InstantTimeToEmpty/{print $5}')"
     time_remain="$(awk -v remain="$itte" 'BEGIN{ printf("%dh%dm\n", remain/60, remain%60) }')"
-    [ -z "$time_remain" ] || [ "${time_remain%%h*}" -gt 10 ] && time_remain="..:.."
+    [ -z "$time_remain" ] || [ "${time_remain%%h*}" -gt 10 ] && time_remain="????."
   fi
 
   echo "$time_remain"
-  [[ "$time_remain" == "..:.." ]] && return 1
+  [[ "$time_remain" == "--:--" ]] && return 1
 }
 
 get_str_tmux_battery() {
