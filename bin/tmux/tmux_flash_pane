@@ -1,6 +1,6 @@
 #!/bin/bash
 set -x
-readonly C1=${1:-52}
+readonly C1=${1:-54}
 readonly C2=${2:-57}
 readonly WINDOW_ACTIVE_STYLE_WAS=$(tmux show-options -w| grep window-active-style)
 for i in $(seq $C1 $C2); do tmux set window-active-style "bg=colour${i}"; done
