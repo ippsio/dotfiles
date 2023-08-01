@@ -67,6 +67,7 @@ Jetpack 'tani/ddc-fuzzy'
 Jetpack 'Shougo/ddc-ui-native'
 Jetpack 'Shougo/ddc-ui-pum'
 Jetpack 'Shougo/pum.vim'
+Jetpack 'ray-x/lsp_signature.nvim'
 
 let array = []
 "call insert(array, '/Users/i/.config/nvim/toml/git_vim-fugitive.toml')
