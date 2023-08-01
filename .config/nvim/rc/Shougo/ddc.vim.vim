@@ -1,11 +1,3 @@
-[[plugins]]
-repo='vim-denops/denops.vim'
-
-[[plugins]]
-repo = 'Shougo/ddc.vim'
-on_event = 'InsertEnter'
-depends = ['denops.vim']
-hook_source='''
 " pum#visible() が真で、ポップアップの選択肢を上下移動します。
 " pum#visible() が偽で、｛カーソルが行頭、又はカーソル直前が空白｝なら、単に<Up>,<Down>します。そうでなければddcのポップアップを開きます。
 " [補足] col('.') <= 1 は、カーソルが行頭の場合、真です。
@@ -60,4 +52,4 @@ call ddc#custom#patch_global({'keywordPattern': '[a-zA-Z_]\w*', })
 
 " Use ddc.
 call ddc#enable()
-'''
+

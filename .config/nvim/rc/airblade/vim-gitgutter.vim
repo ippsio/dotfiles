@@ -1,6 +1,3 @@
-[[plugins]]
-repo = 'airblade/vim-gitgutter'
-hook_source = '''
 set updatetime=250
 set signcolumn=yes
 
@@ -38,4 +35,4 @@ augroup GitGutter
   " 何かバッファを開いたら、gitgutterのサイン表示に利用するgitの比較元ハッシュを更新する
   autocmd BufEnter * call s:UpdateMergeBase()
 augroup END
-'''
+

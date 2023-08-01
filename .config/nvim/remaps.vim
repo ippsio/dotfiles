@@ -65,7 +65,6 @@ nnoremap <space>\| :<C-u>vnew<CR>
 nnoremap <space>= <C-w>=
 
 " [jumplist]
-nnoremap <Backspace> <C-u><C-o>
 nnoremap <Del> <C-u><C-i>
 
 " VISUALモードで連続ペーストできるようにする
