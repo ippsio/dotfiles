@@ -13,7 +13,6 @@ on_source='ddc.vim'
 
 # [ddc-source] nvim-lsp completion for ddc.vim
 [[plugins]]
-repo='Shougo/ddc-nvim-lsp'
+repo='Shougo/ddc-source-nvim-lsp'
 on_source='ddc.vim'
-# [ddc-source] コマンド履歴補完
 
