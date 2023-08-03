@@ -12,62 +12,62 @@ endif
 packadd vim-jetpack
 call jetpack#begin()
 Jetpack 'tani/vim-jetpack', {'opt': 1} "bootstrap
-Jetpack 'tpope/vim-fugitive'
-Jetpack 'airblade/vim-gitgutter'
-Jetpack 'rhysd/conflict-marker.vim'
-Jetpack 'itchyny/lightline.vim'
-Jetpack 'itchyny/vim-cursorword'
-Jetpack 'itchyny/vim-parenmatch'
-Jetpack 'cohama/vim-insert-linenr'
-Jetpack 'nathanaelkane/vim-indent-guides'
-Jetpack 'bronson/vim-trailing-whitespace'
-Jetpack 'rhysd/accelerated-jk'
-Jetpack 'junegunn/fzf', { 'do': {-> fzf#install()} }
-Jetpack 'junegunn/fzf.vim'
-Jetpack 'Shougo/vimproc.vim'
-Jetpack 'ippsio/clip_diff.vim'
-Jetpack 'nvim-treesitter/nvim-treesitter'
-Jetpack 'Shougo/defx.nvim'
-Jetpack 'tpope/vim-repeat'
-Jetpack 'kana/vim-operator-user'
-Jetpack 'kana/vim-operator-replace'
-Jetpack 'vim-jp/vimdoc-ja'
-Jetpack 'leshill/vim-json', { 'on_ft': ['json']}
-Jetpack 'rcmdnk/vim-markdown', { 'on_ft': ['markdown']}
-Jetpack 'leafgarland/typescript-vim', { 'on_ft': ['js', 'typescript']}
-Jetpack 'stephpy/vim-yaml', { 'on_ft': ['yaml']}
-Jetpack 'mechatroner/rainbow_csv', { 'on_ft': ['css', 'scss']}
-Jetpack 'ap/vim-css-color', { 'on_ft': ['css', 'scss']}
-Jetpack 'stsewd/tree-sitter-rst', { 'on_ft': ['rst']}
-Jetpack 'kchmck/vim-coffee-script', { 'on_ft': ['coffee']}
-Jetpack 'dense-analysis/ale'
-Jetpack 'vim-ruby/vim-ruby', { 'on_ft': ['ruby', 'rake', 'erb', 'slim'] }
-Jetpack 'tpope/vim-rails', { 'on_ft': ['ruby', 'rake', 'erb', 'slim'] }
-Jetpack 'vim-scripts/ruby-matchit', { 'on_ft': ['ruby', 'rake', 'erb', 'slim'] }
-Jetpack 'slim-template/vim-slim', { 'on_ft': ['ruby', 'rake', 'erb', 'slim'] }
-Jetpack 'takkii/ruby-dictionary3', { 'on_ft': ['ruby', 'rake', 'erb', 'slim'] }
-Jetpack 'AndrewRadev/splitjoin.vim', { 'on_ft': ['ruby', 'rake', 'erb', 'slim'] }
-Jetpack 'Quramy/tsuquyomi', { 'on_ft': ['js', 'typescript'] }
-Jetpack 'nvie/vim-flake8', { 'on_ft': ['python'] }
-Jetpack 'tell-k/vim-autopep8', { 'on_ft': ['python'] }
-Jetpack 'kana/vim-gf-user', { 'on_ft': 'diff' }
-Jetpack 'kana/vim-gf-diff', { 'on_ft': 'diff' }
-Jetpack 'williamboman/mason.nvim'
-Jetpack 'williamboman/mason-lspconfig.nvim'
-Jetpack 'neovim/nvim-lspconfig'
-Jetpack 'vim-denops/denops.vim'
-Jetpack 'Shougo/ddc.vim'
-Jetpack 'Shougo/ddc-around'
-Jetpack 'Shougo/ddc-file'
-Jetpack 'Shougo/ddc-source-nvim-lsp'
-Jetpack 'Shougo/ddc-matcher_head'
-Jetpack 'Shougo/ddc-sorter_rank'
-Jetpack 'Shougo/ddc-converter_remove_overlap'
-Jetpack 'tani/ddc-fuzzy'
-Jetpack 'Shougo/ddc-ui-native'
-Jetpack 'Shougo/ddc-ui-pum'
-Jetpack 'Shougo/pum.vim'
-Jetpack 'ray-x/lsp_signature.nvim'
+"Jetpack 'tpope/vim-fugitive'
+"Jetpack 'airblade/vim-gitgutter'
+"Jetpack 'rhysd/conflict-marker.vim'
+"Jetpack 'itchyny/lightline.vim'
+"Jetpack 'itchyny/vim-cursorword'
+"Jetpack 'itchyny/vim-parenmatch'
+"Jetpack 'cohama/vim-insert-linenr'
+"Jetpack 'nathanaelkane/vim-indent-guides'
+"Jetpack 'bronson/vim-trailing-whitespace'
+"Jetpack 'rhysd/accelerated-jk'
+"Jetpack 'junegunn/fzf', { 'do': {-> fzf#install()} }
+"Jetpack 'junegunn/fzf.vim'
+"Jetpack 'Shougo/vimproc.vim'
+"Jetpack 'ippsio/clip_diff.vim'
+"Jetpack 'nvim-treesitter/nvim-treesitter'
+"Jetpack 'Shougo/defx.nvim'
+"Jetpack 'tpope/vim-repeat'
+"Jetpack 'kana/vim-operator-user'
+"Jetpack 'kana/vim-operator-replace'
+"Jetpack 'vim-jp/vimdoc-ja'
+"Jetpack 'leshill/vim-json', { 'on_ft': ['json']}
+"Jetpack 'rcmdnk/vim-markdown', { 'on_ft': ['markdown']}
+"Jetpack 'leafgarland/typescript-vim', { 'on_ft': ['js', 'typescript']}
+"Jetpack 'stephpy/vim-yaml', { 'on_ft': ['yaml']}
+"Jetpack 'mechatroner/rainbow_csv', { 'on_ft': ['css', 'scss']}
+"Jetpack 'ap/vim-css-color', { 'on_ft': ['css', 'scss']}
+"Jetpack 'stsewd/tree-sitter-rst', { 'on_ft': ['rst']}
+"Jetpack 'kchmck/vim-coffee-script', { 'on_ft': ['coffee']}
+"Jetpack 'dense-analysis/ale'
+Jetpack 'vim-ruby/vim-ruby', { 'on_ft': [ 'ruby'] }
+Jetpack 'tpope/vim-rails', { 'on_ft': [ 'ruby'] }
+"Jetpack 'vim-scripts/ruby-matchit', { 'on_ft': ['ruby', 'rake', 'erb', 'slim'] }
+"Jetpack 'slim-template/vim-slim', { 'on_ft': ['ruby', 'rake', 'erb', 'slim'] }
+Jetpack 'takkii/ruby-dictionary3', { 'on_ft': ['ruby'] }
+"Jetpack 'AndrewRadev/splitjoin.vim', { 'on_ft': ['ruby', 'rake', 'erb', 'slim'] }
+"Jetpack 'Quramy/tsuquyomi', { 'on_ft': ['js', 'typescript'] }
+"Jetpack 'nvie/vim-flake8', { 'on_ft': ['python'] }
+"Jetpack 'tell-k/vim-autopep8', { 'on_ft': ['python'] }
+"Jetpack 'kana/vim-gf-user', { 'on_ft': 'diff' }
+"Jetpack 'kana/vim-gf-diff', { 'on_ft': 'diff' }
+"Jetpack 'williamboman/mason.nvim'
+"Jetpack 'williamboman/mason-lspconfig.nvim'
+"Jetpack 'neovim/nvim-lspconfig'
+"Jetpack 'vim-denops/denops.vim'
+"Jetpack 'Shougo/ddc.vim'
+"Jetpack 'Shougo/ddc-around'
+"Jetpack 'Shougo/ddc-file'
+"Jetpack 'Shougo/ddc-source-nvim-lsp'
+"Jetpack 'Shougo/ddc-matcher_head'
+"Jetpack 'Shougo/ddc-sorter_rank'
+"Jetpack 'Shougo/ddc-converter_remove_overlap'
+"Jetpack 'tani/ddc-fuzzy'
+"Jetpack 'Shougo/ddc-ui-native'
+"Jetpack 'Shougo/ddc-ui-pum'
+"Jetpack 'Shougo/pum.vim'
+"Jetpack 'ray-x/lsp_signature.nvim'
 
 let array = []
 "call insert(array, '/Users/i/.config/nvim/toml/git_vim-fugitive.toml')
@@ -122,4 +122,13 @@ let array = []
 " endif
 
 call jetpack#end()
-runtime! rc/**/*.vim
+
+"for file_path in globpath('$HOME/.config/nvim/rc/**/', '*.vim', 0, 1)
+"  let basename = fnamemodify(file_path, ':t')
+"  if strpart(basename , 0, 1) != '_'
+"    echo file_path
+"    runtime! file_path
+"  endif
+"endfor
+"runtime! rc/**/*.vim
+

@@ -12,6 +12,23 @@
   interactive = auto
   status = auto
 
+[diff]
+  tool = nvimdiff
+  compactionHeuristic = true
+
+[difftool]
+  prompt = false
+
+[difftool "nvimdiff"]
+  cmd = "(set -x; nvim -d \"$LOCAL\" \"$REMOTE\")"
+
+[color "diff-highlight"]
+  oldNormal = 210 240
+  newNormal = 051 031
+  # 単語差分ハイライト部分
+  oldHighlight = 124 211
+  newHighlight = 021 159
+
 [diff "color"]
   # git/diff.c
   # ```c
@@ -101,16 +118,6 @@
   tag = "reverse bold yellow"
   stash = magenta
 
-[color "diff-highlight"]
-  oldNormal = 210 240
-  newNormal = 051 031
-  # 単語差分ハイライト部分
-  oldHighlight = 124 211
-  newHighlight = 021 159
-
-[diff]
-  compactionHeuristic = true
-
 [pager]
   log =  ((type diff-highlight >/dev/null 2>&1) && (diff-highlight | less --quiet)) || less --quiet
   show = ((type diff-highlight >/dev/null 2>&1) && (diff-highlight | less --quiet)) || less --quiet
@@ -118,9 +125,7 @@
 
 [pull]
   ff = only
-[difftool "sourcetree"]
-	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-	path = 
+
 [mergetool "sourcetree"]
 	cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
 	trustExitCode = true

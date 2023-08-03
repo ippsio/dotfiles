@@ -34,7 +34,7 @@ GIT_DIFF_NO_COLOR="git diff --no-color ${commit1} -- {3}"
 GIT_DIFF_COLORED="git diff --color=always ${commit1}${commit2_three_dots} -- {3}"
 ( type "diff-highlight" > /dev/null 2>&1 ) && GIT_DIFF_COLORED="${GIT_DIFF_COLORED}| diff-highlight"
 
-GIT_DIFF_NUMSTAT="git diff --diff-filter=ACMR --numstat ${commit1}${commit2_three_dots}"
+GIT_DIFF_NUMSTAT="(set -x; git diff --diff-filter=ACMR --numstat ${commit1}${commit2_three_dots})"
 
 files=$(eval "${GIT_DIFF_NUMSTAT}" \
   | awk -v deco="$(decorate)" '
@@ -71,10 +71,77 @@ files=$(eval "${GIT_DIFF_NUMSTAT}" \
     printf "\n";
   }')
 
+fzf_preview_function() {
+  # --------------------------------------------------
+  # Stats + Filename.
+  # --------------------------------------------------
+  cd $(git_root);
+  echo -n {1};
+  echo -n '	';
+  echo {2} \
+    | awk -F '|' \
+      -v deco_plus=$(escape_SQ $(decorate -diff_plus)) \
+      -v deco_minus=$(escape_SQ $(decorate -diff_minus)) \
+      '{
+         printf \"%s\", deco_plus; printf \"%s\", \$1; printf \"\033[0m\";
+         printf \"|\";
+         printf \"%s\", deco_minus; printf \"%s\", \$2; printf \"\033[0m\";
+      }';
+  echo -n '	';
+  echo {3};
+  # echo;
+
+  # --------------------------------------------------
+  # Git log.
+  # --------------------------------------------------
+  decorate -verbose_log; echo "${GIT_LOG}"; printf '\e[0m';
+  eval "${GIT_LOG}" \
+    | awk -F '\t' \
+      -v deco_git_hash=$(escape_SQ $(decorate -git_hash)) \
+      -v deco_git_cd=$(escape_SQ $(decorate -git_cd)) \
+      -v deco_git_an=$(escape_SQ $(decorate -git_an)) \
+      -v deco_git_d=$(escape_SQ $(decorate -git_d)) \
+      -v deco_git_s=$(escape_SQ $(decorate -git_s)) \
+      '{
+         printf \"%2s\", NR;
+         printf \"	\"; printf \"%s\", deco_git_hash; printf \"%s\", \$1; printf \"\033[0m\"; # %h
+         printf \"	\"; printf \"%s\", deco_git_cd; printf \"%s\", \$2; printf \"\033[0m\"; # (%cd)
+         printf \"	\"; printf \"%s\", deco_git_an; printf \"%s\", \$3; printf \"\033[0m\"; # %an
+         printf \"	\"; printf \"%s\", deco_git_d; printf \"%s\", \$4; printf \"\033[0m\"; # %d
+         printf \"%s\", deco_git_s; printf \"%s\", \$5; printf \"\033[0m\"; # %s
+         printf \"\n\";
+      }'
+  horizontal_line;
+  echo;
+
+  # --------------------------------------------------
+  # Git diff.
+  # --------------------------------------------------
+  decorate -verbose_log '${GIT_DIFF_COLORED}';
+  echo;
+  eval '${GIT_DIFF_COLORED}';
+}
+
+# git difftool にコミットの「範囲」を与えた場合、$LOCAL と $REMOTE の双方が
+# /private/var/folders/.../ナントカ... になってしまいます。
+#
+# 例1) 無dots だと良い。編集できるから。
+# % git difftool develop -- hoge.js
+# > ++ nvim -d /var/folders/5x/6x66vkj934560149lcz00pb80000gn/T//git-blob-4lgdCZ/hoge.js hoge.js
+#
+# 例2）2dots だと良くない。編集できないから
+# % git difftool develop.. -- hoge.js
+# > ++ nvim -d /var/folders/5x/6x66vkj934560149lcz00pb80000gn/T//git-blob-4lgdCZ/hoge.js /var/folders/5x/6x66vkj934560149lcz00pb80000gn/T//git-blob-AIACzr/hoge.js
+#
+# 例3) 3dots だと良くない。編集できないから
+# % git difftool develop... -- hoge.js
+# > ++ nvim -d /var/folders/5x/6x66vkj934560149lcz00pb80000gn/T//git-blob-4lgdCZ/hoge.js /var/folders/5x/6x66vkj934560149lcz00pb80000gn/T//git-blob-AIACzr/hoge.js
+#
+commit2_no_dots=""
 target=$(
   export GIT_MERGE_BASE=${commit1};\
-  cd $(set -x; git_root);\
-  diff_result=${GIT_DIFF_NO_COLOR};\
+  git_root_dir=$(set -x; git_root)
+  cd ${git_root_dir};\
   echo "$files" | \
   fzf\
   --tabstop=1 \
@@ -84,60 +151,62 @@ target=$(
   --header="${GIT_DIFF_NUMSTAT}${CR} (enter: nvim)  (tab: tig) (ctrl-d: git diff) (ctrl-l: git_log_fzf)   (ctrl-/: preview toggle)" \
   --nth=1,3 \
   --bind="ctrl-v:execute(nvim {3} >/dev/tty)" \
-  --bind="tab:execute(cd $(git_root) && tig ${commit1}${commit2_three_dots} -- {3} </dev/tty >/dev/tty)" \
+  --bind="tab:execute(tig ${commit1}${commit2_three_dots} -- {3} </dev/tty >/dev/tty)" \
   --bind="enter:execute(${GIT_DIFF_NO_COLOR}| tig >/dev/tty )" \
+  --bind="ctrl-v:execute((set -x; cd ${git_root_dir} && git difftool ${commit1}${commit2_no_dots} -- {3} </dev/tty >/dev/tty))" \
   --bind="ctrl-d:execute(${GIT_DIFF_NO_COLOR}| nvim >/dev/tty)" \
   --bind="ctrl-l:execute(git_log_fzf \"${commit1}${commit2_two_dots}\" \"{3}\")" \
   --bind='ctrl-/:toggle-preview' \
   --preview="
-      # --------------------------------------------------
-      # Stats + Filename.
-      # --------------------------------------------------
-      cd $(git_root);
-      echo -n {1};
-      echo -n '	';
-      echo {2} \
-        | awk -F '|' \
-          -v deco_plus=$(escape_SQ $(decorate -diff_plus)) \
-          -v deco_minus=$(escape_SQ $(decorate -diff_minus)) \
-          '{
-             printf \"%s\", deco_plus; printf \"%s\", \$1; printf \"\033[0m\";
-             printf \"|\";
-             printf \"%s\", deco_minus; printf \"%s\", \$2; printf \"\033[0m\";
-          }';
-      echo -n '	';
-      echo {3};
-      # echo;
+    # --------------------------------------------------
+    # Stats + Filename.
+    # --------------------------------------------------
+    cd $(git_root);
+    echo -n {1};
+    echo -n '	';
+    echo {2} \
+      | awk -F '|' \
+        -v deco_plus=$(escape_SQ $(decorate -diff_plus)) \
+        -v deco_minus=$(escape_SQ $(decorate -diff_minus)) \
+        '{
+           printf \"%s\", deco_plus; printf \"%s\", \$1; printf \"\033[0m\";
+           printf \"|\";
+           printf \"%s\", deco_minus; printf \"%s\", \$2; printf \"\033[0m\";
+        }';
+    echo -n '	';
+    echo {3};
+    # echo;
 
-      # --------------------------------------------------
-      # Git log.
-      # --------------------------------------------------
-      decorate -verbose_log; echo "${GIT_LOG}"; printf '\e[0m';
-      eval "${GIT_LOG}" \
-        | awk -F '\t' \
-          -v deco_git_hash=$(escape_SQ $(decorate -git_hash)) \
-          -v deco_git_cd=$(escape_SQ $(decorate -git_cd)) \
-          -v deco_git_an=$(escape_SQ $(decorate -git_an)) \
-          -v deco_git_d=$(escape_SQ $(decorate -git_d)) \
-          -v deco_git_s=$(escape_SQ $(decorate -git_s)) \
-          '{
-             printf \"%2s\", NR;
-             printf \"	\"; printf \"%s\", deco_git_hash; printf \"%s\", \$1; printf \"\033[0m\"; # %h
-             printf \"	\"; printf \"%s\", deco_git_cd; printf \"%s\", \$2; printf \"\033[0m\"; # (%cd)
-             printf \"	\"; printf \"%s\", deco_git_an; printf \"%s\", \$3; printf \"\033[0m\"; # %an
-             printf \"	\"; printf \"%s\", deco_git_d; printf \"%s\", \$4; printf \"\033[0m\"; # %d
-             printf \"%s\", deco_git_s; printf \"%s\", \$5; printf \"\033[0m\"; # %s
-             printf \"\n\";
-          }'
-      horizontal_line;
-      echo;
+    # --------------------------------------------------
+    # Git log.
+    # --------------------------------------------------
+    decorate -verbose_log; echo "${GIT_LOG}"; printf '\e[0m';
+    eval "${GIT_LOG}" \
+      | awk -F '\t' \
+        -v deco_git_hash=$(escape_SQ $(decorate -git_hash)) \
+        -v deco_git_cd=$(escape_SQ $(decorate -git_cd)) \
+        -v deco_git_an=$(escape_SQ $(decorate -git_an)) \
+        -v deco_git_d=$(escape_SQ $(decorate -git_d)) \
+        -v deco_git_s=$(escape_SQ $(decorate -git_s)) \
+        '{
+           printf \"%2s\", NR;
+           printf \"	\"; printf \"%s\", deco_git_hash; printf \"%s\", \$1; printf \"\033[0m\"; # %h
+           printf \"	\"; printf \"%s\", deco_git_cd; printf \"%s\", \$2; printf \"\033[0m\"; # (%cd)
+           printf \"	\"; printf \"%s\", deco_git_an; printf \"%s\", \$3; printf \"\033[0m\"; # %an
+           printf \"	\"; printf \"%s\", deco_git_d; printf \"%s\", \$4; printf \"\033[0m\"; # %d
+           printf \"%s\", deco_git_s; printf \"%s\", \$5; printf \"\033[0m\"; # %s
+           printf \"\n\";
+        }'
+    horizontal_line;
+    echo;
 
-      # --------------------------------------------------
-      # Git diff.
-      # --------------------------------------------------
-      decorate -verbose_log '${GIT_DIFF_COLORED}';
-      echo;
-      eval '${GIT_DIFF_COLORED}';
-    " --preview-window=bottom:75%)
-    echo $target | awk '{print $3}'
+    # --------------------------------------------------
+    # Git diff.
+    # --------------------------------------------------
+    decorate -verbose_log '${GIT_DIFF_COLORED}';
+    echo;
+    eval '${GIT_DIFF_COLORED}';" \
+  --preview-window=bottom:75% \
+)
+echo $target | awk '{print $3}'
 

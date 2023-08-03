@@ -33,12 +33,13 @@ call ddc#custom#patch_global('sources', [
 \ 'file',
 \ ])
 
-call ddc#custom#patch_global('sourceOptions', {'_': {'minAutoCompleteLength': 2, 'matchers': ['matcher_head'], 'sorters': ['sorter_rank'], 'converters': ['converter_fuzzy']}})
+call ddc#custom#patch_global('sourceOptions', {'_': {'minAutoCompleteLength': 2, 'matchers': ['matcher_fuzzy'], 'sorters': ['sorter_fuzzy'], 'converters': ['converter_fuzzy']}})
 call ddc#custom#patch_global('sourceOptions', {'file': {'mark': 'ddc-file', 'isVolatile': v:true, 'forceCompletionPattern': '\S/\S*'}})
-call ddc#custom#patch_global('sourceOptions', {'around': {'mark': 'ddc-arround'}})
+call ddc#custom#patch_global('sourceOptions', {'around': {'mark': 'ddc-arround', 'matchers': ['matcher_fuzzy']}})
 call ddc#custom#patch_global('sourceOptions', {'nvim-lsp': {'mark': 'lsp', 'forceCompletionPattern': '\.\w*|:\w*|->\w*'}})
 
 call ddc#custom#patch_global('filterParams', {'matcher_fuzzy': {'camelcase': v:true}})
+call ddc#custom#patch_global('filterParams', {'converter_fuzzy': { 'hlGroup': 'SpellBad'}})
 
 call ddc#custom#patch_global('sourceParams', {'around': {'maxSize': 500}})
 call ddc#custom#patch_global('sourceParams', {'nvim-lsp': {'kindLabels': {'Class': 'c'}}})
