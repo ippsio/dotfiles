@@ -1,3 +1,5 @@
+if !jetpack#tap(expand('<sfile>:t:r')) | finish | endif
+
 nnoremap <silent> <space>a :Git blame<CR>
 augroup FugitiveAutocmd
   autocmd!

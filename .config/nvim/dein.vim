@@ -2,7 +2,6 @@ if &compatible
   set nocompatible
 endif
 
-"neovim + vim
 let s:jetpackfile = stdpath('data') .. '/site/pack/jetpack/opt/vim-jetpack/plugin/jetpack.vim'
 let s:jetpackurl = "https://raw.githubusercontent.com/tani/vim-jetpack/master/plugin/jetpack.vim"
 if !filereadable(s:jetpackfile)
@@ -12,123 +11,76 @@ endif
 packadd vim-jetpack
 call jetpack#begin()
 Jetpack 'tani/vim-jetpack', {'opt': 1} "bootstrap
-"Jetpack 'tpope/vim-fugitive'
-"Jetpack 'airblade/vim-gitgutter'
-"Jetpack 'rhysd/conflict-marker.vim'
-"Jetpack 'itchyny/lightline.vim'
-"Jetpack 'itchyny/vim-cursorword'
-"Jetpack 'itchyny/vim-parenmatch'
-"Jetpack 'cohama/vim-insert-linenr'
-"Jetpack 'nathanaelkane/vim-indent-guides'
-"Jetpack 'bronson/vim-trailing-whitespace'
-"Jetpack 'rhysd/accelerated-jk'
-"Jetpack 'junegunn/fzf', { 'do': {-> fzf#install()} }
-"Jetpack 'junegunn/fzf.vim'
-"Jetpack 'Shougo/vimproc.vim'
-"Jetpack 'ippsio/clip_diff.vim'
-"Jetpack 'nvim-treesitter/nvim-treesitter'
-"Jetpack 'Shougo/defx.nvim'
-"Jetpack 'tpope/vim-repeat'
-"Jetpack 'kana/vim-operator-user'
-"Jetpack 'kana/vim-operator-replace'
-"Jetpack 'vim-jp/vimdoc-ja'
-"Jetpack 'leshill/vim-json', { 'on_ft': ['json']}
-"Jetpack 'rcmdnk/vim-markdown', { 'on_ft': ['markdown']}
-"Jetpack 'leafgarland/typescript-vim', { 'on_ft': ['js', 'typescript']}
-"Jetpack 'stephpy/vim-yaml', { 'on_ft': ['yaml']}
-"Jetpack 'mechatroner/rainbow_csv', { 'on_ft': ['css', 'scss']}
-"Jetpack 'ap/vim-css-color', { 'on_ft': ['css', 'scss']}
-"Jetpack 'stsewd/tree-sitter-rst', { 'on_ft': ['rst']}
-"Jetpack 'kchmck/vim-coffee-script', { 'on_ft': ['coffee']}
-"Jetpack 'dense-analysis/ale'
-Jetpack 'vim-ruby/vim-ruby', { 'on_ft': [ 'ruby'] }
-Jetpack 'tpope/vim-rails', { 'on_ft': [ 'ruby'] }
-"Jetpack 'vim-scripts/ruby-matchit', { 'on_ft': ['ruby', 'rake', 'erb', 'slim'] }
-"Jetpack 'slim-template/vim-slim', { 'on_ft': ['ruby', 'rake', 'erb', 'slim'] }
-Jetpack 'takkii/ruby-dictionary3', { 'on_ft': ['ruby'] }
-"Jetpack 'AndrewRadev/splitjoin.vim', { 'on_ft': ['ruby', 'rake', 'erb', 'slim'] }
-"Jetpack 'Quramy/tsuquyomi', { 'on_ft': ['js', 'typescript'] }
-"Jetpack 'nvie/vim-flake8', { 'on_ft': ['python'] }
-"Jetpack 'tell-k/vim-autopep8', { 'on_ft': ['python'] }
-"Jetpack 'kana/vim-gf-user', { 'on_ft': 'diff' }
-"Jetpack 'kana/vim-gf-diff', { 'on_ft': 'diff' }
-"Jetpack 'williamboman/mason.nvim'
-"Jetpack 'williamboman/mason-lspconfig.nvim'
-"Jetpack 'neovim/nvim-lspconfig'
-"Jetpack 'vim-denops/denops.vim'
-"Jetpack 'Shougo/ddc.vim'
-"Jetpack 'Shougo/ddc-around'
-"Jetpack 'Shougo/ddc-file'
-"Jetpack 'Shougo/ddc-source-nvim-lsp'
-"Jetpack 'Shougo/ddc-matcher_head'
-"Jetpack 'Shougo/ddc-sorter_rank'
-"Jetpack 'Shougo/ddc-converter_remove_overlap'
-"Jetpack 'tani/ddc-fuzzy'
-"Jetpack 'Shougo/ddc-ui-native'
-"Jetpack 'Shougo/ddc-ui-pum'
-"Jetpack 'Shougo/pum.vim'
-"Jetpack 'ray-x/lsp_signature.nvim'
+Jetpack 'tpope/vim-fugitive'
+Jetpack 'airblade/vim-gitgutter'
+Jetpack 'rhysd/conflict-marker.vim'
+Jetpack 'itchyny/lightline.vim'
+Jetpack 'itchyny/vim-cursorword'
+Jetpack 'itchyny/vim-parenmatch'
+Jetpack 'cohama/vim-insert-linenr'
+Jetpack 'nathanaelkane/vim-indent-guides'
+Jetpack 'bronson/vim-trailing-whitespace'
+Jetpack 'rhysd/accelerated-jk'
+Jetpack 'junegunn/fzf', { 'do': './install --all --no-bash --no-fish --no-zsh' }
+Jetpack 'junegunn/fzf.vim'
+Jetpack 'Shougo/vimproc.vim', { 'do': 'make' }
+Jetpack 'ippsio/clip_diff.vim'
+Jetpack 'nvim-treesitter/nvim-treesitter'
+Jetpack 'Shougo/defx.nvim'
+Jetpack 'tpope/vim-repeat'
+Jetpack 'kana/vim-operator-user'
+Jetpack 'kana/vim-operator-replace'
+Jetpack 'vim-jp/vimdoc-ja'
+Jetpack 'leshill/vim-json', { 'for': ['json']}
+Jetpack 'rcmdnk/vim-markdown', { 'for': ['markdown']}
+Jetpack 'leafgarland/typescript-vim', { 'for': ['js', 'typescript']}
+Jetpack 'stephpy/vim-yaml', { 'for': ['yaml']}
+Jetpack 'mechatroner/rainbow_csv', { 'for': ['css', 'scss']}
+Jetpack 'ap/vim-css-color', { 'for': ['css', 'scss']}
+Jetpack 'stsewd/tree-sitter-rst', { 'for': ['rst']}
+Jetpack 'kchmck/vim-coffee-script', { 'for': ['coffee']}
+Jetpack 'dense-analysis/ale'
+Jetpack 'vim-ruby/vim-ruby', { 'for': ['ruby', 'rake', 'eruby', 'slim'] }
+Jetpack 'tpope/vim-rails'
+Jetpack 'vim-scripts/ruby-matchit', { 'for': ['ruby', 'rake', 'eruby', 'slim'] }
+Jetpack 'slim-template/vim-slim', { 'for': ['ruby', 'rake', 'eruby', 'slim'] }
+Jetpack 'takkii/ruby-dictionary3', { 'for': ['ruby', 'rake', 'eruby', 'slim'] }
+Jetpack 'AndrewRadev/splitjoin.vim', { 'for': ['ruby', 'rake', 'eruby', 'slim'] }
+Jetpack 'Quramy/tsuquyomi', { 'for': ['js', 'typescript'] }
+Jetpack 'nvie/vim-flake8', { 'for': ['python'] }
+Jetpack 'tell-k/vim-autopep8', { 'for': ['python'] }
+Jetpack 'kana/vim-gf-user', { 'for': ['diff'] }
+Jetpack 'kana/vim-gf-diff', { 'for': ['diff'] }
+Jetpack 'williamboman/mason.nvim'
+Jetpack 'williamboman/mason-lspconfig.nvim'
+Jetpack 'neovim/nvim-lspconfig'
+Jetpack 'vim-denops/denops.vim'
+Jetpack 'Shougo/ddc.vim'
+Jetpack 'Shougo/ddc-around'
+Jetpack 'Shougo/ddc-file'
+Jetpack 'Shougo/ddc-source-nvim-lsp'
+Jetpack 'Shougo/ddc-matcher_head'
+Jetpack 'Shougo/ddc-sorter_rank'
+Jetpack 'Shougo/ddc-converter_remove_overlap'
+Jetpack 'tani/ddc-fuzzy'
+Jetpack 'Shougo/ddc-ui-native'
+Jetpack 'Shougo/ddc-ui-pum'
+Jetpack 'Shougo/pum.vim'
+Jetpack 'ray-x/lsp_signature.nvim'
 
-let array = []
-"call insert(array, '/Users/i/.config/nvim/toml/git_vim-fugitive.toml')
-"call insert(array, '/Users/i/.config/nvim/toml/git_vim-gitgutter.toml')
-"call insert(array, '/Users/i/.config/nvim/toml/git_conflict-marker.toml')
-"call insert(array, '/Users/i/.config/nvim/toml/statusline_lightline.toml')
-"call insert(array, '/Users/i/.config/nvim/toml/visual_vim-cursorword.toml')
-"call insert(array, '/Users/i/.config/nvim/toml/visual_vim-parenmatch.toml')
-"call insert(array, '/Users/i/.config/nvim/toml/visual_vim-insert-linenr.toml')
-"call insert(array, '/Users/i/.config/nvim/toml/visual_vim-indent-guides.toml')
-"call insert(array, '/Users/i/.config/nvim/toml/visual_vim-trailing-whitespace.toml')
-"call insert(array, '/Users/i/.config/nvim/toml/cursor_accelerated-jk.toml')
-"call insert(array, '/Users/i/.config/nvim/toml/fzf.toml')
-"call insert(array, '/Users/i/.config/nvim/toml/vimproc.toml')
-"call insert(array, '/Users/i/.config/nvim/toml/diff_clip_diff.toml')
-"call insert(array, '/Users/i/.config/nvim/toml/syntax_nvim-treesitter.toml')
-"for toml_file in array
-"  call jetpack#load_toml(toml_file)
-"endfor
-
-let array = []
-"call insert(array, '/Users/i/.config/nvim/toml/0_filemanage.toml')
-"call insert(array, '/Users/i/.config/nvim/toml/0_misc.toml')
-"call insert(array, '/Users/i/.config/nvim/toml/doc_vimdoc-ja.toml')
-"call insert(array, '/Users/i/.config/nvim/toml/1_syntax.toml')
-"call insert(array, '/Users/i/.config/nvim/toml/1_linter.toml')
-"call insert(array, '/Users/i/.config/nvim/toml/1_rb.toml')
-"call insert(array, '/Users/i/.config/nvim/toml/1_typescript.toml')
-"call insert(array, '/Users/i/.config/nvim/toml/1_py.toml')
-"call insert(array, '/Users/i/.config/nvim/toml/git_vim-gf-diff.toml')
-"call insert(array, '/Users/i/.config/nvim/toml/1_lsp.toml')
-"call insert(array, '/Users/i/.config/nvim/toml/ddc.toml')
-"call insert(array, '/Users/i/.config/nvim/toml/ddc_source.toml')
-"call insert(array, '/Users/i/.config/nvim/toml/ddc_filter.toml')
-"call insert(array, '/Users/i/.config/nvim/toml/ddc_ui.toml')
-"for toml_file in array
-"  call jetpack#load_toml(toml_file, {lazy: 1})
-"endfor
-
-"lua <<EOF
-"require'nvim-treesitter.configs'.setup {
-"  highlight = {
-"    enable = true,
-"    disable = { }
-"  }
-"}
-"EOF
-
-
-" if has('nvim')
-"   call dein#remote_plugins()
-" endif
+if has('nvim')
+  let available_pkg = stdpath('data') . '/' . 'site' . '/pack/jetpack/opt/available_packages.json'
+elseif has('win32')
+  let available_pkg = expand('~/vimfiles'). '/pack/jetpack/opt/available_packages.json'
+else
+  let available_pkg = expand('~/.vim'). '/pack/jetpack/opt/available_packages.json'
+endif
+let available_pkg_text = filereadable(available_pkg) ? join(readfile(available_pkg)) : "{}"
+if sort(jetpack#names()) != sort(keys(json_decode(available_pkg_text)))
+  call jetpack#sync()
+endif
 
 call jetpack#end()
 
-"for file_path in globpath('$HOME/.config/nvim/rc/**/', '*.vim', 0, 1)
-"  let basename = fnamemodify(file_path, ':t')
-"  if strpart(basename , 0, 1) != '_'
-"    echo file_path
-"    runtime! file_path
-"  endif
-"endfor
-"runtime! rc/**/*.vim
+runtime! rc/**/*.vim
 

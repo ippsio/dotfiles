@@ -1,3 +1,5 @@
+if !jetpack#tap(expand('<sfile>:t:r')) | finish | endif
+
 hi mkdListBlock0 guifg=#55ccff guibg=none ctermfg=14 cterm=bold
 hi mkdListBlock1 guifg=#55ccff guibg=none ctermfg=14 cterm=bold
 

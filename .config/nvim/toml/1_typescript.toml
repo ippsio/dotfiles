@@ -1,4 +1,0 @@
-[[plugins]]
-repo = 'Quramy/tsuquyomi'
-on_ft = ['js', 'typescript']
-

@@ -1,3 +1,5 @@
+if !jetpack#tap(expand('<sfile>:t:r')) | finish | endif
+
 " disable the default highlight group
 let g:conflict_marker_highlight_group = ''
 

@@ -1,3 +1,5 @@
+if !jetpack#tap(expand('<sfile>:t:r')) | finish | endif
+
 set laststatus=2
 let g:lightline = {
   \  'colorscheme': 'Tomorrow_Night_Eighties',

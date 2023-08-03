@@ -1,3 +1,5 @@
+if !jetpack#tap(expand('<sfile>:t:r')) | finish | endif
+
 nnoremap <silent>sf :<C-u>Defx -listed -resume -show-ignored-files
   \ -columns=indent:mark:icon:icons:filename:git:size
   \ -buffer-name=tab`tabpagenr()`

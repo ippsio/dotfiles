@@ -1,3 +1,5 @@
+if !jetpack#tap(expand('<sfile>:t:r')) | finish | endif
+
 lua << EOF
 local on_attach =
   function (client, bufnr)

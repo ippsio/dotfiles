@@ -1,3 +1,5 @@
+if !jetpack#tap(expand('<sfile>:t:r')) | finish | endif
+
 let g:fzf_layout = {'window': { 'width': 0.95, 'height': 0.95 } }
 " " Default fzf layout
 " " - Popup window (center of the screen)

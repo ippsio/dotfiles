@@ -1,3 +1,5 @@
+if !jetpack#tap(expand('<sfile>:t:r')) | finish | endif
+
 "autopep8を<f8>で実行
 function! Preserve(command)
   " Save the last search.

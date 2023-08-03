@@ -1,3 +1,5 @@
+if !jetpack#tap(expand('<sfile>:t:r')) | finish | endif
+
 let g:ale_linters = {
 \   'ruby': ['rubocop'],
 \   'json': ['jsonlint'],

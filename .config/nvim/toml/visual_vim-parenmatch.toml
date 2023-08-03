@@ -1,7 +1,0 @@
-# 対応する括弧をいいかんじにする
-[[plugins]]
-repo='itchyny/vim-parenmatch'
-hook_add='''
-let g:loaded_matchparen = 1
-hi ParenMatch ctermbg=27
-'''
