@@ -1,12 +1,15 @@
-" shadaを無効化します。
-" shada は通常~/.local/state/nvim/shada/main.shada に保存されていると思います。
-" shada には最近のジャンプリスト(:jumps)や実行したコマンドの履歴、マーク(:marks)の情報が自動保存されます。
+" # shadaを無効化します。
+" # shada は通常~/.local/state/nvim/shada/main.shada に保存されていると思います。
+" # shada には最近のジャンプリスト(:jumps)や実行したコマンドの履歴、マーク(:marks)の情報が自動保存されます。
 "
-" If you exit Vim and later start it again, you would normally lose a lot of
-" information.  The ShaDa file can be used to remember that information, which
-" enables you to continue where you left off.  Its name is the abbreviation of
-" SHAred DAta because it is used for sharing data between Neovim sessions.
-set shada=
+" # If you exit Vim and later start it again, you would normally lose a lot of
+" # information.  The ShaDa file can be used to remember that information, which
+" # enables you to continue where you left off.  Its name is the abbreviation of
+" # SHAred DAta because it is used for sharing data between Neovim sessions.
+" 無効化すると思ったよりも不便でした。無効化しません。
+" set shada=
+set shada-=j
+set shadafile=~/.cache/nvim/my.shada
 
 " nocompatible compatibleオプションをオフにする
 set nocompatible
@@ -54,7 +57,7 @@ set switchbuf=useopen
 " [スクロール]
 " scrolloff カーソルの上または下には、最低でもこのオプションに指定した数の行が表示 される。
 " nostartofline 移動コマンドを使ったとき、行頭に移動しない
-set scrolloff=20
+set scrolloff=2
 set nostartofline
 
 " [ウインドウ分割]

@@ -44,6 +44,17 @@ bind blame h      back
 bind generic ? view-help
 bind status l      enter
 bind stage l      view-blame
+bind status <Right> enter
+bind stage <Left>      view-close
+
+# 経験・実験より知った事ですが、Shift+Upは'A'、Shift+Downは'B'として扱われるようです。
+# <Shift-Up>、<ShiftUp>、<S-Up>等としても、Shift+Up時のキーバインド設定を行ないたいという意志がtigに伝わりません。
+# Shift+Upで前のファイル
+bind stage A previous
+bind diff A previous
+# Shift+Downで次のファイル
+bind stage B next
+bind diff B next
 
 # grep
 bind generic E      view-grep
@@ -78,9 +89,12 @@ bind stage C      !git commit
 # diff-viewで今開いてるよりも上（未来）にある全コミットをリベース
 bind main    R !git rebase -i %(commit)~
 
+bind main    a !git commit --amend
+
 bind status - >bash -c "~/dotfiles/bin/tig/git_checkout_-- %(file)"
 bind stage  - >bash -c "~/dotfiles/bin/tig/git_checkout_-- %(file)"
 bind stage  h view-close-no-quit
 bind status D ?rm %(file)
+bind status <C-g> +bash -c "printf '%s' %(file)| pbcopy; echo \"FILENAME COPIED '%(file)'\""
 
 bind generic V :toggle split-view-height -10%   # Decrease split height

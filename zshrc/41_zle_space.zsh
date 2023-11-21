@@ -30,24 +30,16 @@ zle_space() {
   && zle end-of-line && return 0
 
   # git grep(git_grep_fzf_vimでは、git管理外でも検索できるよう、-c grep.fallbackToNoIndex=true 付きにしてあります。)
-  [[ $BUFFER =~ '^gg+$' ]] \
-    && BUFFER="git_grep_fzf_vim " && zle end-of-line && return 0
+  [[ $BUFFER =~ '^gg' ]] \
+    && BUFFER="git_grep_fzf_vim ${RBUFFER}" && zle end-of-line && return 0
 
   if $(is_git_repo); then
     [[ $BUFFER =~ '^git_grep_fzf_vim +$' ]] \
       && BUFFER="git_grep " && zle end-of-line && return 0
 
-    # git status
-    [[ $BUFFER =~ '^gs+$' || $BUFFER =~ '^gst+$' || $BUFFER =~ '^git st+$' ]] \
-      && BUFFER="git status -s " && zle end-of-line && return 0
-
     # git checkout + completion
-    [[ $BUFFER =~ '^gco+$' || $BUFFER =~ '^git co+$' ]] \
+    [[ $BUFFER =~ '^gco+$' ]] \
     && zle autosuggest-clear && BUFFER="git checkout $(git_branch_fzf)" && zle end-of-line && return 0
-
-    # git log + completion
-    [[ $BUFFER =~ '^gl+$' || $BUFFER =~ '^glo+$' || $BUFFER =~ '^gitlog+$' ]] \
-    && zle autosuggest-clear && BUFFER="git_log_fzf " && zle end-of-line && return 0
 
     # git branch + completion
     [[ $BUFFER =~ '^b+$' ]] \
@@ -65,7 +57,7 @@ zle_space() {
     && zle end-of-line && return 0
 
     # git fetch origin --prune
-    [[ $BUFFER =~ '^gfo+$' || $BUFFER =~ '^git fo+$' ]] \
+    [[ $BUFFER =~ '^gfo+$' ]] \
     && BUFFER="git fetch origin --prune" && zle end-of-line && return 0
 
     # git fetch origin $(git branch --show-current 2>/dev/null)
@@ -73,11 +65,11 @@ zle_space() {
     && BUFFER="git fetch origin $(git branch --show-current 2>/dev/null)" && zle end-of-line && return 0
 
     # git merge
-    [[ $BUFFER =~ '^gme+$' || $BUFFER =~ '^git me+$' ]] \
+    [[ $BUFFER =~ '^gme+$' ]] \
     && BUFFER="git merge --ff" && zle end-of-line && return 0
 
     # git push origin HEAD
-    [[ $BUFFER =~ '^gps+$' || $BUFFER =~ '^git ps+$' ]] \
+    [[ $BUFFER =~ '^gps+$' ]] \
     && BUFFER="git push origin HEAD " && zle end-of-line && return 0
 
     # git_deep_blame

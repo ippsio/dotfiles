@@ -22,7 +22,7 @@ color title-blur        234     250 dim
 color title-focus       023     50
 color author            050     default
 color help-group        011     237
-color line-number       0       220
+color line-number       220     0 
 
 #------------------------------------------------------------
 # `diff --git a/xxxx b/xxxx`みたいな箇所(グレー地に白文字)

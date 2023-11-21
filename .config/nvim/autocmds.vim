@@ -1,3 +1,8 @@
+augroup vim-start
+  autocmd!
+  autocmd VimEnter * silent! clearjumps
+augroup END
+
 """augroup QfAutoCommands
 """  autocmd!
 """  " vim上でのgrep, vimgrep, rg(ripgrep)の結果を、即quickfixウインドウに表示する

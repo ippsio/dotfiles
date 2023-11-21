@@ -15,6 +15,9 @@ let g:fzf_layout = {'window': { 'width': 0.95, 'height': 0.95 } }
 " let g:fzf_layout = { 'window': '-tabnew' }
 " let g:fzf_layout = { 'window': '10new' }
 
+" ジャンプリストをfzfで絞り込む
+nnoremap <BS> :Jumps<CR>
+
 " バッファ一覧をfzfで絞り込む
 nnoremap ; :Buffers<CR>
 
@@ -27,8 +30,19 @@ function! s:GetDir(args0)
       throw 'ディレクトリ ['.a:args0.'] っつうのが見つからない。'
     endif
   else
-    let s:git_root = system('cd ' . expand('%:p:h') . '; git rev-parse --show-toplevel 2> /dev/null')[:-2]
-    return s:git_root != '' ? s:git_root : expand('%:p:h')
+    " NOTE: 通常、git管理されたフォルダのサブフォルダで `git rev-parse --show-toplevel` とすると、gitのルートディレクトリが取得できると思うのですが、
+    " git difftoolコマンドから起動されたnvimの場合(?)
+    " system('cd ' . expand('%:h') . '; git rev-parse --show-toplevel 2>/dev/null' の結果として expand('%:h') 相当の値しか得られないという現象が発生しました。
+    " そうした状況においても
+    " system('cd ' . expand('%:h') . '; git rev-parse --git-dir 2>/dev/null'       の結果は、正しいgitルートディレクトリの.gitフォルダの絶対パスが得られました。
+    " そのためここでは `git rev-parse --git-dir` に頼ることにしました。
+    let s:dot_git = system('cd ' . expand('%:h') . '; git rev-parse --git-dir 2>/dev/null')
+    if s:dot_git == ''
+      return expand('%:p:h')
+    else
+      let s:git_root = fnamemodify(s:dot_git, ':h')
+      return s:git_root
+    endif
   endif
 endfunction
 
@@ -97,14 +111,34 @@ command! -bang -nargs=* Grep
   \   . ' --delimiter="\t" '
   \   . ' --tabstop=3 '
   \   . ' --ansi '
-  \   . ' --prompt "filter > " '
+  \   . ' --prompt "fzf.vim.vim Grep > " '
   \   . ' --info=inline '
   \   . ' --layout reverse '
   \   . ' --with-nth=1.. '
   \   . ' --nth=1.. '
   \   . ' --bind "tab:execute(git_pull_request_open_by_file_line {2} {3})" '
+  \   . ' --bind "ctrl-_:toggle-preview" '
   \   . ' --preview "git_blame_colored {2} {3} ' . shellescape(<q-args>) . ' {q}"'
   \   . ' --preview-window="wrap:down:75%" ',
+  \   'window': { 'width': 0.95, 'height': 0.99 }
+  \   })
+
+" ファイルの内容をgit-grep、及びripgrepで検索して、さらにfzfで絞り込む
+command! -bang -nargs=* GitDeepblame
+  \ call fzf#run({
+  \   'source': 'git_deepblame "' . <q-args> . '" -- ' . system('git_obtain_relative_path ' . expand('%:p')),
+  \   'sink*': function('s:EditFile'),
+  \   'options': '-m'
+  \   . ' --delimiter="\t" '
+  \   . ' --tabstop=3 '
+  \   . ' --ansi '
+  \   . ' --prompt "fzf.vim.vim GitDeepblame > " '
+  \   . ' --info=inline '
+  \   . ' --layout reverse '
+  \   . ' --with-nth=1.. '
+  \   . ' --nth=1.. '
+  \   . ' --bind "tab:execute(git_pull_request_open_by_file_line {2} {3})" '
+  \   . ' --bind "ctrl-_:toggle-preview" ',
   \   'window': { 'width': 0.95, 'height': 0.99 }
   \   })
 

@@ -20,16 +20,11 @@ Jetpack 'itchyny/vim-parenmatch'
 Jetpack 'cohama/vim-insert-linenr'
 Jetpack 'nathanaelkane/vim-indent-guides'
 Jetpack 'bronson/vim-trailing-whitespace'
-Jetpack 'rhysd/accelerated-jk'
 Jetpack 'junegunn/fzf', { 'do': './install --all --no-bash --no-fish --no-zsh' }
 Jetpack 'junegunn/fzf.vim'
 Jetpack 'Shougo/vimproc.vim', { 'do': 'make' }
 Jetpack 'ippsio/clip_diff.vim'
 Jetpack 'nvim-treesitter/nvim-treesitter'
-Jetpack 'Shougo/defx.nvim'
-Jetpack 'tpope/vim-repeat'
-Jetpack 'kana/vim-operator-user'
-Jetpack 'kana/vim-operator-replace'
 Jetpack 'vim-jp/vimdoc-ja'
 Jetpack 'leshill/vim-json', { 'for': ['json']}
 Jetpack 'rcmdnk/vim-markdown', { 'for': ['markdown']}
@@ -37,9 +32,7 @@ Jetpack 'leafgarland/typescript-vim', { 'for': ['js', 'typescript']}
 Jetpack 'stephpy/vim-yaml', { 'for': ['yaml']}
 Jetpack 'mechatroner/rainbow_csv', { 'for': ['css', 'scss']}
 Jetpack 'ap/vim-css-color', { 'for': ['css', 'scss']}
-Jetpack 'stsewd/tree-sitter-rst', { 'for': ['rst']}
 Jetpack 'kchmck/vim-coffee-script', { 'for': ['coffee']}
-Jetpack 'dense-analysis/ale'
 Jetpack 'vim-ruby/vim-ruby', { 'for': ['ruby', 'rake', 'eruby', 'slim'] }
 Jetpack 'tpope/vim-rails'
 Jetpack 'vim-scripts/ruby-matchit', { 'for': ['ruby', 'rake', 'eruby', 'slim'] }
@@ -67,20 +60,19 @@ Jetpack 'Shougo/ddc-ui-native'
 Jetpack 'Shougo/ddc-ui-pum'
 Jetpack 'Shougo/pum.vim'
 Jetpack 'ray-x/lsp_signature.nvim'
+Jetpack 'monaqa/modesearch.vim'
+Jetpack 'machakann/vim-sandwich'
+Jetpack 'terryma/vim-expand-region'
+Jetpack 'lambdalisue/fern.vim'
+Jetpack 'yuki-yano/fern-preview.vim'
 
-if has('nvim')
-  let available_pkg = stdpath('data') . '/' . 'site' . '/pack/jetpack/opt/available_packages.json'
-elseif has('win32')
-  let available_pkg = expand('~/vimfiles'). '/pack/jetpack/opt/available_packages.json'
-else
-  let available_pkg = expand('~/.vim'). '/pack/jetpack/opt/available_packages.json'
-endif
-let available_pkg_text = filereadable(available_pkg) ? join(readfile(available_pkg)) : "{}"
-if sort(jetpack#names()) != sort(keys(json_decode(available_pkg_text)))
+let s:available_pkg = stdpath('data') . '/' . 'site' . '/pack/jetpack/opt/available_packages.json'
+let s:available_pkg_text = filereadable(s:available_pkg) ? join(readfile(s:available_pkg)) : "{}"
+if sort(jetpack#names()) != sort(keys(json_decode(s:available_pkg_text)))
   call jetpack#sync()
 endif
 
 call jetpack#end()
 
-runtime! rc/**/*.vim
+runtime! rc/*.vim rc/*/*.vim
 

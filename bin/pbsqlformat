@@ -19,7 +19,8 @@ if ( ${use_own_rule} ); then
 fi
 
 # 結果出力
-printf "[before]\n%s\n---\n[after]\n%s\n" "${before_format}" "${after_format}"
+# printf "[before]\n%s\n---\n[after]\n%s\n" "${before_format}" "${after_format}"
+printf "%s\n" "${after_format}"
 
 # 結果をクリップボードにコピー
 # printf "%s" "${after_format}"| pbcopy

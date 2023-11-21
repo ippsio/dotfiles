@@ -125,7 +125,6 @@ type_or_inst mvn maven
 type_or_inst urlview
 type_or_inst extract_url
 type_or_cargo_inst mocword
-[[ ! -d /Applications/Stats.app ]] && type_or_cask_inst stats
 nodir_then_gitclone "${TMUX_PLUGINS}/tpm" "tmux-plugins/tpm"
 nodir_then_gitclone "${ZINIT_ROOT}" "zdharma/zinit.git" "${ZINIT_ROOT}/bin"
 nodir_then_gitclone "${HOME}/setting_box" "ippsio/setting_box.git"

@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# 指定されたファイルパス
+full_path=$(realpath "$1")
+
+if [ -d "$1" ]; then
+  # Is a directory.
+  dir="$1"
+elif [ -f "$1" ]; then
+  # Is a file.
+  dir=$(dirname "$1")
+else
+  echo "Not found '$1'"
+  exit 1
+fi
+
+if ! cd "$dir" && git rev-parse --is-inside-work-tree &> /dev/null; then
+  echo "Not a git repo '$dir'"
+  exit 1
+fi
+
+git_root_dir=$(cd "$dir"; git rev-parse --show-toplevel)
+relative_path_against_git_root_dir="${full_path#$git_root_dir/}"
+printf "%s\n" "${relative_path_against_git_root_dir}"
+

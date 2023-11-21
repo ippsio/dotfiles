@@ -24,10 +24,16 @@ else
 fi
 
 line_to=$(($line_from + $(tput lines)));
-git_repo=$(cd "${file_dir}"; git_reponame);
-git_branch=$(cd "${file_dir}"; git branch --show-current 2> /dev/null);
+# git_repo=$(cd "${file_dir}"; git_reponame);
+# git_branch=$(cd "${file_dir}"; git branch --show-current 2>/dev/null);
+git_repo=$(git_reponame);
+git_branch=$(git branch --show-current 2>/dev/null);
 if [[ ! -z "${git_repo}" ]]; then
   echo "GIT={${git_repo}  $git_branch}";
+fi
+git_dir=$(cd "${file_dir}"; git rev-parse --git-dir 2>/dev/null)
+if [[ ! -z "${git_dir}" ]]; then
+  git_root=$(dirname "${git_dir}")
 fi
 
 echo "FILE=$(echo "${file_realpath}"| home_as_tilde)";
@@ -38,7 +44,9 @@ if [[ -z "${file}" ]]; then
   echo "No results"
 else
   echo
-  blame_result=$(cd "${file_dir}"; git blame -L ${line_from},${line_to} --show-name ${file_realpath});
+  # blame_result=$(set -x; cd "${file_dir}"; git blame -L ${line_from},${line_to} --show-name ${file_realpath});
+  file_relativepath=${file_realpath#${git_root}/}
+  blame_result=$(set -x; cd "${git_root}";git blame -L ${line_from},${line_to} --show-name ${file_relativepath});
   if [[ $? != 0 ]]; then
     # ここに来るのは、例えばgitリポジトリじゃない場合等です。
     blame_result=$(cat ${file_realpath}\

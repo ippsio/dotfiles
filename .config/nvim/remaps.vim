@@ -10,6 +10,11 @@ xnoremap q <Nop>
 nnoremap @ <Nop>
 xnoremap @ <Nop>
 
+" [ヘルプ]
+" F1でヘルプが開くと鬱陶しいので無効化。
+nnoremap <F1> <Nop>
+inoremap <F1> <Nop>
+
 " [ブロック選択]
 " vを二回で行末まで選択
 vnoremap v $h
@@ -43,6 +48,16 @@ function s:grep_z_register()
   let l:search_word = escape(@z, '\"$`')
   let l:search_word = escape(l:search_word, '\"$`')
   call feedkeys(":Grep " . l:search_word . "\<CR>", "n")
+endfunction
+
+" [検索]
+" <F4> でハイライト中の文字(zレジスタの文字)をGrep。
+nnoremap <F4>       mz:call <SID>git_deepblame_z_register()<CR>
+function s:git_deepblame_z_register()
+  " NOTE: どうやら2回escapeすると期待動作する。1回escapeだと期待動作しない。理由は知らん。
+  let l:search_word = escape(@z, '\"$`')
+  let l:search_word = escape(l:search_word, '\"$`')
+  call feedkeys(":GitDeepblame " . l:search_word . "\<CR>", "n")
 endfunction
 
 " [コマンドモードでの入力値の置換]
@@ -107,11 +122,13 @@ nnoremap <silent> W :<C-u>:w<CR>:echo 'SAVED! ' . strftime("%Y/%m/%d %H:%M:%S") 
 nnoremap <silent> <C-g> :call <SID>CopyFilename()<CR><C-g>
 
 function! s:CopyFilename()
-  let s:git_root = system('cd ' . expand('%:p:h') . '; git rev-parse --show-toplevel 2> /dev/null')[:-2]
-  if s:git_root != ''
-    let l:file = system('cd ' . expand('%:p:h') . '; git ls-files --full-name ' . expand('%:p'))
-  else
+  let l:dot_git = system('cd ' . expand('%:h') . '; git rev-parse --git-dir 2>/dev/null')
+  if l:dot_git == ''
     let l:file = substitute(expand("%:p"), $HOME, "~", "g")
+  else
+    let git_dir = fnamemodify(l:dot_git, ':h')
+    let l:file = system('cd ' . git_dir . '; git ls-files --full-name ' . expand('%'))
   endif
-  let @* = substitute(l:file, "[\\n|\\r]", "", "g")
+  let l:path = substitute(l:file, "[\\n|\\r]", "", "g")
+  let @* = l:path
 endfunction

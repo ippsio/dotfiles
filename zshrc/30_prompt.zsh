@@ -169,7 +169,7 @@ precmd() {
   CHUNK1="${GIT_WORKING_TREE}${GIT_STAGE}${GIT_LOCAL_REPO}"
   CHUNK2="${GIT_REPO_BRANCH}"
   CHUNK3="${EXIT_CD}${NUMBER_OF_JOBS}${CURRENT_DIRECTORY}${GIT_CAUTION}%K{238}%k"
-  CHUNK4="%# "
+  CHUNK4="$(precmd_python_venv)%# "
   # viモードの場合、これを指定しても良い。
   #CHUNK4="%K{25}vi-INSERT %# "
 
@@ -178,12 +178,15 @@ precmd() {
   [[ ! -z "${CHUNK2}" ]] && PROMPT+="${CHUNK2}"
   [[ ! -z "${CHUNK3}" ]] && PROMPT+=$'\n'"${CHUNK3}"
   [[ ! -z "${CHUNK4}" ]] && PROMPT+=$'\n'"${CHUNK4}"
+}
 
-  if [[ "${VIRTUAL_ENV_PROMPT}" ]]; then
-    "${VIRTUAL_ENV}/"
-
-    RPROMPT="${VIRTUAL_ENV_PROMPT}"
+precmd_python_venv() {
+  if [[ ! -z "${VIRTUAL_ENV_PROMPT}" ]]; then
+    python_venv_name=$(basename "${VIRTUAL_ENV}")
+    python_version_name=$(pyenv version-name)
+    printf "(python|%s|%s) " "${python_venv_name}" "${python_version_name}"
   fi
+  return 0
 }
 
 ## 以前のプロンプトにはコマンドラインを確定した時刻を表示

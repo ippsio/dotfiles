@@ -1,0 +1,21 @@
+#!/bin/bash
+[[ -e .envrc ]] && echo ".envrc exists." && exit 1
+if [[ ! -d .venv ]]; then
+  (set -x; python3 -m venv .venv)
+else
+  echo ".venv exists."
+fi
+
+dot_envrc=$(cat << EOF
+[[ -e .venv/bin/activate ]] || python3 -m venv .venv
+source .venv/bin/activate
+EOF
+)
+
+if [[ ! -f .envrc ]]; then
+  echo "${dot_envrc}"
+  read -r -p "Generate .envrc ? (Push CTRL-c to cancel if you don't wanna .envrc)"
+  (set -x; echo "${dot_envrc}" > .envrc)
+else
+  echo ".envrc exists."
+fi

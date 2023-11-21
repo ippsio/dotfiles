@@ -42,6 +42,7 @@ target=$(echo "${RG_RESULT}"| awk -F '\t' '
     --info=inline --ansi --tabstop=4 --bind change:top \
     --bind "ctrl-v:execute(nvim {2} +{3} < /dev/tty > /dev/tty)" \
     --bind 'ctrl-/:toggle-preview' \
+    --bind 'ctrl-_:toggle-preview' \
     --preview 'git_blame_colored {2} {3}' \
     --preview-window=down:70%:wrap \
 )

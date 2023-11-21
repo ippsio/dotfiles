@@ -1,13 +1,11 @@
 #!/bin/bash
-set -x
-readonly C1=${1:-54}
-readonly C2=${2:-57}
-readonly WINDOW_ACTIVE_STYLE_WAS=$(tmux show-options -w| grep window-active-style)
-for i in $(seq $C1 $C2); do tmux set window-active-style "bg=colour${i}"; done
-for i in $(seq $C2 $C1); do tmux set window-active-style "bg=colour${i}"; done
-if [[ -z "${WINDOW_ACTIVE_STYLE_WAS}" ]]; then
-  eval "tmux set window-active-style bg=colour0"
-else
-  eval "tmux set ${WINDOW_ACTIVE_STYLE_WAS}"
-fi
+window_active_style_was=$(tmux show-options -w| grep "window-active-style" 2>/dev/null)
+window_active_style_was="${window_active_style_was:-window-active-style bg=colour0}"
+forward=$(seq "${1:-52}" "${2:-53}")
+reverse=$(seq "${1:-53}" "${2:-52}")
+array=( $(echo "${forward}" "${reverse}") )
+for i in "${array[@]}"; do
+  eval "tmux set window-active-style bg=colour${i}"; sleep 0.03;
+done
+eval "tmux set ${window_active_style_was}"
 

@@ -77,6 +77,7 @@ else
         --bind "ctrl-f:page-down" \
         --bind "ctrl-b:page-up" \
         --bind "ctrl-/:toggle-preview" \
+        --bind "ctrl-_:toggle-preview" \
         --bind "tab:execute(git_pull_request_show_by_file_line {2} {3})" \
         --bind "ctrl-o:execute(git_pull_request_open_by_file_line {2} {3})" \
         --bind "ctrl-p:execute(git_pull_request_open_by_file_line {2} {3})" \

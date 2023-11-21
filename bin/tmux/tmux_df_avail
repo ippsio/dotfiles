@@ -6,7 +6,7 @@
 #df -k /| awk '{ if (NR==2) { printf "Avail %.0fG Used %.0fG", $4*1024/10^9, ($2-$4)*1024/10^9 }}'
 sec=$(date +'%S')
 df_free=$(df -k /| awk '{ if (NR==2) { printf "%.0f", $4*1024/10^9 }}')
-printf "SSD F${df_free}G"
+printf "F${df_free}G"
 
 # 画面幅が一定以上なら使用量も表示
 client_width=$(~/dotfiles/bin/tmux/tmux_client_width)

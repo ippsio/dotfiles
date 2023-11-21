@@ -6,6 +6,14 @@ set diff-highlight = true
 # ======================
 # 各viewの表示
 # ======================
+# set main-view   = line-number:yes,interval=1 id:yes,color date author commit-title:graph=yes,refs=yes
+# set blame-view  = date author id:yes,color line-number:yes,interval=1 text
+# set pager-view  = line-number:yes,interval=1 text
+# set stage-view  = line-number:yes,interval=1 text
+# set log-view    = line-number:yes,interval=1 text
+# set blob-view   = line-number:yes,interval=1 text
+# set diff-view   = line-number:yes,interval=1 text:yes,commit-title-overflow=no
+# set grep-view   = line-number:yes,interval=1 line-number:yes,interval=1 file-name line-number:yes,interval=1 text:yes,commit-title-overflow=no
 set main-view   = line-number:yes,interval=1 id:yes,color date author commit-title:graph=yes,refs=yes
 set blame-view  = date author id:yes,color line-number:yes,interval=1 text
 set pager-view  = line-number:yes,interval=1 text
@@ -14,6 +22,7 @@ set log-view    = line-number:yes,interval=1 text
 set blob-view   = line-number:yes,interval=1 text
 set diff-view   = line-number:yes,interval=1 text:yes,commit-title-overflow=no
 set grep-view   = line-number:yes,interval=1 line-number:yes,interval=1 file-name line-number:yes,interval=1 text:yes,commit-title-overflow=no
+
 
 # ======================
 # main-viewの表示設定

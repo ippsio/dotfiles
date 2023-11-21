@@ -14,9 +14,9 @@ local mason_lspconfig = require('mason-lspconfig')
 mason_lspconfig.setup {
   ensure_installed = {
     'vimls',
+    'lua_ls',
     'pylsp',
     'solargraph',
-    'lua_ls',
     'tsserver',
     'sqlls',
     'jdtls'

@@ -22,12 +22,14 @@ inoremap <silent><expr> <CR>   pum#visible() ? '<Cmd>call pum#map#confirm()<CR>'
 " FIXME: <Esc>を押した時にpum#map#cancel()しつつ、ノーマルモードに戻りたい。
 " inoremap <silent><expr> <Esc>  pum#visible() ? '<Cmd>call pum#map#cancel()<CR>' : '<Esc>'
 
-"call ddc#custom#patch_global('autoCompleteEvents', [
-"\ 'TextChangedI',
-"\ 'TextChangedP',
-"\ 'CmdlineEnter',
-"\ 'CmdlineChanged',
-"\ ])
+" デフォルトでは 'InsertEnter', 'TextChangedI', 'TextChangedP'。
+" 個人的にはInsertEnter が設定されていると、インサートモードに入った瞬間に補完が効いてしまい使いにくかった。
+call ddc#custom#patch_global('autoCompleteEvents', [
+\ 'TextChangedP',
+\ 'TextChangedI',
+\ 'CmdlineEnter',
+\ 'CmdlineChanged',
+\ ])
 
 call ddc#custom#patch_global('sources', [
 \ 'nvim-lsp',
@@ -41,7 +43,7 @@ call ddc#custom#patch_global('sourceOptions', {'around': {'mark': 'ddc-arround',
 call ddc#custom#patch_global('sourceOptions', {'nvim-lsp': {'mark': 'lsp', 'forceCompletionPattern': '\.\w*|:\w*|->\w*'}})
 
 call ddc#custom#patch_global('filterParams', {'matcher_fuzzy': {'camelcase': v:true}})
-call ddc#custom#patch_global('filterParams', {'converter_fuzzy': { 'hlGroup': 'SpellBad'}})
+call ddc#custom#patch_global('filterParams', {'converter_fuzzy': { 'hlGroup': 'Comment'}})
 
 call ddc#custom#patch_global('sourceParams', {'around': {'maxSize': 500}})
 call ddc#custom#patch_global('sourceParams', {'nvim-lsp': {'kindLabels': {'Class': 'c'}}})

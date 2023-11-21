@@ -18,6 +18,7 @@ FZF_RESULT=$(eval "${FIND_CMD}"| grep -v "^${ARG}$"| sed 's#//#/#'| sed 's#^./##
     --header="${FZF_HEADER}" \
     --prompt="${FZF_PROMPT} (dir='$(home_as_tilde ${ARG_AS_REALPATH})') > " \
     --bind "ctrl-/:toggle-preview" \
+    --bind "ctrl-_:toggle-preview" \
     --bind "ctrl-g:execute(rg_fzf_vim . ${HOME_AS_HOME} < /dev/tty > /dev/tty)" \
     --preview-window=right:60%:wrap \
     --preview='

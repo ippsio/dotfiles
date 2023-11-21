@@ -8,14 +8,14 @@ FILE=$(LC_ALL=C date '+%Y_%m%d_%a').txt
 [ ! -d ${NOTE_DIR} ] && mkdir -p ${NOTE_DIR}
 [ ! -f ${NOTE_DIR}/${FILE} ] && echo -e "\n# ${KIND} $(LC_ALL=C date '+%Y/%m/%d(%a)')\n\n---\n" >> ${NOTE_DIR}/${FILE}
 
-CMD="rg --files --hidden -g '*.md' -g '*.txt' --sortr=path ${BASE_DIR}/${KIND}"
+CMD="echo ${BASE_DIR}/${KIND}/top.txt; rg --files --hidden -g '*.md' -g '*.txt' --sortr=path ${BASE_DIR}/${KIND}| grep -v 'top.txt'"
 eval "${CMD}" \
   | sed -e "s#^${HOME}#~#" \
   | fzf\
     --info=inline \
     --prompt="($( [ -L $0 ] && basename $(readlink $0) || basename $0))" --header="${CMD}" \
     --bind 'j:down' --bind 'k:up' --bind 'i:unbind(i,j,k)' \
-    --bind 'enter:execute(f=$(echo {}| sed -e "s#^~#${HOME}#"); nvim -c 5 $f < /dev/tty > /dev/tty)' \
+    --bind 'enter:execute(f=$(echo {}| sed -e "s#^~#${HOME}#"); bash -c "(set -x; nvim -c 5 $f < /dev/tty > /dev/tty)")+abort' \
     --preview='f=$(echo {}| sed -e "s#^~#${HOME}#"); bat $f --color=always --style=numbers'
 
 cd ${BASE_DIR} && git add -A && git status --porcelain| grep "^[MA]" 1>/dev/null && git commit -m "$(date '+%Y/%m/%d(%a) %H時%M分%S秒')" 1>/dev/null

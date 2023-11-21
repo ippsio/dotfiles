@@ -15,6 +15,7 @@ rg_wrap "$@" \
     --header="${FZF_HEADER}" \
     --bind "enter:execute(nvim {2} +{3} < /dev/tty > /dev/tty)" \
     --bind='ctrl-/:toggle-preview' \
+    --bind='ctrl-_:toggle-preview' \
     --preview='
       # 原則、検索ヒットした行の5行前から表示。
       from=$(expr {3} - 5);

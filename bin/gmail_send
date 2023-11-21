@@ -1,0 +1,13 @@
+#!/bin/bash
+[[ -z "${MAIL_FROM}" ]] && echo "MAIL_FROM is not given. Bye." && exit 1
+[[ -z "${MAIL_RCPT}" ]] && echo "MAIL_RCPT is not given. Bye." && exit 1
+[[ -z "${SENDER_EMAIL}" ]] && echo "SENDER_EMAIL is not given. Bye." && exit 1
+[[ -z "${SENDER_PASS}" ]] && echo "SENDER_PASS is not given. Bye." && exit 1
+
+curl\
+  --url 'smtps://smtp.gmail.com:465'\
+  --ssl-reqd\
+  --mail-from "${MAIL_FROM}"\
+  --mail-rcpt "${MAIL_RCPT}"\
+  --upload-file mail.txt\
+  --user "${SENDER_EMAIL}:${SENDER_PASS}" -v

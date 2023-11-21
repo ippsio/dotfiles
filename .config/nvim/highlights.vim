@@ -106,8 +106,8 @@ hi DiffAdd     ctermfg=123 ctermbg=031
 hi DiffAdded   ctermfg=123 ctermbg=031
 hi DiffRemoved ctermfg=210 ctermbg=240
 hi DiffChange  ctermfg=210 ctermbg=240
-hi DiffText    ctermfg=168 ctermbg=125
-hi DiffDelete  ctermfg=238 ctermbg=234
+hi DiffDelete  ctermfg=238 ctermbg=99
+hi DiffText ctermfg=168 ctermbg=117
 
 " rst
 hi rstSections ctermfg=224 ctermbg=198
