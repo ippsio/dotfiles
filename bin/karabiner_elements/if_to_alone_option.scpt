@@ -8,16 +8,19 @@ on run argv
   tell application appName
     if not running then
       activate
+      tell application "System Events"
+        set appProcess to process appName
+      end tell
+      set frontmost of appProcess to true
+    else
+      tell application "System Events"
+        set appProcess to process appName
+      end tell
+      if visible of appProcess then
+        set visible of appProcess to false
+      else
+        set frontmost of appProcess to true
+      end if
     end if
   end tell
-
-  tell application "System Events"
-    set appProcess to process appName
-  end tell
-
-  if visible of appProcess then
-    set visible of appProcess to false
-  else
-    set frontmost of appProcess to true
-  end if
 end run
