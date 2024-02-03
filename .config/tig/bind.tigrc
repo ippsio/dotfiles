@@ -63,6 +63,7 @@ bind generic E      view-grep
 # コミットハッシュをクリップボードにコピー
 #------------------------------------------
 # <Hash>とは、#(シャープ)キーのこと。
+# bind generic <Hash> +bash -c "~/dotfiles/bin/tig/yank_commit_hash_subject %(commit)"
 bind generic <Hash> +bash -c "~/dotfiles/bin/tig/yank_commit_hash_subject %(commit)"
 bind generic h none
 
@@ -90,6 +91,7 @@ bind stage C      !git commit
 bind main    R !git rebase -i %(commit)~
 
 bind main    a !git commit --amend
+bind main    O +bash -c "~/dotfiles/bin/git_pull_request_open_by_hash %(commit)"
 
 bind status - >bash -c "~/dotfiles/bin/tig/git_checkout_-- %(file)"
 bind stage  - >bash -c "~/dotfiles/bin/tig/git_checkout_-- %(file)"

@@ -20,9 +20,9 @@ color cursor            default default underline standout
 color main-tracked      105     default bold
 color title-blur        234     250 dim
 color title-focus       023     50
-color author            050     default
+color author            245     default
 color help-group        011     237
-color line-number       220     0 
+color line-number       220     0
 
 #------------------------------------------------------------
 # `diff --git a/xxxx b/xxxx`みたいな箇所(グレー地に白文字)
@@ -49,16 +49,16 @@ color diff-stat        049 235
 #----------------------
 # diff old系(赤系)
 #----------------------
-color diff-del           210   240
-color diff-del-highlight 211   124 standout
+color diff-del           203   234
+color diff-del-highlight 203   234 standout
 #color "-"             203     053
 #color " -"            203     053
 
 #----------------------
 # new系(緑系)
 #----------------------
-color diff-add           123    031
-color diff-add-highlight 159    021 standout
+color diff-add           081    017
+color diff-add-highlight 081    018 standout
 # color "+"             227     default standout
 # color "+"             227     default standout
 

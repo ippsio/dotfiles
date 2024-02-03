@@ -13,6 +13,6 @@ printf "RAM% 2.1fG" "${used}"
 # 画面幅が一定以上ならusedメモリの詳細も表示
 if [[ $(~/dotfiles/bin/tmux/tmux_client_width) -gt 160 ]]; then
   printf "#[fg=colour241,bg=colour236]"
-  printf "(${usage}%%|ap%.1f|wi%.1f|co%.1f)" "${application}" "${wired}" "${compressed}"
+  printf "(${usage}%%|app%.1f|wir%.1f|cmp%.1f)" "${application}" "${wired}" "${compressed}"
 fi
 printf "#[default]"

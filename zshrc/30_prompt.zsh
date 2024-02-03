@@ -71,21 +71,21 @@ zstyle ':vcs_info:git+set-message:*' hooks git-set-message-hook
   local git_XY=$(echo -e ${git_status}| sed -e "s/^\(..\).*$/\1/")
 
   local repo_1=$(git_reponame)
-  local untracked_3=$(echo "${git_XY}"| egrep -c "^(\?\?)")
-  local unstaged_4=$(echo "${git_XY}"| egrep -c "^([ MADRC][MDRC])")
-  local unmerged_5=$(echo "${git_XY}"| egrep -c "^([DAU][DAU])")
-  local index_6=$(echo "${git_XY}"| egrep -c "^([MADRC][ MD])")
-  local ahead_7=$(echo -e ${git_status}| egrep "ahead [0-9]*"| sed -e "s/^.*\[ahead \([0-9]*\).*/\1/")
-  local behind_8=$(echo -e ${git_status}| egrep "behind [0-9]*"| sed -e "s/^.*[ \[]behind \([0-9]*\).*/\1/")
-  local stash_9="$(git stash list 2>/dev/null| egrep "^stash@"| wc -l| tr -d ' ')"
-  local has_tracking_branch_10=$(git config --local branch.${hook_com[branch]}.remote >/dev/null 2>&1 || echo "!NO_TRACKING-BRANCH!")
-  [ -z ${repo_1} ] && repo_1="NOT_SPECIFIED"
-  [ -z ${ahead_7} ] && ahead_7=0
-  [ -z ${behind_8} ] && behind_8=0
-  [[ "${stash_9}" == "0" ]] && stash_9=""
+  local untracked_3=$(echo "${git_XY}"| grep -Ec "^(\?\?)")
+  local unstaged_4=$(echo "${git_XY}"| grep -Ec "^([ MADRC][MDRC])")
+  local unmerged_5=$(echo "${git_XY}"| grep -Ec "^([DAU][DAU])")
+  local index_6=$(echo "${git_XY}"| grep -Ec "^([MADRC][ MD])")
+  local ahead_7=$(echo -e ${git_status}| egrep -E "ahead [0-9]*"| sed -e "s/^.*\[ahead \([0-9]*\).*/\1/")
+  local behind_8=$(echo -e ${git_status}| grep -E "behind [0-9]*"| sed -e "s/^.*[ \[]behind \([0-9]*\).*/\1/")
+  local stash_9="$(git stash list 2>/dev/null| grep -Ec "^stash@")"
+  local has_tracking_branch_10=$(git config --local branch.${hook_com[branch]}.remote 2>/dev/null)
+  repo_1="${repo_1:-NOT_SPECIFIED}"
+  ahead_7="${ahead_7:-0}"
+  behind_8="${behind_8:-0}"
+  has_tracking_branch_10="track:${has_tracking_branch_10:-none}"
 
   # misc (%m) に追加
-  hook_com[misc]="${repo_1} ${hook_com[branch]} ${untracked_3} ${unstaged_4} ${unmerged_5} ${index_6} ${ahead_7} ${behind_8} ${stash_9} ${has_tracking_branch_10} ${hook_com[action]}"
+  hook_com[misc]="${repo_1}\t${hook_com[branch]}\t${untracked_3}\t${unstaged_4}\t${unmerged_5}\t${index_6}\t${ahead_7}\t${behind_8}\t${stash_9}\t${has_tracking_branch_10}\t${hook_com[action]}"
 }
 
 my_precmd_hook() { return 0; }
@@ -117,56 +117,63 @@ precmd() {
   LANG=en_US.UTF-8 vcs_info
   psvar=( $(echo "${vcs_info_msg_0_}") )
 
+  SEPARATOR_OPEN=" "
+  SEPARATOR_CLOSE=" "
+
   # git basic infomations.
   _mark_git_repo=""
   _mark_branch=""
   GIT_REPO_BRANCH="%K{118}%F{0}"
-  GIT_REPO_BRANCH+="%(1v|[${_mark_git_repo}%1v|)"
+  GIT_REPO_BRANCH+="%(1v|${SEPARATOR_OPEN}${_mark_git_repo}%1v|)"
   GIT_REPO_BRANCH+="%f%k"
   GIT_REPO_BRANCH+="%K{220}%F{0}"
-  GIT_REPO_BRANCH+="%(2v| ${_mark_branch}%2v]|)"
+  GIT_REPO_BRANCH+="%(2v| ${_mark_branch}%2v${SEPARATOR_CLOSE}|)"
   GIT_REPO_BRANCH+="%f%k"
 
   # git working_tree
-  _text_worktree=""
-  _mark_untracked="?"
-  _mark_unstaged="m"
-  _mark_unmerged="!"
+  _mark_untracked="unt"
+  _mark_unstaged="uns"
+  _mark_unmerged="unm"
   GIT_WORKING_TREE="%K{193}%F{241}"
-  GIT_WORKING_TREE+="%(3v|${_text_worktree}[${_mark_untracked}%3v|)"
+  GIT_WORKING_TREE+="%(3v|${SEPARATOR_OPEN}${_mark_untracked}%3v|)"
   GIT_WORKING_TREE+="%(4v| ${_mark_unstaged}%4v|)"
-  GIT_WORKING_TREE+="%(5v| ${_mark_unmerged}%5v]|)"
+  GIT_WORKING_TREE+="%(5v| ${_mark_unmerged}%5v${SEPARATOR_CLOSE}|)"
   GIT_WORKING_TREE+="%f%k"
 
+  _mark_stash="sta"
+  GIT_STASH="%K{193}%F{241}"
+  GIT_STASH+="%(9v|${_mark_stash}%9v|%v)"
+  GIT_STASH+="${SEPARATOR_CLOSE}"
+  GIT_STASH+="%f%k"
+
   # git stage
-  _text_staged=""
-  _mark_staged="+"
+  _mark_staged="stg"
   GIT_STAGE="%K{61}%F{153}"
-  GIT_STAGE+="%(6v|${_text_staged}[${_mark_staged}%6v]|)%k"
+  GIT_STAGE+="%(6v|${SEPARATOR_OPEN}${_mark_staged}%6v${SEPARATOR_CLOSE}|)%k"
   GIT_STAGE+="%f%k"
 
   # git local repositry
-  _text_repo=""
-  _mark_ahead="^"
-  _mark_behind="v"
+  _mark_ahead="ahe"
+  _mark_behind="beh"
   GIT_LOCAL_REPO="%K{90}%F{200}"
-  GIT_LOCAL_REPO+="%(7v|${_text_repo}[${_mark_ahead}%7v|)"
-  GIT_LOCAL_REPO+="%(8v| ${_mark_behind}%8v]|)"
+  GIT_LOCAL_REPO+="%(7v|${SEPARATOR_OPEN}${_mark_ahead}%7v|)"
+  GIT_LOCAL_REPO+="%(8v| ${_mark_behind}%8v${SEPARATOR_CLOSE}|)"
   GIT_LOCAL_REPO+="%f%k"
 
-  # 9v,10v,11v,12v,13vって....。たぶんもっといいやり方あるんだろうけど、調べるのが面倒臭かったんです..
-  _mark_stash="stash"
+  # 10v,11v,12v,13vって....。たぶんもっといいやり方あるんだろうけど、調べるのが面倒臭かったんです..
   GIT_CAUTION="%K{1}"
-  GIT_CAUTION+="%(9v| ${_mark_stash}%9v |)"
-  GIT_CAUTION+="%(10v| %10v |)%(11v| %11v |)%(12v| %12v |)%(13v| %13v |)"
+  GIT_CAUTION+="%(10v| %10v |)"
+  GIT_CAUTION+="%(11v| %11v |)"
+  GIT_CAUTION+="%(12v| %12v |)"
+  GIT_CAUTION+="%(13v| %13v |)"
   GIT_CAUTION+="%k"
 
   # others
-  EXIT_CD="%K{red}%(?..[\$?=%?])%k"
-  NUMBER_OF_JOBS="%(1j|%F{226}bg-jobs(%j)%f|)"
-  CURRENT_DIRECTORY="%K{237}%F{255}[%~] %f%k"
+  EXIT_CD="%K{red}%(?..${SEPARATOR_OPEN}\$?=%?${SEPARATOR_CLOSE})%k"
+  NUMBER_OF_JOBS="%F{226}bg(%j)"
+  CURRENT_DIRECTORY="%K{237}%F{255}${SEPARATOR_OPEN}%~${SEPARATOR_CLOSE} %f%k"
 
-  CHUNK1="${GIT_WORKING_TREE}${GIT_STAGE}${GIT_LOCAL_REPO}"
+  CHUNK1="${GIT_WORKING_TREE}${GIT_STASH}${GIT_STAGE}${GIT_LOCAL_REPO}"
   CHUNK2="${GIT_REPO_BRANCH}"
   CHUNK3="${EXIT_CD}${NUMBER_OF_JOBS}${CURRENT_DIRECTORY}${GIT_CAUTION}%K{238}%k"
   CHUNK4="$(precmd_python_venv)%# "

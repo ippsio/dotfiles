@@ -23,11 +23,11 @@
   cmd = "(set -x; nvim -d \"$LOCAL\" \"$REMOTE\")"
 
 [color "diff-highlight"]
-  oldNormal = 210 240
-  newNormal = 051 031
+  oldNormal = 203 234
+  newNormal = 081 017
   # 単語差分ハイライト部分
-  oldHighlight = 124 211
-  newHighlight = 021 159
+  oldHighlight = 234 203 dim
+  newHighlight = 018 081 dim
 
 [diff "color"]
   # git/diff.c
@@ -99,14 +99,14 @@
 
   meta = 144 235
   frag = 144 235
-  func = 049 235
+  func = 051 017
   context = 247
-  old = 210 240
-  oldMoved = 210 240
+  old = 203 234
+  oldMoved = 203 234
   #oldMovedAlternative =       203 053
   #oldMovedAlternativeDimmed = 203 053
-  new = 051 031
-  newMoved = 051 031
+  new = 081 017
+  newMoved = 081 017
   #newMovedAlternative =       047 024
   #newMovedAlternativeDimmed = 047 024
   commit = 223

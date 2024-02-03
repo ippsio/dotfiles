@@ -1,0 +1,68 @@
+[colors.bright]
+black = "#676767"
+blue = "#6871ff"
+cyan = "#5ffdff"
+green = "#5ff967"
+magenta = "#ff76ff"
+red = "#ff6d67"
+white = "#feffff"
+yellow = "#fefb67"
+
+[colors.normal]
+black = "#000000"
+blue = "#0225c7"
+cyan = "#00c5c7"
+green = "#00c200"
+magenta = "#c930c7"
+red = "#c91b00"
+white = "#c7c7c7"
+yellow = "#c7c400"
+
+[colors.primary]
+background = "#000000"
+foreground = "#c7c7c7"
+
+[font]
+size = 20
+
+# [font.bold]
+# family = "Illusion W"
+# style = "Medium"
+#
+# [font.bold_italic]
+# family = "Illusion W"
+# style = "Bold Italic"
+#
+# [font.italic]
+# family = "Illusion W"
+# style = "Italic"
+#
+# [font.normal]
+# family = "Illusion W"
+# style = "Regular"
+
+[[keyboard.bindings]]
+chars = "\u0014n"
+key = "F11"
+
+[[keyboard.bindings]]
+chars = "\u0014N"
+key = "F11"
+mods = "Shift"
+
+[[keyboard.bindings]]
+chars = "\u0014z"
+key = "F12"
+
+# [[keyboard.bindings]]
+# key = "F6"
+# action = "Hide"
+
+[shell]
+args = ["-l"]
+program = "/opt/homebrew/bin/zsh"
+
+[window]
+decorations = "full"
+opacity = 0.8
+

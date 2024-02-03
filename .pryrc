@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+
 if defined?(PryByebug)
   CodeRay::Encoders::Terminal::TOKEN_COLORS[:comment] = "\e[38;5;123m\e[48;5;23m"
   CodeRay::Encoders::Terminal::TOKEN_COLORS[:definition] = "\e[38;5;170m"

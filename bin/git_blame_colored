@@ -9,12 +9,21 @@ shift
 arg_line_highlight="${1:-1}"
 shift
 while (( $# > 0 )); do
-  [[ -z "${RG_PASSTHRU_QUERY}" ]] && RG_PASSTHRU_QUERY="$1" || RG_PASSTHRU_QUERY="${RG_PASSTHRU_QUERY} $1"
+  Q="$1"
+  Q="${Q//\{/\\\{}"
+  Q="${Q//\}/\\\}}"
+  Q="${Q//\(/\\\(}"
+  Q="${Q//\)/\\\)}"
+  Q="${Q//\`/\\\`}"
+  if [[ -z "${RG_PASSTHRU_QUERY}" ]]; then
+    RG_PASSTHRU_QUERY="$Q"
+  else
+    RG_PASSTHRU_QUERY="${RG_PASSTHRU_QUERY} $Q"
+  fi
   shift
 done
-RG_PASSTHRU_QUERY=$(echo "${RG_PASSTHRU_QUERY}"| sed -E "s/[[:blank:]]+$//g"| sed -E "s/[[:blank:]]+/\|/g"| sed -E 's/\`/\\\`/g');
-RG_PASSTHRU_QUERY=$(echo "${RG_PASSTHRU_QUERY}"| sed -E "s/{/\\\{/g"| sed -E "s/}/\\\}/g");
-RG_PASSTHRU_QUERY=$(echo "${RG_PASSTHRU_QUERY}"| sed -E "s/\(/\\\(/g"| sed -E "s/\)/\\\)/g");
+RG_PASSTHRU_QUERY=$(echo "${RG_PASSTHRU_QUERY}"| sed -E "s/[[:blank:]]+$//g")
+RG_PASSTHRU_QUERY=$(echo "${RG_PASSTHRU_QUERY}"| sed -E "s/[[:blank:]]+/\|/g");
 if [ ${arg_line_highlight} -le ${HIGHLIGHT_STANDARD} ]; then
   line_from=1
   line_highlight="${arg_line_highlight}"

@@ -77,6 +77,7 @@ command! -bang -nargs=* BLinesWithPreview
       \ )
 
 " ファイル名の一覧をfzfで絞り込む
+nnoremap <F9> :FzfFiles<CR>
 nnoremap <C-p> :FzfFiles<CR>
 command! -bang -nargs=? -complete=dir FzfFiles
       \ call fzf#run(

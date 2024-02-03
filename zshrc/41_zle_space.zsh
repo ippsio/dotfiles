@@ -10,104 +10,151 @@ zle_space() {
   # cd
   if [[ $BUFFER =~ '^goto+$' || $BUFFER =~ '^g$' ]]; then
     BUFFER="$(goto_candidate_fzf)"
-    if [[ ! -z "${BUFFER}" ]]; then
-      zle accept-line
-      return 0
-    else
-      BUFFER=""
-      return 1
-    fi
+    [[ -n "${BUFFER}" ]] && zle accept-line || BUFFER=""
+    return 0
   fi
 
   # ssh
-  [[ $BUFFER =~ '^ssh+[ ]$' ]] \
-  && BUFFER="ssh $(fgrep 'Host ' ~/.ssh/config | grep -v '*' | awk '{print $2}' | sort | fzf)" \
-  && zle end-of-line && return 0
+  if [[ $BUFFER =~ '^ssh+[ ]$' ]]; then
+    BUFFER="ssh $(fgrep 'Host ' ~/.ssh/config | grep -v '*' | awk '{print $2}' | sort | fzf)" && zle end-of-line
+    return 0
+  fi
 
   # scp
-  [[ $BUFFER =~ '^scp+[ ]$' ]] \
-  && BUFFER="scp $(fgrep 'Host ' ~/.ssh/config | grep -v '*' | awk '{print $2}' | sort | fzf)" \
-  && zle end-of-line && return 0
+  if [[ $BUFFER =~ '^scp+[ ]$' ]]; then
+    BUFFER="scp $(fgrep 'Host ' ~/.ssh/config | grep -v '*' | awk '{print $2}' | sort | fzf)" && zle end-of-line
+    return 0
+  fi
 
   # git grep(git_grep_fzf_vimでは、git管理外でも検索できるよう、-c grep.fallbackToNoIndex=true 付きにしてあります。)
-  [[ $BUFFER =~ '^gg' ]] \
-    && BUFFER="git_grep_fzf_vim ${RBUFFER}" && zle end-of-line && return 0
+  if [[ $BUFFER =~ '^gg' ]]; then
+    BUFFER="git_grep_fzf_vim ${RBUFFER}" && zle end-of-line
+    return 0
+  fi
 
   if $(is_git_repo); then
-    [[ $BUFFER =~ '^git_grep_fzf_vim +$' ]] \
-      && BUFFER="git_grep " && zle end-of-line && return 0
+    if [[ $BUFFER =~ '^git_grep_fzf_vim +$' ]]; then
+      BUFFER="git_grep " && zle end-of-line
+      return 0
+    fi
 
     # git checkout + completion
-    [[ $BUFFER =~ '^gco+$' ]] \
-    && zle autosuggest-clear && BUFFER="git checkout $(git_branch_fzf)" && zle end-of-line && return 0
+    if [[ $BUFFER =~ '^gco+$' ]]; then
+      zle autosuggest-clear && BUFFER="git checkout $(git_branch_fzf)" && zle end-of-line
+      return 0
+    fi
 
     # git branch + completion
-    [[ $BUFFER =~ '^b+$' ]] \
-    && zle autosuggest-clear \
-    && BUFFER="git_branch_fzf" \
-    && zle end-of-line \
-    && BUFFER="$(git_branch_fzf)" \
-    && zle end-of-line && return 0
+    if [[ $BUFFER =~ '^b+$' ]]; then
+      zle autosuggest-clear\
+        && BUFFER="git_branch_fzf" && zle end-of-line\
+        && BUFFER="$(git_branch_fzf)" && zle end-of-line
+      return 0
+    fi
 
     # git branch + completion
-    [[ $BUFFER =~ '^.*B+$' ]] \
-    && zle autosuggest-clear \
-    && zle end-of-line \
-    && BUFFER="${BUFFER%B}$(git_branch_fzf)" \
-    && zle end-of-line && return 0
+    if [[ $BUFFER =~ '^.*B+$' ]]; then
+      zle autosuggest-clear\
+        && zle end-of-line\
+        && BUFFER="${BUFFER%B}$(git_branch_fzf)"\
+        && zle end-of-line
+      return 0
+    fi
+
+    # git branch -M
+    if [[ $BUFFER =~ '^git branch -M+$' ]]; then
+      zle autosuggest-clear\
+        && zle end-of-line\
+        && BUFFER="${BUFFER%B} $(git branch --show-current)"\
+        && zle end-of-line
+      return 0
+    fi
 
     # git fetch origin --prune
-    [[ $BUFFER =~ '^gfo+$' ]] \
-    && BUFFER="git fetch origin --prune" && zle end-of-line && return 0
+    if [[ $BUFFER =~ '^gfo+$' ]]; then
+      BUFFER="git fetch origin --prune" && zle end-of-line
+      return 0
+    fi
 
     # git fetch origin $(git branch --show-current 2>/dev/null)
-    [[ $BUFFER =~ '^git fetch origin --prune+$' ]] \
-    && BUFFER="git fetch origin $(git branch --show-current 2>/dev/null)" && zle end-of-line && return 0
+    if [[ $BUFFER =~ '^git fetch origin --prune+$' ]]; then
+      BUFFER="git fetch origin $(git branch --show-current 2>/dev/null)" && zle end-of-line
+      return 0
+    fi
 
     # git merge
-    [[ $BUFFER =~ '^gme+$' ]] \
-    && BUFFER="git merge --ff" && zle end-of-line && return 0
+    if [[ $BUFFER =~ '^gme+$' ]]; then
+      BUFFER="git merge --ff" && zle end-of-line
+      return 0
+    fi
 
     # git push origin HEAD
-    [[ $BUFFER =~ '^gps+$' ]] \
-    && BUFFER="git push origin HEAD " && zle end-of-line && return 0
+    if [[ $BUFFER =~ '^gps+$' ]]; then
+      BUFFER="git push origin HEAD " && zle end-of-line
+      return 0
+    fi
+
 
     # git_deep_blame
-    [[ $BUFFER =~ '^gb+$' ]] \
-    && BUFFER="git_deepblame " && zle end-of-line && return 0
+    if [[ $BUFFER =~ '^gb+$' ]]; then
+      BUFFER="git_deepblame " && zle end-of-line
+      return 0
+    fi
+
+    # git_checkout
+    if [[ $BUFFER =~ '^git[ ]*co$' ]]; then
+      BUFFER="git checkout " && zle end-of-line
+      return 0
+    fi
   fi
 
   # bundle exec
-  [[ $BUFFER =~ '^be+$' ]] \
-  && BUFFER="bundle exec " && zle end-of-line && return 0
+  if [[ $BUFFER =~ '^be+$' ]]; then
+    BUFFER="bundle exec " && zle end-of-line
+    return 0
+  fi
 
   # bundle exec rails
-  [[ $BUFFER =~ '^rails+$' ]] \
-  && BUFFER="bundle exec rails " && zle end-of-line && return 0
+  if [[ $BUFFER =~ '^rails+$' ]]; then
+    BUFFER="bundle exec rails " && zle end-of-line
+    return 0
+  fi
 
   # bundle exec rails c
-  [[ $BUFFER =~ '^c+$' ]] \
-  && BUFFER="bundle exec rails c" && zle end-of-line && return 0
+  if [[ $BUFFER =~ '^c+$' ]]; then
+    BUFFER="bundle exec rails c" && zle end-of-line
+    return 0
+  fi
 
   # bundle exec rails c
-  [[ $BUFFER =~ '^sidekiq+$' ]] \
-  && BUFFER="bundle exec sidekiq -C config/sidekiq.yml" && zle end-of-line && return 0
+  if [[ $BUFFER =~ '^sidekiq+$' ]]; then
+    BUFFER="bundle exec sidekiq -C config/sidekiq.yml" && zle end-of-line
+    return 0
+  fi
 
   #  bundle exec rake + completion
-  [[ $BUFFER =~ '^rake+$' ]] \
-  && BUFFER="bundle exec rake $(fzf_bundle_exec_rake)" && zle end-of-line && return 0
+  if [[ $BUFFER =~ '^rake+$' ]]; then
+    BUFFER="bundle exec rake $(fzf_bundle_exec_rake)" && zle end-of-line
+    return 0
+  fi
 
   # bundle exec rails s
-  [[ $BUFFER =~ '^rs+$' ]] \
-  && BUFFER="bundle exec rails s -b 0.0.0.0" && zle end-of-line && return 0
+  if [[ $BUFFER =~ '^rs+$' ]]; then
+    BUFFER="bundle exec rails s -b 0.0.0.0" && zle end-of-line
+    return 0
+  fi
 
   # rg
-  [[ $BUFFER =~ '^rgg+$' ]] \
-  && BUFFER="rg_fzf_vim " && zle end-of-line && return 0
+  if [[ $BUFFER =~ '^rgg+$' ]]; then
+    BUFFER="rg_fzf_vim " && zle end-of-line
+    return 0
+  fi
 
   # docker exec
-  [[ $BUFFER =~ '^de+$' || $BUFFER =~ '^docker exec+$' ]] \
-  && BUFFER=$(docker_exec) && zle end-of-line && return 0
+  if [[ $BUFFER =~ '^de+$' || $BUFFER =~ '^docker exec+$' ]]; then
+    BUFFER=$(docker_exec) && zle end-of-line
+    return 0
+  fi
 
   # docker-compose
   dc_files=()
@@ -124,26 +171,43 @@ zle_space() {
         docker_compose="docker-compose -f ${dc_file}"
       fi
       # docker-compose
-      [[ $BUFFER =~ '^dc+$' ]] && BUFFER="${docker_compose} " && zle end-of-line && return 0
+      if [[ $BUFFER =~ '^dc+$' ]]; then
+        BUFFER="${docker_compose} " && zle end-of-line
+        return 0
+      fi
 
       # docker-compose up -d
-      [[ $BUFFER =~ '^dcu+$' ]] && BUFFER="${docker_compose} up -d" && zle end-of-line && return 0
+      if [[ $BUFFER =~ '^dcu+$' ]]; then
+        BUFFER="${docker_compose} up -d" && zle end-of-line
+        return 0
+      fi
 
       # docker-compose up -d; docker-compose logs -f
-      [[ $BUFFER =~ '^dcul+$' ]] && BUFFER="${docker_compose} up -d; ${docker_compose} logs -f" && zle end-of-line && return 0
+      if [[ $BUFFER =~ '^dcul+$' ]]; then
+        BUFFER="${docker_compose} up -d; ${docker_compose} logs -f" && zle end-of-line
+        return 0
+      fi
 
       # docker-compose down
-      [[ $BUFFER =~ '^dcd+$' ]] && BUFFER="${docker_compose} down" && zle end-of-line && return 0
+      if [[ $BUFFER =~ '^dcd+$' ]]; then
+        BUFFER="${docker_compose} down" && zle end-of-line
+        return 0
+      fi
 
       # docker-compose logs -f
-      [[ $BUFFER =~ '^dcl+$' ]] && BUFFER="${docker_compose} logs -f" && zle end-of-line && return 0
+      if [[ $BUFFER =~ '^dcl+$' ]]; then
+        BUFFER="${docker_compose} logs -f" && zle end-of-line
+        return 0
+      fi
 
       # docker-compose ps
-      [[ $BUFFER =~ '^dcp+$' ]] && BUFFER="${docker_compose} ps" && zle end-of-line && return 0
+      if [[ $BUFFER =~ '^dcp+$' ]]; then
+        BUFFER="${docker_compose} ps" && zle end-of-line
+        return 0
+      fi
     fi
   done
 
   zle self-insert
   return 1
 }
-

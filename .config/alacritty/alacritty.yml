@@ -28,18 +28,18 @@ colors:
     cyan:    '#5ffdff'
     white:   '#feffff'
 font:
-  size: 15
+  size: 20
   normal:
-    family: 'Fira Mono for Powerline'
+    family: 'JetBrainsMonoNL Nerd Font Mono'
     style: Regular
   bold:
-    family: 'Fira Mono for Powerline'
+    family: 'JetBrainsMono Nerd Font Mono'
     style: Medium
   italic:
-    family: 'Fira Mono for Powerline'
+    family: 'JetBrainsMonoNL Nerd Font Mono'
     style: Italic
   bold_italic:
-    family: 'Fira Mono for Powerline'
+    family: 'JetBrainsMono Nerd Font Mono'
     style: Bold Italic
 window:
   decorations: full         # ボーダーとタイトルバーを表示する

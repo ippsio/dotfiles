@@ -103,6 +103,7 @@ set signcolumn=yes
 set cursorline
 "set cursorlineopt="line,screenline,number"
 set cursorlineopt=screenline,number
+call setcellwidths([[0x2103, 0x2103, 2]])
 
 set guicursor=
 set wrap

@@ -13,12 +13,12 @@ if ( tput cols>/dev/null 2>&1 ); then
   fi
 fi
 git_log_h_s=$(git log -1 --pretty="%h %s" "$1");
-if [[ ! -z "${git_log_h_s}" ]]; then
-  msg="COPIED!\n=> ${git_log_h_s}\n";
-  printf "${git_log_h_s}"| pbcopy;
+if [[ -n "${git_log_h_s}" ]]; then
+  msg="HASH COPIED!\n=> ${git_log_h_s}\n";
+  printf '%s' "$(git rev-parse --short $1)"| pbcopy;
 else
   msg="NOTHING WAS COPIED!\n";
 fi
-tmux popup -w${width} -h5 -E "printf '${msg}'; read -n 1 -t 1;";
-printf "$msg"| tr "\n" " ";
+tmux popup -w${width} -h5 -E "printf '%s' '${git_log_h_s}'; read -n 1 -t 1;";
+printf '%s' "$msg"| tr "\n" " ";
 

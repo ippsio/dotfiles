@@ -32,6 +32,11 @@ set main-view-date-format = "%Y/%m/%d %H:%M(%a)"
 set blame-view-date-display = custom
 set blame-view-date-format = "%Y/%m/%d %H:%M(%a)"
 
+# ======================
+# diffビュー
+# ======================
+# diffの前後の見える範囲をデフォルトよりちょっとだけ広げる
+set diff-context = 7
 
 set vertical-split = yes
 # ======================
@@ -75,4 +80,3 @@ set editor-line-number = yes
 # リポジトリ内の監視されているファイルへの修正に基づいて、どうやってビューがリフレッシュされるかを設定
 set refresh-mode = periodic
 set refresh-interval = 3
-

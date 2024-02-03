@@ -1,0 +1,2 @@
+#!/bin/bash
+echo "%s" "$(pbpaste)"| md5sum| awk '{ print $1 }'
