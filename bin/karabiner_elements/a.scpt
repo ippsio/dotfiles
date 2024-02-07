@@ -1,12 +1,19 @@
 use AppleScript version "2.4"
 use scripting additions
-set aRes to dispAppWithFullScreen("Google Chrome") of me
+on run argv
+  if (count of argv) is 0 then
+    display dialog "No arguments provided. Please provide an argument." buttons {"OK"} default button "OK"
+    return
+  end if
+  set argvAppName to item 1 of argv
+  set aRes to dispAppWithFullScreen(argvAppName) of me
+end run
 
 on dispAppWithFullScreen(applicationName)
     set appName to returnExactNameOfAnApp(applicationName)
     if appName = false then
 
-      tell application "Google Chrome"
+      tell application argvAppName
         if not running then
           activate
           tell application "System Events"
