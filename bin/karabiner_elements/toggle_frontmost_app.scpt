@@ -19,9 +19,19 @@ on process(appName)
   end if
 end process
 
+on isFrontmost(appName)
+  tell application "System Events"
+    return frontmost of process appName
+  end tell
+end isFrontmost
+
 on toggleVisible(appName)
   if isVisible(appName) then
-    makeAppInvisible(appName)
+    if isFrontmost(appName) then
+      makeAppInvisible(appName)
+    else
+      makeAppFrontmost(appName)
+    end if
   else
     makeAppVisible(appName, false)
   end if
@@ -34,6 +44,12 @@ on isVisible(appName)
     end tell
   end tell
 end isVisible
+
+on makeAppFrontmost(appName)
+  tell application "System Events"
+    set frontmost of process appName to true
+  end tell
+end makeAppInvisible
 
 on makeAppInvisible(appName)
   tell application appName
@@ -65,8 +81,8 @@ end isAppOnCurrentVirtualDesktop
 on boot(appName)
   tell application appName
     activate
-    return true
   end tell
+  makeAppVisible(appName)
 end boot
 
 on isRunning(appName)
