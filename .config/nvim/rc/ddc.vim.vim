@@ -32,7 +32,7 @@ call ddc#custom#patch_global('autoCompleteEvents', [
 \ ])
 
 call ddc#custom#patch_global('sources', [
-\ 'nvim-lsp',
+\ 'lsp',
 \ 'around',
 \ 'file',
 \ ])
@@ -40,20 +40,19 @@ call ddc#custom#patch_global('sources', [
 call ddc#custom#patch_global('sourceOptions', {'_': {'minAutoCompleteLength': 2, 'matchers': ['matcher_fuzzy'], 'sorters': ['sorter_fuzzy'], 'converters': ['converter_fuzzy']}})
 call ddc#custom#patch_global('sourceOptions', {'file': {'mark': 'ddc-file', 'isVolatile': v:true, 'forceCompletionPattern': '\S/\S*'}})
 call ddc#custom#patch_global('sourceOptions', {'around': {'mark': 'ddc-arround', 'matchers': ['matcher_fuzzy']}})
-call ddc#custom#patch_global('sourceOptions', {'nvim-lsp': {'mark': 'lsp', 'forceCompletionPattern': '\.\w*|:\w*|->\w*'}})
+call ddc#custom#patch_global('sourceOptions', {'lsp': {'mark': 'lsp', 'forceCompletionPattern': '\.\w*|:\w*|->\w*'}})
 
 call ddc#custom#patch_global('filterParams', {'matcher_fuzzy': {'camelcase': v:true}})
 call ddc#custom#patch_global('filterParams', {'converter_fuzzy': { 'hlGroup': 'Comment'}})
 
 call ddc#custom#patch_global('sourceParams', {'around': {'maxSize': 500}})
-call ddc#custom#patch_global('sourceParams', {'nvim-lsp': {'kindLabels': {'Class': 'c'}}})
+call ddc#custom#patch_global('sourceParams', {'lsp': {'kindLabels': {'Class': 'c'}}})
 
 " ddc-file
 call ddc#custom#patch_filetype(['ps1', 'dosbatch', 'autohotkey', 'registry'], {'sourceOptions': {'file': {'forceCompletionPattern': '\S\\\S*', }, }, })
 call ddc#custom#patch_filetype(['ps1', 'dosbatch', 'autohotkey', 'registry'], {'sourceParams': {'file': {'mode': 'win32', }, }})
 
 call ddc#custom#patch_global('ui', 'pum')
-call ddc#custom#patch_global({'keywordPattern': '[a-zA-Z_]\w*', })
 
 " Use ddc.
 call ddc#enable()

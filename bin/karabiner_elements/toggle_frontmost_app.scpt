@@ -1,26 +1,77 @@
 on run argv
   if (count of argv) is 0 then
-    display dialog "No arguments provided. Please provide an argument." buttons {"OK"} default button "OK"
+    display dialog "No arguments provided." buttons {"OK"} default button "OK"
     return
   end if
   set appName to item 1 of argv
-
-  tell application appName
-    if not running then
-      activate
-      tell application "System Events"
-        set appProcess to process appName
-      end tell
-      set frontmost of appProcess to true
-    else
-      tell application "System Events"
-        set appProcess to process appName
-      end tell
-      if visible of appProcess then
-        set visible of appProcess to false
-      else
-        set frontmost of appProcess to true
-      end if
-    end if
-  end tell
+  set res to process(appName) of me
 end run
+
+on process(appName)
+  if isRunning(appName) then
+    if isAppOnCurrentVirtualDesktop(appName) then
+      toggleVisible(appName, false)
+    else
+      makeAppVisible(appName, true)
+    end if
+  else
+    boot(appName)
+  end if
+end process
+
+on toggleVisible(appName)
+  if isVisible(appName) then
+    makeAppInvisible(appName)
+  else
+    makeAppVisible(appName, false)
+  end if
+end toggleVisible
+
+on isVisible(appName)
+  tell application appName
+    tell application "System Events"
+      return visible of process appName
+    end tell
+  end tell
+end isVisible
+
+on makeAppInvisible(appName)
+  tell application appName
+    tell application "System Events"
+      set visible of process appName to false
+    end tell
+  end tell
+end makeAppInvisible
+
+on makeAppVisible(appName, onceInvisible)
+  tell application appName
+    tell application "System Events"
+      if onceInvisible then
+        set visible of process appName to false
+        delay 0.01
+      end if
+      set frontmost of process appName to true
+    end tell
+  end tell
+end makeAppVisible
+
+on isAppOnCurrentVirtualDesktop(appName)
+  tell application "System Events"
+    set cnt to count of windows of process appName
+    return cnt >= 1
+  end tell
+end isAppOnCurrentVirtualDesktop
+
+on boot(appName)
+  tell application appName
+    activate
+    return true
+  end tell
+end boot
+
+on isRunning(appName)
+  tell application appName
+    return running
+  end tell
+end isRunning
+
