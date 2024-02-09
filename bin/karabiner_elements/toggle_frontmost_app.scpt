@@ -5,7 +5,11 @@ on run argv
     return
   end if
   set appName to item 1 of argv
-  set res to process(appName) of me
+  try
+    set res to process(appName) of me
+  on error theCaption number n
+    display dialog theCaption
+  end try
 end run
 
 on process(appName)
@@ -81,19 +85,32 @@ on makeAppFrontmost(appName)
 end makeAppFrontmost
 
 on makeAppVisible(appName, onceInvisible)
-    tell application "System Events"
-      if onceInvisible then
-        set visible of process appName to false
-        delay 0.1
-        set visible of process appName to true
-      end if
-      set frontmost of process appName to true
+  tell application "System Events"
+    set process_appName to process appName
+  end tell
+  if onceInvisible then
+    -- 別の仮想デスクトップでAppが起動していれば、set visibleのfalse->trueでフォーカスされる模様(経験則)。
+    -- また一定のdelayを挟まないと動作が安定しない(経験則)
+    set visible of process_appName to false
+    delay 0.1
+    set visible of process_appName to true
+  end if
+  set frontmost of process_appName to true
+
+  -- 一定のdelayを挟まないと動作が安定しない(経験則)
+  delay 0.5
+  if not isAppOnCurrentVirtualDesktop(appName) then
+    -- ここまでしてもwindowが存在しない場合、ウインドウを新規作成する。
+    -- Chrome等のブラウザで、タブが全て閉じられている場合などを想定します。
+    tell application appName
+      make new window
     end tell
+  end if
 end makeAppVisible
 
 on makeAppInvisible(appName)
-    tell application "System Events"
-      set visible of process appName to false
-    end tell
+  tell application "System Events"
+    set visible of process appName to false
+  end tell
 end makeAppInvisible
 
