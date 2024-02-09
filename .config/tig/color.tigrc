@@ -16,7 +16,7 @@ color 'Date: '          default 017 dim
 #color id                223 default
 color date              106     default
 color graph-commit      203     default
-color cursor            006 default underline
+color cursor            default default underline standout
 color main-tracked      105     default bold
 color title-blur        234     250 dim
 color title-focus       023     50
