@@ -1,5 +1,6 @@
 on run argv
   --set argv to {"Microsoft Edge"}
+  --set argv to {"Slack"}
   if (count of argv) is 0 then
     display dialog "No arguments provided." buttons {"OK"} default button "OK"
     return
@@ -88,6 +89,7 @@ on makeAppVisible(appName, onceInvisible)
   tell application "System Events"
     set process_appName to process appName
   end tell
+  
   if onceInvisible then
     tryToFocusAppOnAnotherVirtualDesktop(appName)
     set frontmost of process_appName to true
@@ -98,6 +100,7 @@ on makeAppVisible(appName, onceInvisible)
         ここまでしてもwindowが存在しない場合、ウインドウを新規作成する。
         Chrome等のブラウザで、タブが全て閉じられている場合などを想定します。
       *)
+
       makeNewWindowOfApp(appName)
     end if
   else
@@ -107,9 +110,14 @@ end makeAppVisible
 
 on makeNewWindowOfApp(appName)
   tell application appName
-    make new window
+    -- make new window
+    activate
   end tell
-end
+  delay 0.5 -- Slackがアクティブになるのを待つ
+  tell application "System Events"
+    keystroke "n" using {command down} -- 新しいウィンドウを開く
+  end tell
+end makeNewWindowOfApp
 
 on tryToFocusAppOnAnotherVirtualDesktop(appName)
   tell application "System Events"
@@ -131,4 +139,5 @@ on makeAppInvisible(appName)
     set visible of process appName to false
   end tell
 end makeAppInvisible
+
 
