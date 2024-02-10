@@ -21,6 +21,7 @@ on process(appName)
     end if
   else
     boot(appName)
+    makeAppVisible(appName, false)
   end if
 end process
 
@@ -34,7 +35,6 @@ on boot(appName)
   tell application appName
     activate
   end tell
-  makeAppVisible(appName)
 end boot
 
 on isAppOnCurrentVirtualDesktop(appName)
@@ -89,24 +89,42 @@ on makeAppVisible(appName, onceInvisible)
     set process_appName to process appName
   end tell
   if onceInvisible then
-    -- 別の仮想デスクトップでAppが起動していれば、set visibleのfalse->trueでフォーカスされる模様(経験則)。
-    -- また一定のdelayを挟まないと動作が安定しない(経験則)
-    set visible of process_appName to false
-    delay 0.1
-    set visible of process_appName to true
-  end if
-  set frontmost of process_appName to true
-
-  -- 一定のdelayを挟まないと動作が安定しない(経験則)
-  delay 0.5
-  if not isAppOnCurrentVirtualDesktop(appName) then
-    -- ここまでしてもwindowが存在しない場合、ウインドウを新規作成する。
-    -- Chrome等のブラウザで、タブが全て閉じられている場合などを想定します。
-    tell application appName
-      make new window
-    end tell
+    tryToFocusAppOnAnotherVirtualDesktop(appName)
+    set frontmost of process_appName to true
+    (* 一定のdelayを挟まないと動作が安定しない(経験則) *)
+    delay 0.5
+    if not isAppOnCurrentVirtualDesktop(appName) then
+      (*
+        ここまでしてもwindowが存在しない場合、ウインドウを新規作成する。
+        Chrome等のブラウザで、タブが全て閉じられている場合などを想定します。
+      *)
+      makeNewWindowOfApp(appName)
+    end if
+  else
+    set frontmost of process_appName to true
   end if
 end makeAppVisible
+
+on makeNewWindowOfApp(appName)
+  tell application appName
+    make new window
+  end tell
+end
+
+on tryToFocusAppOnAnotherVirtualDesktop(appName)
+  tell application "System Events"
+    (*
+      別の仮想デスクトップでAppが起動している場合、
+      一度 visible を false に設定し、
+      再度 visible を true に設定すると、
+      該当のAppが起動している仮想デスクトップにフォーカスが移動するようです(経験則)。
+      その際、一定のdelayを挟まないと動作が安定しないようです(こちらも経験則)。
+    *)
+    set visible of process appName to false
+    delay 0.1
+    set visible of process appName to true
+  end tell
+end tryToFocusAppOnAnotherVirtualDesktop
 
 on makeAppInvisible(appName)
   tell application "System Events"
