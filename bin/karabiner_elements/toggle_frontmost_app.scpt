@@ -21,7 +21,7 @@ on process(appName)
       makeAppVisible(appName, true)
     end if
   else
-    boot(appName)
+    activate(appName)
     makeAppVisible(appName, false)
   end if
 end process
@@ -32,11 +32,11 @@ on isRunning(appName)
   end tell
 end isRunning
 
-on boot(appName)
+on activate(appName)
   tell application appName
     activate
   end tell
-end boot
+end activate
 
 on isAppOnCurrentVirtualDesktop(appName)
   tell application "System Events"
@@ -89,7 +89,7 @@ on makeAppVisible(appName, onceInvisible)
   tell application "System Events"
     set process_appName to process appName
   end tell
-  
+
   if onceInvisible then
     tryToFocusAppOnAnotherVirtualDesktop(appName)
     set frontmost of process_appName to true
@@ -109,11 +109,10 @@ on makeAppVisible(appName, onceInvisible)
 end makeAppVisible
 
 on makeNewWindowOfApp(appName)
-  tell application appName
-    -- make new window
-    activate
-  end tell
-  delay 0.5 -- Slackがアクティブになるのを待つ
+  activate(appName)
+
+  (* 待つ *)
+  delay 0.5
   tell application "System Events"
     keystroke "n" using {command down} -- 新しいウィンドウを開く
   end tell
