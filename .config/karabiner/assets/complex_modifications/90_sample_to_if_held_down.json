@@ -1,0 +1,18 @@
+{
+  "title": "[30:to_if_held_down]",
+  "rules": [{
+    "description": "31: to_if_held_down sample",
+    "manipulators": [
+      {
+        "type": "basic",
+        "from": {"key_code": "right_option"},
+        "to": [ {"key_code": "right_option", "lazy": true} ],
+        "to_if_alone": [ {"key_code": "right_option"} ],
+        "to_if_held_down": [ {"shell_command": "~/dotfiles/bin/to_if_held_down.sh"} ],
+        "parameters": {
+          "basic.to_if_held_down_threshold_milliseconds": 100
+        }
+      }
+    ]
+  }]
+}

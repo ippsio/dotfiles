@@ -119,7 +119,7 @@ nnoremap <silent> W :<C-u>:w<CR>:echo 'SAVED! ' . strftime("%Y/%m/%d %H:%M:%S") 
 " [その他]
 " ファイル名と行番号を表示する。ついでにファイル名をクリップボードにコピーする。
 " nnoremap <silent> <C-g> :let @* = substitute(expand("%:p"), $HOME, "~", "g")<CR><C-g>
-nnoremap <silent> <C-g> :call <SID>CopyFilename()<CR><C-g>
+nnoremap <C-g> :call <SID>CopyFilename()<CR>
 
 function! s:CopyFilename()
   let l:dot_git = system('cd ' . expand('%:h') . '; git rev-parse --git-dir 2>/dev/null')
@@ -131,4 +131,5 @@ function! s:CopyFilename()
   endif
   let l:path = substitute(l:file, "[\\n|\\r]", "", "g")
   let @* = l:path
+  echo '"' . l:path . '" <-COPIED INTO CLIPBOARD.'
 endfunction

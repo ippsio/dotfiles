@@ -1,4 +1,6 @@
-if !jetpack#tap(expand('<sfile>:t:r')) | finish | endif
+if !jetpack#tap(expand('<script>:t:r'))
+  finish " このファイル名に該当するプラグインがJetpack上で有効でない場合finishします
+endif
 
 " pum#visible() が真で、ポップアップの選択肢を上下移動します。
 " pum#visible() が偽で、｛カーソルが行頭、又はカーソル直前が空白｝なら、単に<Up>,<Down>します。そうでなければddcのポップアップを開きます。
@@ -34,11 +36,10 @@ call ddc#custom#patch_global('autoCompleteEvents', [
 call ddc#custom#patch_global('sources', [
 \ 'lsp',
 \ 'around',
-\ 'file',
 \ ])
 
 call ddc#custom#patch_global('sourceOptions', {'_': {'minAutoCompleteLength': 2, 'matchers': ['matcher_fuzzy'], 'sorters': ['sorter_fuzzy'], 'converters': ['converter_fuzzy']}})
-call ddc#custom#patch_global('sourceOptions', {'file': {'mark': 'ddc-file', 'isVolatile': v:true, 'forceCompletionPattern': '\S/\S*'}})
+"call ddc#custom#patch_global('sourceOptions', {'file': {'mark': 'ddc-file', 'isVolatile': v:true, 'forceCompletionPattern': '\S/\S*'}})
 call ddc#custom#patch_global('sourceOptions', {'around': {'mark': 'ddc-arround', 'matchers': ['matcher_fuzzy']}})
 call ddc#custom#patch_global('sourceOptions', {'lsp': {'mark': 'lsp', 'forceCompletionPattern': '\.\w*|:\w*|->\w*'}})
 
@@ -49,8 +50,8 @@ call ddc#custom#patch_global('sourceParams', {'around': {'maxSize': 500}})
 call ddc#custom#patch_global('sourceParams', {'lsp': {'kindLabels': {'Class': 'c'}}})
 
 " ddc-file
-call ddc#custom#patch_filetype(['ps1', 'dosbatch', 'autohotkey', 'registry'], {'sourceOptions': {'file': {'forceCompletionPattern': '\S\\\S*', }, }, })
-call ddc#custom#patch_filetype(['ps1', 'dosbatch', 'autohotkey', 'registry'], {'sourceParams': {'file': {'mode': 'win32', }, }})
+"call ddc#custom#patch_filetype(['ps1', 'dosbatch', 'autohotkey', 'registry'], {'sourceOptions': {'file': {'forceCompletionPattern': '\S\\\S*', }, }, })
+"call ddc#custom#patch_filetype(['ps1', 'dosbatch', 'autohotkey', 'registry'], {'sourceParams': {'file': {'mode': 'win32', }, }})
 
 call ddc#custom#patch_global('ui', 'pum')
 

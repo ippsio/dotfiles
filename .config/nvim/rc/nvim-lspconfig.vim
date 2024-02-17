@@ -1,83 +1,101 @@
-if !jetpack#tap(expand('<sfile>:t:r')) | finish | endif
+if !jetpack#tap(expand('<script>:t:r'))
+  finish " このファイル名に該当するプラグインがJetpack上で有効でない場合finishします
+endif
 
 lua << EOF
-local on_attach =
-  function (client, bufnr)
-    local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
-    local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
-    local opts = { noremap=true, silent=true }
-  end
 
-require("mason").setup()
-
-local mason_lspconfig = require('mason-lspconfig')
-mason_lspconfig.setup {
+local mason_lspconfig_setup_opts = {
   ensure_installed = {
-    'vimls',
-    'lua_ls',
-    'pylsp',
-    'solargraph',
-    'tsserver',
-    'sqlls',
-    'jdtls'
+    "bashls",
+    "vimls",
+    "lua_ls",
+    "pylsp",
+    "solargraph",
+    "tsserver",
+    "sqlls",
+    "jdtls"
   }
 }
---local nvim_lsp = require('lspconfig')
---mason_lspconfig.setup_handlers({
---  function(server_name)
---  local opts = {}
---    opts.on_attach = function(_, bufnr)
---      local bufopts = { silent = true, buffer = bufnr }
---      vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
---      vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
---      vim.keymap.set('n', 'gs', vim.lsp.buf.signature_help, bufopts)
---      vim.keymap.set('n', 'gtD', vim.lsp.buf.type_definition, bufopts)
---      --vim.keymap.set('n', 'grf', vim.lsp.buf.references, bufopts)
---      --vim.keymap.set('n', '<space>p', vim.lsp.buf.format, bufopts)
---      --vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
---      --vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
---      --vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
---      --vim.keymap.set('n', 'gx', vim.lsp.diagnostic.show_line_diagnostics, bufopts)
---      --vim.keymap.set('n', 'g[', vim.lsp.diagnostic.goto_prev, bufopts)
---      --vim.keymap.set('n', 'g]', vim.lsp.diagnostic.goto_next, bufopts)
---
---      require "lsp_signature".setup(cfg)
---      vim.keymap.set({ 'n' }, '<C-k>', function()       require('lsp_signature').toggle_float_win()
---      end, { silent = true, noremap = true, desc = 'toggle signature' })
---
---      vim.keymap.set({ 'n' }, '<Leader>k', function()
---       vim.lsp.buf.signature_help()
---      end, { silent = true, noremap = true, desc = 'toggle signature' })
---      require("lsp_signature").status_line(max_width)
---     end
---  nvim_lsp[server_name].setup(opts)
---  end})
---EOF
+local lsp_signature_on_attach_opts = {
+  bind = false,
+  use_lspsaga = true,
+  floating_window = true,
+  fix_pos = true,
+  hint_enable = true,
+  hi_parameter = "Search",
+  handler_opts = {
+    "shadow"
+  }
+}
 
-
-local nvim_lsp = require('lspconfig')
-mason_lspconfig.setup_handlers({
+local mason_lspconfig_setup_handlers_opts = {
+  -- The first entry (without a key) will be the default handler
+  -- and will be called for each installed server that doesn't have
+  -- a dedicated handler.
   function(server_name)
-  local opts = {}
-    opts.on_attach = function(_, bufnr)
-      local bufopts = { silent = true, buffer = bufnr }
-      vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
-      vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
-      vim.keymap.set('n', 'gs', vim.lsp.buf.signature_help, bufopts)
-      vim.keymap.set('n', 'gtD', vim.lsp.buf.type_definition, bufopts)
-    end
-    nvim_lsp[server_name].setup({
-      require"lsp_signature".on_attach({
-      bind = false,
-      use_lspsaga = true,
-      floating_window = true,
-      fix_pos = true,
-      hint_enable = true,
-      hi_parameter = "Search",
-      handler_opts = {
-        "shadow"
-       }
-      })
-    })
-  end})
+    require("lspconfig")[server_name].setup {
+      require "lsp_signature".on_attach(lsp_signature_on_attach_opts)
+    }
+  end,
+  -- Next, you can provide targeted overrides for specific servers.
+  --["rust_analyzer"] = function ()
+  --    require("rust-tools").setup {}
+  --end,
+  --["lua_ls"] = function ()
+  --    local lspconfig = require("lspconfig")
+  --    lspconfig.lua_ls.setup {
+  --        settings = {
+  --            Lua = {
+  --                diagnostics = {
+  --                    globals = { "vim" }
+  --                }
+  --            }
+  --        }
+  --    }
+  --end,
+}
+require("mason").setup()
+require("mason-lspconfig").setup(mason_lspconfig_setup_opts)
+require("mason-lspconfig").setup_handlers(mason_lspconfig_setup_handlers_opts)
+
+
+-- Global mappings.
+-- See `:help vim.diagnostic.*` for documentation on any of the below functions
+vim.keymap.set('n', '<space>e', vim.diagnostic.open_float)
+vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
+vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
+vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist)
+
+-- Use LspAttach autocommand to only map the following keys
+-- after the language server attaches to the current buffer
+vim.api.nvim_create_autocmd('LspAttach', {
+  group = vim.api.nvim_create_augroup('UserLspConfig', {}),
+  callback = function(ev)
+    -- Enable completion triggered by <c-x><c-o>
+    vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
+
+    -- Buffer local mappings.
+    -- See `:help vim.lsp.*` for documentation on any of the below functions
+    local opts = { buffer = ev.buf }
+    vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
+    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
+    vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
+    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
+    vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
+    vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, opts)
+    vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, opts)
+    vim.keymap.set('n', '<space>wl', function()
+      print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+    end, opts)
+    vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, opts)
+    vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, opts)
+    vim.keymap.set({ 'n', 'v' }, '<space>ca', vim.lsp.buf.code_action, opts)
+    vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
+    vim.keymap.set('n', '<space>f', function()
+      vim.lsp.buf.format { async = true }
+    end, opts)
+  end,
+})
+
 EOF
+

@@ -11,6 +11,12 @@ augroup END
 """  """ " Quickfixのバッファから抜ける時は、Quickfixを自動的に閉じる。
 """  """ au BufLeave * if &filetype == 'qf' | ccl | endif
 """augroup END
+
+augroup vim-quickfix
+  " 残ったバッファがquickfixのみだった場合、vimを閉じる。
+  autocmd BufEnter * if winnr('$') == 1 && &buftype == 'quickfix' | q | endif
+augroup END
+
 augroup vimrc-highlight
   " 大きなファイルだったら先頭の100行位でファイルタイプを解析する。
   autocmd!

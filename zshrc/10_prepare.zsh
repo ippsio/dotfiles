@@ -140,7 +140,8 @@ chkfile_or_dlink ~/.config/bat           ~/dotfiles/.config/bat
 chkfile_or_dlink ~/.config/alacritty     ~/dotfiles/.config/alacritty
 chkfile_or_dlink ~/.config/ranger        ~/dotfiles/.config/ranger
 chkfile_or_dlink ~/.config/tig          ~/dotfiles/.config/tig
-chkfile_or_dlink ~/.config/karabiner     ~/setting_box/karabiner
+mkdir -p ~/.config/karabiner/assets
+chkfile_or_dlink ~/.config/karabiner/assets/complex_modifications     ~/dotfiles/.config/karabiner /assets/ complex_modifications
 
 chkfile_or_flink ~/.gitattributes_global ~/dotfiles/.gitattributes_global
 chkfile_or_flink ~/.gitconfig            ~/dotfiles/.gitconfig

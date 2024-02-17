@@ -11,6 +11,7 @@ endif
 packadd vim-jetpack
 call jetpack#begin()
 Jetpack 'tani/vim-jetpack', {'opt': 1} "bootstrap
+Jetpack 'rhysd/accelerated-jk'
 Jetpack 'tpope/vim-fugitive'
 Jetpack 'airblade/vim-gitgutter'
 Jetpack 'rhysd/conflict-marker.vim'
@@ -23,12 +24,12 @@ Jetpack 'bronson/vim-trailing-whitespace'
 Jetpack 'junegunn/fzf', { 'do': './install --all --no-bash --no-fish --no-zsh' }
 Jetpack 'junegunn/fzf.vim'
 Jetpack 'Shougo/vimproc.vim', { 'do': 'make' }
+Jetpack 'Shougo/deol.nvim'
 Jetpack 'ippsio/clip_diff.vim'
 Jetpack 'nvim-treesitter/nvim-treesitter'
 Jetpack 'vim-jp/vimdoc-ja'
 Jetpack 'leshill/vim-json', { 'for': ['json']}
 Jetpack 'rcmdnk/vim-markdown', { 'for': ['markdown']}
-Jetpack 'leafgarland/typescript-vim', { 'for': ['js', 'typescript']}
 Jetpack 'stephpy/vim-yaml', { 'for': ['yaml']}
 Jetpack 'mechatroner/rainbow_csv', { 'for': ['css', 'scss']}
 Jetpack 'ap/vim-css-color', { 'for': ['css', 'scss']}
@@ -39,7 +40,6 @@ Jetpack 'vim-scripts/ruby-matchit', { 'for': ['ruby', 'rake', 'eruby', 'slim'] }
 Jetpack 'slim-template/vim-slim', { 'for': ['ruby', 'rake', 'eruby', 'slim'] }
 Jetpack 'takkii/ruby-dictionary3', { 'for': ['ruby', 'rake', 'eruby', 'slim'] }
 Jetpack 'AndrewRadev/splitjoin.vim', { 'for': ['ruby', 'rake', 'eruby', 'slim'] }
-Jetpack 'Quramy/tsuquyomi', { 'for': ['js', 'typescript'] }
 Jetpack 'nvie/vim-flake8', { 'for': ['python'] }
 Jetpack 'tell-k/vim-autopep8', { 'for': ['python'] }
 Jetpack 'kana/vim-gf-user', { 'for': ['diff'] }
@@ -50,7 +50,7 @@ Jetpack 'neovim/nvim-lspconfig'
 Jetpack 'vim-denops/denops.vim'
 Jetpack 'Shougo/ddc.vim'
 Jetpack 'Shougo/ddc-around'
-"Jetpack 'Shougo/ddc-file'
+Jetpack 'Shougo/ddc-file'
 Jetpack 'LumaKernel/ddc-source-file'
 Jetpack 'Shougo/ddc-source-nvim-lsp'
 Jetpack 'Shougo/ddc-matcher_head'
@@ -66,6 +66,9 @@ Jetpack 'machakann/vim-sandwich'
 Jetpack 'terryma/vim-expand-region'
 Jetpack 'lambdalisue/fern.vim'
 Jetpack 'yuki-yano/fern-preview.vim'
+Jetpack 'lambdalisue/guise.vim'
+Jetpack 'dense-analysis/ale'
+Jetpack 'thoughtbot/vim-rspec'
 
 let s:available_pkg = stdpath('data') . '/' . 'site' . '/pack/jetpack/opt/available_packages.json'
 let s:available_pkg_text = filereadable(s:available_pkg) ? join(readfile(s:available_pkg)) : "{}"
@@ -75,5 +78,18 @@ endif
 
 call jetpack#end()
 
-runtime! rc/*.vim rc/*/*.vim
+for rc_filename in split(glob(expand("<script>:p:h") . "/rc/*.vim"))
+  let s:plugin_name = fnamemodify(rc_filename, ':t:r')
+  let s:runtime_list = []
+
+  let runtime_target = 'rc/' . s:plugin_name . '.vim'
+  if jetpack#tap(s:plugin_name)
+    call add(s:runtime_list, runtime_target)
+  else
+    echo(expand('<script>') . ' ' . s:plugin_name . 'はJetpackに認識されていません。' . runtime_target . ' はruntime!しません。')
+  endif
+  if len(s:runtime_list) > 0
+    execute 'runtime! ' . join(s:runtime_list, ' ')
+  endif
+endfor
 
