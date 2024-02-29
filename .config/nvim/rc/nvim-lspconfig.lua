@@ -1,9 +1,4 @@
-if !jetpack#tap(expand('<script>:t:r'))
-  finish " このファイル名に該当するプラグインがJetpack上で有効でない場合finishします
-endif
-
 lua << EOF
-
 local mason_lspconfig_setup_opts = {
   ensure_installed = {
     "bashls",
@@ -96,6 +91,4 @@ vim.api.nvim_create_autocmd('LspAttach', {
     end, opts)
   end,
 })
-
 EOF
-

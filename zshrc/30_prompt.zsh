@@ -78,14 +78,22 @@ zstyle ':vcs_info:git+set-message:*' hooks git-set-message-hook
   local ahead_7=$(echo -e ${git_status}| egrep -E "ahead [0-9]*"| sed -e "s/^.*\[ahead \([0-9]*\).*/\1/")
   local behind_8=$(echo -e ${git_status}| grep -E "behind [0-9]*"| sed -e "s/^.*[ \[]behind \([0-9]*\).*/\1/")
   local stash_9="$(git stash list 2>/dev/null| grep -Ec "^stash@")"
-  local has_tracking_branch_10=$(git config --local branch.${hook_com[branch]}.remote 2>/dev/null)
+  local has_remote_10=$(git config --local branch.${hook_com[branch]}.remote)
+  local parent_branch=
   repo_1="${repo_1:-NOT_SPECIFIED}"
   ahead_7="${ahead_7:-0}"
+  if [[ -z "${ahead_7}" ]]; then
+    local parent_branch=$(git_obtain_parent_branch)
+    if [[ -n "${parent_branch}" ]]; then
+      aheading=$(git log --oneline "${parent_branch}"..HEAD| wc -l| tr -d ' ')
+      ahead_7="${aheading}(${parent_branch}..HEAD)"
+    fi
+  fi
   behind_8="${behind_8:-0}"
-  has_tracking_branch_10="track:${has_tracking_branch_10:-none}"
+  has_remote_10="track(${has_remote_10:-none})"
 
   # misc (%m) に追加
-  hook_com[misc]="${repo_1}\t${hook_com[branch]}\t${untracked_3}\t${unstaged_4}\t${unmerged_5}\t${index_6}\t${ahead_7}\t${behind_8}\t${stash_9}\t${has_tracking_branch_10}\t${hook_com[action]}"
+  hook_com[misc]="${repo_1}\t${hook_com[branch]}\t${untracked_3}\t${unstaged_4}\t${unmerged_5}\t${index_6}\t${ahead_7}\t${behind_8}\t${stash_9}\t${has_remote_10}\t${hook_com[action]}"
 }
 
 my_precmd_hook() { return 0; }

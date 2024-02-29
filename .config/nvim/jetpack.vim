@@ -38,7 +38,6 @@ Jetpack 'vim-ruby/vim-ruby', { 'for': ['ruby', 'rake', 'eruby', 'slim'] }
 Jetpack 'tpope/vim-rails'
 Jetpack 'vim-scripts/ruby-matchit', { 'for': ['ruby', 'rake', 'eruby', 'slim'] }
 Jetpack 'slim-template/vim-slim', { 'for': ['ruby', 'rake', 'eruby', 'slim'] }
-Jetpack 'takkii/ruby-dictionary3', { 'for': ['ruby', 'rake', 'eruby', 'slim'] }
 Jetpack 'AndrewRadev/splitjoin.vim', { 'for': ['ruby', 'rake', 'eruby', 'slim'] }
 Jetpack 'nvie/vim-flake8', { 'for': ['python'] }
 Jetpack 'tell-k/vim-autopep8', { 'for': ['python'] }
@@ -50,7 +49,6 @@ Jetpack 'neovim/nvim-lspconfig'
 Jetpack 'vim-denops/denops.vim'
 Jetpack 'Shougo/ddc.vim'
 Jetpack 'Shougo/ddc-around'
-Jetpack 'Shougo/ddc-file'
 Jetpack 'LumaKernel/ddc-source-file'
 Jetpack 'Shougo/ddc-source-nvim-lsp'
 Jetpack 'Shougo/ddc-matcher_head'
@@ -69,6 +67,8 @@ Jetpack 'yuki-yano/fern-preview.vim'
 Jetpack 'lambdalisue/guise.vim'
 Jetpack 'dense-analysis/ale'
 Jetpack 'thoughtbot/vim-rspec'
+Jetpack 'tpope/vim-dispatch'
+Jetpack 'echasnovski/mini.animate'
 
 let s:available_pkg = stdpath('data') . '/' . 'site' . '/pack/jetpack/opt/available_packages.json'
 let s:available_pkg_text = filereadable(s:available_pkg) ? join(readfile(s:available_pkg)) : "{}"
@@ -78,18 +78,13 @@ endif
 
 call jetpack#end()
 
-for rc_filename in split(glob(expand("<script>:p:h") . "/rc/*.vim"))
-  let s:plugin_name = fnamemodify(rc_filename, ':t:r')
-  let s:runtime_list = []
-
-  let runtime_target = 'rc/' . s:plugin_name . '.vim'
-  if jetpack#tap(s:plugin_name)
-    call add(s:runtime_list, runtime_target)
+for s:rcfile_full in split(glob(expand('<script>:h') . '/rc/*.vim'))
+  let s:rcfile = fnamemodify(s:rcfile_full, ':t')
+  let s:plugin = fnamemodify(s:rcfile_full, ':t:r')
+  if jetpack#tap(s:plugin)
+    execute 'runtime! rc/' . s:rcfile
   else
-    echo(expand('<script>') . ' ' . s:plugin_name . 'はJetpackに認識されていません。' . runtime_target . ' はruntime!しません。')
-  endif
-  if len(s:runtime_list) > 0
-    execute 'runtime! ' . join(s:runtime_list, ' ')
+    echo('Jetpackは' . s:plugin . 'を認識してません。' . s:rcfile_full . 'はruntime!しません。')
   endif
 endfor
 

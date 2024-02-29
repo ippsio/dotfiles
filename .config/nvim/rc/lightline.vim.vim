@@ -1,13 +1,9 @@
-if !jetpack#tap(expand('<script>:t:r'))
-  finish " このファイル名に該当するプラグインがJetpack上で有効でない場合finishします
-endif
-
 set laststatus=2
 let g:lightline = {
-  \  'colorscheme': 'Tomorrow_Night_Eighties',
-  \  'inactive': {'left': [ ['mode', 'paste'], ['readonly', 'filepath']], 'right': [ [ 'lineinfo' ]] },
-  \  'active': {  'left': [ ['mode', 'paste'], ['readonly', 'filepath']], 'right': [ [ 'lineinfo' ], ['info']] },
-  \  'component': { 'lineinfo': '%l/%L(%p%%):%v%<', 'info': '%{%StrGitMergeBase()%}(%{%StrUnderCursor()%} 0x%02B)' . &fileformat . '|' . &fileencoding . '%<'},
+  \  'colorscheme': 'Tomorrow',
+  \  'inactive': {'left': [ ['mode', 'paste'], ['readonly', 'filepath']], 'right': [ ['lineinfo']] },
+  \  'active': {  'left': [ ['mode', 'paste'], ['readonly', 'filepath']], 'right': [ ['info'], ['lineinfo']] },
+  \  'component': { 'lineinfo': '%v:%l/%L(%p%%)%<', 'info': '%{%StrGitMergeBase()%}(%{%StrUnderCursor()%} 0x%02B)' . &fileformat . '|' . &fileencoding . '%<'},
   \  'component_function': { 'filepath': 'FileName', 'git': 'StrGitMergeBase'},
   \ }
 

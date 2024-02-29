@@ -54,3 +54,7 @@ execute_zle_shift_left() { BUFFER="cd .." && zle accept-line; }
 zle -N execute_zle_shift_left
 bindkey "^[[1;2D" execute_zle_shift_left
 
+source ~/dotfiles/zshrc/44_zle_enter.zsh
+zle -N execute_zle_enter
+bindkey '^M' execute_zle_enter
+

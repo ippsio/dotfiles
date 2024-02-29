@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+git config --local "branch.$(git branch --show-current).remote" 2>/dev/null

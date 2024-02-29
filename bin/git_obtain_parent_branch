@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+git log --simplify-by-decoration --pretty="%D" -1 HEAD^| awk -F ',' '{ print $1 }'| sed 's#origin/##'

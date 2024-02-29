@@ -10,7 +10,8 @@ ARG_AS_REALPATH=$(cd "${ARG}" && pwd)
 
 FZF_PROMPT="$(basename $0)"
 FZF_HEADER="C-g:ripgrep, C-/:TogglePreview"
-FIND_CMD="rg --files --hidden --no-ignore --sortr=path ${ARG} 2>/dev/null"
+# FIND_CMD="rg --files --hidden --no-ignore --sortr=path ${ARG} 2>/dev/null"
+FIND_CMD="rg --files --hidden --no-ignore ${ARG} 2>/dev/null"
 FZF_RESULT=$(eval "${FIND_CMD}"| grep -v "^${ARG}$"| sed 's#//#/#'| sed 's#^./##' \
   | home_as_tilde\
   | fzf +m \

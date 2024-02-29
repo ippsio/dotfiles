@@ -1,7 +1,3 @@
-if !jetpack#tap(expand('<script>:t:r'))
-  finish " このファイル名に該当するプラグインがJetpack上で有効でない場合finishします
-endif
-
 hi mkdListBlock0 guifg=#55ccff guibg=none ctermfg=14 cterm=bold
 hi mkdListBlock1 guifg=#55ccff guibg=none ctermfg=14 cterm=bold
 

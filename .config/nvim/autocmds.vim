@@ -37,9 +37,9 @@ augroup vimrc-highlight
 
   " ft=*.rb,pythonなら、コード規約遵守のための縦線を引く(120桁目位に）。
   " autocmd BufRead,BufEnter,BufWinEnter * let &colorcolumn=join(range(0, 0), ",")
-  autocmd BufRead,BufEnter,BufWinEnter *.rb let &colorcolumn=join(range(141, 141), ",")
-  autocmd BufRead,BufEnter,BufWinEnter *.rake let &colorcolumn=join(range(141, 141), ",")
-  autocmd BufRead,BufEnter,BufWinEnter *.py let &colorcolumn=join(range(141, 141), ",")
+  autocmd BufRead,BufEnter,BufWinEnter *.rb let &colorcolumn=join(range(121, 121), ",")
+  autocmd BufRead,BufEnter,BufWinEnter *.rake let &colorcolumn=join(range(121, 121), ",")
+  autocmd BufRead,BufEnter,BufWinEnter *.py let &colorcolumn=join(range(121, 121), ",")
 
 augroup END
 

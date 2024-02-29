@@ -1,7 +1,3 @@
-if !jetpack#tap(expand('<script>:t:r'))
-  finish " このファイル名に該当するプラグインがJetpack上で有効でない場合finishします
-endif
-
 "autopep8を<f8>で実行
 function! Preserve(command)
   " Save the last search.

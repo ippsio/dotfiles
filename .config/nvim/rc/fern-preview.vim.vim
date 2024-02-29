@@ -1,7 +1,3 @@
-if !jetpack#tap(expand('<script>:t:r'))
-  finish " このファイル名に該当するプラグインがJetpack上で有効でない場合finishします
-endif
-
 function! s:fern_settings() abort
   nmap <silent> <buffer> p <Plug>(fern-action-preview:auto:toggle)
   nmap <silent> <buffer> <C-d> <Plug>(fern-action-preview:scroll:down:half)
