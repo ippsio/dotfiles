@@ -38,12 +38,11 @@ set blame-view-date-format = "%Y/%m/%d %H:%M(%a)"
 # diffの前後の見える範囲をデフォルトよりちょっとだけ広げる
 set diff-context = 7
 
-set vertical-split = yes
 # ======================
 # ビューの分割
 # ======================
 # ビューを水平方向あるいは垂直方向に分割するかどうか
-set vertical-split = yes
+set vertical-split = no
 # Width of the right-most view in a vertically split display
 set split-view-width = 80%
 # 水平方向の分割表示時の下のビューの高さ

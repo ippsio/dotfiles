@@ -4,6 +4,7 @@ animate.setup(
 {
     -- Cursor path
     cursor = {
+      enable = true,
       -- Animate for 200 milliseconds with linear easing
       timing = animate.gen_timing.linear({ duration = 200, unit = 'total' }),
 
@@ -15,6 +16,7 @@ animate.setup(
 
     -- Vertical scroll
     scroll = {
+      enable = false,
       -- Animate for 200 milliseconds with linear easing
       timing = animate.gen_timing.linear({ duration = 200, unit = 'total' }),
 
@@ -24,6 +26,7 @@ animate.setup(
 
     -- Window resize
     resize = {
+      enable = false,
       -- Animate for 200 milliseconds with linear easing
       timing = animate.gen_timing.linear({ duration = 200, unit = 'total' }),
 
@@ -33,6 +36,7 @@ animate.setup(
 
     -- Window open
     open = {
+      enable = true,
       -- Animate for 400 milliseconds with linear easing
       timing = animate.gen_timing.linear({ duration = 400, unit = 'total' }),
 
@@ -44,6 +48,7 @@ animate.setup(
     },
 
     close = {
+      enable = true,
       -- Animate for 400 milliseconds with linear easing
       timing = animate.gen_timing.linear({ duration = 400, unit = 'total' }),
 

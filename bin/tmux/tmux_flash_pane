@@ -1,12 +1,11 @@
 #!/bin/bash
 window_active_style_was=$(tmux show-options -wgv window-active-style| grep -Ev "^$"| awk 'BEGIN { printf "window-active-style \"" }; { if (NR==1) { printf "%s", $0 } else { printf ", %s", $0 }}; END { printf "\"\n" }')
 window_active_style_was="${window_active_style_was:-window-active-style bg=default}"
-forward=$(seq "${1:-52}" "${2:-53}")
-reverse=$(seq "${1:-53}" "${2:-52}")
-array=( $(echo "${forward}" "${reverse}") )
+forward=$(seq "${1:-240}" "${2:-240}")
+reverse=$(seq "${1:-240}" "${2:-240}")
+array=( $(echo "${forward}" "${reverse}"| awk 'BEGIN {last = 0} {if ($1 != last) { print $1 }; last = $1}') )
 
 for i in "${array[@]}"; do
   eval "tmux set window-active-style bg=colour${i}"; sleep "${3:-0.03}";
 done
 eval "tmux set ${window_active_style_was}"
-# eval "tmux set window-active-style bg=default"

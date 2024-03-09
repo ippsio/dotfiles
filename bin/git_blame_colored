@@ -1,93 +1,99 @@
-#!/bin/bash
-echo "$(basename $0)"
+#!/usr/bin/env bash
+echo "$0"| home_as_tilde
 readonly HIGHLIGHT_STANDARD=5
+readonly ABBREV_HASH_LENGT=10
+readonly ARG_FILENAME="$1"
+readonly ARG_HIGHLIGHT_LINENO="${2:-1}"
+readonly ARG_SEARCHWORDS="$4"
 
-file="$1";
-file_realpath=$(realpath "${file}")
-file_dir=$(dirname "${file_realpath}")
-shift
-arg_line_highlight="${1:-1}"
-shift
-while (( $# > 0 )); do
-  Q="$1"
-  Q="${Q//\{/\\\{}"
-  Q="${Q//\}/\\\}}"
-  Q="${Q//\(/\\\(}"
-  Q="${Q//\)/\\\)}"
-  Q="${Q//\`/\\\`}"
-  if [[ -z "${RG_PASSTHRU_QUERY}" ]]; then
-    RG_PASSTHRU_QUERY="$Q"
-  else
-    RG_PASSTHRU_QUERY="${RG_PASSTHRU_QUERY} $Q"
-  fi
-  shift
-done
-RG_PASSTHRU_QUERY=$(echo "${RG_PASSTHRU_QUERY}"| sed -E "s/[[:blank:]]+$//g")
-RG_PASSTHRU_QUERY=$(echo "${RG_PASSTHRU_QUERY}"| sed -E "s/[[:blank:]]+/\|/g");
-if [ ${arg_line_highlight} -le ${HIGHLIGHT_STANDARD} ]; then
-  line_from=1
-  line_highlight="${arg_line_highlight}"
-else
-  line_from=$(( ${arg_line_highlight} - ${HIGHLIGHT_STANDARD} + 1))
-  line_highlight=${HIGHLIGHT_STANDARD}
+if [[ -z "${ARG_FILENAME}" ]]; then
+  echo "No ARG_FILENAME"
+  exit 1
 fi
 
-line_to=$(($line_from + $(tput lines)));
-# git_repo=$(cd "${file_dir}"; git_reponame);
-# git_branch=$(cd "${file_dir}"; git branch --show-current 2>/dev/null);
-git_repo=$(git_reponame);
-git_branch=$(git branch --show-current 2>/dev/null);
-if [[ ! -z "${git_repo}" ]]; then
-  echo "GIT={${git_repo}  $git_branch}";
-fi
-git_dir=$(cd "${file_dir}"; git rev-parse --git-dir 2>/dev/null)
-if [[ ! -z "${git_dir}" ]]; then
-  git_root=$(dirname "${git_dir}")
+# 対象ファイルの絶対パス
+file_realpath=$(realpath "${ARG_FILENAME}")
+filename_against_home=$(echo "${file_realpath}"| home_as_tilde)
+echo "ARG_FILENAME=${filename_against_home}";
+
+# git blame開始/終了行の取得。
+blame_lineno_from=$(( ${ARG_HIGHLIGHT_LINENO} - ${HIGHLIGHT_STANDARD} + 1))
+blame_lineno_to=$(($blame_lineno_from + $(tput lines)));
+highlight_lineno=${HIGHLIGHT_STANDARD}
+if [[ ${blame_lineno_from} -le 0 ]]; then
+  blame_lineno_from=1
+  highlight_lineno="${ARG_HIGHLIGHT_LINENO}"
 fi
 
-echo "FILE=$(echo "${file_realpath}"| home_as_tilde)";
-if [[ ! -z "${RG_PASSTHRU_QUERY}" ]]; then
-  echo "RG_PASSTHRU_QUERY=${RG_PASSTHRU_QUERY}";
+# GITリポジトリの場合はその情報を表示します。
+git_reponame=$(git_reponame);
+if [[ -n "${git_reponame}" ]]; then
+  echo "GIT_REPO={${git_reponame}}";
+  echo "GIT_BRANCH={$(git branch --show-current 2>/dev/null)}";
+  git_repo_dir=$(cd $(dirname "${file_realpath}"); git rev-parse --git-dir 2>/dev/null)
+  git_repo_root_dir=$(dirname "${git_repo_dir}")
 fi
-if [[ -z "${file}" ]]; then
-  echo "No results"
-else
-  echo
-  # blame_result=$(set -x; cd "${file_dir}"; git blame -L ${line_from},${line_to} --show-name ${file_realpath});
-  file_relativepath=${file_realpath#${git_root}/}
-  blame_result=$(set -x; cd "${git_root}";git blame -L ${line_from},${line_to} --show-name ${file_relativepath});
-  if [[ $? != 0 ]]; then
-    # ここに来るのは、例えばgitリポジトリじゃない場合等です。
-    blame_result=$(cat ${file_realpath}\
-      | awk -v file="${file_realpath}" -v line_from="${line_from}" -v line_to="${line_to}" '{ if (line_from <= NR && NR <= line_to) { printf "000000 %s %2d:%s\n", file, NR, $0 } }')
-  fi
-  echo "${blame_result}" \
-    | awk '{ printf "%s%s\n", substr($0, 0, index($0, " ") - 1), substr($0, index($0, " (")) }' \
-    | awk '
-      BEGIN {
-        H["0"] = 0; H["1"] = 1; H["2"] = 2; H["3"] = 3; H["4"] = 4; H["5"] = 5; H["6"] = 6; H["7"] = 7;
-        H["8"] = 8; H["9"] = 9; H["A"] = 10;H["B"] = 11; H["C"] = 12;H["D"] = 13;H["E"] = 14;H["F"] = 15;
-        PR[""] = "";
-      } {
-        HASH=$1; H1 = toupper(substr(HASH, 2, 1)); H2 = toupper(substr(HASH, 3, 1));
-        COLOR = H[H1] * 16 + H[H2];
-        # 色の調整。暗い色は見にくい。
-        if (16  <= COLOR && COLOR <=  18) { COLOR = COLOR +  10 }
-        if (232 <= COLOR && COLOR <= 237) { COLOR = COLOR - 200 }
-        printf("\033[38;5;%dm", COLOR);
-        printf("%s", HASH);
 
-        if (!( HASH in PR)) {
-          "git_pull_request_no_by_hash " HASH | getline var
-          PR[HASH] = var
-        }
-        printf(" #%-6s", PR[HASH]);
+file_relativepath=${file_realpath#${git_repo_root_dir}/}
+blame_result=$(cd "${git_repo_root_dir}"; set -x; git blame -L ${blame_lineno_from},${blame_lineno_to} --abbrev=${ABBREV_HASH_LENGT} --show-name ${file_relativepath})
 
-        printf("\033[0m");
-        sub(/[\^a-f0-9]+/, "", $0); # コミットハッシュ部分削除
-        sub(/:[0-9]{2} \+[0-9]{4}/, "", $0); # コミット日時の秒とタイムゾーン部分削除
-        printf "%s\n", $0;
-      }' \
-    | rg --smart-case --passthru --color=always "${RG_PASSTHRU_QUERY}" \
-    | bat --wrap auto --no-pager --style plain --color=always --highlight-line ${line_highlight};
+if [[ $? != 0 ]]; then
+  # ここに来るのは、例えばgitリポジトリじゃない場合等です。
+  empty_abbrev_hash=$(eval printf '%.0s-' '{1..${ABBREV_HASH_LENGT}}')
+  blame_result=$(cat ${file_realpath}| awk -v ARG_FILENAME="${file_realpath}" -v blame_lineno_from="${blame_lineno_from}" -v blame_lineno_to="${blame_lineno_to}" -v empty_abbrev_hash="${empty_abbrev_hash}"'
+    {
+      if (blame_lineno_from <= NR && NR <= blame_lineno_to) {
+        printf "%s %s %2d:%s\n", empty_abbrev_hash, ARG_FILENAME, NR, $0
+      }
+    }
+  ')
 fi
+blame_with_color=$(echo "${blame_result}" \
+  | awk '{ printf "%s%s\n", substr($0, 0, index($0, " ") - 1), substr($0, index($0, " (")) }' \
+  | awk 'BEGIN { PR[""] = ""; }
+    {
+      COMMIT_HASH=$1
+
+      # コミットハッシュの先頭2桁(16進数)の範囲は0〜255。これをCOLOR(10進数)として使う。
+      TOP2WORDS=toupper(substr(COMMIT_HASH, 1, 2))
+      "echo $((0x"TOP2WORDS"))"| getline COLOR
+
+      # 色の調整。暗い色は見にくい。
+      if (0 == COLOR) { COLOR = 156 }
+      if (16  <= COLOR && COLOR <=  18) { COLOR = COLOR +  10 }
+      if (232 <= COLOR && COLOR <= 237) { COLOR = COLOR - 200 }
+
+      if (!( COMMIT_HASH in PR)) {
+        "git_pull_request_no_by_hash " COMMIT_HASH | getline var
+        PR[COMMIT_HASH] = var
+      }
+      printf("\033[38;5;%dm%s #%-6s\033[0m", COLOR, COMMIT_HASH, PR[COMMIT_HASH]);
+      sub(/[\^a-f0-9]+/, "", $0); # コミットハッシュ部分削除
+      sub(/:[0-9]{2} \+[0-9]{4}/, "", $0); # コミット日時の秒とタイムゾーン部分削除
+      printf "%s\n", $0;
+    }')
+word_highlighted="${blame_with_color}"
+(
+  # rg の --fixed-strings に対し、検索文字 "-hoge" を与えた場合、"-hoge" がハイフンを含むという理由でrgが正常動作しない。
+  #
+  # % echo "-abc --def"| rg "-abc"    #=> rg: ripgrep requires at least one pattern to execute a search
+  # % echo "-abc --def"| rg "--def"   #=> rg: unrecognized flag --def
+  # % echo "-abc --def"| rg "abc"     #=> -abc --def
+  # % echo "-abc --def"| rg "def"     #=> -abc --def
+  # % echo "-abc --def"| rg "\-abc"   #=> -abc --def
+  # % echo "-abc --def"| rg "\-\-def" #=> -abc --def
+
+  # ハイフンを含まない文字列でripgrepし、マッチする文字部分を色付けする
+  IFS=$' \n-'
+  for searchword in $(echo "${ARG_SEARCHWORDS}"| sed 's/\\["]/"/g'); do
+    word_highlighted=$(echo "${word_highlighted}"| rg --fixed-strings --case-sensitive --passthru --color=always "${searchword}")
+  done
+
+  # ハイフンだけの文字列でripgrepし、マッチする文字部分を色付けする
+  IFS=$' \n'
+  unique_hyphens=$(echo "${ARG_SEARCHWORDS}"| grep -Eo '(\-)+'| sort| uniq)
+  for searchword_hyphen in $(echo "${unique_hyphens}"| sed 's/-/\\-/g'); do
+    word_highlighted=$(echo "${word_highlighted}"| rg --passthru --color=always "${searchword_hyphen}")
+  done
+  echo "${word_highlighted}"| bat --wrap auto --no-pager --style plain --color=always --highlight-line ${highlight_lineno};
+)

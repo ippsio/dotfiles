@@ -24,39 +24,25 @@ foreground = "#c7c7c7"
 
 [font]
 size = 20
-
-# [font.bold]
-# family = "Illusion W"
-# style = "Medium"
-#
-# [font.bold_italic]
-# family = "Illusion W"
-# style = "Bold Italic"
-#
-# [font.italic]
-# family = "Illusion W"
-# style = "Italic"
-#
-# [font.normal]
-# family = "Illusion W"
-# style = "Regular"
+offset = {x=0, y=-2}
+#normal = {family = "Noto Mono for Powerline"}
+#normal = {family = "JetBrainsMono Nerd Font Mono"}
+#normal = {family = "Source code Pro for Powerline"}
+#normal = {family = "Inconsolata-g for Powerline"}
+normal = {family = "Inconsolata-dz for Powerline"}
 
 [[keyboard.bindings]]
-chars = "\u0014n"
 key = "F11"
+chars = "\u0014n" # これは<ctrl-t>n
 
 [[keyboard.bindings]]
-chars = "\u0014N"
 key = "F11"
 mods = "Shift"
+chars = "\u0014N" # これは<ctrl-t>N
 
 [[keyboard.bindings]]
-chars = "\u0014z"
 key = "F12"
-
-# [[keyboard.bindings]]
-# key = "F6"
-# action = "Hide"
+chars = "\u0014z" # これは<ctrl-t>z
 
 [shell]
 args = ["-l"]

@@ -33,7 +33,7 @@ augroup vimrc-highlight
   autocmd BufNewFile,BufRead *.tsv setlocal filetype=tsv
 
   " .tomlなファイルのファイルタイプはvimとして扱った方が個人的にシンタックスハイライトが好み
-  autocmd BufNewFile,BufRead *.toml setlocal filetype=vim
+  "autocmd BufNewFile,BufRead *.toml setlocal filetype=vim
 
   " ft=*.rb,pythonなら、コード規約遵守のための縦線を引く(120桁目位に）。
   " autocmd BufRead,BufEnter,BufWinEnter * let &colorcolumn=join(range(0, 0), ",")
