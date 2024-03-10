@@ -1,67 +1,38 @@
-#!/bin/bash
-if [[ "$1" == "" || "$1" == "./" ]]; then
-  ARG="."
+#!/usr/bin/env bash
+if [[ -z "$1" || "$1" == "." || "$1" == "./" ]]; then
+  TARGET_DIR="."
+  FZF_QUERY=""
 else
-  ARG="$(echo $1| sed -r 's#/+#/#g'| home_as_home)"
-  [[ ! -e "$(home_as_home ${ARG})" ]] && exit
-  FZF_QUERY=$(home_as_tilde ${ARG})
+  # 2連続以上のスラッシュが与えられた場合、単一のスラッシュにします。
+  TARGET_DIR=$(echo "$1"| sed -r 's#/+#/#g')
+  # パスが${HOME}のものなら~/を${HOME}の値に置換します。
+  TARGET_DIR=$(echo "${TARGET_DIR}"| home_as_home)
+  # 存在しないパスなら処理を終了します。
+  [[ ! -e "$(home_as_home ${TARGET_DIR})" ]] && exit
+  FZF_QUERY="${TARGET_DIR_TILDE}"
 fi
-ARG_AS_REALPATH=$(cd "${ARG}" && pwd)
-
-FZF_PROMPT="$(basename $0)"
-FZF_HEADER="C-g:ripgrep, C-/:TogglePreview"
-# FIND_CMD="rg --files --hidden --no-ignore --sortr=path ${ARG} 2>/dev/null"
-FIND_CMD="rg --files --hidden --no-ignore ${ARG} 2>/dev/null"
-FZF_RESULT=$(eval "${FIND_CMD}"| grep -v "^${ARG}$"| sed 's#//#/#'| sed 's#^./##' \
-  | home_as_tilde\
-  | fzf +m \
-    --query="${FZF_QUERY} " \
-    --header="${FZF_HEADER}" \
-    --prompt="${FZF_PROMPT} (dir='$(home_as_tilde ${ARG_AS_REALPATH})') > " \
-    --bind "ctrl-/:toggle-preview" \
-    --bind "ctrl-_:toggle-preview" \
-    --bind "ctrl-g:execute(rg_fzf_vim . ${HOME_AS_HOME} < /dev/tty > /dev/tty)" \
-    --preview-window=right:60%:wrap \
-    --preview='
+FZF_PROMPT="$(basename $0) (dir='$(home_as_tilde ${TARGET_DIR})') > "
+FZF_RESULT=$(rg --files --hidden --no-ignore "${TARGET_DIR}" 2>/dev/null| grep -v "^${TARGET_DIR}$"| sed 's#^./##' | home_as_tilde\
+  | fzf +m --query="${FZF_QUERY} " --header="C-g:ripgrep, C-/:TogglePreview" --prompt="${FZF_PROMPT}" \
+    --bind "ctrl-/:toggle-preview" --bind "ctrl-_:toggle-preview" \
+    --bind "ctrl-g:execute(rg_fzf_vim . ${TARGET_DIR} < /dev/tty > /dev/tty)" \
+    --preview-window=right:60%:wrap --preview='
       real_path_file="$(home_as_home {}| xargs realpath)"
       true_if_git_repo=$(cd $(dirname "${real_path_file}"); git rev-parse --is-inside-work-tree 2> /dev/null)
-
-      if [[ "${true_if_git_repo}" == "true" ]]; then
-        if ( is_binary "${real_path_file}" ); then
-          home_as_tilde "${real_path_file}"
-          echo "---"
-          echo "<<<< BINARY FILE >>>>"
-          exiftool -t "${real_path_file}"| cat -n
-          echo "---"
-          bat -A "${real_path_file}"
-        else
-          git_blame_colored "${real_path_file}"
-        fi
+      if ( is_binary "${real_path_file}" ); then
+        home_as_tilde "${real_path_file}"
+        printf "---\n<<<< BINARY FILE >>>>\n"
+        exiftool -t "${real_path_file}"| cat -n
+        echo "---"
+        bat -A "${real_path_file}"
+      elif [[ "${true_if_git_repo}" == "true" ]]; then
+        git_blame_colored "${real_path_file}"
       else
-        if ( is_binary "${real_path_file}" ); then
-          echo "<<<< BINARY FILE >>>>"
-          exiftool -t "${real_path_file}"| cat -n
-          echo "---"
-          bat -A "${real_path_file}"
-        else
-          bat "$(home_as_home {})" --color=always --style=numbers --line-range :100
-        fi
+        bat "$(home_as_home {})" --color=always --style=numbers --line-range :100
       fi
     ')
-FZF_EXIT_CD=$?
-[[ $FZF_EXIT_CD != 0 ]] && echo -n "$1" && exit
-
-FZF_RESULT=$(home_as_tilde ${FZF_RESULT})
-RETURN_RELATIVE_PATH=false
-
-if ${RETURN_RELATIVE_PATH}; then
-  RELATIVE_PATH="$(realpath --relative-to=. ${FZF_RESULT:-$(home_as_home ${ARG})})"
-  if [[ -d ${RELATIVE_PATH} ]]; then
-    RELATIVE_PATH="${RELATIVE_PATH}/"
-  fi
-  echo -n "${RELATIVE_PATH}"
-
+if [[ $? -eq 0 ]]; then
+  home_as_tilde "${FZF_RESULT}"
 else
-  echo -n "${FZF_RESULT}"
+  printf "%s" "$1"
 fi
-

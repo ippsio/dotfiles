@@ -1,11 +1,8 @@
 #!/bin/bash
 FROM='~'
 INTO=${HOME}
-if [ -z "$1" ]
-then
-  sed "s#^${FROM}#${INTO}#" \
-    | sed -r 's#/{1,}#/#g'
+if [ -z "$1" ]; then
+  sed "s#^${FROM}#${INTO}#"| sed -r 's#/{1,}#/#g'
 else
-  echo "$1"| sed "s#^${FROM}#${INTO}#" \
-    | sed -r 's#/{1,}#/#g'
+  echo "$1"| sed "s#^${FROM}#${INTO}#"| sed -r 's#/{1,}#/#g'
 fi
