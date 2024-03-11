@@ -96,7 +96,7 @@ bind main    O +bash -c "~/dotfiles/bin/git_pull_request_open_by_hash %(commit)"
 bind status - >bash -c "~/dotfiles/bin/tig/git_checkout_-- %(file)"
 bind stage  - >bash -c "~/dotfiles/bin/tig/git_checkout_-- %(file)"
 bind stage  h view-close-no-quit
-bind status D ?rm %(file)
+bind status D ?bash -c "(set -x; rm %(file))"
 bind status <C-g> +bash -c "printf '%s' %(file)| pbcopy; echo \"FILENAME COPIED '%(file)'\""
 
 bind generic V :toggle split-view-height -10%   # Decrease split height

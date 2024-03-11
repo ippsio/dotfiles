@@ -129,7 +129,7 @@ nodir_then_gitclone "${TMUX_PLUGINS}/tpm" "tmux-plugins/tpm"
 nodir_then_gitclone "${ZINIT_ROOT}" "zdharma/zinit.git" "${ZINIT_ROOT}/bin"
 nodir_then_gitclone "${HOME}/setting_box" "ippsio/setting_box.git"
 chk_pynvim_or_install
-chk_or_pip_install diff-highlight
+# chk_or_pip_install diff-highlight
 
 # mkdir
 mkdir -p ~/.tmux/log/

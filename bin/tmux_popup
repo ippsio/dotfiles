@@ -1,2 +1,0 @@
-#!/bin/bash
-tmux popup  -E -w100 -h3 "${1:-ls -ltra}; read"

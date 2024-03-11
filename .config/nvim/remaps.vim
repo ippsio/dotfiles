@@ -124,12 +124,17 @@ nnoremap <C-g> :call <SID>CopyFilename()<CR>
 function! s:CopyFilename()
   let l:dot_git = system('cd ' . expand('%:h') . '; git rev-parse --git-dir 2>/dev/null')
   if l:dot_git == ''
+    " Outside git repository.
     let l:file = substitute(expand("%:p"), $HOME, "~", "g")
   else
+    " Inside git repository.
     let git_dir = fnamemodify(l:dot_git, ':h')
-    let l:file = system('cd ' . git_dir . '; git ls-files --full-name ' . expand('%'))
+    let l:file = system('cd ' . git_dir . '; git ls-files --full-name ' . expand('%') . ' 2>/dev/null')
+    if l:file == ''
+      let l:file = substitute(expand("%:p"), $HOME, "~", "g")
+    endif
   endif
   let l:path = substitute(l:file, "[\\n|\\r]", "", "g")
   let @* = l:path
-  echo '"' . l:path . '" <-COPIED INTO CLIPBOARD.'
+  echo "Filename copied '" . l:path . "'"
 endfunction

@@ -44,7 +44,7 @@ autoload -Uz compinit && compinit -u
 SHOW_ME_PROFILE=false
 ${SHOW_ME_PROFILE} && zmodload zsh/zprof && zprof
 
-START=$(~/dotfiles/bin/epocms_c)
+START=$(~/dotfiles/bin/epocms/epocms_c)
 
 # history
 HISTFILE=~/.zsh_history
@@ -85,5 +85,5 @@ source ~/dotfiles/zshrc/60_zsh_plugin_manage.zsh
 
 # profiling
 ( type "zprof" > /dev/null 2>&1 ) && zprof # zprof
-printf "zshrc load finished (%dms).\n" $(expr $(~/dotfiles/bin/epocms_c) - $START)
+printf "zshrc load finished (%dms).\n" $(expr $(epocms_c) - $START)
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 echo "$0"| home_as_tilde
 readonly HIGHLIGHT_STANDARD=5
-readonly ABBREV_HASH_LENGT=10
+readonly ABBREV_HASH_LENGT=6
 readonly ARG_FILENAME="$1"
 readonly ARG_HIGHLIGHT_LINENO="${2:-1}"
 readonly ARG_SEARCHWORDS="$4"
@@ -35,27 +35,28 @@ if [[ -n "${git_reponame}" ]]; then
 fi
 
 file_relativepath=${file_realpath#${git_repo_root_dir}/}
-blame_result=$(cd "${git_repo_root_dir}"; set -x; git blame -L ${blame_lineno_from},${blame_lineno_to} --abbrev=${ABBREV_HASH_LENGT} --show-name ${file_relativepath})
+blame_result=$(cd "${git_repo_root_dir}"; set -x; git blame -L ${blame_lineno_from},${blame_lineno_to} --abbrev=${ABBREV_HASH_LENGT} --show-name ${file_relativepath} 2>/dev/null)
 
 if [[ $? != 0 ]]; then
   # ここに来るのは、例えばgitリポジトリじゃない場合等です。
-  empty_abbrev_hash=$(eval printf '%.0s-' '{1..${ABBREV_HASH_LENGT}}')
-  blame_result=$(cat ${file_realpath}| awk -v ARG_FILENAME="${file_realpath}" -v blame_lineno_from="${blame_lineno_from}" -v blame_lineno_to="${blame_lineno_to}" -v empty_abbrev_hash="${empty_abbrev_hash}"'
+  empty_hash="00000000000000000000000000000000000000000"
+  empty_abbrev_hash=${empty_hash:0:${ABBREV_HASH_LENGT}}
+  blame_result=$(cat ${file_realpath}| awk -v ARG_FILENAME="${filename_against_home}" -v blame_lineno_from="${blame_lineno_from}" -v blame_lineno_to="${blame_lineno_to}" -v empty_abbrev_hash="${empty_abbrev_hash}" '
     {
+      # 62b9a4b5 bin/tmux/tmux_memory (ippsio 2023-07-29 10:21:26 +0900  1) #!/bin/bash
       if (blame_lineno_from <= NR && NR <= blame_lineno_to) {
-        printf "%s %s %2d:%s\n", empty_abbrev_hash, ARG_FILENAME, NR, $0
+        printf "%s %s (------ %s %2d) %s\n", empty_abbrev_hash, ARG_FILENAME, "0000-00-00 00:00:00 +0900", NR, $0
       }
     }
   ')
 fi
 blame_with_color=$(echo "${blame_result}" \
   | awk '{ printf "%s%s\n", substr($0, 0, index($0, " ") - 1), substr($0, index($0, " (")) }' \
-  | awk 'BEGIN { PR[""] = ""; }
+  | awk -v empty_abbrev_hash="${empty_abbrev_hash}" 'BEGIN { PR[""] = ""; }
     {
       COMMIT_HASH=$1
-
       # コミットハッシュの先頭2桁(16進数)の範囲は0〜255。これをCOLOR(10進数)として使う。
-      TOP2WORDS=toupper(substr(COMMIT_HASH, 1, 2))
+      # TOP2WORDS=toupper(substr(COMMIT_HASH, 1, 2))
       "echo $((0x"TOP2WORDS"))"| getline COLOR
 
       # 色の調整。暗い色は見にくい。

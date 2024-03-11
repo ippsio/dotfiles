@@ -7,6 +7,5 @@ if ( is_git_repo ); then
     rg_wrap "$@" -- ${untracked_files}
   fi
 else
-  # FIXME: maybe slow.
   rg_wrap "$@"
 fi

@@ -12,23 +12,25 @@ else
   FZF_QUERY="${TARGET_DIR_TILDE}"
 fi
 FZF_PROMPT="$(basename $0) (dir='$(home_as_tilde ${TARGET_DIR})') > "
-FZF_RESULT=$(rg --files --hidden --no-ignore "${TARGET_DIR}" 2>/dev/null| grep -v "^${TARGET_DIR}$"| sed 's#^./##' | home_as_tilde\
-  | fzf +m --query="${FZF_QUERY} " --header="C-g:ripgrep, C-/:TogglePreview" --prompt="${FZF_PROMPT}" \
+FZF_RESULT=$(rg --files --hidden --no-ignore "${TARGET_DIR}" 2>/dev/null| grep -v "^${TARGET_DIR}$"| sed 's#^./##'| home_as_tilde\
+  | fzf +m --query="${FZF_QUERY} " --header="C-g:ripgrep, C-/:TogglePreview" --prompt="${FZF_PROMPT}" --info=inline\
     --bind "ctrl-/:toggle-preview" --bind "ctrl-_:toggle-preview" \
     --bind "ctrl-g:execute(rg_fzf_vim . ${TARGET_DIR} < /dev/tty > /dev/tty)" \
     --preview-window=right:60%:wrap --preview='
-      real_path_file="$(home_as_home {}| xargs realpath)"
-      true_if_git_repo=$(cd $(dirname "${real_path_file}"); git rev-parse --is-inside-work-tree 2> /dev/null)
-      if ( is_binary "${real_path_file}" ); then
-        home_as_tilde "${real_path_file}"
-        printf "---\n<<<< BINARY FILE >>>>\n"
-        exiftool -t "${real_path_file}"| cat -n
+      file_realpath="$(home_as_home {}| xargs realpath)"
+      if ( is_binary "${file_realpath}" ); then
+        home_as_tilde "${file_realpath}"
+        echo "<<<BINARY FILE>>>"
+        (set -x; exiftool -t "${file_realpath}")| cat -n
         echo "---"
-        bat -A "${real_path_file}"
-      elif [[ "${true_if_git_repo}" == "true" ]]; then
-        git_blame_colored "${real_path_file}"
+        (set -x; bat --show-all --nonprintable-notation caret "${file_realpath}")
       else
-        bat "$(home_as_home {})" --color=always --style=numbers --line-range :100
+        true_if_git_repo=$(cd $(dirname "${file_realpath}"); git rev-parse --is-inside-work-tree 2> /dev/null)
+        if [[ "${true_if_git_repo}" == "true" ]]; then
+          (set -x; git_blame_colored "${file_realpath}")
+        else
+          (set -x; bat "$(home_as_home {})" --color=always --style=numbers --line-range :100)
+        fi
       fi
     ')
 if [[ $? -eq 0 ]]; then

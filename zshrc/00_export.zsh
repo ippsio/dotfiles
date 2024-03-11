@@ -6,9 +6,12 @@ export EDITOR=nvim
 export ZINIT_ROOT=~/.zinit
 export TMUX_PLUGINS=~/.cache/tmux/plugins
 
-# NOTE: diff-highlight を pip install すると ~/.local/bin に配置されます。
-DIFF_HIGHLIGHT=$(find /opt/homebrew/Cellar/git -type f -name "diff-highlight" | sort -nr| head -n 1)
-export PATH=~/dotfiles/bin:${PATH}:$(dirname ${DIFF_HIGHLIGHT}):~/.local/bin
+my_diff_highlight_bin_dir=$(find /opt/homebrew/Cellar/git -type f -name "diff-highlight" | sort -nr| head -n 1)
+export PATH=${my_diff_highlight_bin_dir}:${PATH}
+for my_bin_dir in $(find ~/dotfiles/bin -type d); do
+  export PATH=${my_bin_dir}:${PATH}
+done
+export PATH=${PATH}
 
 # LSCOLORS
 # a black,
