@@ -1,5 +1,5 @@
 #!/bin/bash
-source ~/dotfiles/bin/git_review_core $@|| exit $?
+source git_review_core $@|| exit $?
 (
   echo "${review_json}";
   echo "---";

@@ -4,53 +4,68 @@ readonly TAB="	"
 readonly threshold_h=6
 readonly threshold_an=6
 readonly threshold_s=8
-
-# 移動先フォルダの候補を作ります。
 t1=$(epocms)
-candidates=$(while read -r line; do
+select_result=$( (
+while read -r line; do
+  if [[ -z "${line}" ]]; then
+    continue
+  fi
+  idx=$(( ${idx:-0} + 1 ))
   # NOTE: lineの定義内容はこんな感じ
   # > 1行目:dotfiles #vim   ,cd,~/dotfiles/.config/nvim
   # > 2行目:dotfiles        ,cd,~/dotfiles
   # > 3行目:   (略)
-  tags=$(echo "${line}"| awk -F ',' '{ print $1 }'| sed -E 's/[ ]+/ /g')
-  cmd=$(echo "${line}"| awk -F ',' '{ print $2 }')
-  path=$(echo "${line}"| awk -F ',' '{ print $3 }')
-  idx=$(( ${idx:-0} + 1 ))
-  if [[ "${path: -2}" != "/*" ]]; then
-    row=$(printf "%2d ${tags}${TAB}${cmd} ${path}" "${idx}")
+  if [[ "${line}" == "#" ]]; then
+    tags="#"
+    cmd=
+    path=
+    row=$(printf "%2d %s${TAB}%s % s" "${idx}" "${tags}" "${cmd}" "${path}")
+    echo "${row}"
+  else
+    tags=$(echo "${line}"| awk -F ',' '{ print $1 }'| sed -E 's/[ ]+/ /g')
+    cmd=$(echo "${line}"| awk -F ',' '{ print $2 }')
+    path=$(echo "${line}"| awk -F ',' '{ print $3 }')
     path_home_as_home=$(echo "${path}"| sed "s#^~#${HOME}#"| sed -r 's#/{1,}#/#g')
-    git_branch=$(cd $path_home_as_home; git branch --show-current 2>/dev/null)
-    if [[ -n "${git_branch}" ]]; then
-      last_commit=$(cd $path_home_as_home; git log --abbrev=${threshold_h} --date="format:%Y/%m/%d %H:%M" --pretty="%h${TAB}%ad${TAB}%an${TAB}%s" -1)
+    row=$(printf "%2d %-15s${TAB}%s %-25s" "${idx}" "${tags}" "${cmd}" "${path}")
+
+    # git管理下であれば、多くの場合ブランチが取得できるでしょう。
+    git_branch=$(cd "${path_home_as_home}" && git branch --show-current 2>/dev/null)
+    if [[ -z "${git_branch}" ]]; then
+      # git管理下でない場合
+      echo "${row}"
+    else
+      # git管理下の場合
+      last_commit=$(cd "${path_home_as_home}" && git log --abbrev="${threshold_h}" --date="format:%Y/%m/%d %H:%M" --pretty="%h${TAB}%ad${TAB}%an${TAB}%s" -1)
       h=$(echo "${last_commit}"| awk -F "${TAB}" '{ print $1 }')
       ad=$(echo "${last_commit}"| awk -F "${TAB}" '{ print $2 }')
       an=$(echo "${last_commit}"| awk -F "${TAB}" '{ print $3 }')
       s=$(echo "${last_commit}"| awk -F "${TAB}" '{ print $4 }')
-      [[ ${#an} -gt ${threshold_an} ]] && an="${an:0:${threshold_an}}"
-      [[ ${#s} -gt ${threshold_s} ]] && s="${s:0:${threshold_s}}."
-      echo "${row}${TAB}(${h}|${ad}|${an}|${s})${TAB}${git_branch}"
-    else
-      echo "${row}"
+
+      git_status=$(cd "${path_home_as_home}" && git status -s)
+      git_status_lineno=$(echo "${git_status}"| wc -l| tr -d ' ')
+      if [[ -z "${git_status}" ]]; then
+        dirtiness="o clean "
+      else
+        dirtiness="x dirty${git_status_lineno}"
+      fi
+
+      # 長い%an(author name) は紙面の都合により短くします。
+      if [[ ${#an} -gt ${threshold_an} ]]; then
+        an="${an:0:${threshold_an}}"
+      fi
+
+      # 長い%s(コミット件名) は紙面の都合により短くします。
+      if [[ ${#s} -gt ${threshold_s} ]]; then
+        s="${s:0:${threshold_s}}."
+      fi
+      echo "${row}${TAB}(git:${dirtiness} ${h}|${ad}|${an}|${s})${TAB}${git_branch}"
     fi
   fi
-done < ${FILE})
-t2=$(epocms)
-
-# 移動先を選択します。
-select_result=$(echo "${candidates}"\
-  | sed -E "s/${TAB}/,${TAB}/g" \
-  | column -t -s "," \
-  | fzf-tmux -p 90%,80% \
-    --tabstop=1 \
-    --info=inline \
-    --prompt="$(basename $0) " \
-    --header="source file='$(home_as_tilde ${FILE})' (took $(( t2 - t1 )) ms to generate candidates.)" \
-    --ansi \
-    --query="#"
-)
+done < ${FILE}; t2=$(epocms); printf "%2d #(%dms)" $(( idx + 1 )) $(( t2 - t1 )))| fzf-tmux -p 90%,80% --tabstop=1 --info=inline --prompt="$(basename $0) " --ansi --query="#"\
+ --header="source file='$(home_as_tilde ${FILE})'")
 
 # 選択した移動先を返します。
 result=$(echo "${select_result}"| awk -F "${TAB}" '{ print $2 }')
-if [[ ! -z "${result}" ]]; then
+if [[ -n "${result}" ]]; then
   echo "${result}"
 fi

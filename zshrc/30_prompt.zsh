@@ -150,8 +150,7 @@ precmd() {
 
   _mark_stash="sta"
   GIT_STASH="%K{193}%F{241}"
-  GIT_STASH+="%(9v|${_mark_stash}%9v|%v)"
-  GIT_STASH+="${SEPARATOR_CLOSE}"
+  GIT_STASH+="%(9v|${_mark_stash}%9v${SEPARATOR_CLOSE}|%v)"
   GIT_STASH+="%f%k"
 
   # git stage
