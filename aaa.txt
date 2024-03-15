@@ -1,3 +1,5 @@
 class Apple
   attr item1
+  attr item2
+  attr item3
 end
