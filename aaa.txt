@@ -1,2 +1,5 @@
-class Apple
+class Apple < Fruit
+  def item0
+    @item0
+  end
 end
