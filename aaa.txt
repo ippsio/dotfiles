@@ -1,2 +1,3 @@
 class Apple
+  attr item1
 end
