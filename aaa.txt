@@ -2,4 +2,19 @@ class Apple < Fruit
   def item0
     @item0
   end
+
+  def item1
+    @item1
+  end
+
+  def item2
+    @item2
+  end
+
+  def item3
+    @item3.map |a| do
+      puts a
+      a.to_s.split(',')
+    end
+  end
 end
