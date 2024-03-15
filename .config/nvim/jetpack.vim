@@ -69,8 +69,10 @@ Jetpack 'lambdalisue/guise.vim'
 Jetpack 'dense-analysis/ale'
 Jetpack 'thoughtbot/vim-rspec'
 Jetpack 'tpope/vim-dispatch'
+Jetpack 'itchyny/dictionary.vim'
 "Jetpack 'echasnovski/mini.animate'
 "Jetpack 'koron/dicwin-vim'
+Jetpack  'vim-skk/eskk.vim'
 
 let s:available_pkg = stdpath('data') . '/' . 'site' . '/pack/jetpack/opt/available_packages.json'
 let s:available_pkg_text = filereadable(s:available_pkg) ? join(readfile(s:available_pkg)) : "{}"

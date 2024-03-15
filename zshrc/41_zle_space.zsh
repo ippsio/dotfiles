@@ -38,6 +38,12 @@ zle_space() {
       return 0
     fi
 
+    # git log
+    if [[ $BUFFER =~ '^git log $' ]]; then
+      zle autosuggest-clear && BUFFER="git log --date=iso --pretty='%h %ad %an %s' " && zle end-of-line
+      return 0
+    fi
+
     # git checkout + completion
     if [[ $BUFFER =~ '^gco$' ]]; then
       zle autosuggest-clear && BUFFER="git checkout $(git_branch_fzf)" && zle end-of-line
