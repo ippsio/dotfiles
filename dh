@@ -3,7 +3,7 @@ lookup_lineno="$1"
 readonly L=a.txt
 readonly R=b.txt
 
-get_seq_numbers_of_sum() { seq 1 "$(diff "$1" "$2"| grep -Evc "^(<|\-\-\-|>)")"; return 0; }
+get_seq_of_diff_hunk() { seq 1 "$(diff "$1" "$2"| grep -Evc "^(<|\-\-\-|>)")"; return 0; }
 get_summaries() { diff "$1" "$2"| grep -Ev "^(<|\-\-\-|>)"; return 0; }
 get_nth_sum() { get_summaries "$1" "$2"| awk -v n="$3" '{ if (NR==n) { print $0 }}'; return 0; }
 get_sumL() { echo "$1"| awk -F '[acd]' '{ print $1 }'; return 0; }
@@ -19,7 +19,7 @@ is_line_no_between() {
 }
 
 seq_no_lookup_beaten=0
-for seq_no in $(get_seq_numbers_of_sum "$L" "$R"); do
+for seq_no in $(get_seq_of_diff_hunk "$L" "$R"); do
   sum=$(get_nth_sum "$L" "$R" "$seq_no")
   sumR=$(get_sumR "$sum")
   sumR_start=$(get_sumstart "$sumR")
