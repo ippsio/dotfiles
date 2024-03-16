@@ -1,0 +1,22 @@
+if &compatible
+  set nocompatible
+endif
+
+call jetpack#end()
+Jetpack 'aaa/bbb'
+Jetpack 'ccc/DDD'
+
+for s:rcfile_full in split(glob(expand('<script>:h') . '/rc/*.vim'))
+  let s:rcfile = fnamemodify(s:rcfile_full, ':t')
+  let s:plugin = fnamemodify(s:rcfile_full, ':t:r')
+  if jetpack#tap(s:plugin)
+    echo('Jetpackは' . s:plugin . 'を認識してません。' . s:rcfile_full . 'はruntime!しません。')
+    echo('Jetpackは' . s:plugin . 'を認識してません。' . s:rcfile_full . 'はruntime!しません。')
+    echo('Jetpackは' . s:plugin . 'を認識してません。' . s:rcfile_full . 'はruntime!しません。')
+    echo('Jetpackは' . s:plugin . 'を認識してません。' . s:rcfile_full . 'はruntime!しません。')
+  else
+    execute 'runtime! rc/' . s:rcfile
+  endif
+endfor
+
+"sample2
