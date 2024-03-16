@@ -1,109 +1,67 @@
 #!/usr/bin/env bash
 lookup_lineno="$1"
-left=a.txt
-right=b.txt
+readonly L=a.txt
+readonly R=b.txt
 
-get_seq_numbers_of_hunk_summary() {
-  number=$(diff "$1" "$2"| grep -Evc "^(<|\-\-\-|>)")
-  seq 1 "$number"
-}
-
-get_hunk_summaries() {
-  diff "$1" "$2"| grep -Ev "^(<|\-\-\-|>)"
-}
-
-get_nth_hunk_summary() {
-  get_hunk_summaries "$1" "$2"| awk -v n="$3" '{ if (NR==n) { print $0 }}'
-}
-
-get_hunk_summary_left() {
-  echo "$1"| awk -F '[acd]' '{ print $1 }'
-}
-
-get_hunk_summary_right() {
-  echo "$1"| awk -F '[acd]' '{ print $2 }'
-}
-
-get_hunk_summary_start_lineno() {
-  echo "$1"| awk -F ',' '{ print $1 }'
-}
-
-get_hunk_summary_end_lineno() {
-  echo "$1"| awk -F ',' '{ print $2 }'
-}
-
+get_seq_numbers_of_sum() { seq 1 "$(diff "$1" "$2"| grep -Evc "^(<|\-\-\-|>)")"; return 0; }
+get_summaries() { diff "$1" "$2"| grep -Ev "^(<|\-\-\-|>)"; return 0; }
+get_nth_sum() { get_summaries "$1" "$2"| awk -v n="$3" '{ if (NR==n) { print $0 }}'; return 0; }
+get_sumL() { echo "$1"| awk -F '[acd]' '{ print $1 }'; return 0; }
+get_sumR() { echo "$1"| awk -F '[acd]' '{ print $2 }'; return 0; }
+get_sumstart() { echo "$1"| awk -F ',' '{ print $1 }'; return 0; }
+get_sumend() { echo "$1"| awk -F ',' '{ print $2 }'; return 0; }
+get_line_of_lineno() { echo "$1"| awk -v lineno_start="$2" -v lineno_end="${3:-$2}" '{ if (lineno_start <= NR && NR <= lineno_end) { print $0 }}'; return 0; }
 is_line_no_between() {
   lineno="$1"
-  start_lineno="$2"
-  end_lineno="${3:-$2}"
-
-  # printf "start_lineno=%d, lineno=%d, end_lineno=%d\n" "$start_lineno" "$lineno" "$end_lineno"
-  if [[ "$start_lineno" -le "$lineno" && "$lineno" -le "$end_lineno" ]]; then
-    return 0
-  else
-    return 1
-  fi
+  start="$2"
+  end="$3"
+  [[ "$start" -le "$lineno" && "$lineno" -le "$end" ]] && return 0 || return 1;
 }
 
-get_line_of_lineno() {
-  echo "$1"| awk -v lineno_start="$2" -v lineno_end="${3:-$2}" '{ if (lineno_start <= NR && NR <= lineno_end) { print $0 }}'
-}
+seq_no_lookup_beaten=0
+for seq_no in $(get_seq_numbers_of_sum "$L" "$R"); do
+  sum=$(get_nth_sum "$L" "$R" "$seq_no")
+  sumR=$(get_sumR "$sum")
+  sumR_start=$(get_sumstart "$sumR")
+  sumR_end=$(get_sumend "$sumR")
+  sumR_end=${sumR_end:-$sumR_start}
 
-found=0
-is_a=0
-seq_no_a=0
-for seq_no in $(get_seq_numbers_of_hunk_summary "$left" "$right"); do
-  hunk_summary=$(get_nth_hunk_summary "$left" "$right" "$seq_no")
-  hunk_summary_left=$(get_hunk_summary_left "$hunk_summary")
-  hunk_summary_right=$(get_hunk_summary_right "$hunk_summary")
-  hunk_summary_right_start_lineno=$(get_hunk_summary_start_lineno "$hunk_summary_right")
-  hunk_summary_right_end_lineno=$(get_hunk_summary_end_lineno "$hunk_summary_right")
-
-  if is_line_no_between "$lookup_lineno" "$hunk_summary_right_start_lineno" "$hunk_summary_right_end_lineno"; then
-    hunk_summary_left_start_lineno=$(get_hunk_summary_start_lineno "$hunk_summary_left")
-    hunk_summary_left_end_lineno=$(get_hunk_summary_end_lineno "$hunk_summary_left")
-    echo "[$hunk_summary]"
-    echo "[左:$hunk_summary_left(変更差分)]"
-    get_line_of_lineno "$(cat -n $left)" "$hunk_summary_left_start_lineno" "$hunk_summary_left_end_lineno"
+  if is_line_no_between "$lookup_lineno" "$sumR_start" "$sumR_end"; then
+    sumL=$(get_sumL "$sum")
+    sumL_start=$(get_sumstart "$sumL")
+    sumL_end=$(get_sumend "$sumL")
+    sumL_end=${sumL_end:-$sumL_start}
+    echo "[左:$sumL(変更差分)]"
+    get_line_of_lineno "$(cat -n $L)" "$sumL_start" "${sumL_end}"
     echo "----"
-    echo "[右:$hunk_summary_right(変更差分)]"
-    get_line_of_lineno "$(cat -n $right)" "$hunk_summary_right_start_lineno" "$hunk_summary_right_end_lineno"
-    found=1
-    break
-  fi
-  if [[ "$is_a" -eq 0 ]]; then
-    if [[ "$lookup_lineno" -lt "$hunk_summary_right_start_lineno" ]]; then
-      seq_no_a=$(( seq_no ))
-      is_a=1
-    fi
+    echo "[右:$sumR(変更差分)]"
+    get_line_of_lineno "$(cat -n $R)" "$sumR_start" "$sumR_end"
+    exit 0
+  elif [[ "$seq_no_lookup_beaten" -eq 0 && "$lookup_lineno" -lt "$sumR_start" ]]; then
+    seq_no_lookup_beaten="${seq_no}"
   fi
 done
 
-if [[ "$found" -ne 1 ]]; then
-  if [[ "$seq_no_a" -eq 0 ]]; then
-    echo "[左]"
-    get_line_of_lineno "$(cat -n $left)" "$lookup_lineno"
-  else
-    echo "[左]"
-    hunk_summary=$(get_nth_hunk_summary "$left" "$right" "$((seq_no_a - 1))")
-    hunk_summary_right=$(get_hunk_summary_right "$hunk_summary")
-    hunk_summary_right_start_lineno=$(get_hunk_summary_start_lineno "$hunk_summary_right")
-    hunk_summary_right_end_lineno=$(get_hunk_summary_end_lineno "$hunk_summary_right")
-    hunk_summary_right_end_lineno=${hunk_summary_right_end_lineno:-$hunk_summary_right_start_lineno}
-    hunk_summary_right_start_to_lookup_lineno=$((lookup_lineno - hunk_summary_right_start_lineno))
-    hunk_summary_right_start_to_end_lineno=$((hunk_summary_right_end_lineno - hunk_summary_right_start_lineno))
+if [[ "$seq_no_lookup_beaten" -eq 0 ]]; then
+  echo "[左]"
+  get_line_of_lineno "$(cat -n $L)" "$lookup_lineno"
+else
+  echo "[左]"
+  sum=$(get_nth_sum "$L" "$R" "$((seq_no_lookup_beaten - 1))")
+  sumR=$(get_sumR "$sum")
+  sumR_start=$(get_sumstart "$sumR")
+  sumR_end=$(get_sumend "$sumR")
+  sumR_end=${sumR_end:-$sumR_start}
 
-    hunk_summary_left=$(get_hunk_summary_left "$hunk_summary")
-    hunk_summary_left_start_lineno=$(get_hunk_summary_start_lineno "$hunk_summary_left")
-    hunk_summary_left_end_lineno=$(get_hunk_summary_end_lineno "$hunk_summary_left")
-    hunk_summary_left_end_lineno=${hunk_summary_left_end_lineno:-$hunk_summary_left_start_lineno}
-    hunk_summary_left_start_to_end_lineno=$((hunk_summary_left_end_lineno - hunk_summary_left_start_lineno))
+  sumL=$(get_sumL "$sum")
+  sumL_start=$(get_sumstart "$sumL")
+  sumL_end=$(get_sumend "$sumL")
+  sumL_end=${sumL_end:-$sumL_start}
 
-    left_lieno=$((hunk_summary_left_start_lineno + hunk_summary_right_start_to_lookup_lineno - (hunk_summary_right_start_to_end_lineno - hunk_summary_left_start_to_end_lineno)))
-    get_line_of_lineno "$(cat -n $left)" "$left_lieno"
-  fi
-  echo "----"
-  echo "[右]"
-  get_line_of_lineno "$(cat -n $right)" "$lookup_lineno"
+  left_lieno=$((lookup_lineno + sumL_end - sumR_end))
+  get_line_of_lineno "$(cat -n $L)" "$left_lieno"
 fi
+echo "----"
+echo "[右]"
+get_line_of_lineno "$(cat -n $R)" "$lookup_lineno"
 
