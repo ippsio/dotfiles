@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
-lookup_lineno="$1"
+if [[ $1 =~ [0-9]+,[0-9]+ ]]; then
+  lookup_start=$(echo "$1"| awk -F ',' '{ print $1 }')
+  lookup_end=$(echo "$1"| awk -F ',' '{ print $2 }')
+else
+  lookup_start=$(echo "$1"| awk -F ',' '{ print $1 }')
+  lookup_end="$lookup_start"
+fi
+echo "lookup_start=$lookup_start, lookup_end=$lookup_end"
 readonly L=a.txt
 readonly R=b.txt
 
@@ -12,11 +19,13 @@ get_sumstart() { echo "$1"| awk -F ',' '{ print $1 }'; return 0; }
 get_sumend() { echo "$1"| awk -F ',' '{ print $2 }'; return 0; }
 get_line_of_lineno() { echo "$1"| awk -v lineno_start="$2" -v lineno_end="${3:-$2}" '{ if (lineno_start <= NR && NR <= lineno_end) { print $0 }}'; return 0; }
 is_line_no_between() {
-  lineno="$1"
-  start="$2"
-  end="$3"
-  [[ "$start" -le "$lineno" && "$lineno" -le "$end" ]] && return 0 || return 1;
+  l_lookup_start="$1"
+  l_lookup_end="$2"
+  start="$3"
+  end="$4"
+  [[ "$start" -le "$l_lookup_start" && "$l_lookup_end" -le "$end" ]] && return 0 || return 1;
 }
+
 
 seq_no_lookup_beaten=0
 for seq_no in $(get_seq_of_diff_hunk "$L" "$R"); do
@@ -26,27 +35,29 @@ for seq_no in $(get_seq_of_diff_hunk "$L" "$R"); do
   sumR_end=$(get_sumend "$sumR")
   sumR_end=${sumR_end:-$sumR_start}
 
-  if is_line_no_between "$lookup_lineno" "$sumR_start" "$sumR_end"; then
+  if is_line_no_between "$lookup_start" "$lookup_end" "$sumR_start" "$sumR_end"; then
     sumL=$(get_sumL "$sum")
     sumL_start=$(get_sumstart "$sumL")
     sumL_end=$(get_sumend "$sumL")
     sumL_end=${sumL_end:-$sumL_start}
-    echo "[左:$sumL(変更差分)]"
-    get_line_of_lineno "$(cat -n $L)" "$sumL_start" "${sumL_end}"
+    echo "[左]"
+    get_line_of_lineno "$(cat -n $L)" "$sumL_start" "$sumL_end"
     echo "----"
-    echo "[右:$sumR(変更差分)]"
+    echo "[右]"
     get_line_of_lineno "$(cat -n $R)" "$sumR_start" "$sumR_end"
     exit 0
-  elif [[ "$seq_no_lookup_beaten" -eq 0 && "$lookup_lineno" -lt "$sumR_start" ]]; then
+  elif [[ "$seq_no_lookup_beaten" -eq 0 && "$lookup_start" -lt "$sumR_start" ]]; then
     seq_no_lookup_beaten="${seq_no}"
   fi
 done
 
 if [[ "$seq_no_lookup_beaten" -eq 0 ]]; then
   echo "[左]"
-  get_line_of_lineno "$(cat -n $L)" "$lookup_lineno"
+  get_line_of_lineno "$(cat -n $L)" "$lookup_start" "$lookup_end"
+  echo "----"
+  echo "[右]"
+  get_line_of_lineno "$(cat -n $R)" "$lookup_start" "$lookup_end"
 else
-  echo "[左]"
   sum=$(get_nth_sum "$L" "$R" "$((seq_no_lookup_beaten - 1))")
   sumR=$(get_sumR "$sum")
   sumR_start=$(get_sumstart "$sumR")
@@ -58,10 +69,11 @@ else
   sumL_end=$(get_sumend "$sumL")
   sumL_end=${sumL_end:-$sumL_start}
 
-  left_lieno=$((lookup_lineno + sumL_end - sumR_end))
-  get_line_of_lineno "$(cat -n $L)" "$left_lieno"
+  left_lieno=$((lookup_start + sumL_end - sumR_end))
+  echo "[左]"
+  get_line_of_lineno "$(cat -n $L)" "$left_lieno" "$((left_lieno + lookup_end - lookup_start))"
+  echo "----"
+  echo "[右]"
+  get_line_of_lineno "$(cat -n $R)" "$lookup_start" "$lookup_end"
 fi
-echo "----"
-echo "[右]"
-get_line_of_lineno "$(cat -n $R)" "$lookup_lineno"
 
