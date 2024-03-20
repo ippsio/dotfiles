@@ -1,0 +1,95 @@
+#!/usr/bin/env bash
+
+check_file_existence() { git cat-file --filters "$1:$file">/dev/null 2>&1 && return 0 || return $?; }
+seq_of_diff_hunk() { seq 1 "$(diff <(git cat-file --filters "$1:$file") <(git cat-file --filters "$2:$file")| grep -Evc "^(<|\-\-\-|>)")"; return 0; }
+hunk_summary_nth() { diff <(git cat-file --filters "$1") <(git cat-file --filters "$2")| grep -Ev "^(<|\-\-\-|>)"| awk -v n="$3" '{ if (NR==n) { print $0 }}'; return 0; }
+lineno_older_start_end() { echo "$1"| awk -F '[acd]' '{ print $1 }'; return 0; }
+lineno_newer_start_end() { echo "$1"| awk -F '[acd]' '{ print $2 }'; return 0; }
+lineno_start() { echo "$1"| awk -F ',' '{ print $1 }'; return 0; }
+lineno_end() { echo "$1"| awk -F ',' '{ print $2 }'; return 0; }
+line_text() { git cat-file --filter "$1"| awk -v v_lineno_start="$2" -v v_lineno_end="${3:-$2}" '{ if (v_lineno_start <= NR && NR <= v_lineno_end) { printf "%d:%s\n", NR, $0 }}'; return 0; }
+equal() { [[ "$1" == "$2" ]] && echo "same" || echo "different"; return 0; }
+lookup() {
+  local l_commit_hash_newer="$1"
+  local l_commit_hash_older="$2"
+  local l_file="$3"
+  local l_lineno_lookup="$4"
+  local l_seqno_lineno_lookup_exceeded=0
+  ( ! check_file_existence "$l_commit_hash_older" ) && echo "NOT FOUND($l_commit_hash_older:$l_file)" && exit 0
+  for seqno in $(seq_of_diff_hunk "$l_commit_hash_older" "$l_commit_hash_newer"); do
+    hunk_summary=$(hunk_summary_nth "$l_commit_hash_older:$l_file" "$l_commit_hash_newer:$l_file" "$seqno")
+    lineno_newer_start_end=$(lineno_newer_start_end "$hunk_summary")
+    lineno_newer_start=$(lineno_start "$lineno_newer_start_end")
+    lineno_newer_end=$(lineno_end "$lineno_newer_start_end")
+    lineno_newer_end=${lineno_newer_end:-$lineno_newer_start}
+
+    if [[ "$lineno_newer_start" -le "$l_lineno_lookup" && "$l_lineno_lookup" -le "$lineno_newer_end" ]]; then
+      lineno_older_start_end=$(lineno_older_start_end "$hunk_summary")
+      lineno_older_start=$(lineno_start "$lineno_older_start_end")
+      if [[ $hunk_summary =~ [0-9]+[ad][0-9]+ ]]; then
+        lineno_older_start=$(( lineno_older_start - 1 ))
+      fi
+
+      lineno_older_end=$(lineno_end "$lineno_older_start_end")
+      lineno_older_end=${lineno_older_end:-$lineno_older_start}
+      line_text_older=$(line_text "$l_commit_hash_older:$l_file" "$lineno_older_start" "$lineno_older_end")
+      line_text_older_no_lineno=$(echo "$line_text_older"| sed -E 's/^[0-9]+://')
+      line_text_newer=$(line_text "$l_commit_hash_newer:$l_file" "$l_lineno_lookup")
+      line_text_newer_no_lineno=$(echo "$line_text_newer"| sed -E 's/^[0-9]+://')
+      if [[ $hunk_summary =~ [0-9]+[ad][0-9]+ ]]; then
+        lineno_next_lookup=$(echo "$line_text_older"| head -1| awk -F ':' '{ printf "%s", $1 }')
+      elif [[ $hunk_summary =~ [0-9]+,[0-9]+[c][0-9]+,[0-9]+ ]]; then
+        lineno_next_lookup=$(echo "$line_text_older"| tail -n -1| awk -F ':' '{ printf "%s", $1 }')
+      else
+        lineno_next_lookup=$(echo "$line_text_older"| head -1| awk -F ':' '{ printf "%s", $1 }')
+      fi
+
+      is_same=$(equal "$line_text_older_no_lineno" "$line_text_newer_no_lineno")
+      echo "$line_text_older"| awk '{ printf "[OLDER]%s\n", $0 }'
+      echo "----"
+      echo "$line_text_newer"| awk '{ printf "[NEWER]%s\n", $0 }'
+      echo "$lineno_next_lookup,$is_same"
+      return 0
+    fi
+
+    if [[ "$l_seqno_lineno_lookup_exceeded" -eq 0 ]]; then
+      if [[ "$l_lineno_lookup" -lt "$lineno_newer_start" ]]; then
+        l_seqno_lineno_lookup_exceeded="${seqno}"
+      fi
+    fi
+  done
+
+  if [[ "$l_seqno_lineno_lookup_exceeded" -eq 0 ]]; then
+    l_seqno_lineno_lookup_exceeded=$(seq_of_diff_hunk "$l_commit_hash_older" "$l_commit_hash_newer"| tail -n 1)
+    echo "hunk_summary_nth $l_commit_hash_older:$l_file $l_commit_hash_newer:$l_file $l_seqno_lineno_lookup_exceeded"
+    hunk_summary=$(hunk_summary_nth "$l_commit_hash_older:$l_file" "$l_commit_hash_newer:$l_file" "$l_seqno_lineno_lookup_exceeded")
+  elif [[ "$l_seqno_lineno_lookup_exceeded" -eq 1 ]]; then
+    hunk_summary="0c0"
+  else
+    hunk_summary=$(hunk_summary_nth "$l_commit_hash_older:$l_file" "$l_commit_hash_newer:$l_file" "$((l_seqno_lineno_lookup_exceeded - 1))")
+  fi
+  echo "hunk_summary=$hunk_summary"
+  lineno_newer_start_end=$(lineno_newer_start_end "$hunk_summary")
+  lineno_newer_start=$(lineno_start "$lineno_newer_start_end")
+  lineno_newer_end=$(lineno_end "$lineno_newer_start_end")
+  lineno_newer_end=${lineno_newer_end:-$lineno_newer_start}
+
+  lineno_older_start_end=$(lineno_older_start_end "$hunk_summary")
+  lineno_older_start=$(lineno_start "$lineno_older_start_end")
+  lineno_older_end=$(lineno_end "$lineno_older_start_end")
+  lineno_older_end=${lineno_older_end:-$lineno_older_start}
+  line_text_older=$(line_text "$l_commit_hash_older:$l_file" "$((l_lineno_lookup + lineno_older_end - lineno_newer_end))")
+  line_text_older_no_lineno=$(echo "$line_text_older"| sed -E 's/^[0-9]+://')
+  line_text_newer=$(line_text "$l_commit_hash_newer:$l_file" "$l_lineno_lookup")
+  line_text_newer_no_lineno=$(echo "$line_text_newer"| sed -E 's/^[0-9]+://')
+
+  lineno_next_lookup=$(echo "$line_text_older"| head -1| awk -F ':' '{ printf "%s", $1 }')
+  is_same=$(equal "$line_text_older_no_lineno" "$line_text_newer_no_lineno")
+  echo "$line_text_older"| awk '{ printf "[OLDER]%s\n", $0 }'
+  echo "----"
+  echo "$line_text_newer"| awk '{ printf "[NEWER]%s\n", $0 }'
+  echo "$lineno_next_lookup,$is_same"
+
+  return 0
+}
+
