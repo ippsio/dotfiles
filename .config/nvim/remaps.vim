@@ -41,23 +41,13 @@ endfunction
 nmap <silent> <Esc> :<C-u>nohlsearch<CR>
 
 " [検索]
-" <F3> でハイライト中の文字(zレジスタの文字)をGrep。
-nnoremap <F3>       mz:call <SID>grep_z_register()<CR>
+" <F4> でハイライト中の文字(zレジスタの文字)をGrep。
+nnoremap <F4>       mz:call <SID>grep_z_register()<CR>
 function s:grep_z_register()
   " NOTE: どうやら2回escapeすると期待動作する。1回escapeだと期待動作しない。理由は知らん。
   let l:search_word = escape(@z, '\"$`')
   let l:search_word = escape(l:search_word, '\"$`')
   call feedkeys(":Grep " . l:search_word . "\<CR>", "n")
-endfunction
-
-" [検索]
-" <F4> でハイライト中の文字(zレジスタの文字)をGrep。
-nnoremap <F4>       mz:call <SID>git_deepblame_z_register()<CR>
-function s:git_deepblame_z_register()
-  " NOTE: どうやら2回escapeすると期待動作する。1回escapeだと期待動作しない。理由は知らん。
-  let l:search_word = escape(@z, '\"$`')
-  let l:search_word = escape(l:search_word, '\"$`')
-  call feedkeys(":GitDeepblame " . l:search_word . "\<CR>", "n")
 endfunction
 
 " [コマンドモードでの入力値の置換]
@@ -78,9 +68,6 @@ nnoremap <space>\  :<C-u>vnew<CR>
 nnoremap <space>\| :<C-u>vnew<CR>
 " ウインドウの高さの統一
 nnoremap <space>= <C-w>=
-
-" [jumplist]
-nnoremap <Del> <C-u><C-i>
 
 " VISUALモードで連続ペーストできるようにする
 " この設定をしたい理由：

@@ -40,7 +40,6 @@ Jetpack 'vim-scripts/ruby-matchit', { 'for': ['ruby', 'rake', 'eruby', 'slim'] }
 Jetpack 'slim-template/vim-slim', { 'for': ['ruby', 'rake', 'eruby', 'slim'] }
 Jetpack 'AndrewRadev/splitjoin.vim', { 'for': ['ruby', 'rake', 'eruby', 'slim'] }
 Jetpack 'nvie/vim-flake8', { 'for': ['python'] }
-Jetpack 'tell-k/vim-autopep8', { 'for': ['python'] }
 Jetpack 'kana/vim-gf-user', { 'for': ['diff'] }
 Jetpack 'kana/vim-gf-diff', { 'for': ['diff'] }
 Jetpack 'williamboman/mason.nvim'
@@ -50,7 +49,7 @@ Jetpack 'vim-denops/denops.vim'
 Jetpack 'Shougo/ddc.vim'
 Jetpack 'Shougo/ddc-around'
 Jetpack 'LumaKernel/ddc-source-file'
-Jetpack 'Shougo/ddc-source-nvim-lsp'
+Jetpack 'Shougo/ddc-source-lsp'
 Jetpack 'Shougo/ddc-matcher_head'
 Jetpack 'Shougo/ddc-sorter_rank'
 Jetpack 'Shougo/ddc-converter_remove_overlap'
@@ -64,13 +63,14 @@ Jetpack 'machakann/vim-sandwich'
 Jetpack 'terryma/vim-expand-region'
 Jetpack 'lambdalisue/fern.vim'
 Jetpack 'yuki-yano/fern-preview.vim'
-Jetpack 'preservim/nerdtree'
 Jetpack 'lambdalisue/guise.vim'
 Jetpack 'dense-analysis/ale'
 Jetpack 'thoughtbot/vim-rspec'
 Jetpack 'tpope/vim-dispatch'
-"Jetpack 'echasnovski/mini.animate'
-"Jetpack 'koron/dicwin-vim'
+Jetpack 'echasnovski/mini.animate'
+Jetpack 'iberianpig/tig-explorer.vim'
+"Jetpack 'rbgrouleff/bclose.vim'
+Jetpack 'lambdalisue/gin.vim'
 
 let s:available_pkg = stdpath('data') . '/' . 'site' . '/pack/jetpack/opt/available_packages.json'
 let s:available_pkg_text = filereadable(s:available_pkg) ? join(readfile(s:available_pkg)) : "{}"
@@ -80,13 +80,12 @@ endif
 
 call jetpack#end()
 
-for s:rcfile_full in split(glob(expand('<script>:h') . '/rc/*.vim'))
+for s:rcfile_full in split(glob(expand('<script>:h') . '/rc/*.vim') . "\n" . glob(expand('<script>:h') . '/rc/*.lua'), "\n")
   let s:rcfile = fnamemodify(s:rcfile_full, ':t')
   let s:plugin = fnamemodify(s:rcfile_full, ':t:r')
   if jetpack#tap(s:plugin)
     execute 'runtime! rc/' . s:rcfile
   else
-    echo('Jetpackは' . s:plugin . 'を認識してません。' . s:rcfile_full . 'はruntime!しません。')
+    " echomsg 'Jetpackは' . s:plugin . 'を認識してません。' . s:rcfile_full . 'はruntime!しません。'
   endif
 endfor
-

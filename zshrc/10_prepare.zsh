@@ -117,7 +117,7 @@ type_or_inst goenv
 type_or_inst rbenv
 type_or_inst ruby-build
 type_or_inst nodenv
-type_or_inst deno
+# type_or_inst deno
 type_or_inst rustc rust
 type_or_inst cargo
 type_or_inst java openjdk
@@ -129,6 +129,8 @@ nodir_then_gitclone "${TMUX_PLUGINS}/tpm" "tmux-plugins/tpm"
 nodir_then_gitclone "${ZINIT_ROOT}" "zdharma/zinit.git" "${ZINIT_ROOT}/bin"
 nodir_then_gitclone "${HOME}/setting_box" "ippsio/setting_box.git"
 chk_pynvim_or_install
+
+[[ ! -d /Applications/Stats.app ]] && type_or_cask_inst stats
 # chk_or_pip_install diff-highlight
 
 # mkdir
@@ -140,6 +142,9 @@ chkfile_or_dlink ~/.config/bat           ~/dotfiles/.config/bat
 chkfile_or_dlink ~/.config/alacritty     ~/dotfiles/.config/alacritty
 chkfile_or_dlink ~/.config/ranger        ~/dotfiles/.config/ranger
 chkfile_or_dlink ~/.config/tig          ~/dotfiles/.config/tig
+mkdir -p ~/.local/share/tig
+touch ~/.local/share/tig/history
+
 mkdir -p ~/.config/karabiner/assets
 chkfile_or_dlink ~/.config/karabiner/assets/complex_modifications     ~/dotfiles/.config/karabiner /assets/ complex_modifications
 

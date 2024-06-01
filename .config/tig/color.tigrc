@@ -27,7 +27,8 @@ color line-number       220     0
 #------------------------------------------------------------
 # `diff --git a/xxxx b/xxxx`みたいな箇所(グレー地に白文字)
 #------------------------------------------------------------
-color diff-header      149 233
+# color diff-header      149 233
+color diff-header      233 149
 
 #----------------------------------------
 # `index acbd5f297b..4a56929e4e 100644`
@@ -45,6 +46,10 @@ color "--- "           149 233
 #----------------------------------------------------------------------
 color diff-chunk       149 234
 color diff-stat        049 235
+
+color stat-staged      default default
+color stat-unstaged    default default
+color stat-untracked   default default
 
 #----------------------
 # diff old系(赤系)

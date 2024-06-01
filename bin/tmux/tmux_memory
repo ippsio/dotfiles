@@ -1,6 +1,6 @@
 #!/bin/bash
 
-memory_info_str=$(~/dotfiles/bin/memory_info)
+memory_info_str=$(~/dotfiles/bin/statistics/memory_info)
 usage=$(      echo "${memory_info_str}"| grep "usage:"      | awk -F ':' '{ print $2 }')
 application=$(echo "${memory_info_str}"| grep "application:"| awk -F ':' '{ print $2 }')
 wired=$(      echo "${memory_info_str}"| grep "wired:"      | awk -F ':' '{ print $2 }')

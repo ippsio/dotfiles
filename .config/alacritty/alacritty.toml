@@ -44,6 +44,16 @@ chars = "\u0014N" # これは<ctrl-t>N
 key = "F12"
 chars = "\u0014z" # これは<ctrl-t>z
 
+[[keyboard.bindings]]
+key = "w"
+mods = "Command"
+chars = "" # Cmd+wの無効化(うっかりAlacrittyを閉じてほしくない その1)
+
+[[keyboard.bindings]]
+key = "q"
+mods = "Command"
+chars = "" # Cmd+qの無効化(うっかりAlacrittyを閉じてほしくない その2)
+
 [shell]
 args = ["-l"]
 program = "/opt/homebrew/bin/zsh"

@@ -1,4 +1,4 @@
-set laststatus=2
+set laststatus=3
 let g:lightline = {
   \  'colorscheme': 'Tomorrow',
   \  'inactive': {'left': [ ['mode', 'paste'], ['readonly', 'filepath']], 'right': [ ['lineinfo']] },

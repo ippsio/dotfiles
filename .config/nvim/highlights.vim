@@ -1,35 +1,12 @@
-" hi {group-name} {key}={arg}
-"  - group-nameの一覧を見る方法
-"    - :help group-name
-"
-" 設定できる色の一覧を見たい場合
-" :so $VIMRUNTIME/syntax/colortest.vim
-"
-" 現在設定している色の確認（結構時間かかりまっせ）
-" :so $VIMRUNTIME/syntax/hitest.vim
-
+set notermguicolors
 " if has('nvim')
 "   set termguicolors
 "   let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
 "   let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 " endif
 
-" 背景色
-"hi Normal guibg=#222622
-"hi NormalNC guibg=#000000
-
-" 背景色により、現在カーソルのあるウインドウをわかりやすくする。
-"augroup ChangeBackground
-"  autocmd!
-"  "" 背景色(カレントウインドウ)
-"  autocmd FocusGained * hi Normal guibg=#222622
-"  autocmd FocusLost   * hi Normal guibg=default
-"augroup END
-
 " カーソル行
-"""hi CursorLine cterm=NONE ctermfg=NONE ctermbg=NONE
-" カーソル自体の色は、iTerm2等のターミナルの設定であるため、コメントアウト
-" hi Cursor ctermbg=1 ctermfg=240
+hi CursorLine cterm=underline ctermbg=239
 
 " 補完ポップアップ
 hi Pmenu ctermfg=195 ctermbg=237
@@ -38,11 +15,9 @@ hi PmenuSbar ctermbg=190
 hi PmenuThumb ctermbg=27
 
 " コード規約上120文字な言語があったりするので、その目安に線を引く
-" let &colorcolumn=join(range(121,121),",")
-hi ColorColumn ctermbg=235
+hi ColorColumn ctermbg=235 cterm=NONE
 
 " 検索単語
-"hi IncSearch guibg=#882200 guifg=#ff22ff
 hi Search ctermbg=89 ctermfg=208
 
 " フォーカスのないウインドウ
@@ -51,54 +26,34 @@ hi NormalNC ctermfg=251
 " コメント
 hi Comment ctermbg=236 ctermfg=6
 hi vimLineComment ctermbg=236 ctermfg=6
-hi vimCommentString ctermbg=23 ctermfg=123
+hi link vimCommentString Comment
 hi vimCommentTitle ctermbg=23
 hi vimCommentTitleLeader ctermbg=23
+"hi pythonTripleQuotes ctermbg=1
 
 " 変数、文字列
-"hi Constant ctermfg=168 cterm=bold
-"hi Constant ctermfg=168
 hi Constant ctermfg=105
-
 hi PreProc ctermfg=170
+hi String ctermfg=75
 
 " ruby
 hi rubySymbol ctermbg=0 ctermfg=170
-hi rubyString ctermbg=232 ctermfg=69
+hi link rubyString String
 hi rubyTodo ctermbg=94
 
 " 行番号
 hi LineNr ctermfg=136
 " directory
-"hi Directory ctermbg=16 ctermfg=75 cterm=bold
 hi Directory ctermbg=16 ctermfg=75
 
-"hi Type ctermbg=16 ctermfg=118 cterm=bold
-"hi Type ctermbg=16 ctermfg=118
 hi Type ctermbg=16 ctermfg=48
-"hi Visual ctermbg=0 ctermbg=226
-"hi Visual ctermbg=60
 hi Visual ctermfg=220 ctermbg=237
-
 " markdown
-" hi markdownH1          guibg=#cc2299 guifg=#ffff66
-" hi markdownH1Delimiter guibg=#ff2299 guifg=#ffff00
-" hi markdownH2          guibg=#cc2299 guifg=#ffff66
-" hi markdownH2Delimiter guibg=#ff2299 guifg=#ffff00
-" hi markdownH3          guibg=#cc2299 guifg=#ffff66
-" hi markdownH3Delimiter guibg=#ff2299 guifg=#ffff00
-" hi markdownH4          guibg=#cc2299 guifg=#ffff66
-" hi markdownH4Delimiter guibg=#ff2299 guifg=#ffff00
-" hi markdownH5          guibg=#cc2299 guifg=#ffff66
-" hi markdownH5Delimiter guibg=#ff2299 guifg=#ffff00
-hi markdownCode          guibg=#333333 guifg=#cccccc ctermbg=236 ctermfg=255
-hi markdownCodeDelimiter guibg=#222222 guifg=#cccccc ctermbg=88 ctermfg=211
+hi markdownCode          ctermbg=236 ctermfg=255
+hi markdownCodeDelimiter ctermbg=88 ctermfg=211
+"hi markdownListMarker guibg=#456789 guifg=#ffff00 gui=bold
+"hi markdownError guibg=#222622
 
-hi markdownListMarker guibg=#456789 guifg=#ffff00 gui=bold
-hi markdownError guibg=#222622
-
-"hi Function guifg=#ffff00 guibg=#444400
-" hi Statement guifg=#ffff00 ctermfg=226 cterm=bold
 hi Statement ctermfg=178
 
 " vimdiffの色設定
@@ -123,14 +78,6 @@ hi QuickFixLine ctermfg=222 ctermbg=69
 hi vimContinue ctermfg=70 ctermbg=54
 hi vimOperParen ctermfg=222
 hi vimUserFunc ctermfg=10
-" 例）
-" vimContinue: `\` 部分
-" vimOperParen: `fzf#vim#` 部分
-" vimUserFunc: `with_preview` 部分
-"  command! -bang -nargs=? -complete=dir FzfFiles
-"        \ call fzf#run(
-"        \   fzf#vim#with_preview(
-"        \     fzf#wrap(
 
 " カーソル下のhighlight情報を表示する
 function! s:part(s, fgbg, type)
@@ -158,5 +105,4 @@ function! s:syn_info()
 endfunction
 
 command! Hi call s:syn_info()
-command! Hiinfo call s:syn_info()
 

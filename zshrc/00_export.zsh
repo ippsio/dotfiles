@@ -6,8 +6,11 @@ export EDITOR=nvim
 export ZINIT_ROOT=~/.zinit
 export TMUX_PLUGINS=~/.cache/tmux/plugins
 
-my_diff_highlight_bin_dir=$(find /opt/homebrew/Cellar/git -type f -name "diff-highlight" | sort -nr| head -n 1)
-export PATH=${my_diff_highlight_bin_dir}:${PATH}
+my_diff_highlight_bin=$(find /opt/homebrew/Cellar/git -type f -name "diff-highlight" | sort -nr| head -n 1)
+if [[ -n "my_diff_highlight_bin" ]]; then
+  my_diff_highlight_bin_dir=$(dirname "${my_diff_highlight_bin}")
+  export PATH=${my_diff_highlight_bin_dir}:${PATH}
+fi
 for my_bin_dir in $(find ~/dotfiles/bin -type d); do
   export PATH=${my_bin_dir}:${PATH}
 done
@@ -94,3 +97,8 @@ export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
 # For compilers to find openjdk you may need to set:
 export CPPFLAGS="-I/opt/homebrew/opt/openjdk/include"
 
+# ---------------------
+# Deno
+# ---------------------
+export DENO_INSTALL="${HOME}/.deno"
+export PATH="$DENO_INSTALL/bin:$PATH"

@@ -82,6 +82,7 @@ bind diff ] :toggle diff-context +1		   # Increase context
 # git commit
 #--------------
 bind stage C      !git commit
+bind status C      !git commit
 
 #--------------
 # git rebase

@@ -4,3 +4,4 @@
 node_modules
 zshrc/10_prepare.zsh.cache
 .envrc
+.config/nvim/denops_cache

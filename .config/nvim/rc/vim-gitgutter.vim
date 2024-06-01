@@ -11,10 +11,10 @@ let g:gitgutter_sign_modified_removed   = 'MX'
 
 "" 変更マークのハイライト
 "hi SignColumn             ctermbg=none
-hi GitGutterAdd           cterm=standout " an added line
-hi GitGutterChange        cterm=standout " a changed line
-hi GitGutterDelete        cterm=standout " at least one removed line
-hi GitGutterChangeDelete  cterm=standout " a changed line followed by at least one removed line
+"hi GitGutterAdd           cterm=standout " an added line
+"hi GitGutterChange        cterm=standout " a changed line
+"hi GitGutterDelete        cterm=standout " at least one removed line
+"hi GitGutterChangeDelete  cterm=standout " a changed line followed by at least one removed line
 
 " 行ハイライトは結構見にくいと感じたので、コメントアウト
 " 起動時に差分行の行ハイライトを自動的に有効にする

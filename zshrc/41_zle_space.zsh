@@ -88,6 +88,12 @@ zle_space() {
       return 0
     fi
 
+    # git log --date=iso --pretty='%h %ad %an %s'
+    if [[ $BUFFER =~ '^git log $' ]]; then
+      BUFFER="git log --date=iso --pretty='%h %ad %an %s'" && zle end-of-line
+      return 0
+    fi
+
     # git push origin HEAD
     if [[ $BUFFER =~ '^gps$' ]]; then
       if [[ -n "$(git_obtain_remote_of_branch)" ]]; then
@@ -112,45 +118,53 @@ zle_space() {
     fi
   fi
 
-  # bundle exec
-  if [[ $BUFFER =~ '^be$' ]]; then
-    BUFFER="bundle exec " && zle end-of-line
-    return 0
-  fi
+  if [[ -e Gemfile ]]; then
+    # bundle exec
+    if [[ $BUFFER =~ '^be$' ]]; then
+      BUFFER="bundle exec " && zle end-of-line
+      return 0
+    fi
 
-  # bundle exec rails
-  if [[ $BUFFER =~ '^rails$' ]]; then
-    BUFFER="bundle exec rails " && zle end-of-line
-    return 0
-  fi
+    # bundle exec rails
+    if [[ $BUFFER =~ '^rails$' ]]; then
+      BUFFER="bundle exec rails " && zle end-of-line
+      return 0
+    fi
 
-  # bundle exec rails c
-  if [[ $BUFFER =~ '^c$' ]]; then
-    BUFFER="bundle exec rails c" && zle end-of-line
-    return 0
-  fi
+    # bundle exec rails c
+    if [[ $BUFFER =~ '^c$' ]]; then
+      BUFFER="bundle exec rails c" && zle end-of-line
+      return 0
+    fi
 
-  # bundle exec rails c
-  if [[ $BUFFER =~ '^sidekiq$' ]]; then
-    BUFFER="bundle exec sidekiq -C config/sidekiq.yml" && zle end-of-line
-    return 0
-  fi
+    # bundle exec sidekiq
+    if [[ $BUFFER =~ '^sidekiq$' ]]; then
+      BUFFER="bundle exec sidekiq -C config/sidekiq.yml" && zle end-of-line
+      return 0
+    fi
 
-  #  bundle exec rake + completion
-  if [[ $BUFFER =~ '^rake$' ]]; then
-    BUFFER="bundle exec rake $(fzf_bundle_exec_rake)" && zle end-of-line
-    return 0
-  fi
+    #  bundle exec rake + completion
+    if [[ $BUFFER =~ '^rake$' ]]; then
+      BUFFER="bundle exec rake $(fzf_bundle_exec_rake)" && zle end-of-line
+      return 0
+    fi
 
-  # bundle exec rails s
-  if [[ $BUFFER =~ '^rs$' ]]; then
-    BUFFER="bundle exec rails s -b 0.0.0.0" && zle end-of-line
-    return 0
+    # bundle exec rails s
+    if [[ $BUFFER =~ '^rs$' ]]; then
+      BUFFER="bundle exec rails s -b 0.0.0.0" && zle end-of-line
+      return 0
+    fi
   fi
 
   # rg
   if [[ $BUFFER =~ '^rgg$' ]]; then
     BUFFER="rg_fzf_vim " && zle end-of-line
+    return 0
+  fi
+
+  # initvim
+  if [[ $BUFFER =~ '^i$' ]]; then
+    BUFFER="initvim" && zle end-of-line && zle accept-line
     return 0
   fi
 

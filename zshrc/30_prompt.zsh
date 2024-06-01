@@ -71,6 +71,7 @@ zstyle ':vcs_info:git+set-message:*' hooks git-set-message-hook
   local git_XY=$(echo -e ${git_status}| sed -e "s/^\(..\).*$/\1/")
 
   local repo_1=$(git_reponame)
+  local hash_2=$(git rev-parse --short HEAD)
   local untracked_3=$(echo "${git_XY}"| grep -Ec "^(\?\?)")
   local unstaged_4=$(echo "${git_XY}"| grep -Ec "^([ MADRC][MDRC])")
   local unmerged_5=$(echo "${git_XY}"| grep -Ec "^([DAU][DAU])")
@@ -93,7 +94,7 @@ zstyle ':vcs_info:git+set-message:*' hooks git-set-message-hook
   has_remote_10="track(${has_remote_10:-none})"
 
   # misc (%m) に追加
-  hook_com[misc]="${repo_1}\t${hook_com[branch]}\t${untracked_3}\t${unstaged_4}\t${unmerged_5}\t${index_6}\t${ahead_7}\t${behind_8}\t${stash_9}\t${has_remote_10}\t${hook_com[action]}"
+  hook_com[misc]="${repo_1}\t${hash_2}\t${hook_com[branch]}\t${untracked_3}\t${unstaged_4}\t${unmerged_5}\t${index_6}\t${ahead_7}\t${behind_8}\t${stash_9}\t${has_remote_10}\t${hook_com[action]}"
 }
 
 my_precmd_hook() { return 0; }
@@ -135,7 +136,8 @@ precmd() {
   GIT_REPO_BRANCH+="%(1v|${SEPARATOR_OPEN}${_mark_git_repo}%1v|)"
   GIT_REPO_BRANCH+="%f%k"
   GIT_REPO_BRANCH+="%K{220}%F{0}"
-  GIT_REPO_BRANCH+="%(2v| ${_mark_branch}%2v${SEPARATOR_CLOSE}|)"
+  GIT_REPO_BRANCH+="%(2v| ${_mark_branch}(%2v)${SEPARATOR_CLOSE}|)"
+  GIT_REPO_BRANCH+="%(3v|${_mark_branch}%3v${SEPARATOR_CLOSE}|)"
   GIT_REPO_BRANCH+="%f%k"
 
   # git working_tree
@@ -143,36 +145,36 @@ precmd() {
   _mark_unstaged="uns"
   _mark_unmerged="unm"
   GIT_WORKING_TREE="%K{193}%F{241}"
-  GIT_WORKING_TREE+="%(3v|${SEPARATOR_OPEN}${_mark_untracked}%3v|)"
-  GIT_WORKING_TREE+="%(4v| ${_mark_unstaged}%4v|)"
-  GIT_WORKING_TREE+="%(5v| ${_mark_unmerged}%5v${SEPARATOR_CLOSE}|)"
+  GIT_WORKING_TREE+="%(4v|${SEPARATOR_OPEN}${_mark_untracked}%4v|)"
+  GIT_WORKING_TREE+="%(5v| ${_mark_unstaged}%5v|)"
+  GIT_WORKING_TREE+="%(6v| ${_mark_unmerged}%6v${SEPARATOR_CLOSE}|)"
   GIT_WORKING_TREE+="%f%k"
 
   _mark_stash="sta"
   GIT_STASH="%K{193}%F{241}"
-  GIT_STASH+="%(9v|${_mark_stash}%9v${SEPARATOR_CLOSE}|%v)"
+  GIT_STASH+="%(10v|${_mark_stash}%10v${SEPARATOR_CLOSE}|%v)"
   GIT_STASH+="%f%k"
 
   # git stage
   _mark_staged="stg"
   GIT_STAGE="%K{61}%F{153}"
-  GIT_STAGE+="%(6v|${SEPARATOR_OPEN}${_mark_staged}%6v${SEPARATOR_CLOSE}|)%k"
+  GIT_STAGE+="%(7v|${SEPARATOR_OPEN}${_mark_staged}%7v${SEPARATOR_CLOSE}|)%k"
   GIT_STAGE+="%f%k"
 
   # git local repositry
   _mark_ahead="ahe"
   _mark_behind="beh"
   GIT_LOCAL_REPO="%K{90}%F{200}"
-  GIT_LOCAL_REPO+="%(7v|${SEPARATOR_OPEN}${_mark_ahead}%7v|)"
-  GIT_LOCAL_REPO+="%(8v| ${_mark_behind}%8v${SEPARATOR_CLOSE}|)"
+  GIT_LOCAL_REPO+="%(8v|${SEPARATOR_OPEN}${_mark_ahead}%8v|)"
+  GIT_LOCAL_REPO+="%(9v| ${_mark_behind}%9v${SEPARATOR_CLOSE}|)"
   GIT_LOCAL_REPO+="%f%k"
 
-  # 10v,11v,12v,13vって....。たぶんもっといいやり方あるんだろうけど、調べるのが面倒臭かったんです..
+  # 11v,12v,13v,14vって....。たぶんもっといいやり方あるんだろうけど、調べるのが面倒臭かったんです..
   GIT_CAUTION="%K{1}"
-  GIT_CAUTION+="%(10v| %10v |)"
   GIT_CAUTION+="%(11v| %11v |)"
   GIT_CAUTION+="%(12v| %12v |)"
   GIT_CAUTION+="%(13v| %13v |)"
+  GIT_CAUTION+="%(14v| %14v |)"
   GIT_CAUTION+="%k"
 
   # others

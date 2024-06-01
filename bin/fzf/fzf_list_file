@@ -12,7 +12,8 @@ else
   FZF_QUERY="${TARGET_DIR_TILDE}"
 fi
 FZF_PROMPT="$(basename $0) (dir='$(home_as_tilde ${TARGET_DIR})') > "
-FZF_RESULT=$(rg --files --hidden --no-ignore "${TARGET_DIR}" 2>/dev/null| grep -v "^${TARGET_DIR}$"| sed 's#^./##'| home_as_tilde\
+#FZF_RESULT=$(rg --max-depth=1 --files --hidden --no-ignore "${TARGET_DIR}" 2>/dev/null| grep -v "^${TARGET_DIR}$"| sed 's#^./##'| home_as_tilde\
+FZF_RESULT=$(rg --max-depth=3 --files --hidden --no-ignore "${TARGET_DIR}" 2>/dev/null| grep -v "^${TARGET_DIR}$"| sed 's#^./##'| home_as_tilde\
   | fzf +m --query="${FZF_QUERY} " --header="C-g:ripgrep, C-/:TogglePreview" --prompt="${FZF_PROMPT}" --info=inline\
     --bind "ctrl-/:toggle-preview" --bind "ctrl-_:toggle-preview" \
     --bind "ctrl-g:execute(rg_fzf_vim . ${TARGET_DIR} < /dev/tty > /dev/tty)" \

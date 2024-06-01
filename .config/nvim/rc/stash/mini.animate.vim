@@ -6,7 +6,7 @@ animate.setup(
     cursor = {
       enable = true,
       -- Animate for 200 milliseconds with linear easing
-      timing = animate.gen_timing.linear({ duration = 200, unit = 'total' }),
+      timing = animate.gen_timing.linear({ duration = 25, unit = 'total' }),
 
       -- Animate with shortest line for any cursor move
       path = animate.gen_path.line({
@@ -36,7 +36,7 @@ animate.setup(
 
     -- Window open
     open = {
-      enable = true,
+      enable = false,
       -- Animate for 400 milliseconds with linear easing
       timing = animate.gen_timing.linear({ duration = 400, unit = 'total' }),
 
@@ -48,7 +48,7 @@ animate.setup(
     },
 
     close = {
-      enable = true,
+      enable = false,
       -- Animate for 400 milliseconds with linear easing
       timing = animate.gen_timing.linear({ duration = 400, unit = 'total' }),
 

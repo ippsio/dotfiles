@@ -9,3 +9,4 @@ for i in "${array[@]}"; do
   eval "tmux set window-active-style bg=colour${i}"; sleep "${3:-0.03}";
 done
 eval "tmux set ${window_active_style_was}"
+tmux display-panes -d 250
