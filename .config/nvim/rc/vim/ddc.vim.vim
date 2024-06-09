@@ -11,11 +11,10 @@ inoremap <silent><expr> <C-n>  pum#visible() ? '<Cmd>call pum#map#insert_relativ
 inoremap <silent> <C-k>  <Cmd>call pum#map#insert_relative(-1)<CR>
 inoremap <silent> <C-j>  <Cmd>call pum#map#insert_relative(+1)<CR>
 
-" pum#visible() が真なら、ポップアップの選択肢を上下移動します。
-" pum#visible() が偽なら、単に<Up>,<Down>します。
+" pum#visible() が真なら、ポップアップの選択肢を上下移動、または決定します。
+" pum#visible() が偽なら、単に<Up>,<Down>、または改行します。
 inoremap <silent><expr> <Up>   pum#visible() ? '<Cmd>call pum#map#insert_relative(-1)<CR>' : '<Up>'
 inoremap <silent><expr> <Down> pum#visible() ? '<Cmd>call pum#map#insert_relative(+1)<CR>' : '<Down>'
-
 inoremap <silent><expr> <CR>   pum#visible() ? '<Cmd>call pum#map#confirm()<CR>' : '<CR>'
 " FIXME: <Esc>を押した時にpum#map#cancel()しつつ、ノーマルモードに戻りたい。
 " inoremap <silent><expr> <Esc>  pum#visible() ? '<Cmd>call pum#map#cancel()<CR>' : '<Esc>'
@@ -40,30 +39,51 @@ call ddc#custom#patch_global('sources',
 \ )
 
 call ddc#custom#patch_global('sourceOptions',
-\ #{
-\   _: #{
-\     minAutoCompleteLength: 2,
-\     matchers: ['matcher_fuzzy'],
-\     sorters: ['sorter_fuzzy'],
-\     converters: ['converter_fuzzy']
+\   #{
+\     _: #{
+\       minAutoCompleteLength: 2,
+\       matchers: ['matcher_fuzzy'],
+\       sorters: ['sorter_fuzzy'],
+\       converters: ['converter_fuzzy']
+\     }
 \   }
-\ })
-
+\ )
 call ddc#custom#patch_global('sourceOptions',
 \   #{
 \     file: #{
 \       mark: 'ddc-file',
 \       isVolatile: v:true,
 \       forceCompletionPattern: '\S/\S*'
-\      }
+\     }
 \   }
 \ )
-
 call ddc#custom#patch_global('sourceOptions',
 \   #{
 \     around: #{
 \       mark: 'ddc-arround',
 \       matchers: ['matcher_fuzzy']
+\     }
+\   }
+\ )
+call ddc#custom#patch_global('sourceOptions',
+\   #{
+\     lsp: #{
+\       mark: 'lsp',
+\       forceCompletionPattern: join(['\.\w*', ':\w*', '->\w*'], '|')
+\     },
+\   }
+\ )
+call ddc#custom#patch_filetype(['ps1', 'dosbatch', 'autohotkey', 'registry'],
+\   #{
+\     sourceOptions: #{
+\       file: #{
+\         forceCompletionPattern: '\S\\\S*',
+\        },
+\      },
+\      sourceParams: #{
+\         file: #{
+\         mode: 'win32',
+\       },
 \     }
 \   }
 \ )
@@ -90,42 +110,6 @@ call ddc#custom#patch_global('sourceParams',
 \     }
 \   }
 \ )
-
-
-" ddc-file
-call ddc#custom#patch_global('sourceOptions',
-\   #{
-\     file: #{
-\       mark: 'F',
-\       isVolatile: v:true,
-\       forceCompletionPattern: '\S/\S*'
-\     }
-\   }
-\ )
-call ddc#custom#patch_filetype(['ps1', 'dosbatch', 'autohotkey', 'registry'],
-\   #{
-\     sourceOptions: #{
-\       file: #{
-\         forceCompletionPattern: '\S\\\S*',
-\        },
-\      },
-\      sourceParams: #{
-\         file: #{
-\         mode: 'win32',
-\       },
-\     }
-\   }
-\ )
-
-call ddc#custom#patch_global('sourceOptions',
-\   #{
-\     lsp: #{
-\       mark: 'lsp',
-\       forceCompletionPattern: '\.\w*|:\w*|->\w*',
-\     },
-\   }
-\ )
-
 call ddc#custom#patch_global('sourceParams',
 \   #{
 \     lsp: #{

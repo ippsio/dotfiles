@@ -29,7 +29,9 @@ offset = {x=0, y=-2}
 #normal = {family = "JetBrainsMono Nerd Font Mono"}
 #normal = {family = "Source code Pro for Powerline"}
 #normal = {family = "Inconsolata-g for Powerline"}
-normal = {family = "Inconsolata-dz for Powerline"}
+#normal = {family = "Inconsolata-dz for Powerline"}
+normal = {family = "InconsolataDz Nerd Font"}
+
 
 [[keyboard.bindings]]
 key = "F11"

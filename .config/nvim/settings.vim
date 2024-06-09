@@ -84,7 +84,7 @@ set shortmess+=I
 
 " [折りたたみ]
 " nofoldenable 折りたたみが個人的に好きでないので、無効化する。例えば :Gdiff 等で勝手に折りたたまれた状態で表示されると、いらいらする。
-set nofoldenable
+"set nofoldenable
 
 " [表示]
 " number 行番号を表示。

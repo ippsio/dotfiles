@@ -50,7 +50,6 @@ endfunction
 " ハイライト一覧の閲覧「:so $VIMRUNTIME/syntax/hitest.vim」実行時にバッティングします。
 " ハイライト一覧を見たい場合、このnnoremap は一旦コメントアウトしましょう...。
 nnoremap <silent> ' :<C-u>:BLinesWithPreview<CR>
-nnoremap <silent> L :<C-u>:BLinesWithPreview<CR>
 command! -bang -nargs=* BLinesWithPreview
       \ call fzf#vim#grep(
       \   'rg '
