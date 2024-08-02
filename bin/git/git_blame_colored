@@ -14,6 +14,7 @@ fi
 # 対象ファイルの絶対パス
 file_realpath=$(realpath "${ARG_FILENAME}")
 filename_against_home=$(echo "${file_realpath}"| home_as_tilde)
+echo
 echo "ARG_FILENAME=${filename_against_home}";
 
 # git blame開始/終了行の取得。
@@ -33,6 +34,7 @@ if [[ -n "${git_reponame}" ]]; then
   git_repo_dir=$(cd $(dirname "${file_realpath}"); git rev-parse --git-dir 2>/dev/null)
   git_repo_root_dir=$(dirname "${git_repo_dir}")
 fi
+echo
 
 file_relativepath=${file_realpath#${git_repo_root_dir}/}
 blame_result=$(cd "${git_repo_root_dir}"; set -x; git blame -L ${blame_lineno_from},${blame_lineno_to} --abbrev=${ABBREV_HASH_LENGT} --show-name ${file_relativepath} 2>/dev/null)

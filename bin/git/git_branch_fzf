@@ -9,7 +9,7 @@ L_ALL="$(git log --oneline -1| awk '{ gsub(/[0-9a-f]/, "o", $1); print $1 }')	oo
 $(echo "${GIT_BRANCH_RESULT}"| grep -E '	(develop|origin/develop)	')
 $(echo "${GIT_BRANCH_RESULT}"| grep -E '	(master|origin/master)	')
 $(echo "${GIT_BRANCH_RESULT}"| grep -Ev '	(HEAD|origin/HEAD|develop|origin/develop|master|origin/master)	')"
-echo "${L_ALL}" | awk -F '	' -v count=$(echo "${L_ALL}"| chop_blank_line| wc -l| tr -d ' ') -v deco_git_objectname=$(decorate -git_objectname) -v deco_git_authordate=$(decorate -git_authordate) \
+echo "${L_ALL}"| grep -Ev "^$"| awk -F '	' -v count=$(echo "${L_ALL}"| chop_blank_line| wc -l| tr -d ' ') -v deco_git_objectname=$(decorate -git_objectname) -v deco_git_authordate=$(decorate -git_authordate) \
     -v deco_git_an=$(decorate -git_an) -v deco_git_refname=$(decorate -git_refname) -v deco_git_s=$(decorate -git_s) '{
       if (index($5, "origin/") > 0) { taginfo = "origin"; branchname = substr($5, length("origin/") + 1); } else { taginfo = " local"; branchname = $5; }
       printf "%s", "\033[2m"; printf "(%+2s/%s)", NR, count;

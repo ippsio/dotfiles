@@ -6,9 +6,10 @@ if handle ~= nil then
   handle:close()
   result = result:gsub("%s+", "") -- 結果の改行を削除
   command = result
-  print(result)
 end
+-- print(command)
 
+-- debugpyモジュールが必要です (pip install debugpy)
 require('dap-python').setup(command)
 vim.api.nvim_set_keymap('n', '<F5>', ':DapContinue<CR>', { silent = true })
 vim.api.nvim_set_keymap('n', '<F10>', ':DapStepOver<CR>', { silent = true })

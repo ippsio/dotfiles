@@ -1,41 +1,14 @@
 #!/usr/bin/env zsh
-# zsh起動時にtmux起動
-tmux_attach_to_first_session() {
-  unattached_sessions=$(tmux list-session| grep -Ev "\(attached\)")
-  if [[ ! -z "${unattached_sessions}" ]]; then
-    echo "Unattached tmux sessions found."
-    echo "${unattached_sessions}"
-    echo "Attached to the first one."
-    sleep 1
-    session_name=$(echo "${unattached_sessions}"| head -1| awk -F ':' '{ print $1 }')
-    tmux attach-session -t "${session_names}"
-    echo "bye."
-    sleep 1
-    return 0
-  else
-    return 1
-  fi
-}
-
-tmux_new_session() {
-  for i in {1..128}; do
-    if [[ -z $(tmux ls -f "#{==:#{session_name},${i}}") ]]; then
-      tmux new-session -s ${i}
-      echo "bye."
-      sleep 1
-      break
-    fi
-  done
-  return 0
-}
-
-if (type "tmux" > /dev/null 2>&1); then
-  if [[ -z "$TMUX" && ! -z "$PS1" ]]; then
-    tmux_new_session
-    while true; do
-      tmux_attach_to_first_session || exit
-    done
-  fi
+am_not_i_on_tmux() { [[ -z "$TMUX" && -n "$PS1" ]] && return 0 || return 1; }
+tmux_idx_next_attach() { tmux ls -f "#{==:#{session_attached},0}" -F "#S"| sort --general-numeric-sort| head -1; return 0; }
+tmux_idx_next_new() { (tmux ls -F "#S"; seq 1 16)| sort --general-numeric-sort| uniq --unique| head -1; return 0; }
+tmux_session_attach() { i=$(tmux_idx_next_attach); [[ -n "$i" ]] && tmux attach-session -t "$i" && tmux_wait_for_bye && return 0 || return 1 }
+tmux_session_new() { i=$(tmux_idx_next_new); tmux new-session -s "$i"; tmux_wait_for_bye; return 0; }
+tmux_wait_for_bye() { echo "bye"; sleep 1; return 0; }
+tmux_executable() { type "tmux" > /dev/null 2>&1 && return 0 || return 1; }
+if tmux_executable && am_not_i_on_tmux; then
+  tmux_session_new
+  while true; do tmux_session_attach || exit; done
 fi
 
 autoload -Uz compinit && compinit -u

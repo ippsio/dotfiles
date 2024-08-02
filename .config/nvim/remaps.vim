@@ -101,12 +101,19 @@ cnoremap <Down> <C-n>
 nnoremap qq    :<C-u>:q<CR>
 " ノーマルモード中に素早くqqと入力した場合は:q<CR>とみなす
 nnoremap Q     :<C-u>q<CR>
-nnoremap <silent> W :<C-u>:w<CR>:echo 'SAVED! ' . strftime("%Y/%m/%d %H:%M:%S") . '[' . substitute(expand("%:p"), $HOME, "~", "g") . ']'<CR>
+nnoremap <silent> W :call <SID>SaveFile()<CR>
+
+function! s:SaveFile()
+  silent! :w
+  let l:msg = 'SAVED! ' . strftime("%Y/%m/%d %H:%M:%S") . '[' . substitute(expand("%:p"), $HOME, "~", "g") . ']'
+  let l:maxlen = v:echospace + ((&cmdheight - 1) * &columns)
+  echom strpart(l:msg, 0, l:maxlen)
+endfunction
 
 " [その他]
 " ファイル名と行番号を表示する。ついでにファイル名をクリップボードにコピーする。
 " nnoremap <silent> <C-g> :let @* = substitute(expand("%:p"), $HOME, "~", "g")<CR><C-g>
-nnoremap <C-g> :call <SID>CopyFilename()<CR>
+nnoremap <silent> <C-g> :call <SID>CopyFilename()<CR>
 
 function! s:CopyFilename()
   let l:dot_git = system('cd ' . expand('%:h') . '; git rev-parse --git-dir 2>/dev/null')
@@ -123,5 +130,7 @@ function! s:CopyFilename()
   endif
   let l:path = substitute(l:file, "[\\n|\\r]", "", "g")
   let @* = l:path
-  echo "Filename copied '" . l:path . "'"
+  let l:msg = "Filename copied '" . l:path . "'"
+  let l:maxlen = v:echospace + ((&cmdheight - 1) * &columns)
+  echom strpart(l:msg, 0, l:maxlen)
 endfunction

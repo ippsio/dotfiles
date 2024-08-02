@@ -1,6 +1,5 @@
 #!/bin/bash
 ! $(set -x; is_git_repo) && echo "Not a git repository." && exit 1
-
 commit1="$1"
 current_branch=$(set -x; git_branch_current)
 review_json=$(set -x; git_get_review_json "${current_branch}" "${commit1}")

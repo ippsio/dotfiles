@@ -30,7 +30,20 @@ offset = {x=0, y=-2}
 #normal = {family = "Source code Pro for Powerline"}
 #normal = {family = "Inconsolata-g for Powerline"}
 #normal = {family = "Inconsolata-dz for Powerline"}
-normal = {family = "InconsolataDz Nerd Font"}
+#normal = {family = "InconsolataDz Nerd Font"}
+#normal = {family = "NotoMono Nerd Font"}
+#normal = {family = "FiraCode Nerd Font Mono"}
+#normal = {family = "InconsolataGo Nerd Font Mono"}
+#normal = {family = "FantasqueSansM Nerd Font Mono"}
+#normal = {family = "GoMono Nerd Font Mono"}
+#normal = {family = "CaskaydiaCove Nerd Font Mono"}
+#normal = {family = "Hack Nerd Font Mono"}
+normal = {family = "RobotoMono Nerd Font Mono"}
+#normal = {family = "VictorMono Nerd Font Mono"}
+#normal = {family = "AurulentSansM Nerd Font Mono"}
+#normal = {family = "Cousine Nerd Font Mono"}
+#normal = {family = "DroidSansM Nerd Font Mono"}
+
 
 
 [[keyboard.bindings]]

@@ -1,4 +1,5 @@
 nnoremap <C-n> :call NERDTreeFindOrCloseToggle()<CR>
+"nnoremap <C-n> :NERDTreeToggle<CR>
 
 let NERDTreeShowHidden=1
 let NERDTreeShowFiles=1
@@ -11,17 +12,20 @@ let NERDTreeAutoDeleteBuffer=1
 let g:NERDTreeDirArrowExpandable = '+'
 let g:NERDTreeDirArrowCollapsible = '-'
 let NERDTreeMapCustomOpen = 'l'
-"
+let NERDTreeMapOpenRecursively = 'l'
 let NERDTreeMapCloseDir = 'h'
 function! NERDTreeFindOrCloseToggle()
   if IsNERDTreeOpen()
     NERDTreeClose
-  elseif winnr('$') == 1
-    NERDTreeToggle
-    wincmd p
   else
-    NERDTreeFind
-    wincmd p
+    if winnr('$') <= 1
+      NERDTreeToggle
+      wincmd p
+    else
+      NERDTreeFind
+      wincmd p
+    endif
+    call SyncTree()
   endif
 endfunction
 
@@ -30,7 +34,7 @@ function! IsNERDTreeOpen()
   return exists("t:NERDTreeBufName") && (bufwinnr(t:NERDTreeBufName) != -1)
 endfunction
 
-" Call NERDTreeFind iff NERDTree is active, current window contains a modifiable
+" Call NERDTreeFind if NERDTree is active, current window contains a modifiable
 " file, and we're not in vimdiff
 function! SyncTree()
   if &modifiable && IsNERDTreeOpen() && strlen(expand('%')) > 0 && !&diff
@@ -46,7 +50,7 @@ augroup AU_NERDTree
   " Start NERDTree and put the cursor back in the other window.
   autocmd VimEnter * call NERDTreeFindOrCloseToggle()
 
-  " Highlight currently open buffer in NERDTree
+  "Highlight currently open buffer in NERDTree
   autocmd BufEnter * call SyncTree()
 augroup END
 
@@ -72,15 +76,6 @@ function! NERDTreeGrepFile(node)
   call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case \"\" ".shellescape(path), 1, fzf#vim#with_preview())
 endfunction
 " function to grep files under current node
-function! NERDTreeHoge(node)
-  if a:node.path.isDirectory == 1
-    let path = a:node.path.str()
-  else
-    let path = a:node.path.getDir().str()
-  endif
-  NERDTreeClose
-  call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case \"\" ".shellescape(path), 1, fzf#vim#with_preview())
-endfunction
 augroup nerdtree
   autocmd!
   " find file under current node
@@ -95,9 +90,5 @@ augroup nerdtree
         \ 'callback': 'NERDTreeGrepFile',
         \ 'quickhelpText': 'grep files under current node',
         \ 'scope': 'Node' })
-  autocmd VimEnter * call NERDTreeAddKeyMap({
-        \ 'key': 'l',
-        \ 'callback': 'NERDTreeHoge',
-        \ 'quickhelpText': 'grep files under current node',
-        \ 'scope': 'Node' })
+
 augroup END

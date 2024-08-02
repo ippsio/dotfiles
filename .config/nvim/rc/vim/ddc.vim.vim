@@ -23,6 +23,7 @@ inoremap <silent><expr> <CR>   pum#visible() ? '<Cmd>call pum#map#confirm()<CR>'
 " 個人的にはInsertEnter が設定されていると、インサートモードに入った瞬間に補完が効いてしまい使いにくかった。
 call ddc#custom#patch_global('autoCompleteEvents',
 \   [
+\     'InsertEnter',
 \     'TextChangedP',
 \     'TextChangedI',
 \     'CmdlineEnter',
@@ -33,21 +34,24 @@ call ddc#custom#patch_global('autoCompleteEvents',
 call ddc#custom#patch_global('sources',
 \   [
 \     'lsp',
-\     'file',
 \     'around',
+\     'file',
 \   ]
 \ )
 
 call ddc#custom#patch_global('sourceOptions',
 \   #{
 \     _: #{
-\       minAutoCompleteLength: 2,
+\       minAutoCompleteLength: 1,
 \       matchers: ['matcher_fuzzy'],
 \       sorters: ['sorter_fuzzy'],
-\       converters: ['converter_fuzzy']
+\       converters: ['converter_fuzzy'],
 \     }
 \   }
 \ )
+"\      matchers: ['matcher_head'],
+"\      sorters: ['sorter_rank'],
+"\      converters: ['converter_remove_overlap'],
 call ddc#custom#patch_global('sourceOptions',
 \   #{
 \     file: #{
@@ -61,15 +65,14 @@ call ddc#custom#patch_global('sourceOptions',
 \   #{
 \     around: #{
 \       mark: 'ddc-arround',
-\       matchers: ['matcher_fuzzy']
 \     }
 \   }
 \ )
 call ddc#custom#patch_global('sourceOptions',
 \   #{
 \     lsp: #{
-\       mark: 'lsp',
-\       forceCompletionPattern: join(['\.\w*', ':\w*', '->\w*'], '|')
+\       mark: 'ddc-lsp',
+\       forceCompletionPattern: join(['\.\w*', '->\w*'], '|')
 \     },
 \   }
 \ )
@@ -91,14 +94,15 @@ call ddc#custom#patch_filetype(['ps1', 'dosbatch', 'autohotkey', 'registry'],
 call ddc#custom#patch_global('filterParams',
 \   #{
 \     matcher_fuzzy: #{
-\       camelcase: v:true
+\       camelcase: v:true,
+\       splitMode: 'word'
 \     }
 \   }
 \ )
 call ddc#custom#patch_global('filterParams',
 \   #{
 \     converter_fuzzy: #{
-\       hlGroup: 'Comment'
+\       hlGroup: 'SpellBad'
 \     }
 \   }
 \ )

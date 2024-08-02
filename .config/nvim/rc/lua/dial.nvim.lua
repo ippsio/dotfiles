@@ -15,7 +15,7 @@ local t = {
     augend.date.alias["%Y/%m/%d"],
   }
 }
-local extend_default_ar = {'python', 'ruby', 'visual'}
+local extend_default_ar = {'python', 'ruby', 'visual', 'vim'}
 for _idx, k in ipairs(extend_default_ar) do
   t[k] = extend_default(t)
 end
@@ -23,6 +23,7 @@ end
 table.insert(t['python'], augend.constant.new{ elements = {"True", "False"} })
 table.insert(t['visual'], augend.constant.alias.alpha)
 table.insert(t['visual'], augend.constant.alias.Alpha)
+table.insert(t['vim'], augend.constant.new{ elements = {"v:true", "v:false"} })
 
 require("dial.config").augends:register_group(t)
 

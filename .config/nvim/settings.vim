@@ -99,6 +99,7 @@ set shortmess+=I
 " synmaxcol シンタックスハイライトの最大行数
 " t_Co 256色対応
 set number
+set relativenumber
 set signcolumn=yes
 "set cursorline
 "set cursorlineopt="line,screenline,number"

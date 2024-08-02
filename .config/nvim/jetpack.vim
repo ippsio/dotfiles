@@ -12,24 +12,28 @@ packadd vim-jetpack
 call jetpack#begin()
 " [jetpack]
 Jetpack 'tani/vim-jetpack', { 'opt': 1} "bootstrap
+Jetpack 'dstein64/vim-startuptime'
 if v:true
   if v:true " ddc
-    Jetpack 'Shougo/ddc.vim'
-    " required dependency
-    Jetpack 'vim-denops/denops.vim'
-    " ddc-source
-    Jetpack 'Shougo/ddc-around'
-    Jetpack 'Shougo/ddc-source-lsp'
-    Jetpack 'LumaKernel/ddc-source-file'
-    " ddc-matcher,sorter,converter
-    Jetpack 'tani/ddc-fuzzy'
-    " ui
-    Jetpack 'Shougo/ddc-ui-native'
-    Jetpack 'Shougo/ddc-ui-pum'
-    Jetpack 'Shougo/pum.vim'
+   Jetpack 'Shougo/ddc.vim'
+   " required dependency
+   Jetpack 'vim-denops/denops.vim'
+   " ddc-source
+   Jetpack 'Shougo/ddc-around'
+   Jetpack 'Shougo/ddc-source-lsp'
+   Jetpack 'LumaKernel/ddc-source-file'
+   " ddc-matcher,sorter,converter
+   Jetpack 'Shougo/ddc-filter-converter_remove_overlap'
+   Jetpack 'Shougo/ddc-sorter_rank'
+   Jetpack 'Shougo/ddc-matcher_head'
+   Jetpack 'tani/ddc-fuzzy'
+   " ui
+   Jetpack 'Shougo/ddc-ui-native'
+   Jetpack 'Shougo/ddc-ui-pum'
+   Jetpack 'Shougo/pum.vim'
   endif
   if v:true " lsp
-    "Jetpack 'j-hui/fidget.nvim'
+    Jetpack 'j-hui/fidget.nvim'
     Jetpack 'neovim/nvim-lspconfig'
     Jetpack 'ray-x/lsp_signature.nvim'
     Jetpack 'williamboman/mason-lspconfig.nvim'
@@ -48,20 +52,15 @@ if v:true
     Jetpack 'bronson/vim-trailing-whitespace'
     Jetpack 'cohama/vim-insert-linenr'
     "Jetpack 'nathanaelkane/vim-indent-guides'
-    if v:false " incline
-      Jetpack 'b0o/incline.nvim'
-      Jetpack 'nvim-tree/nvim-web-devicons'
-      Jetpack 'SmiteshP/nvim-navic'
-    endif
-    if v:true " debugger
-      Jetpack 'mfussenegger/nvim-dap'
-      Jetpack 'mfussenegger/nvim-dap-python'
-      Jetpack 'nvim-neotest/nvim-nio'
-      Jetpack 'rcarriga/nvim-dap-ui'
-      Jetpack 'theHamsta/nvim-dap-virtual-text'
-    endif
   endif
-  "  Jetpack 'shellRaining/hlchunk.nvim'
+
+  if v:true " debugger
+    Jetpack 'mfussenegger/nvim-dap'
+    Jetpack 'mfussenegger/nvim-dap-python'
+    Jetpack 'nvim-neotest/nvim-nio'
+    Jetpack 'rcarriga/nvim-dap-ui'
+    Jetpack 'theHamsta/nvim-dap-virtual-text'
+  endif
   if v:true " fzf
     Jetpack 'junegunn/fzf', { 'do': './install --all --no-bash --no-fish --no-zsh' }
     Jetpack 'junegunn/fzf.vim'
@@ -95,13 +94,14 @@ if v:true
       Jetpack 'tpope/vim-dispatch'
     endif
   endif
-  if v:true " filer
+  if v:true " file manager
     Jetpack 'lambdalisue/fern.vim'
     Jetpack 'yuki-yano/fern-preview.vim'
+    "Jetpack 'preservim/nerdtree'
   endif
   if v:true " cursor
-    Jetpack 'echasnovski/mini.animate'
-    Jetpack 'kana/vim-smartword'
+    "Jetpack 'echasnovski/mini.animate'
+    "Jetpack 'kana/vim-smartword'
     Jetpack 'rhysd/accelerated-jk'
   endif
   if v:true " jump between files
@@ -111,6 +111,10 @@ if v:true
     Jetpack 'monaqa/modesearch.vim'
   endif
 endif
+if v:true " window
+  Jetpack 'declancm/maximize.nvim'
+endif
+
 Jetpack 'rhysd/conflict-marker.vim'
 Jetpack 'ippsio/clip_diff.vim'
 Jetpack 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
@@ -118,17 +122,8 @@ Jetpack 'vim-jp/vimdoc-ja'
 Jetpack 'lambdalisue/guise.vim'
 Jetpack 'lambdalisue/gin.vim'
 Jetpack 'monaqa/dial.nvim'
-Jetpack 'folke/which-key.nvim'
 if v:true
-  Jetpack 'rebelot/kanagawa.nvim'
-  Jetpack 'folke/tokyonight.nvim'
-  Jetpack 'rktjmp/lush.nvim'
-  Jetpack 'ribru17/bamboo.nvim'
-  Jetpack 'uloco/bluloco.nvim'
-  Jetpack 'kartikp10/noctis.nvim'
   Jetpack 'scottmckendry/cyberdream.nvim'
-  Jetpack 'danilo-augusto/vim-afterglow'
-  Jetpack 'romainl/Apprentice'
 endif
 let s:available_pkg = stdpath('data') . '/' . 'site' . '/pack/jetpack/opt/available_packages.json'
 let s:available_pkg_text = filereadable(s:available_pkg) ? join(readfile(s:available_pkg)) : "{}"
