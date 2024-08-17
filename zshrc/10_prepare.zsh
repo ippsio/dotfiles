@@ -1,6 +1,5 @@
 #!/usr/bin/env zsh
-
-readonly CACHE_FILE="$0.cache"
+CACHE_FILE="$0.cache"
 if [[ -e "${CACHE_FILE}" ]]; then
   current_day=$(date +'%Y%m%d')
   current_md5=$(md5sum $0| awk '{ print $1 }')
@@ -20,28 +19,6 @@ type_or_inst() {
   else
     echo "$1 not found. install."
     brew install ${2:-$1}
-    do_cache=0
-    return 1
-  fi
-}
-type_or_cask_inst() {
-  if ( brew list --cask| grep -E "^${1}$" > /dev/null 2>&1 ); then
-    echo -n "$1 ok, "
-    return 0
-  else
-    echo "$1 not found. install."
-    brew install --cask ${2:-$1}
-    do_cache=0
-    return 1
-  fi
-}
-type_or_cargo_inst() {
-  if ( type "$1" > /dev/null 2>&1 ); then
-    echo -n "$1 ok, "
-    return 0
-  else
-    echo "$1 not found. install."
-    cargo install ${2:-$1}
     do_cache=0
     return 1
   fi
@@ -124,13 +101,11 @@ type_or_inst java openjdk
 type_or_inst mvn maven
 type_or_inst urlview
 type_or_inst extract_url
-type_or_cargo_inst mocword
 nodir_then_gitclone "${TMUX_PLUGINS}/tpm" "tmux-plugins/tpm"
 nodir_then_gitclone "${ZINIT_ROOT}" "zdharma/zinit.git" "${ZINIT_ROOT}/bin"
 nodir_then_gitclone "${HOME}/setting_box" "ippsio/setting_box.git"
 chk_pynvim_or_install
 
-[[ ! -d /Applications/Stats.app ]] && type_or_cask_inst stats
 # chk_or_pip_install diff-highlight
 
 # mkdir

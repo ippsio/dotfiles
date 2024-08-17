@@ -23,7 +23,6 @@ inoremap <silent><expr> <CR>   pum#visible() ? '<Cmd>call pum#map#confirm()<CR>'
 " 個人的にはInsertEnter が設定されていると、インサートモードに入った瞬間に補完が効いてしまい使いにくかった。
 call ddc#custom#patch_global('autoCompleteEvents',
 \   [
-\     'InsertEnter',
 \     'TextChangedP',
 \     'TextChangedI',
 \     'CmdlineEnter',
@@ -33,98 +32,81 @@ call ddc#custom#patch_global('autoCompleteEvents',
 
 call ddc#custom#patch_global('sources',
 \   [
-\     'lsp',
 \     'around',
+\     'lsp',
 \     'file',
 \   ]
 \ )
 
-call ddc#custom#patch_global('sourceOptions',
-\   #{
-\     _: #{
-\       minAutoCompleteLength: 1,
-\       matchers: ['matcher_fuzzy'],
-\       sorters: ['sorter_fuzzy'],
-\       converters: ['converter_fuzzy'],
-\     }
-\   }
-\ )
-"\      matchers: ['matcher_head'],
-"\      sorters: ['sorter_rank'],
-"\      converters: ['converter_remove_overlap'],
-call ddc#custom#patch_global('sourceOptions',
-\   #{
+call ddc#custom#patch_filetype(['ps1', 'dosbatch', 'autohotkey', 'registry'], #{
+\   sourceOptions: #{
 \     file: #{
-\       mark: 'ddc-file',
-\       isVolatile: v:true,
-\       forceCompletionPattern: '\S/\S*'
-\     }
-\   }
-\ )
-call ddc#custom#patch_global('sourceOptions',
-\   #{
-\     around: #{
-\       mark: 'ddc-arround',
-\     }
-\   }
-\ )
-call ddc#custom#patch_global('sourceOptions',
-\   #{
-\     lsp: #{
-\       mark: 'ddc-lsp',
-\       forceCompletionPattern: join(['\.\w*', '->\w*'], '|')
+\       forceCompletionPattern: '\S\\\S*',
+\      },
+\    },
+\    sourceParams: #{
+\       file: #{
+\       mode: 'win32',
 \     },
 \   }
-\ )
-call ddc#custom#patch_filetype(['ps1', 'dosbatch', 'autohotkey', 'registry'],
-\   #{
-\     sourceOptions: #{
-\       file: #{
-\         forceCompletionPattern: '\S\\\S*',
-\        },
-\      },
-\      sourceParams: #{
-\         file: #{
-\         mode: 'win32',
-\       },
-\     }
-\   }
-\ )
+\ })
 
-call ddc#custom#patch_global('filterParams',
-\   #{
-\     matcher_fuzzy: #{
-\       camelcase: v:true,
-\       splitMode: 'word'
-\     }
+call ddc#custom#patch_global('sourceParams', #{
+\   matcher_head: #{
+\     splitMode: 'word'
+\   },
+\   around: #{
+\     maxSize: 500
+\   },
+\   lsp: #{
+\     snippetEngine: denops#callback#register({
+\         body -> vsnip#anonymous(body)
+\     }),
+\     enableResolveItem: v:true,
+\     enableAdditionalTextEdit: v:true,
 \   }
-\ )
-call ddc#custom#patch_global('filterParams',
-\   #{
-\     converter_fuzzy: #{
-\       hlGroup: 'SpellBad'
-\     }
-\   }
-\ )
+\ })
 
-call ddc#custom#patch_global('sourceParams',
-\   #{
-\     around: #{
-\       maxSize: 500
-\     }
+call ddc#custom#alias('filter', 'matcher_initial', 'matcher_head')
+call ddc#custom#alias('filter', 'matcher_first_2', 'matcher_head')
+call ddc#custom#alias('filter', 'matcher_first_3', 'matcher_head')
+call ddc#custom#alias('filter', 'matcher_lazy_1', 'matcher_head')
+call ddc#custom#alias('filter', 'matcher_lazy_2', 'matcher_head')
+call ddc#custom#patch_global('filterParams', #{
+\   matcher_initial: #{maxMatchLength: 1},
+\   matcher_first_2: #{maxMatchLength: 2,},
+\   matcher_first_3: #{maxMatchLength: 3,},
+\   matcher_lazy_1: #{maxMatchLength: -1,},
+\   matcher_lazy_2: #{maxMatchLength: -2,},
+\   matcher_fuzzy: #{
+\     camelcase: v:true,
+\     splitMode: 'word'
+\   },
+\   converter_fuzzy: #{
+\     hlGroup: 'SpellBad'
 \   }
-\ )
-call ddc#custom#patch_global('sourceParams',
-\   #{
-\     lsp: #{
-\       snippetEngine: denops#callback#register({
-\           body -> vsnip#anonymous(body)
-\       }),
-\       enableResolveItem: v:true,
-\       enableAdditionalTextEdit: v:true,
-\     }
-\   }
-\ )
+\ })
+
+call ddc#custom#patch_global('sourceOptions', #{
+\   _: #{
+\     minAutoCompleteLength: 2,
+\     matchers: ['matcher_fuzzy'],
+\     sorters: ['sorter_fuzzy'],
+\     converters: ['converter_fuzzy'],
+\   },
+\   file: #{
+\     mark: 'ddc-file',
+\     isVolatile: v:true,
+\     forceCompletionPattern: '\S/\S*'
+\   },
+\   around: #{
+\     mark: 'ddc-arround',
+\   },
+\   lsp: #{
+\     mark: 'ddc-lsp',
+\     forceCompletionPattern: join(['\.\w*', '->\w*'], '|')
+\   },
+\ })
 
 call ddc#custom#patch_global('ui', 'pum')
 

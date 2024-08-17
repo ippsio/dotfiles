@@ -1,4 +1,4 @@
-set notermguicolors
+"set notermguicolors
 " if has('nvim')
 "   set termguicolors
 "   let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"

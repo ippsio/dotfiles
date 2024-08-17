@@ -1,5 +1,7 @@
 require("mason").setup()
-require("mason-lspconfig").setup({ ensure_installed = { "denols", "bashls", "vimls", "lua_ls", "pylsp", "rubocop", "solargraph", "tsserver", "sqlls", "jdtls", } })
+require("mason-lspconfig").setup({ ensure_installed = { "denols", "bashls", "vimls", "lua_ls", "pylsp", "rubocop", "solargraph", "tsserver", "sqlls", "jdtls" } })
+local null_ls = require('null-ls')
+
 require("mason-lspconfig").setup_handlers({
   -- The first entry (without a key) will be the default handler
   -- and will be called for each installed server that doesn't have
@@ -126,8 +128,7 @@ require("mason-lspconfig").setup_handlers({
     })
   end,
   ["solargraph"] = function()
-    local lspconfig = require("lspconfig")
-    lspconfig.solargraph.setup {
+    require("lspconfig").solargraph.setup {
       settings = {
         solargraph = {
           diagnostics = true
@@ -195,3 +196,4 @@ vim.api.nvim_create_autocmd('LspAttach', {
     -- ]]
   end,
 })
+

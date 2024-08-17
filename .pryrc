@@ -8,6 +8,9 @@ if defined?(PryByebug)
   CodeRay::Encoders::Terminal::TOKEN_COLORS[:symbol] = "\e[38;5;196m\e[48;5;52m"
   CodeRay::Encoders::Terminal::TOKEN_COLORS[:type] = "\e[38;5;48m\e[48;5;16m"
 
+  # 表示されるコード範囲を広くする
+  Pry.config.window_size = 20
+
   Pry.commands.alias_command 's', 'step'
   Pry.commands.alias_command 'n', 'next'
   Pry.commands.alias_command 'f', 'finish'

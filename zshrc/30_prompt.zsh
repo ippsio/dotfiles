@@ -136,14 +136,14 @@ precmd() {
   GIT_REPO_BRANCH+="%(1v|${SEPARATOR_OPEN}${_mark_git_repo}%1v|)"
   GIT_REPO_BRANCH+="%f%k"
   GIT_REPO_BRANCH+="%K{220}%F{0}"
-  GIT_REPO_BRANCH+="%(2v| ${_mark_branch}(%2v)${SEPARATOR_CLOSE}|)"
+  GIT_REPO_BRANCH+="%(2v|${_mark_branch}${SEPARATOR_CLOSE}|)"
   GIT_REPO_BRANCH+="%(3v|${_mark_branch}%3v${SEPARATOR_CLOSE}|)"
   GIT_REPO_BRANCH+="%f%k"
 
   # git working_tree
-  _mark_untracked="unt"
-  _mark_unstaged="uns"
-  _mark_unmerged="unm"
+  _mark_untracked="?"
+  _mark_unstaged="US"
+  _mark_unmerged="UM"
   GIT_WORKING_TREE="%K{193}%F{241}"
   GIT_WORKING_TREE+="%(4v|${SEPARATOR_OPEN}${_mark_untracked}%4v|)"
   GIT_WORKING_TREE+="%(5v| ${_mark_unstaged}%5v|)"
@@ -162,8 +162,8 @@ precmd() {
   GIT_STAGE+="%f%k"
 
   # git local repositry
-  _mark_ahead="ahe"
-  _mark_behind="beh"
+  _mark_ahead="A"
+  _mark_behind="B"
   GIT_LOCAL_REPO="%K{90}%F{200}"
   GIT_LOCAL_REPO+="%(8v|${SEPARATOR_OPEN}${_mark_ahead}%8v|)"
   GIT_LOCAL_REPO+="%(9v| ${_mark_behind}%9v${SEPARATOR_CLOSE}|)"

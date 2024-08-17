@@ -38,6 +38,8 @@ if v:true
     Jetpack 'ray-x/lsp_signature.nvim'
     Jetpack 'williamboman/mason-lspconfig.nvim'
     Jetpack 'williamboman/mason.nvim'
+    Jetpack 'nvimtools/none-ls.nvim'
+    Jetpack 'nvim-lua/plenary.nvim'
   endif
   if v:true " git
     Jetpack 'tpope/vim-fugitive'
@@ -52,6 +54,7 @@ if v:true
     Jetpack 'bronson/vim-trailing-whitespace'
     Jetpack 'cohama/vim-insert-linenr'
     "Jetpack 'nathanaelkane/vim-indent-guides'
+    Jetpack 'norcalli/nvim-colorizer.lua'
   endif
 
   if v:true " debugger
@@ -103,6 +106,7 @@ if v:true
     "Jetpack 'echasnovski/mini.animate'
     "Jetpack 'kana/vim-smartword'
     Jetpack 'rhysd/accelerated-jk'
+    Jetpack 'rhysd/clever-f.vim'
   endif
   if v:true " jump between files
     Jetpack 'tpope/vim-projectionist'

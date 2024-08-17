@@ -11,6 +11,9 @@
 set shada-=j
 set shadafile=~/.cache/nvim/my.shada
 
+
+set termguicolors
+
 " nocompatible compatibleオプションをオフにする
 set nocompatible
 
@@ -101,7 +104,7 @@ set shortmess+=I
 set number
 set relativenumber
 set signcolumn=yes
-"set cursorline
+set cursorline
 "set cursorlineopt="line,screenline,number"
 set cursorlineopt=screenline,number
 call setcellwidths([[0x2103, 0x2103, 2]])

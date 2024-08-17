@@ -2,8 +2,8 @@
 let g:fern#default_hidden=1
 
 " ファイルツリーを開く
-nnoremap <silent> <C-n> :Fern %:h -reveal=% -drawer -toggle -width=60<CR>
-nnoremap <silent> , :Fern %:h -reveal=% -drawer -toggle -width=60<CR>
+nnoremap <silent> <C-n> :Fern . -reveal=% -drawer -toggle -width=60<CR>
+nnoremap <silent> , :Fern . -reveal=% -drawer -toggle -width=60<CR>
 
 function! s:init_fern() abort
   " Use 'select' instead of 'edit' for default 'open' action
