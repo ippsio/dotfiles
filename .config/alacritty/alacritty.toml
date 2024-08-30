@@ -69,6 +69,11 @@ key = "q"
 mods = "Command"
 chars = "" # Cmd+qの無効化(うっかりAlacrittyを閉じてほしくない その2)
 
+[[keyboard.bindings]]
+key = "m"
+mods = "Command"
+chars = "" # Cmd+mの無効化(うっかり最小化しないでほしい)
+
 [shell]
 args = ["-l"]
 program = "/opt/homebrew/bin/zsh"

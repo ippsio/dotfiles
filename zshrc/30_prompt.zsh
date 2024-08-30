@@ -179,7 +179,8 @@ precmd() {
 
   # others
   EXIT_CD="%K{red}%(?..${SEPARATOR_OPEN}\$?=%?${SEPARATOR_CLOSE})%k"
-  NUMBER_OF_JOBS="%F{226}bg(%j)"
+  NUMBER_OF_JOBS="%(1j|%F{226}bg:%j%f|)"
+
   CURRENT_DIRECTORY="%K{237}%F{255}${SEPARATOR_OPEN}%~${SEPARATOR_CLOSE} %f%k"
 
   CHUNK1="${GIT_WORKING_TREE}${GIT_STASH}${GIT_STAGE}${GIT_LOCAL_REPO}"

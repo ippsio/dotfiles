@@ -1,6 +1,18 @@
 require("mason").setup()
-require("mason-lspconfig").setup({ ensure_installed = { "denols", "bashls", "vimls", "lua_ls", "pylsp", "rubocop", "solargraph", "tsserver", "sqlls", "jdtls" } })
-local null_ls = require('null-ls')
+require("mason-lspconfig").setup({
+  ensure_installed = {
+    "denols",
+    "bashls",
+    "vimls",
+    "lua_ls",
+    "pylsp",
+    "solargraph",
+    "rubocop",
+    "tsserver",
+    "sqlls",
+    "jdtls"
+  }
+})
 
 require("mason-lspconfig").setup_handlers({
   -- The first entry (without a key) will be the default handler
@@ -65,7 +77,7 @@ require("mason-lspconfig").setup_handlers({
 
         transparency = nil, -- disabled by default, allow floating win transparent value 1~100
         shadow_blend = 36, -- if you using shadow as border use this set the opacity
-        shadow_guibg = 'Black', -- if you using shadow as border use this set the color e.g. 'Green' or '#121315'
+        shadow_guibg = 'Green', -- if you using shadow as border use this set the color e.g. 'Green' or '#121315'
         timer_interval = 200, -- default timer check interval set to lower value if you want to reduce latency
         toggle_key = nil, -- toggle signature on and off in insert mode,  e.g. toggle_key = '<M-x>'
         toggle_key_flip_floatwin_setting = false, -- true: toggle floating_windows: true|false setting after toggle key pressed
@@ -131,11 +143,14 @@ require("mason-lspconfig").setup_handlers({
     require("lspconfig").solargraph.setup {
       settings = {
         solargraph = {
-          diagnostics = true
+          diagnostics = false
         }
       }
     }
-  end
+  end,
+  ["rubocop"] = function()
+    require("lspconfig").rubocop.setup {}
+  end,
 })
 
 -- Global mappings.
@@ -196,4 +211,18 @@ vim.api.nvim_create_autocmd('LspAttach', {
     -- ]]
   end,
 })
+vim.g.lsp_diagnostics_virtual_text_prefix = ""
+-- カスタムハンドラの設定
+local function custom_diagnostics_handler(_, result, ctx, config)
+  for _, diagnostic in ipairs(result.diagnostics) do
+    if diagnostic.source == "rubocop" and diagnostic.code ~= nil then
+      diagnostic.message = "(" .. diagnostic.source .. ":" .. diagnostic.code .. ") " .. diagnostic.message
+    end
+  end
 
+  -- デフォルトのハンドラを呼び出して診断結果を表示
+  vim.lsp.diagnostic.on_publish_diagnostics(nil, result, ctx, config)
+end
+
+-- ハンドラを上書き
+vim.lsp.handlers["textDocument/publishDiagnostics"] = custom_diagnostics_handler

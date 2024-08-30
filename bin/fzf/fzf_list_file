@@ -39,7 +39,7 @@ EOF
 
 RG_RESULT=$(rg \
   --files\
-  --max-depth=3\
+  --max-depth=6\
   --hidden\
   --no-ignore\
   "${TARGET_DIR}" 2>/dev/null\

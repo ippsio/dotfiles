@@ -69,7 +69,7 @@ command! -bang -nargs=* BLinesWithPreview
       \         . '--nth=2.. '
       \         . '--delimiter=":"'
       \     },
-      \     'down:50%'
+      \     'down:60%'
       \   )
       \ )
 
@@ -91,7 +91,8 @@ command! -bang -nargs=? -complete=dir FzfFiles
       \           .'--glob !.DS_Store '
       \           .'--sort=path'
       \       }
-      \     )
+      \     ),
+      \     'down:60%'
       \   )
       \ )
 

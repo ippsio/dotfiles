@@ -38,8 +38,7 @@ if v:true
     Jetpack 'ray-x/lsp_signature.nvim'
     Jetpack 'williamboman/mason-lspconfig.nvim'
     Jetpack 'williamboman/mason.nvim'
-    Jetpack 'nvimtools/none-ls.nvim'
-    Jetpack 'nvim-lua/plenary.nvim'
+    "Jetpack 'nvimtools/none-ls.nvim'
   endif
   if v:true " git
     Jetpack 'tpope/vim-fugitive'
@@ -87,7 +86,7 @@ if v:true
   endif
   if v:true " ruby development
     Jetpack 'AndrewRadev/splitjoin.vim', { 'for': [ 'ruby', 'rake', 'eruby', 'slim'] }
-    Jetpack 'dense-analysis/ale', { 'for': [ 'ruby', 'rake', 'eruby', 'slim'] }
+    "Jetpack 'dense-analysis/ale', { 'for': [ 'ruby', 'rake', 'eruby', 'slim'] }
     Jetpack 'slim-template/vim-slim', { 'for': [ 'ruby', 'rake', 'eruby', 'slim'] }
     Jetpack 'tpope/vim-rails'
     Jetpack 'vim-ruby/vim-ruby', { 'for': [ 'ruby', 'rake', 'eruby', 'slim'] }
