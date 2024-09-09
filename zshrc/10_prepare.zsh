@@ -12,7 +12,7 @@ if [[ -e "${CACHE_FILE}" ]]; then
 fi
 
 do_cache=1
-type_or_inst() {
+prepare_by_brew() {
   if ( type "$1" > /dev/null 2>&1 ); then
     echo -n "$1 ok, "
     return 0
@@ -79,28 +79,28 @@ chkfile_or_dlink() {
   fi
 }
 
-type_or_inst xz
-type_or_inst nvim neovim
-type_or_inst zsh
-type_or_inst tmux
-type_or_inst direnv
-type_or_inst rg
-type_or_inst tig
-type_or_inst fzf
-type_or_inst bat
-type_or_inst pyenv
-type_or_inst pyenv-virtualenv
-type_or_inst goenv
-type_or_inst rbenv
-type_or_inst ruby-build
-type_or_inst nodenv
-# type_or_inst deno
-type_or_inst rustc rust
-type_or_inst cargo
-type_or_inst java openjdk
-type_or_inst mvn maven
-type_or_inst urlview
-type_or_inst extract_url
+prepare_by_brew xz
+prepare_by_brew nvim neovim
+prepare_by_brew zsh
+prepare_by_brew tmux
+prepare_by_brew direnv
+prepare_by_brew rg
+prepare_by_brew tig
+prepare_by_brew fzf
+prepare_by_brew bat
+prepare_by_brew pyenv
+prepare_by_brew pyenv-virtualenv
+prepare_by_brew goenv
+prepare_by_brew rbenv
+prepare_by_brew ruby-build
+prepare_by_brew nodenv
+# prepare_by_brew deno
+prepare_by_brew rustc rust
+prepare_by_brew cargo
+prepare_by_brew java openjdk
+prepare_by_brew mvn maven
+prepare_by_brew urlview
+prepare_by_brew extract_url
 nodir_then_gitclone "${TMUX_PLUGINS}/tpm" "tmux-plugins/tpm"
 nodir_then_gitclone "${ZINIT_ROOT}" "zdharma/zinit.git" "${ZINIT_ROOT}/bin"
 nodir_then_gitclone "${HOME}/setting_box" "ippsio/setting_box.git"

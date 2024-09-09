@@ -162,6 +162,18 @@ zle_space() {
     return 0
   fi
 
+  # deepl-cli
+  if [[ $BUFFER =~ '^dej$' ]]; then
+    BUFFER='deepl-cli-ej ""' && zle end-of-line && zle backward-char
+    return 0
+  fi
+
+  # google cloud translation
+  if [[ $BUFFER =~ '^gej$' ]]; then
+    BUFFER='gc-translate-cli-ej ""' && zle end-of-line && zle backward-char
+    return 0
+  fi
+
   # initvim
   if [[ $BUFFER =~ '^i$' ]]; then
     BUFFER="initvim" && zle end-of-line && zle accept-line

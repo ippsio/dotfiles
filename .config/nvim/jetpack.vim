@@ -12,7 +12,7 @@ packadd vim-jetpack
 call jetpack#begin()
 " [jetpack]
 Jetpack 'tani/vim-jetpack', { 'opt': 1} "bootstrap
-Jetpack 'dstein64/vim-startuptime'
+"Jetpack 'dstein64/vim-startuptime'
 if v:true
   if v:true " ddc
    Jetpack 'Shougo/ddc.vim'

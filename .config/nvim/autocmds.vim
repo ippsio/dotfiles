@@ -49,6 +49,11 @@ augroup fileTypeIndent
   autocmd FileType yaml setlocal indentkeys=
 augroup END
 
+augroup windowResize
+  autocmd!
+  autocmd VimResized * wincmd =
+augroup END
+
 """augroup aufugitive
 """  autocmd!
 """
