@@ -8,7 +8,7 @@ require("mason-lspconfig").setup({
     "pylsp",
     "solargraph",
     "rubocop",
-    "tsserver",
+    "ts_ls",
     "sqlls",
     "jdtls"
   }

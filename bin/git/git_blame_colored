@@ -98,5 +98,5 @@ word_highlighted="${blame_with_color}"
   for searchword_hyphen in $(echo "${unique_hyphens}"| sed 's/-/\\-/g'); do
     word_highlighted=$(echo "${word_highlighted}"| rg --passthru --color=always "${searchword_hyphen}")
   done
-  echo "${word_highlighted}"| bat --wrap auto --no-pager --style plain --color=always --highlight-line ${highlight_lineno};
+  echo "${word_highlighted}"| bat --wrap never --no-pager --style plain --color=always --highlight-line ${highlight_lineno};
 )

@@ -97,12 +97,6 @@ zstyle ':vcs_info:git+set-message:*' hooks git-set-message-hook
   hook_com[misc]="${repo_1}\t${hash_2}\t${hook_com[branch]}\t${untracked_3}\t${unstaged_4}\t${unmerged_5}\t${index_6}\t${ahead_7}\t${behind_8}\t${stash_9}\t${has_remote_10}\t${hook_com[action]}"
 }
 
-my_precmd_hook() { return 0; }
-my_chpwd_hook() { return 0; }
-my_periodic_hook() { return 0; }
-my_preexec_hook() { return 0; }
-my_zshaddhistory_hook() { return 0; }
-
 readonly REGEX_BINDING_PART="%K{[0-9]+}(vi-VISUAL|vi-NORMAL|vi-INSERT) %#"
 update_binding_part() {
   if [[ $REGION_ACTIVE -ne 0 ]]; then
@@ -212,13 +206,6 @@ my-accept-line() {
   zle .reset-prompt
   zle .accept-line
 }
-
-# zshのフック登録
-add-zsh-hook precmd my_precmd_hook
-add-zsh-hook chpwd my_chpwd_hook
-add-zsh-hook periodic my_periodic_hook
-add-zsh-hook preexec my_preexec_hook
-add-zsh-hook zshaddhistory my_zshaddhistory_hook
 
 # viモードの場合、これを使っても良い。
 # zle -N zle-line-init

@@ -26,5 +26,5 @@ execute_zle_enter() {
   fi
 
   zle accept-line
-  return 1
+  return 0
 }

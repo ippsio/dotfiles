@@ -62,12 +62,12 @@ if defined?(PryByebug)
   end
 
 
-  def fg255(fg255)
-    "\e[38;5;#{fg255}m"
+  def ansi256_fg(arg1)
+    "\e[38;5;#{arg1}m"
   end
 
-  def bg255(bg255)
-    "\e[48;5;#{bg255}m"
+  def ansi256_bg(arg1)
+    "\e[48;5;#{arg1}m"
   end
 
   def reset
@@ -86,11 +86,11 @@ if defined?(PryByebug)
     class: ansi16_bold_underlined(fg35_magenta),
     class_variable: ansi16(fg36_cyan),
     color: ansi16(fg32_green),
-    comment: fg255(123) + bg255(23),
+    comment: ansi256_fg(123) + ansi256_bg(23),
     # constant: ansi16_bold_underlined(fg34_blue),
     constant: ansi16_bold_underlined(fg94_blue),
     decorator: ansi16(fg35_magenta),
-    definition: fg255(170),
+    definition: ansi256_fg(170),
     directive:ansi16(bg43_yellow),
     docstring: ansi16(fg31_red),
     # doctype: ansi16_bold(fg34_blue),
@@ -107,7 +107,7 @@ if defined?(PryByebug)
     # id: ansi16_bold(fg34_blue),
     id: ansi16_bold(fg94_blue),
     include: ansi16(fg31_red),
-    integer: fg255(168),
+    integer: ansi256_fg(168),
     # imaginary: ansi16_bold(fg34_blue),
     imaginary: ansi16_bold(fg94_blue),
     important: ansi16_bold(fg31_red),
@@ -128,9 +128,9 @@ if defined?(PryByebug)
     reserved: ansi16(fg32_green),
     shell: {:self=>ansi16(fg33_yellow), :char=>ansi16_bold(fg33_yellow), :delimiter=>ansi16_bold(fg33_yellow), :escape=>ansi16_bold(fg33_yellow)},
     string: {:self=>ansi16(fg31_red), :modifier=>ansi16_bold(fg31_red), :char=>ansi16_bold(fg35_magenta), :delimiter=>ansi16_bold(fg31_red), :escape=>ansi16_bold(fg31_red)},
-    symbol: fg255(196) + bg255(52),
+    symbol: ansi256_fg(196) + ansi256_bg(52),
     tag: ansi16(fg32_green),
-    type: fg255(48) + bg255(18),
+    type: ansi256_fg(48) + ansi256_bg(18),
     value: ansi16(fg36_cyan),
     # variable: ansi16(fg34_blue),
     variable: ansi16(fg94_blue),
@@ -138,13 +138,15 @@ if defined?(PryByebug)
     delete: {:self=>ansi16(bg41_red), :delete=>ansi16_bold(fg31_red, bg41_red), :eyecatcher=>ansi16(bg101_red)},
     change: {:self=>ansi16(bg44_blue), :change=> ansi16(fg37_white, bg44_blue)},
     head: {:self=>ansi16(bg45_magenta), :filename=>ansi16(fg37_white, bg45_magenta)},
-    method: fg255(14),
-    escape: nil
+    method: ansi256_fg(14),
+    escape: nil,
   }.each do |k, v|
     CodeRay::Encoders::Terminal::TOKEN_COLORS[k] = v
   end
   hacked = CodeRay::Encoders::Terminal::TOKEN_COLORS.dup
-  (hacked.to_a - original.to_a).each { |k,v| print("#{k} = #{v}aaaa" + reset + "\n") }
+
+  # NOTE: オリジナルとの違いがどこにあるか、確認したいですか？
+  # (hacked.to_a - original.to_a).each { |k,v| print("#{k} = #{v}aaaa" + reset + "\n") }
 
   # 表示されるコード範囲を広くする
   Pry.config.window_size = 20

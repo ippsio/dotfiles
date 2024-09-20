@@ -6,7 +6,7 @@ export EDITOR=nvim
 export ZINIT_ROOT=~/.zinit
 export TMUX_PLUGINS=~/.cache/tmux/plugins
 
-for file in $(find ~/dotfiles/zshrc/00_export/rc -type f); do
+for file in ~/dotfiles/zshrc/00_export/rc/*.zsh; do
   source "${file}"
 done
 
