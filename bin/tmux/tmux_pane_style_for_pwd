@@ -19,7 +19,6 @@ window_active_style_was=$(tmux show-options -v -t "${pane_number_current}" windo
     fi
   done
   if [[ "${window_active_style}" != "${window_active_style_was}" ]]; then
-    echo "was:${window_active_style_was}->to:${window_active_style}"
     eval "set -x; tmux set window-active-style \"$window_active_style\""
   fi
 )
