@@ -215,7 +215,8 @@ vim.g.lsp_diagnostics_virtual_text_prefix = ""
 -- カスタムハンドラの設定
 local function custom_diagnostics_handler(_, result, ctx, config)
   for _, diagnostic in ipairs(result.diagnostics) do
-    if diagnostic.source == "rubocop" and diagnostic.code ~= nil then
+    --if diagnostic.source == "rubocop" and diagnostic.code ~= nil then
+    if diagnostic.code ~= nil then
       diagnostic.message = "(" .. diagnostic.source .. ":" .. diagnostic.code .. ") " .. diagnostic.message
     end
   end

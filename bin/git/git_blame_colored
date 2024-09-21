@@ -18,8 +18,8 @@ echo
 echo "ARG_FILENAME=${filename_against_home}";
 
 # git blame開始/終了行の取得。
-blame_lineno_from=$(( ${ARG_HIGHLIGHT_LINENO} - ${HIGHLIGHT_STANDARD} + 1))
-blame_lineno_to=$(($blame_lineno_from + $(tput lines)));
+blame_lineno_from=$(( ARG_HIGHLIGHT_LINENO - HIGHLIGHT_STANDARD + 1))
+blame_lineno_to=$(( blame_lineno_from + $(tput lines)));
 highlight_lineno=${HIGHLIGHT_STANDARD}
 if [[ ${blame_lineno_from} -le 0 ]]; then
   blame_lineno_from=1
@@ -31,26 +31,43 @@ git_reponame=$(git_reponame);
 if [[ -n "${git_reponame}" ]]; then
   echo "GIT_REPO={${git_reponame}}";
   echo "GIT_BRANCH={$(git branch --show-current 2>/dev/null)}";
-  git_repo_dir=$(cd $(dirname "${file_realpath}"); git rev-parse --git-dir 2>/dev/null)
+  file_realpath_dir=$(dirname "${file_realpath}")
+  git_repo_dir=$(cd "$file_realpath_dir" || exit; git rev-parse --git-dir 2>/dev/null)
   git_repo_root_dir=$(dirname "${git_repo_dir}")
 fi
 echo
 
-file_relativepath=${file_realpath#${git_repo_root_dir}/}
-blame_result=$(cd "${git_repo_root_dir}"; set -x; git blame -L ${blame_lineno_from},${blame_lineno_to} --abbrev=${ABBREV_HASH_LENGT} --show-name ${file_relativepath} 2>/dev/null)
+# shellcheck disable=SC2001
+file_relativepath=$(echo "${file_realpath}"| sed "s#${git_repo_root_dir}/##")
+blame_result=$(
+  cd "${git_repo_root_dir}" || exit;
+  set -x
+  git blame\
+    -L "${blame_lineno_from}","${blame_lineno_to}"\
+    --date="format:%Y-%m-%d"\
+    --abbrev="${ABBREV_HASH_LENGT}"\
+    --show-name "${file_relativepath}" 2>/dev/null
+)
 
+# shellcheck disable=SC2181
 if [[ $? != 0 ]]; then
   # ここに来るのは、例えばgitリポジトリじゃない場合等です。
   empty_hash="00000000000000000000000000000000000000000"
   empty_abbrev_hash=${empty_hash:0:${ABBREV_HASH_LENGT}}
-  blame_result=$(cat ${file_realpath}| awk -v ARG_FILENAME="${filename_against_home}" -v blame_lineno_from="${blame_lineno_from}" -v blame_lineno_to="${blame_lineno_to}" -v empty_abbrev_hash="${empty_abbrev_hash}" '
-    {
-      # 62b9a4b5 bin/tmux/tmux_memory (ippsio 2023-07-29 10:21:26 +0900  1) #!/bin/bash
-      if (blame_lineno_from <= NR && NR <= blame_lineno_to) {
-        printf "%s %s (------ %s %2d) %s\n", empty_abbrev_hash, ARG_FILENAME, "0000-00-00 00:00:00 +0900", NR, $0
+  blame_result=$(
+    awk\
+    -v ARG_FILENAME="${filename_against_home}"\
+    -v blame_lineno_from="${blame_lineno_from}"\
+    -v blame_lineno_to="${blame_lineno_to}"\
+    -v empty_abbrev_hash="${empty_abbrev_hash}" '
+      {
+        # 62b9a4b5 bin/tmux/tmux_memory (ippsio 2023-07-29  1) #!/bin/bash
+        if (blame_lineno_from <= NR && NR <= blame_lineno_to) {
+          printf "%s %s (------ %s %2d) %s\n", empty_abbrev_hash, ARG_FILENAME, "0000-00-00 00:00:00 +0900", NR, $0
+        }
       }
-    }
-  ')
+    '< "${file_realpath}"
+  )
 fi
 blame_with_color=$(echo "${blame_result}" \
   | awk '{ printf "%s%s\n", substr($0, 0, index($0, " ") - 1), substr($0, index($0, " (")) }' \
@@ -88,6 +105,7 @@ word_highlighted="${blame_with_color}"
 
   # ハイフンを含まない文字列でripgrepし、マッチする文字部分を色付けする
   IFS=$' \n-'
+  # shellcheck disable=SC2001
   for searchword in $(echo "${ARG_SEARCHWORDS}"| sed 's/\\["]/"/g'); do
     word_highlighted=$(echo "${word_highlighted}"| rg --fixed-strings --case-sensitive --passthru --color=always "${searchword}")
   done
@@ -95,8 +113,13 @@ word_highlighted="${blame_with_color}"
   # ハイフンだけの文字列でripgrepし、マッチする文字部分を色付けする
   IFS=$' \n'
   unique_hyphens=$(echo "${ARG_SEARCHWORDS}"| grep -Eo '(\-)+'| sort| uniq)
+  # shellcheck disable=SC2001
   for searchword_hyphen in $(echo "${unique_hyphens}"| sed 's/-/\\-/g'); do
     word_highlighted=$(echo "${word_highlighted}"| rg --passthru --color=always "${searchword_hyphen}")
   done
-  echo "${word_highlighted}"| bat --wrap never --no-pager --style plain --color=always --highlight-line ${highlight_lineno};
+  terminal_width=$(terminal_width)
+  width_for_muriyari_wrap=$(( terminal_width - 3 ))
+  echo "${word_highlighted}"\
+    | cut -b 1-"${width_for_muriyari_wrap}"\
+    | bat --no-pager --style plain --color=always --highlight-line "${highlight_lineno}"
 )
