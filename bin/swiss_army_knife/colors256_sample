@@ -1,37 +1,62 @@
 #!/bin/bash
-label() {
-  # NOTE: readable but slow.
-  # fg_sequence=$(printf "\e[38;5;%dm" $1)
-  # bg_sequence=$(printf "\e[48;5;%dm" $2)
-  # printf "${fg_sequence}${bg_sequence}[fg=%3s,bg%3s]\e[0m " $1 $2
-
-  printf "\e[38;5;%dm\e[48;5;%dmfg%3s,bg%3s\e[0m " $1 $2 $1 $2
+print_a_color() {
+  local c1=$1
+  local c2=$2
+  local fgbg_switch=$3
+  local show_label=$4
+  if [[ "${fgbg_switch}" -eq 0 ]]; then
+    local fg="${c2}"
+    local bg="${c1}"
+  else
+    local fg="${c1}"
+    local bg="${c2}"
+  fi
+  if [[ "${show_label}" -eq 1 ]]; then
+    printf "\e[38;5;%dm\e[48;5;%dmfg%3s,bg%3s\e[0m" "$fg" "$bg" "$fg" "$bg"
+  else
+    printf "\e[38;5;%dm\e[48;5;%dm           \e[0m" "$fg" "$bg"
+  fi
+  return 0
 }
 
 show_color_sample() {
-  given_color=$1
-  fgbg_switch=$2
+  local c2=$1
+  local fgbg_switch=$2
   echo
-  for loop_color in {0..255}; do
-    if [ ${fgbg_switch} -eq 0 ]; then
-      label ${given_color} ${loop_color}
-    else
-      label ${loop_color} ${given_color}
-    fi
-    [[ $(( $((loop_color + 3)) % 12 )) -eq 0 ]] && echo && echo
-  done
-  echo
+
+  for show_label in {0..1}; do for c1 in {0..9}; do print_a_color "${c1}" "${c2}" "$fgbg_switch" "$show_label"; done; echo; done
+  for show_label in {0..1}; do for c1 in {10..21}; do print_a_color "${c1}" "${c2}" "$fgbg_switch" "$show_label"; done; echo; done
+  for show_label in {0..1}; do for c1 in {22..33}; do print_a_color "${c1}" "${c2}" "$fgbg_switch" "$show_label"; done; echo; done
+  for show_label in {0..1}; do for c1 in {34..45}; do print_a_color "${c1}" "${c2}" "$fgbg_switch" "$show_label"; done; echo; done
+  for show_label in {0..1}; do for c1 in {46..57}; do print_a_color "${c1}" "${c2}" "$fgbg_switch" "$show_label"; done; echo; done
+  for show_label in {0..1}; do for c1 in {58..69}; do print_a_color "${c1}" "${c2}" "$fgbg_switch" "$show_label"; done; echo; done
+  for show_label in {0..1}; do for c1 in {70..81}; do print_a_color "${c1}" "${c2}" "$fgbg_switch" "$show_label"; done; echo; done
+  for show_label in {0..1}; do for c1 in {82..93}; do print_a_color "${c1}" "${c2}" "$fgbg_switch" "$show_label"; done; echo; done
+  for show_label in {0..1}; do for c1 in {94..105}; do print_a_color "${c1}" "${c2}" "$fgbg_switch" "$show_label"; done; echo; done
+  for show_label in {0..1}; do for c1 in {106..117}; do print_a_color "${c1}" "${c2}" "$fgbg_switch" "$show_label"; done; echo; done
+  for show_label in {0..1}; do for c1 in {118..129}; do print_a_color "${c1}" "${c2}" "$fgbg_switch" "$show_label"; done; echo; done
+  for show_label in {0..1}; do for c1 in {130..141}; do print_a_color "${c1}" "${c2}" "$fgbg_switch" "$show_label"; done; echo; done
+  for show_label in {0..1}; do for c1 in {142..153}; do print_a_color "${c1}" "${c2}" "$fgbg_switch" "$show_label"; done; echo; done
+  for show_label in {0..1}; do for c1 in {154..165}; do print_a_color "${c1}" "${c2}" "$fgbg_switch" "$show_label"; done; echo; done
+  for show_label in {0..1}; do for c1 in {166..177}; do print_a_color "${c1}" "${c2}" "$fgbg_switch" "$show_label"; done; echo; done
+  for show_label in {0..1}; do for c1 in {178..189}; do print_a_color "${c1}" "${c2}" "$fgbg_switch" "$show_label"; done; echo; done
+  for show_label in {0..1}; do for c1 in {190..201}; do print_a_color "${c1}" "${c2}" "$fgbg_switch" "$show_label"; done; echo; done
+  for show_label in {0..1}; do for c1 in {202..213}; do print_a_color "${c1}" "${c2}" "$fgbg_switch" "$show_label"; done; echo; done
+  for show_label in {0..1}; do for c1 in {214..225}; do print_a_color "${c1}" "${c2}" "$fgbg_switch" "$show_label"; done; echo; done
+  for show_label in {0..1}; do for c1 in {226..237}; do print_a_color "${c1}" "${c2}" "$fgbg_switch" "$show_label"; done; echo; done
+  for show_label in {0..1}; do for c1 in {238..249}; do print_a_color "${c1}" "${c2}" "$fgbg_switch" "$show_label"; done; echo; done
+  for show_label in {0..1}; do for c1 in {250..255}; do print_a_color "${c1}" "${c2}" "$fgbg_switch" "$show_label"; done; echo; done
 }
 
-color=${1:-0}
+color=0
 switch=0
 while true; do
   clear
-  show_color_sample ${color} ${switch}
-  echo "$(basename $0) color=[${color}] | J=-1, K=+1, S:Foreground-color <=> Background-color"
-  read -n1 key_input
-  [[ ${key_input} == "j" ]] && color=$(($color - 1))
-  [[ ${key_input} == "k" ]] && color=$(($color + 1))
+  show_color_sample "${color}" "${switch}"
+  printf "color=[%s] | J=-1, K=+1, S:Foreground-color <=> Background-color" "${color}"
+  read -r -n1 key_input
+  [[ ${key_input} == "j" ]] && color=$(( color - 1))
+  [[ ${key_input} == "k" ]] && color=$(( color + 1))
   [[ ${key_input} == "s" ]] && switch=$(( ( switch + 1 ) % 2 ))
   [[ ${color} -le 0 ]] && color=0
   [[ ${color} -ge 255 ]] && color=255
