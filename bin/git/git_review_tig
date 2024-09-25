@@ -1,9 +1,38 @@
-#!/bin/bash
-source git_review_core $@|| exit $?
-(
+#!/usr/bin/env bash
+# shellcheck disable=SC2317
+handle_exception() {
+  exitcd="$1"
+  case "$exitcd" in
+    0)
+      ;;
+    101) echo "Not a git repo. exitcd=${exitcd}"
+      ;;
+    111)
+      echo "INVALID_GIT_BRANCH_GIVEN"
+      ;;
+    112)
+      echo "GIT_SEARCH_PR:PR_NOT_FOUND"
+      ;;
+    114)
+      echo "FAILED TO GET TOKEN"
+      ;;
+    *)
+      echo "SOMETHING WENT WRONG exitcd=${exitcd}"
+      ;;
+  esac
+}
+trap 'handle_exception $?' EXIT
+
+source git_review_core "$@"
+
+{
   echo "${review_json}";
   echo "---";
   GIT_DIFF_CMD="git diff --stat=200 --stat-name-width=160 -p ${merge_base_hash}"
   echo "${GIT_DIFF_CMD}"
   eval "${GIT_DIFF_CMD}"
-)| (set -x; export GIT_MERGE_BASE=${merge_base_hash}; tig show ${merge_base_hash}...HEAD)
+}| (
+  set -x
+  export GIT_MERGE_BASE=${merge_base_hash}
+  tig show "${merge_base_hash}"...HEAD
+)

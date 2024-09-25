@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 COMMIT_LOG_ROWS=15
 ! (set -x; is_git_repo) && echo "Not a git repository. " && exit 1
 _ME=$( [ -L $0 ] && basename $(readlink $0) || basename $0)
