@@ -9,7 +9,7 @@ precmd() {
   LANG=en_US.UTF-8 vcs_info
   PROMPT=""
   if git rev-parse --is-inside-work-tree>/dev/null 2>&1; then
-    local git_status="$(git git_status --porcelain --branch --ahead-behind 2> /dev/null)"
+    local git_status="$(git status --porcelain --branch --ahead-behind 2> /dev/null)"
     local xy=$(echo -e ${git_status}| sed -e "s/^\(..\).*$/\1/")
 
     local untracked=$(echo "${xy}"| grep -Ec "^(\?\?)")
