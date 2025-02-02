@@ -1,4 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
+home_as_tilde "$0"| xargs -I {} echo "'{}' called"  1>&2
+
 current_branch=$(git_branch_current)
 branch=${1:-${current_branch}}
 if ! ( is_git_branch "${branch}"); then
@@ -13,6 +15,6 @@ if [[ -n "${RES}" ]]; then
   echo "${RES}"
   exit 0
 else
-  exit 112 # GIT_SEARCH_PR:PR_NOT_FOUND
+  echo "GIT_SEARCH_PR:PR_NOT_FOUND" 1>&2
 fi
 

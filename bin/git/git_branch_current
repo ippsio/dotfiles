@@ -1,2 +1,3 @@
-#!/bin/bash
+#!/usr/bin/env bash
+home_as_tilde "$0"| xargs -I {} echo "'{}' called"  1>&2
 git branch --show-current

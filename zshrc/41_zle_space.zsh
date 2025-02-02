@@ -38,6 +38,11 @@ zle_space() {
       return 0
     fi
 
+    if [[ $BUFFER =~ '^git_grep +$' ]]; then
+      BUFFER="git grep " && zle end-of-line
+      return 0
+    fi
+
     # git checkout + completion
     if [[ $BUFFER =~ '^gco$' ]]; then
       zle autosuggest-clear && BUFFER="git checkout $(git_branch_fzf)" && zle end-of-line

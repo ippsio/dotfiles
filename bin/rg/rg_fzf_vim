@@ -16,13 +16,5 @@ rg_wrap "$@" \
     --bind "enter:execute(nvim {2} +{3} < /dev/tty > /dev/tty)" \
     --bind='ctrl-/:toggle-preview' \
     --bind='ctrl-_:toggle-preview' \
-    --preview='
-      # 原則、検索ヒットした行の5行前から表示。
-      from=$(expr {3} - 5);
-      [[ ${from} -lt 1 ]] && from=1;
-      bat \
-        --color=always \
-        --style=numbers,header \
-        --line-range ${from}: \
-        --highlight-line {3} {2}
-      '
+    --preview 'bat --color=always {2} --highlight-line {3}' \
+    --preview-window '+{3}+3/3,~7'

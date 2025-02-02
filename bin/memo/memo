@@ -4,18 +4,39 @@ BASE_DIR=~/notes
 NOTE_DIR=${BASE_DIR}/${KIND}/$(LC_ALL=C date '+%Y_%m')
 FILE=$(LC_ALL=C date '+%Y_%m%d_%a').txt
 
-[ ! -d ${BASE_DIR} ] && ( mkdir -p ${BASE_DIR} && cd ${BASE_DIR} && git init && cd .. || exit $? )
-[ ! -d ${NOTE_DIR} ] && mkdir -p ${NOTE_DIR}
-[ ! -f ${NOTE_DIR}/${FILE} ] && echo -e "\n# ${KIND} $(LC_ALL=C date '+%Y/%m/%d(%a)')\n\n---\n" >> ${NOTE_DIR}/${FILE}
+[ ! -d "${BASE_DIR}" ] && ( mkdir -p "${BASE_DIR}" && cd "${BASE_DIR}" && git init && cd .. || exit $? )
+[ ! -d "${NOTE_DIR}" ] && mkdir -p "${NOTE_DIR}"
+[ ! -f "${NOTE_DIR}/${FILE}" ] && echo -e "\n# ${KIND} $(LC_ALL=C date '+%Y/%m/%d(%a)')\n\n---\n" >> "${NOTE_DIR}/${FILE}"
 
 CMD="echo ${BASE_DIR}/${KIND}/top.txt; rg --files --hidden -g '*.md' -g '*.txt' --sortr=path ${BASE_DIR}/${KIND}| grep -v 'top.txt'"
+file="$0"
+if [ -L "$file" ]; then
+  file=$(readlink "$file")
+fi
+BASENAME=$(basename "${file}")
+# shellcheck disable=SC2016 # Expressions don't expand in single quotes, use double quotes for that.
+BIND_ENTER='
+file=$(echo {}| sed -e "s#^~#${HOME}#")
+/usr/bin/env bash -c "(set -x; nvim -c 5 $file < /dev/tty > /dev/tty)"
+'
+# shellcheck disable=SC2016 # Expressions don't expand in single quotes, use double quotes for that.
+PREVIEW='
+file=$(echo {}| sed -e "s#^~#${HOME}#");
+echo "# ${file}"
+bat "$file" --color=always --style=numbers
+'
 eval "${CMD}" \
   | sed -e "s#^${HOME}#~#" \
   | fzf\
+    --ansi \
     --info=inline \
-    --prompt="($( [ -L $0 ] && basename $(readlink $0) || basename $0))" --header="${CMD}" \
-    --bind 'j:down' --bind 'k:up' --bind 'i:unbind(i,j,k)' \
-    --bind 'enter:execute(f=$(echo {}| sed -e "s#^~#${HOME}#"); bash -c "(set -x; nvim -c 5 $f < /dev/tty > /dev/tty)")+abort' \
-    --preview='f=$(echo {}| sed -e "s#^~#${HOME}#"); bat $f --color=always --style=numbers'
+    --prompt="(${BASENAME})" --header="${CMD}" \
+    --bind 'j:down' \
+    --bind 'k:up'  \
+    --bind 'q:abort'  \
+    --bind 'i:unbind(i,j,k,q)' \
+    --bind "enter:execute(${BIND_ENTER})" \
+    --preview="${PREVIEW}"\
+    --preview-window=right,85%
 
 cd ${BASE_DIR} && git add -A && git status --porcelain| grep "^[MA]" 1>/dev/null && git commit -m "$(date '+%Y/%m/%d(%a) %H時%M分%S秒')" 1>/dev/null

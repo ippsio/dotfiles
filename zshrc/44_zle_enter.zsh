@@ -28,3 +28,6 @@ execute_zle_enter() {
   zle accept-line
   return 0
 }
+
+zle -N execute_zle_enter
+bindkey '^M' execute_zle_enter

@@ -1,4 +1,5 @@
-#!/bin/bash
+#!//usr/bin/env bash
+home_as_tilde "$0"| xargs -I {} echo "'{}' called"  1>&2
 # shellcheck disable=SC2155
 readonly JSON="$(set -x; git_root)/../pull_requests.json"
 readonly CURRENT_BRANCH=${1:-$(set -x; git_branch_current)}

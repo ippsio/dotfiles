@@ -1,2 +1,4 @@
 #!/usr/bin/env bash
+home_as_tilde "$0"| xargs -I {} echo "'{}' called"  1>&2
+
 (set -x; github_send_get_request "https://api.github.com/repos/$(git_reponame)/pulls/$1")|| exit $?

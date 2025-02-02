@@ -56,7 +56,7 @@ if v:true
     Jetpack 'norcalli/nvim-colorizer.lua'
   endif
 
-  if v:true " debugger
+  if v:false " debugger
     Jetpack 'mfussenegger/nvim-dap'
     Jetpack 'mfussenegger/nvim-dap-python'
     Jetpack 'nvim-neotest/nvim-nio'
@@ -71,7 +71,7 @@ if v:true
     Jetpack 'ap/vim-css-color', { 'for': [ 'css', 'scss' ]}
     Jetpack 'kchmck/vim-coffee-script', { 'for': [ 'coffee' ]}
     Jetpack 'leshill/vim-json', { 'for': [ 'json' ]}
-    Jetpack 'mechatroner/rainbow_csv', { 'for': [ 'css', 'scss' ]}
+    Jetpack 'mechatroner/rainbow_csv', { 'for': [ 'csv', 'tsv' ]}
     "Jetpack 'nvie/vim-flake8', { 'for': [ 'python' ] }
     Jetpack 'rcmdnk/vim-markdown', { 'for': [ 'markdown' ]}
     Jetpack 'stephpy/vim-yaml', { 'for': [ 'yaml' ]}
@@ -87,10 +87,10 @@ if v:true
   if v:true " ruby development
     Jetpack 'AndrewRadev/splitjoin.vim', { 'for': [ 'ruby', 'rake', 'eruby', 'slim'] }
     "Jetpack 'dense-analysis/ale', { 'for': [ 'ruby', 'rake', 'eruby', 'slim'] }
-    Jetpack 'slim-template/vim-slim', { 'for': [ 'ruby', 'rake', 'eruby', 'slim'] }
+    Jetpack 'slim-template/vim-slim', { 'for': [ 'slim'] }
     Jetpack 'tpope/vim-rails'
     Jetpack 'vim-ruby/vim-ruby', { 'for': [ 'ruby', 'rake', 'eruby', 'slim'] }
-    Jetpack 'vim-scripts/ruby-matchit', { 'for': [ 'ruby', 'rake', 'eruby', 'slim'] }
+    Jetpack 'vim-scripts/ruby-matchit', { 'for': [ 'ruby', 'rake'] }
     if v:true
       "Jetpack 'thoughtbot/vim-rspec', { 'for': [ 'ruby', 'rake', 'eruby', 'slim'] }
       Jetpack 'tpope/vim-dispatch'
@@ -105,7 +105,7 @@ if v:true
     "Jetpack 'echasnovski/mini.animate'
     "Jetpack 'kana/vim-smartword'
     Jetpack 'rhysd/accelerated-jk'
-    Jetpack 'rhysd/clever-f.vim'
+    "Jetpack 'rhysd/clever-f.vim'
   endif
   if v:true " jump between files
     Jetpack 'tpope/vim-projectionist'

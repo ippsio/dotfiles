@@ -8,4 +8,9 @@ readonly HEADER2="Authorization: Bearer $token"
 readonly HEADER3="X-GitHub-Api-Version: 2022-11-28"
 readonly URL=$1
 
-curl -X GET -s -L -H "${HEADER1}" -H "${HEADER2}" -H "${HEADER3}" "$URL"|| exit $?
+curl -X GET -s -L -H "${HEADER1}" -H "${HEADER2}" -H "${HEADER3}" "$URL"
+exitcd="$?"
+if [[ "$exitcd" != "0" ]]; then
+  echo "curl returns exitcd $exitcd" 1>&2
+fi
+exit 0

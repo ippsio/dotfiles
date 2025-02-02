@@ -15,6 +15,8 @@
 #   >	Re-open Tig instantly in the last displayed view after executing the command.
 # set key to page-down/page-up
 
+bind main M >tig --first-parent
+
 # カーソル移動
 bind generic <C-b> move-page-up
 bind generic <C-f> move-page-down

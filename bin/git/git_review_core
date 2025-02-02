@@ -1,18 +1,48 @@
 #!/usr/bin/env bash
-if ! ( set -x; is_git_repo ); then
-  exit 101 # Not a git repository
-fi
+# shellcheck disable=SC1090
+source ~/dotfiles/bin/bash/export_ps4
+handle_exception() {
+  exitcd="$1"
+  case "$exitcd" in
+    0)
+      # NOP
+      ;;
+    101)
+      echo "(${exitcd}) NOT A GIT REPO"
+      ;;
+    102)
+      echo "(${exitcd}) CANNOT DECIDE BASE BRANCH"
+      ;;
+    111)
+      echo "(${exitcd}) INVALID_GIT_BRANCH_GIVEN"
+      ;;
+    # 112)
+    #   echo "(${exitcd}) GIT_SEARCH_PR:PR_NOT_FOUND"
+    #   ;;
+    114)
+      echo "(${exitcd}) FAILED TO GET TOKEN"
+      ;;
+    115)
+      echo "(${exitcd}) CURL FAILED on github_send_get_request"
+      ;;
+    *)
+      echo "(${exitcd}) SOMETHING WENT WRONG"
+      ;;
+  esac
+}
+trap 'handle_exception $?' EXIT
+( set -x; is_git_repo )|| exit 101 # not a git repository
 
 commit1="$1"
 current_branch=$(set -x; git_branch_current)
-review_json=$(set -x; git_get_review_json "${current_branch}" "${commit1}")
-exitcd="$?"
-if [[ "$exitcd" != "0" ]]; then
-  exit "$exitcd"
-fi
+review_json=$(set -x; git_get_review_json "${current_branch}" "${commit1}")|| exit $?
 base_branch=$(echo "${review_json}"| jq -r '.base')
-[[ "${base_branch}" == "" ]] && echo "base_branch empty. Bye" && exit 1
+if [[ -z "${base_branch}" ]]; then
+  exit 102 # CANNOT DECIDE BASE BRANCH
+fi
 base_branch=origin/${base_branch}
-merge_base_hash=$(git rev-parse --short "$(git merge-base ${base_branch} HEAD)")
-merge_base_log=$(git log -1 --date="format:%Y-%m-%d %H:%M:%S" --pretty="(%h) %ad %an %s" ${merge_base_hash})
+merge_base_hash_long=$(git merge-base "${base_branch}" HEAD)
+merge_base_hash=$(git rev-parse --short "${merge_base_hash_long}")
+merge_base_log=$(git log -1 --date="format:%Y-%m-%d %H:%M:%S" --pretty="(%h) %ad %an %s" "${merge_base_hash}")
+merge_base_log=${merge_base_log//\"/\\\"}
 review_json=$(echo "${review_json}"| jq ".merge_base=\"${merge_base_log}\"")

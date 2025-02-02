@@ -46,6 +46,8 @@ color "--- "           149 233
 #----------------------------------------------------------------------
 color diff-chunk       149 234
 color diff-stat        049 235
+color diff-chunk       149 default
+color diff-stat        68 default standout
 
 color stat-staged      default default
 color stat-unstaged    default default
@@ -54,16 +56,16 @@ color stat-untracked   default default
 #----------------------
 # diff old系(赤系)
 #----------------------
-color diff-del           203   234
-color diff-del-highlight 203   234 standout
+color diff-del           204   234
+color diff-del-highlight 204   234 standout
 #color "-"             203     053
 #color " -"            203     053
 
 #----------------------
-# new系(緑系)
+# new系
 #----------------------
-color diff-add           081    017
-color diff-add-highlight 081    018 standout
+color diff-add           045    234
+color diff-add-highlight 045    234 standout
 # color "+"             227     default standout
 # color "+"             227     default standout
 

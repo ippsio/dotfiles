@@ -15,67 +15,55 @@ do_cache=1
 prepare_by_brew() {
   if ( type "$1" > /dev/null 2>&1 ); then
     echo -n "$1 ok, "
-    return 0
   else
     echo "$1 not found. install."
     brew install ${2:-$1}
     do_cache=0
-    return 1
   fi
 }
 nodir_then_gitclone() {
   if [ -d $1 ]; then
     echo -n "$2 ok, "
-    return 0
   else
     echo "$2 not found. git clone."
     git clone https://github.com/$2 ${3:-$1}
     do_cache=0
-    return 1
   fi
 }
 chk_pynvim_or_install() {
   if ( python3 -c 'import pynvim' > /dev/null 2>&1 ); then
     echo -n "pynvim ok, "
-    return 0
   else
     echo "pynvim not found. install."
     python3 -m pip install pynvim --user
     do_cache=0
-    return 1
   fi
 }
 chk_or_pip_install() {
   if ( type "$1" > /dev/null 2>&1 ); then
     echo -n "$1 ok, "
-    return 0
   else
     echo "$1 not found. install."
     python3 -m pip install ${2:-$1} --user
     do_cache=0
-    return 1
   fi
 }
 chkfile_or_flink() {
   if [ -L $1 ]; then
     echo -n "${1//${HOME}/~} ok, "
-    return 0
   else
     echo "$1 not found. link! ($1<-$2)"
     ln -s $2 $1
     do_cache=0
-    return 1
   fi
 }
 chkfile_or_dlink() {
   if [ -d $1 ]; then
     echo -n "${1//${HOME}/~} ok, "
-    return 0
   else
     echo "$1 not found. link! ($1<-$2)"
     ln -s $2 $1
     do_cache=0
-    return 1
   fi
 }
 

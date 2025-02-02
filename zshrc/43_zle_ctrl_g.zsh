@@ -14,3 +14,6 @@ zle_ctrl_g() {
   return 0
 }
 
+zle -N zle_ctrl_g
+bindkey "^G" zle_ctrl_g
+

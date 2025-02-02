@@ -26,6 +26,7 @@ function s:hi_word()
   " （\<や\>は、単語の境界を示す特殊文字）
   normal "zyiw
   let @/ = '\<' . @z . '\>'
+  "let @/ = @z
   call feedkeys(":set hlsearch\<CR>", "n")
   normal `z
 endfunction

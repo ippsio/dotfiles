@@ -60,7 +60,7 @@ set switchbuf=useopen
 " [スクロール]
 " scrolloff カーソルの上または下には、最低でもこのオプションに指定した数の行が表示 される。
 " nostartofline 移動コマンドを使ったとき、行頭に移動しない
-set scrolloff=2
+set scrolloff=10
 set nostartofline
 
 " [ウインドウ分割]

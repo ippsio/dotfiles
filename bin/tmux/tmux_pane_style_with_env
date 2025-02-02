@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 if [[ -n "$TMUX_PANE_STYLE" ]]; then
-  (set -x; tmux select-pane -P "$TMUX_PANE_STYLE")
+  current_pane_style=$(tmux display-message -p "fg=#{pane_fg},bg=#{pane_bg}"| perl -pe 's/[\r\n]//g')
+  if [[ "$current_pane_style" != "$TMUX_PANE_STYLE" ]]; then
+    (home_as_tilde "$0"; set -x; tmux select-pane -P "$TMUX_PANE_STYLE")
+  fi
 else
   tmux select-pane -P "bg=default,fg=default"
 fi

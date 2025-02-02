@@ -23,7 +23,7 @@ augroup vimrc-highlight
   autocmd Syntax conf if 10000 < line('$') | syntax sync minlines=100 | endif
 
   " .slimなファイルのファイルタイプがslimであると、vimが気づいてくれない時があったので、その対策。
-  autocmd BufNewFile,BufRead *.slim setlocal filetype=slim
+  " autocmd BufNewFile,BufRead *.slim setlocal filetype=slim
 
   " .coffeeなファイルのファイルタイプがcoffeeであると、vimが気づいてくれない時があったので、その対策。
   autocmd BufNewFile,BufRead *.coffee setlocal filetype=coffee
@@ -35,8 +35,8 @@ augroup vimrc-highlight
   " .tomlなファイルのファイルタイプはvimとして扱った方が個人的にシンタックスハイライトが好み
   "autocmd BufNewFile,BufRead *.toml setlocal filetype=vim
 
-  " ft=*.rb,pythonなら、コード規約遵守のための縦線を引く(160桁目位に）。
-  autocmd BufRead,BufEnter,BufWinEnter *.rb,*.rake,*.py let &colorcolumn=join(range(161, 161), ",")
+  " ft=*.rb,pythonなら、コード規約遵守のための縦線を引く(140桁目位に）。
+  autocmd BufRead,BufEnter,BufWinEnter *.rb,*.rake,*.py let &colorcolumn=join(range(141, 141), ",")
 
 augroup END
 
@@ -94,6 +94,11 @@ augroup FileTypeRuby
   " id="hoge">
   " </p>
   au FileType eruby setlocal indentexpr=
+augroup END
+
+augroup FileTypeGitCommit
+  autocmd!
+  au FileType gitcommit setlocal tw=7
 augroup END
 
 augroup AutocmdEventVisualize
