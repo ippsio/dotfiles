@@ -1,13 +1,6 @@
-autoload -Uz vcs_info
 autoload -Uz add-zsh-hook
-zstyle ':vcs_info:*' enable git
-zstyle ':vcs_info:*' max-exports 1
-zstyle ':vcs_info:*' formats '%a'
-zstyle ':vcs_info:*' actionformats '%a'
-
 precmd() {
-  LANG=en_US.UTF-8 vcs_info
-  PROMPT=""
+  PROMPT_ARRAY=()
   if git rev-parse --is-inside-work-tree>/dev/null 2>&1; then
     local git_status="$(git status --porcelain --branch --ahead-behind 2> /dev/null)"
     local xy=$(echo -e ${git_status}| sed -e "s/^\(..\).*$/\1/")
@@ -30,21 +23,24 @@ precmd() {
     local repo=$(git_reponame)
     local branch="$(git branch --show-current)"
     local remote=$(git config --local branch.${branch}.remote)
-    local REPO_BRANCH="%F{118}${repo} %F{118}${branch}%f %F{red}track(${remote:-none})"
-    local GIT_CAUTION="%F{1}%(1v| %1v |)%(2v| %2v |)%(3v| %3v |)%(4v| %4v |)%k"
+    local commit_msg=$(git log -1 --date=format:"%m/%d %H:%M" --pretty='%h %ad %an %s')
+    local REPO_BRANCH="%F{118}${repo} %F{118}${branch}%f %F{red}track(${remote:-none}) %F{186}%K{0}${commit_msg}%k%f"
 
-    PROMPT+=$'\n'"${GIT_CAUTION}${WORKTREE}${STASH}${STAGE}${AB}${REPO_BRANCH}"
+    local merging=$(test -f "$(git rev-parse --git-dir)/MERGE_HEAD" && echo 'MERGING' || echo '')
+    local GIT_CAUTION="%K{1}${merging}%f%k "
+
+    PROMPT_ARRAY+=( "${WORKTREE}${STASH}${STAGE}${AB}${GIT_CAUTION}${REPO_BRANCH}" )
   fi
 
-  PROMPT+=$'\n'
   if [[ -n "${VIRTUAL_ENV_PROMPT}" ]]; then
     local python_venv_name=$(basename "${VIRTUAL_ENV}")
     local python_version_name=$(pyenv version-name)
-    PROMPT+="(python|${python_venv_name}|${python_version_name})"
+    PROMPT_ARRAY+=( "(python|${python_venv_name}|${python_version_name})" )
   fi
 
   local EXIT_CD="%F{red}%(?..\$?=%? )%f"
   local BG="%(1j|%F{226}bg:%j%f|)"
   local PWD="%F{137}%~ %f"
-  PROMPT+="${EXIT_CD}${BG}${PWD}%F{245}#%f "
+  PROMPT_ARRAY+=( "${EXIT_CD}${BG}${PWD}%F{245}#%f " )
+  PROMPT=$(print -l "${PROMPT_ARRAY[@]}")
 }

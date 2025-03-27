@@ -105,10 +105,14 @@ nnoremap Q     :<C-u>q<CR>
 nnoremap <silent> W :call <SID>SaveFile()<CR>
 
 function! s:SaveFile()
-  silent! :w
-  let l:msg = 'SAVED! ' . strftime("%Y/%m/%d %H:%M:%S") . '[' . substitute(expand("%:p"), $HOME, "~", "g") . ']'
-  let l:maxlen = v:echospace + ((&cmdheight - 1) * &columns)
-  echom strpart(l:msg, 0, l:maxlen)
+  try
+    silent :w
+    let l:msg = 'SAVED! ' . strftime("%Y/%m/%d %H:%M:%S") . '[' . substitute(expand("%:p"), $HOME, "~", "g") . ']'
+    let l:maxlen = v:echospace + ((&cmdheight - 1) * &columns)
+    echom strpart(l:msg, 0, l:maxlen)
+  catch
+    echo "保存に失敗しました: " . v:errmsg
+  endtry
 endfunction
 
 " [その他]

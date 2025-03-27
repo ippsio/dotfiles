@@ -1,4 +1,6 @@
 #!/usr/bin/env zsh
+# NOTE: エスケープシーケンスは cat -vで調べられるよ。
+
 # emacs like
 bindkey -e
 
@@ -28,22 +30,16 @@ zle_through_or_self_insert() {
     zle self-insert
     return 0
   elif [[ ${difference} -lt $(( 10 * 1000 )) ]]; then
-    # 時計ずらしたときとか
+    # 端末の時計を過去に戻ったりすると、キー入力が一切通らなくなることがあった。
+    # 明らかすぎる時間のズレがあればこのブロックに到達し、キー入力が受け付けられるようにする。
     zle_space_timer=$t
     zle self-insert
     return 0
   fi
 }
-
 zle -N zle_through_or_self_insert
-# keysの結果＝printf "$(printf '\\x%x ' {33..127}) "
-keys="!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_\`abcdefghijklmnopqrstuvwxyz{|}~"
-for ((i=0; i<${#keys}; i++)); do
-  # ハイフンはエスケープが必要
-  # bindkey "-" zle_through_or_self_insert #=> zle "zle_through_or_self_insert" undefined-key
-  # bindkey "\-" zle_through_or_self_insert #=> OK
-  __key="${keys:${i}:1}"
-  bindkey "${__key/-/\-}" zle_through_or_self_insert
+for key in $(echo $(printf '"\\x%x" ' {33..127})); do
+  bindkey "\${key}" zle_through_or_self_insert
 done
 
 # Shift+<Left> で親階層のフォルダに移動
@@ -52,4 +48,17 @@ zle -N execute_zle_shift_left
 bindkey "^[[1;2D" execute_zle_shift_left
 
 source ~/dotfiles/zshrc/44_zle_enter.zsh
+
+# f1で ~/dotfiles/bin配下に存在するコマンドの候補をFZFで選択するインタフェースを提供する。
+zle_f1() {
+  BUFFER=$( (rg --follow --files ~/dotfiles/bin\
+    | awk '{ ABSOLUTE=$0; gsub(/^.*\//, "", $1); BASENAME=$0; print BASENAME"\t("ABSOLUTE")" }'| column -t\
+    | (fzf --query "^${BUFFER}" --nth 1 || printf "%s" "${BUFFER}")\
+    | awk '{ printf $1 }' )
+  )
+  zle end-of-line
+  return 0
+}
+zle -N zle_f1
+bindkey "^[OP" zle_f1
 

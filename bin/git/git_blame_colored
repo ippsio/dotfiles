@@ -118,7 +118,9 @@ word_highlighted="${blame_with_color}"
     word_highlighted=$(echo "${word_highlighted}"| rg --passthru --color=always "${searchword_hyphen}")
   done
   terminal_width=$(terminal_width)
-  width_for_muriyari_wrap=$(( terminal_width - 3 ))
+  # 無理やりなwrapをするかしないか...
+  width_for_muriyari_wrap=$(( 2048 - 3 ))
+  # width_for_muriyari_wrap=$(( terminal_width - 3 ))
   echo "${word_highlighted}"\
     | cut -b 1-"${width_for_muriyari_wrap}"\
     | bat --no-pager --style plain --color=always --highlight-line "${highlight_lineno}"

@@ -18,9 +18,9 @@ let g:gitgutter_sign_modified_removed   = 'MX'
 
 " 行ハイライトは結構見にくいと感じたので、コメントアウト
 " 起動時に差分行の行ハイライトを自動的に有効にする
-let g:gitgutter_highlight_lines = 1
+let g:gitgutter_highlight_lines = 0
 " 行番号のハイライト
-let g:gitgutter_highlight_linenrs = 1
+let g:gitgutter_highlight_linenrs = 0
 
 function! s:UpdateMergeBase()
   if $GIT_MERGE_BASE != ""

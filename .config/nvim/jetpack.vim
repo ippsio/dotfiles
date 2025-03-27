@@ -63,10 +63,12 @@ if v:true
     Jetpack 'rcarriga/nvim-dap-ui'
     Jetpack 'theHamsta/nvim-dap-virtual-text'
   endif
+
   if v:true " fzf
     Jetpack 'junegunn/fzf', { 'do': './install --all --no-bash --no-fish --no-zsh' }
     Jetpack 'junegunn/fzf.vim'
   endif
+
   if v:true " syntax
     Jetpack 'ap/vim-css-color', { 'for': [ 'css', 'scss' ]}
     Jetpack 'kchmck/vim-coffee-script', { 'for': [ 'coffee' ]}
@@ -76,14 +78,17 @@ if v:true
     Jetpack 'rcmdnk/vim-markdown', { 'for': [ 'markdown' ]}
     Jetpack 'stephpy/vim-yaml', { 'for': [ 'yaml' ]}
   endif
-  if v:true " gf
+
+  if v:false " gf
     Jetpack 'kana/vim-gf-diff', { 'for': ['diff'] }
     Jetpack 'kana/vim-gf-user', { 'for': ['diff'] }
   endif
+
   if v:true " text-object selection, surround
     Jetpack 'machakann/vim-sandwich'
-    Jetpack 'terryma/vim-expand-region'
+    "Jetpack 'terryma/vim-expand-region'
   endif
+
   if v:true " ruby development
     Jetpack 'AndrewRadev/splitjoin.vim', { 'for': [ 'ruby', 'rake', 'eruby', 'slim'] }
     "Jetpack 'dense-analysis/ale', { 'for': [ 'ruby', 'rake', 'eruby', 'slim'] }
@@ -91,27 +96,28 @@ if v:true
     Jetpack 'tpope/vim-rails'
     Jetpack 'vim-ruby/vim-ruby', { 'for': [ 'ruby', 'rake', 'eruby', 'slim'] }
     Jetpack 'vim-scripts/ruby-matchit', { 'for': [ 'ruby', 'rake'] }
-    if v:true
-      "Jetpack 'thoughtbot/vim-rspec', { 'for': [ 'ruby', 'rake', 'eruby', 'slim'] }
-      Jetpack 'tpope/vim-dispatch'
-    endif
+    "Jetpack 'thoughtbot/vim-rspec', { 'for': [ 'ruby', 'rake', 'eruby', 'slim'] }
+    Jetpack 'tpope/vim-dispatch'
   endif
+
   if v:true " file manager
     Jetpack 'lambdalisue/fern.vim'
     Jetpack 'yuki-yano/fern-preview.vim'
     "Jetpack 'preservim/nerdtree'
   endif
-  if v:true " cursor
-    "Jetpack 'echasnovski/mini.animate'
-    "Jetpack 'kana/vim-smartword'
-    Jetpack 'rhysd/accelerated-jk'
-    "Jetpack 'rhysd/clever-f.vim'
-  endif
+
   if v:true " jump between files
     Jetpack 'tpope/vim-projectionist'
   endif
-  if v:true " search
+  if v:false " search
     Jetpack 'monaqa/modesearch.vim'
+  endif
+
+  if v:true "colorscheme
+    Jetpack 'bluz71/vim-nightfly-colors'
+    Jetpack 'navarasu/onedark.nvim'
+    Jetpack 'catppuccin/nvim'
+    Jetpack 'olimorris/onedarkpro.nvim'
   endif
 endif
 if v:true " window

@@ -110,7 +110,7 @@ command! -bang -nargs=* Grep
   \   . ' --delimiter="\t" '
   \   . ' --tabstop=3 '
   \   . ' --ansi '
-  \   . ' --prompt "fzf.vim.vim Grep > " '
+  \   . ' --prompt "fzf.vim.vim Grep (' . <q-args> . ') > " '
   \   . ' --info=inline '
   \   . ' --layout reverse '
   \   . ' --with-nth=1.. '

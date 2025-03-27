@@ -1,4 +1,5 @@
 #!/usr/bin/env zsh
+autoload -Uz add-zsh-hook
 my_chpwd() { ~/dotfiles/bin/tmux/tmux_pane_style_with_env; return 0; }
 my_precmd_hook() { ~/dotfiles/bin/tmux/tmux_pane_style_with_env; return 0; }
 my_preexec_hook() { ~/dotfiles/bin/tmux/tmux_pane_style_with_env; return 0; }

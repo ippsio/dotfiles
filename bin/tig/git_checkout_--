@@ -1,23 +1,39 @@
 #!/bin/bash
 file="$1"
 echo "file='${file}'"
+if [[ -z "${file}" ]]; then
+  echo "No args given."
+  exit 0
+fi
+
+hr() { eval printf '%.0s-' '{1..'"$(tput cols)"'}'; return 0;}
+echoc() { printf "\e[38;5;7m\e[48;5;1m%s\e[0m\n" "$1"; return 0; }
 
 # check
-( set -x; git --no-pager diff -- ${file} ) || exit $?
-[[ -z "$(git --no-pager diff -- ${file})" ]] && echo "No changes." && exit 0
+( set -x; git --no-pager diff -- "${file}" )
+diff_result=$(git --no-pager diff -- "${file}")
+if [[ -z "${diff_result}" ]]; then
+  echo "No changes."
+  exit 0
+fi
 
-eval printf '%.0s-' '{1..'$(tput cols)'}';
-printf '\e[38;5;255m'; printf '\e[48;5;1m'
-echo "THIS CHANGES WILL BE DELETED! OK?"
-echo " >>> git checkout -- ${file}"
-echo "----------------------------------"
-printf '\e[0m'
+hr
+echoc " =>'git checkout -- ${file}'"
+hr
+echo "Enter: execute!, CTRL-c: cancel."
+redirect_to="${diff_trashbox_path}"/$(echo "$file"| sed -E 's#[/\ ]#_#g')_$(date +'%Y-%m-%d_%H%M%S')
+echo "(Backup will be saved->${redirect_to}_yyyy-mm-dd_HHMMSS)"
 
-answer_row=$(echo "-DELETE THE CHANGES
-+KEEP   THE CHANGES"| fzf --height=4 --info=hidden)
-echo "=>'${answer_row}'"
+read -r
+diff_trashbox_path="$(git_root)/.git/diff_trashbox"
+if [[ ! -d ${diff_trashbox_path} ]]; then
+  (set -x; mkdir -pv "${diff_trashbox_path}")
+fi
 
-answer=$(echo "${answer_row}"| awk '{ print $1 }')
-[[ "${answer}" == "-DELETE" ]] && git checkout -- "${file}" && echo "=>DONE. CHANGES WERE DELETED."
+echoc "Execute."
+(set  -x; git checkout -- "${file}")
+redirect_to="${diff_trashbox_path}"/$(echo "$file"| sed -E 's#[/\ ]#_#g')_$(date +'%Y-%m-%d_%H%M%S')
+printf "%s" "${diff_result}"> "${redirect_to}"
+echo "Backup saved->'${redirect_to}'"
 echo
 

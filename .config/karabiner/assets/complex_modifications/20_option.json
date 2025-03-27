@@ -2,26 +2,14 @@
   "title": "[20:option] behaviors",
   "rules": [
     {
-      "description": "21: option to_if_alone: Alacritty",
-      "manipulators": [
-        {
-          "type": "basic",
-          "from": {"key_code": "left_option"},
-          "to": [ {"key_code": "left_option", "lazy": true} ],
-          "to_if_held_down": [ {"key_code": "left_option"} ],
-          "to_if_alone": [ {"shell_command": "osascript ~/dotfiles/bin/applescript/toggle_frontmost_app.scpt Alacritty"} ]
-        }
-      ]
-    },
-    {
-      "description": "22*: option + a: Alacritty",
+      "description": "22*: option + a: kitty",
       "manipulators": [
         {
           "type": "basic",
           "from": {"key_code": "a", "modifiers": {"mandatory": ["option"], "optional": ["any"]}},
           "to": [ {"key_code": "left_option", "lazy": true} ],
           "to_if_held_down": [ {"key_code": "left_option"} ],
-          "to_if_alone": [ {"shell_command": "osascript ~/dotfiles/bin/applescript/toggle_frontmost_app.scpt Alacritty"} ]
+          "to_if_alone": [ {"shell_command": "osascript ~/dotfiles/bin/karabiner_elements/toggle_frontmost_app.scpt kitty"} ]
         }
       ]
     },
@@ -33,7 +21,7 @@
           "from": {"key_code": "e", "modifiers": {"mandatory": ["option"], "optional": ["any"]}},
           "to": [ {"key_code": "left_option", "lazy": true} ],
           "to_if_held_down": [ {"key_code": "left_option"} ],
-          "to_if_alone": [ {"shell_command": "osascript ~/dotfiles/bin/applescript/toggle_frontmost_app.scpt 'Microsoft Edge'"} ]
+          "to_if_alone": [ {"shell_command": "osascript ~/dotfiles/bin/karabiner_elements/toggle_frontmost_app.scpt 'Microsoft Edge'"} ]
         }
       ]
     },
@@ -45,7 +33,7 @@
           "from": {"key_code": "s", "modifiers": {"mandatory": ["option"], "optional": ["any"]}},
           "to": [ {"key_code": "left_option", "lazy": true} ],
           "to_if_held_down": [ {"key_code": "left_option"} ],
-          "to_if_alone": [ {"shell_command": "osascript ~/dotfiles/bin/applescript/toggle_frontmost_app.scpt Slack"} ]
+          "to_if_alone": [ {"shell_command": "osascript ~/dotfiles/bin/karabiner_elements/toggle_frontmost_app.scpt Slack"} ]
         }
       ]
     },
@@ -57,7 +45,7 @@
           "from": {"key_code": "c", "modifiers": {"mandatory": ["option"], "optional": ["any"]}},
           "to": [ {"key_code": "left_option", "lazy": true} ],
           "to_if_held_down": [ {"key_code": "left_option"} ],
-          "to_if_alone": [ {"shell_command": "osascript ~/dotfiles/bin/applescript/toggle_frontmost_app.scpt 'Google Chrome'"} ]
+          "to_if_alone": [ {"shell_command": "osascript ~/dotfiles/bin/karabiner_elements/toggle_frontmost_app.scpt 'Google Chrome'"} ]
         }
       ]
     }

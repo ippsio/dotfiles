@@ -106,6 +106,7 @@ chkfile_or_dlink ~/.config/alacritty     ~/dotfiles/.config/alacritty
 chkfile_or_dlink ~/.config/ranger        ~/dotfiles/.config/ranger
 chkfile_or_dlink ~/.config/tig          ~/dotfiles/.config/tig
 chkfile_or_dlink ~/.config/direnv          ~/dotfiles/.config/direnv
+chkfile_or_dlink ~/.config/kitty          ~/dotfiles/.config/kitty
 mkdir -p ~/.local/share/tig
 touch ~/.local/share/tig/history
 

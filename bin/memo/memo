@@ -37,6 +37,6 @@ eval "${CMD}" \
     --bind 'i:unbind(i,j,k,q)' \
     --bind "enter:execute(${BIND_ENTER})" \
     --preview="${PREVIEW}"\
-    --preview-window=right,85%
+    --preview-window=right,65%
 
 cd ${BASE_DIR} && git add -A && git status --porcelain| grep "^[MA]" 1>/dev/null && git commit -m "$(date '+%Y/%m/%d(%a) %H時%M分%S秒')" 1>/dev/null
