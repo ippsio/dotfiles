@@ -24,7 +24,7 @@ precmd() {
     local branch="$(git branch --show-current)"
     local remote=$(git config --local branch.${branch}.remote)
     local commit_msg=$(git log -1 --date=format:"%m/%d %H:%M" --pretty='%h %ad %an %s')
-    local REPO_BRANCH="%F{118}${repo} %F{118}${branch}%f %F{red}track(${remote:-none}) %F{186}%K{0}${commit_msg}%k%f"
+    local REPO_BRANCH="%F{118}${repo} %F{118}${branch}%f %F{red}track(${remote:-none}) %F{186}${commit_msg}%f"
 
     local merging=$(test -f "$(git rev-parse --git-dir)/MERGE_HEAD" && echo 'MERGING' || echo '')
     local GIT_CAUTION="%K{1}${merging}%f%k "

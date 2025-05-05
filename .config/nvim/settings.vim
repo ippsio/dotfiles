@@ -135,7 +135,7 @@ set showtabline=2
 set maxmempattern=100000 " 100,000KB = 100MB
 set ignorecase
 set smartcase
-set incsearch
+"set incsearch
 set hlsearch
 set inccommand=
 

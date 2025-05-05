@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+AWK_CMD="awk 'BEGIN { count=0 } { files[NR]=\$0; count++ } END { for (i=1; i<=count; i++) { printf \"(%d/%d:git-grep)	%s\n\", i, count, files[i] } }'"
+GIT_GREP_CMD="git -c grep.fallbackToNoIndex=true grep -I --line-number --fixed-strings"
+GIT_GREP_CMD_START="${GIT_GREP_CMD} --null --color=always $1| perl -pe 's/\x0/\t/g'| ${AWK_CMD}"
+
+eval "${GIT_GREP_CMD_START}"
+

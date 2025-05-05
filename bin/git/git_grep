@@ -1,2 +1,0 @@
-#!/bin/bash
-git_grep_fzf_vim --no-fzf "$@"

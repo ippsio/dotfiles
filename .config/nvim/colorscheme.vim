@@ -29,6 +29,7 @@ colorscheme cyberdream
 " colorscheme wildcharm
 " colorscheme zaibatsu
 "colorscheme zellner
+
 "hi link diffAdd String
 " hi DiffAdd     guifg=#123 ctermbg=31
 " hi DiffAdded   guifg=#123 ctermbg=31

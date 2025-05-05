@@ -4,7 +4,7 @@ f="${1:-240}"
 t="${2:-240}"
 for i in $( ( seq "${f}" "${t}"; seq "${t}" "${f}" ) | awk 'prev != $0 { print } { prev = $0 }' ); do
   eval "tmux select-pane -P bg=colour${i}"
-  sleep "${3:-0.03}"
+  sleep "${3:-0.05}"
 done
 eval "tmux select-pane -P ${pane_style_was}"
-tmux display-panes -d 250
+# tmux display-panes -d 10

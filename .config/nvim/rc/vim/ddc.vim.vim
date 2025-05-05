@@ -3,8 +3,8 @@
 " [補足] col('.') <= 1 は、カーソルが行頭の場合、真です。
 " [補足] getline('.')[col('.') - 2] =~# '\s' は、カーソルの直前が空白の場合、真です。
 " [補足] <Bar><Bar> は || (OR演算子) を意味します。
-inoremap <silent><expr> <C-p>  pum#visible() ? '<Cmd>call pum#map#insert_relative(+1)<CR>' : (col('.') <= 1 <Bar><Bar> getline('.')[col('.') - 2] =~# '\s') ? '<Up>'   : ddc#map#manual_complete()
-inoremap <silent><expr> <C-n>  pum#visible() ? '<Cmd>call pum#map#insert_relative(-1)<CR>' : (col('.') <= 1 <Bar><Bar> getline('.')[col('.') - 2] =~# '\s') ? '<Down>' : ddc#map#manual_complete()
+inoremap <silent><expr> <C-p>  pum#visible() ? '<Cmd>call pum#map#insert_relative(-1)<CR>' : (col('.') <= 1 <Bar><Bar> getline('.')[col('.') - 2] =~# '\s') ? '<Up>'   : ddc#map#manual_complete()
+inoremap <silent><expr> <C-n>  pum#visible() ? '<Cmd>call pum#map#insert_relative(+1)<CR>' : (col('.') <= 1 <Bar><Bar> getline('.')[col('.') - 2] =~# '\s') ? '<Down>' : ddc#map#manual_complete()
 
 " pum#visible() の状態によらず call pum#map#insert_relativeします。
 " [補足] 最小構成のvimにおけるインサートモードでの <C-j>、<C-k> は機能しなくなります。
@@ -95,15 +95,15 @@ call ddc#custom#patch_global('sourceOptions', #{
 \     converters: ['converter_fuzzy'],
 \   },
 \   file: #{
-\     mark: 'ddc-file',
+\     mark: 'FILE',
 \     isVolatile: v:true,
 \     forceCompletionPattern: '\S/\S*'
 \   },
 \   around: #{
-\     mark: 'ddc-arround',
+\     mark: 'AROUND',
 \   },
 \   lsp: #{
-\     mark: 'ddc-lsp',
+\     mark: 'LSP',
 \     forceCompletionPattern: join(['\.\w*', '->\w*'], '|')
 \   },
 \ })

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 if ( is_git_repo ); then
   git_grep "$@"
   untracked_files=$(git status --short| grep "^??"| awk '{ printf "%s ", $2 }')

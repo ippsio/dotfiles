@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+today_ym=$(LC_ALL=C date '+%Y_%m')
+today_ymda1=$(LC_ALL=C date '+%Y_%m%d_%a')
+today_ymda2=$(LC_ALL=C date '+%Y/%m/%d(%a)')
+readonly KIND="memo"
+readonly BASE_DIR=~/notes
+readonly NOTE_DIR="${BASE_DIR}/${KIND}/${today_ym}"
+readonly TODAYS_NOTE="${NOTE_DIR}/${today_ymda1}.md"
+readonly PREVIEW="(echo '# {}'; bat '{}' --color=always --style=numbers)"
+readonly RG_CMD="rg --files --hidden -g '20*.{md,txt}' --sortr=path ${BASE_DIR}/${KIND}"
+readonly FZF_START="${RG_CMD}| sed -E 's#^${HOME}#~#'"
+readonly NVIM_CMD="/usr/bin/env bash -c '(set -x; nvim -c 5 {} < /dev/tty > /dev/tty)'"
+
+mkdir_if_base_dir_not_exists() {
+  if [ ! -d "${BASE_DIR}" ]; then
+    mkdir -p "${BASE_DIR}"
+    cd "${BASE_DIR}"|| return 1
+    git init
+    cd ..
+  fi
+}
+mkdir_if_note_dir_not_exists() {
+  if [ ! -d "${NOTE_DIR}" ]; then
+    mkdir -p "${NOTE_DIR}"
+  fi
+}
+make_todays_note_if_not_exists() {
+  if [ ! -f "${TODAYS_NOTE}" ]; then
+    last_file=$(eval "${RG_CMD}"| head -1)
+    last_content=$(tail -n +5 "${last_file}" )
+    content="\n"
+    content="${content}# ${KIND} ${today_ymda2}\n"
+    content="${content}\n"
+    content="${content}---\n"
+    content="${content}${last_content}"
+    echo -e "${content}">>"${TODAYS_NOTE}"
+  fi
+}
+select_note() {
+  fzf --ansi --info=inline --prompt="(${KIND})"\
+      --bind "start:reload:(${FZF_START})"\
+      --bind "j:down" --bind "k:up"  --bind "q:abort"\
+      --bind "enter:execute(${NVIM_CMD})"\
+      --preview="${PREVIEW}" --preview-window=right,65%\
+    && return 0\
+    || return 1
+}
+git_commit_note() {
+  git add -A
+  now=$(date '+%Y/%m/%d(%a) %H時%M分%S秒')
+  git commit -m "${now}" 1>/dev/null && git log --date=iso --pretty='%h %ad %an %s' -1 --name-only
+}
+

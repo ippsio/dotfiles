@@ -10,11 +10,12 @@ HISTSIZE=10000 # メモリに保存される履歴の件数
 SAVEHIST=10000 # 履歴ファイルに保存される履歴の件数
 
 ### eval XXenv
-(type "direnv">/dev/null 2>&1) && eval "$(direnv hook zsh)"
-(type "goenv">/dev/null 2>&1) && eval "$(goenv init -)"
-(type "nodenv">/dev/null 2>&1) && eval "$(nodenv init -)"
-(type "pyenv">/dev/null 2>&1) && eval "$(pyenv init --path)"
-(type "rbenv">/dev/null 2>&1) && eval "$(rbenv init -)"
+eval "$(direnv hook zsh)"
+eval "$(goenv init -)"
+eval "$(nodenv init -)"
+eval "$(pyenv init --path)"
+eval "$(rbenv init -)"
+
 source ~/dotfiles/zshrc/00_setopt.zsh
 source ~/dotfiles/zshrc/00_export.zsh
 source ~/dotfiles/zshrc/10_prepare.zsh

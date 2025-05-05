@@ -10,130 +10,108 @@ endif
 
 packadd vim-jetpack
 call jetpack#begin()
-" [jetpack]
+" jetpack
 Jetpack 'tani/vim-jetpack', { 'opt': 1} "bootstrap
-"Jetpack 'dstein64/vim-startuptime'
-if v:true
-  if v:true " ddc
-   Jetpack 'Shougo/ddc.vim'
-   " required dependency
-   Jetpack 'vim-denops/denops.vim'
-   " ddc-source
-   Jetpack 'Shougo/ddc-around'
-   Jetpack 'Shougo/ddc-source-lsp'
-   Jetpack 'LumaKernel/ddc-source-file'
-   " ddc-matcher,sorter,converter
-   Jetpack 'Shougo/ddc-filter-converter_remove_overlap'
-   Jetpack 'Shougo/ddc-sorter_rank'
-   Jetpack 'Shougo/ddc-matcher_head'
-   Jetpack 'tani/ddc-fuzzy'
-   " ui
-   Jetpack 'Shougo/ddc-ui-native'
-   Jetpack 'Shougo/ddc-ui-pum'
-   Jetpack 'Shougo/pum.vim'
-  endif
-  if v:true " lsp
-    Jetpack 'j-hui/fidget.nvim'
-    Jetpack 'neovim/nvim-lspconfig'
-    Jetpack 'ray-x/lsp_signature.nvim'
-    Jetpack 'williamboman/mason-lspconfig.nvim'
-    Jetpack 'williamboman/mason.nvim'
-    "Jetpack 'nvimtools/none-ls.nvim'
-  endif
-  if v:true " git
-    Jetpack 'tpope/vim-fugitive'
-    Jetpack 'airblade/vim-gitgutter'
-    Jetpack 'iberianpig/tig-explorer.vim'
-    "Jetpack 'rbgrouleff/bclose.vim'
-  endif
-  if v:true " viewability, statusline
-    Jetpack 'itchyny/vim-cursorword'
-    Jetpack 'itchyny/vim-parenmatch'
-    Jetpack 'itchyny/lightline.vim'
-    Jetpack 'bronson/vim-trailing-whitespace'
-    Jetpack 'cohama/vim-insert-linenr'
-    "Jetpack 'nathanaelkane/vim-indent-guides'
-    Jetpack 'norcalli/nvim-colorizer.lua'
-  endif
 
-  if v:false " debugger
-    Jetpack 'mfussenegger/nvim-dap'
-    Jetpack 'mfussenegger/nvim-dap-python'
-    Jetpack 'nvim-neotest/nvim-nio'
-    Jetpack 'rcarriga/nvim-dap-ui'
-    Jetpack 'theHamsta/nvim-dap-virtual-text'
-  endif
-
-  if v:true " fzf
-    Jetpack 'junegunn/fzf', { 'do': './install --all --no-bash --no-fish --no-zsh' }
-    Jetpack 'junegunn/fzf.vim'
-  endif
-
-  if v:true " syntax
-    Jetpack 'ap/vim-css-color', { 'for': [ 'css', 'scss' ]}
-    Jetpack 'kchmck/vim-coffee-script', { 'for': [ 'coffee' ]}
-    Jetpack 'leshill/vim-json', { 'for': [ 'json' ]}
-    Jetpack 'mechatroner/rainbow_csv', { 'for': [ 'csv', 'tsv' ]}
-    "Jetpack 'nvie/vim-flake8', { 'for': [ 'python' ] }
-    Jetpack 'rcmdnk/vim-markdown', { 'for': [ 'markdown' ]}
-    Jetpack 'stephpy/vim-yaml', { 'for': [ 'yaml' ]}
-  endif
-
-  if v:false " gf
-    Jetpack 'kana/vim-gf-diff', { 'for': ['diff'] }
-    Jetpack 'kana/vim-gf-user', { 'for': ['diff'] }
-  endif
-
-  if v:true " text-object selection, surround
-    Jetpack 'machakann/vim-sandwich'
-    "Jetpack 'terryma/vim-expand-region'
-  endif
-
-  if v:true " ruby development
-    Jetpack 'AndrewRadev/splitjoin.vim', { 'for': [ 'ruby', 'rake', 'eruby', 'slim'] }
-    "Jetpack 'dense-analysis/ale', { 'for': [ 'ruby', 'rake', 'eruby', 'slim'] }
-    Jetpack 'slim-template/vim-slim', { 'for': [ 'slim'] }
-    Jetpack 'tpope/vim-rails'
-    Jetpack 'vim-ruby/vim-ruby', { 'for': [ 'ruby', 'rake', 'eruby', 'slim'] }
-    Jetpack 'vim-scripts/ruby-matchit', { 'for': [ 'ruby', 'rake'] }
-    "Jetpack 'thoughtbot/vim-rspec', { 'for': [ 'ruby', 'rake', 'eruby', 'slim'] }
-    Jetpack 'tpope/vim-dispatch'
-  endif
-
-  if v:true " file manager
-    Jetpack 'lambdalisue/fern.vim'
-    Jetpack 'yuki-yano/fern-preview.vim'
-    "Jetpack 'preservim/nerdtree'
-  endif
-
-  if v:true " jump between files
-    Jetpack 'tpope/vim-projectionist'
-  endif
-  if v:false " search
-    Jetpack 'monaqa/modesearch.vim'
-  endif
-
-  if v:true "colorscheme
-    Jetpack 'bluz71/vim-nightfly-colors'
-    Jetpack 'navarasu/onedark.nvim'
-    Jetpack 'catppuccin/nvim'
-    Jetpack 'olimorris/onedarkpro.nvim'
-  endif
-endif
-if v:true " window
-  Jetpack 'declancm/maximize.nvim'
-endif
-
-Jetpack 'rhysd/conflict-marker.vim'
-Jetpack 'ippsio/clip_diff.vim'
+" vim
 Jetpack 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Jetpack 'nvim-treesitter/playground', {'do': ':TSPlaygroundToggle'}
 Jetpack 'vim-jp/vimdoc-ja'
-Jetpack 'lambdalisue/guise.vim'
-Jetpack 'lambdalisue/gin.vim'
+
+" ddc
+Jetpack 'Shougo/ddc.vim'
+Jetpack 'vim-denops/denops.vim'
+" ddc> ddc-source
+Jetpack 'Shougo/ddc-around'
+Jetpack 'Shougo/ddc-source-lsp'
+Jetpack 'LumaKernel/ddc-source-file'
+" ddc> ddc-matcher,sorter,converter
+Jetpack 'Shougo/ddc-filter-converter_remove_overlap'
+Jetpack 'Shougo/ddc-sorter_rank'
+Jetpack 'Shougo/ddc-matcher_head'
+Jetpack 'tani/ddc-fuzzy'
+" ddc> ui
+Jetpack 'Shougo/ddc-ui-native'
+Jetpack 'Shougo/ddc-ui-pum'
+Jetpack 'Shougo/pum.vim'
+
+" lsp
+" lsp> config
+Jetpack 'neovim/nvim-lspconfig'
+Jetpack 'williamboman/mason-lspconfig.nvim'
+Jetpack 'williamboman/mason.nvim'
+Jetpack 'ray-x/lsp_signature.nvim'
+" lsp> progress message
+Jetpack 'j-hui/fidget.nvim'
+
+" git
+Jetpack 'tpope/vim-fugitive'
+Jetpack 'airblade/vim-gitgutter'
+Jetpack 'iberianpig/tig-explorer.vim'
+"Jetpack 'rhysd/conflict-marker.vim'
+
+" viewability, statusline
+Jetpack 'itchyny/vim-cursorword'
+Jetpack 'itchyny/vim-parenmatch'
+Jetpack 'itchyny/lightline.vim'
+Jetpack 'bronson/vim-trailing-whitespace'
+Jetpack 'cohama/vim-insert-linenr'
+Jetpack 'norcalli/nvim-colorizer.lua'
+
+" debugger
+" Jetpack 'mfussenegger/nvim-dap'
+" Jetpack 'mfussenegger/nvim-dap-python'
+" Jetpack 'nvim-neotest/nvim-nio'
+" Jetpack 'rcarriga/nvim-dap-ui'
+" Jetpack 'theHamsta/nvim-dap-virtual-text'
+
+" fzf
+Jetpack 'junegunn/fzf', { 'do': './install --all --no-bash --no-fish --no-zsh' }
+Jetpack 'junegunn/fzf.vim'
+
+" syntax
+Jetpack 'ap/vim-css-color', { 'for': [ 'css', 'scss' ]}
+Jetpack 'kchmck/vim-coffee-script', { 'for': [ 'coffee' ]}
+Jetpack 'leshill/vim-json', { 'for': [ 'json' ]}
+Jetpack 'mechatroner/rainbow_csv', { 'for': [ 'csv', 'tsv' ]}
+Jetpack 'stephpy/vim-yaml', { 'for': [ 'yaml' ]}
+
+" text-object selection, surround
+Jetpack 'machakann/vim-sandwich'
+
+" ruby development
+Jetpack 'AndrewRadev/splitjoin.vim', { 'for': [ 'ruby', 'rake', 'eruby', 'slim'] }
+Jetpack 'slim-template/vim-slim', { 'for': [ 'slim'] }
+Jetpack 'tpope/vim-rails'
+Jetpack 'vim-ruby/vim-ruby', { 'for': [ 'ruby', 'rake', 'eruby', 'slim'] }
+Jetpack 'vim-scripts/ruby-matchit', { 'for': [ 'ruby', 'rake'] }
+Jetpack 'tpope/vim-dispatch'
+
+" file manager
+Jetpack 'lambdalisue/fern.vim'
+Jetpack 'yuki-yano/fern-preview.vim'
+
+" jump between files
+Jetpack 'tpope/vim-projectionist'
+
+"colorscheme
+Jetpack 'bluz71/vim-nightfly-colors'
+Jetpack 'navarasu/onedark.nvim'
+Jetpack 'catppuccin/nvim'
+Jetpack 'olimorris/onedarkpro.nvim'
+Jetpack 'scottmckendry/cyberdream.nvim'
+
+" window
+Jetpack 'declancm/maximize.nvim'
+
+" misc
+Jetpack 'ippsio/clip_diff.vim'
 Jetpack 'monaqa/dial.nvim'
-if v:true
-  Jetpack 'scottmckendry/cyberdream.nvim'
-endif
+
+" markdown
+Jetpack 'preservim/vim-markdown'
+"Jetpack 'lukas-reineke/headlines.nvim'
+
 let s:available_pkg = stdpath('data') . '/' . 'site' . '/pack/jetpack/opt/available_packages.json'
 let s:available_pkg_text = filereadable(s:available_pkg) ? join(readfile(s:available_pkg)) : "{}"
 if sort(jetpack#names()) != sort(keys(json_decode(s:available_pkg_text)))
@@ -142,9 +120,7 @@ endif
 
 call jetpack#end()
 
-let s:rc_vim = split(glob(expand('<script>:h') . '/rc/vim/*.vim'))
-let s:rc_lua = split(glob(expand('<script>:h') . '/rc/lua/*.lua'))
-for s:rcfile_realpath in (s:rc_vim + s:rc_lua)
+for s:rcfile_realpath in (split(glob(expand('<script>:h') . '/rc/{vim,lua}/*.{vim,lua}')))
   if jetpack#tap(fnamemodify(s:rcfile_realpath, ':t:r'))
     execute 'runtime! rc/' . fnamemodify(s:rcfile_realpath, ':e') . '/' . fnamemodify(s:rcfile_realpath, ':t')
   else

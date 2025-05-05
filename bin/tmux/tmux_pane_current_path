@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-if [[ "$2" == "--current-window" ]]; then
-  tmux display-message -t "$1" -p "#{pane_current_path}" | sed -E "s|${HOME}|~|"
-else
-  tmux display-message -t "$1" -p "#{pane_current_path}" | sed -E "s|^.*/||"
-fi
+# if [[ "$2" == "--current-window" ]]; then
+#   tmux display-message -t "$1" -p "#{pane_current_path}" | sed -E "s|${HOME}|~|"
+# else
+#   tmux display-message -t "$1" -p "#{pane_current_path}" | sed -E "s|^.*/||"
+# fi
+tmux display-message -t "$1" -p "#{pane_current_path}" | sed -E "s|${HOME}|~|"

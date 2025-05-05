@@ -134,6 +134,15 @@ require("mason-lspconfig").setup_handlers({
       }
     }
   end,
+  ["markdown_oxide"] = function()
+    require("lspconfig").markdown_oxide.setup({
+      default_config = {
+        cmd = { "markdown-oxide" },
+        filetypes = { "markdown" },
+        --root_dir = util.root_pattern(".git", "."),
+      }
+    })
+  end,
   ["denols"] = function()
     require("lspconfig").denols.setup({
       capabilities = require("ddc_source_lsp").make_client_capabilities()
@@ -149,8 +158,21 @@ require("mason-lspconfig").setup_handlers({
     }
   end,
   ["rubocop"] = function()
-    require("lspconfig").rubocop.setup {}
+    require("lspconfig").rubocop.setup {
+      cmd = { "bundle", "exec", "rubocop", "--lsp" },
+      root_dir = require("lspconfig.util").root_pattern("Gemfile", ".git"),
+    }
   end,
+  ["bashls"] = function()
+    require("lspconfig").bashls.setup {
+      cmd = { "bundle", "exec", "rubocop", "--lsp" },
+      cmd = { "node", "--experimental-wasm-reftypes", vim.fn.stdpath("data") .. "/mason/packages/bash-language-server/node_modules/.bin/bash-language-server", "start" },
+    }
+  end,
+
+
+
+
 })
 
 -- Global mappings.
@@ -211,19 +233,38 @@ vim.api.nvim_create_autocmd('LspAttach', {
     -- ]]
   end,
 })
-vim.g.lsp_diagnostics_virtual_text_prefix = ""
--- カスタムハンドラの設定
-local function custom_diagnostics_handler(_, result, ctx, config)
-  for _, diagnostic in ipairs(result.diagnostics) do
-    --if diagnostic.source == "rubocop" and diagnostic.code ~= nil then
-    if diagnostic.code ~= nil then
-      diagnostic.message = "(" .. diagnostic.source .. ":" .. diagnostic.code .. ") " .. diagnostic.message
-    end
-  end
 
-  -- デフォルトのハンドラを呼び出して診断結果を表示
-  vim.lsp.diagnostic.on_publish_diagnostics(nil, result, ctx, config)
-end
-
--- ハンドラを上書き
-vim.lsp.handlers["textDocument/publishDiagnostics"] = custom_diagnostics_handler
+vim.diagnostic.enable(true)
+vim.diagnostic.config({
+  update_in_insert = true,
+  virtual_text = {
+    format = function(diagnostic)
+      return string.format(
+        "(source=%s,code=%s) %s",
+        diagnostic.source,
+        diagnostic.code,
+        diagnostic.message
+      )
+    end,
+  },
+  signs = {
+    text = {
+      [vim.diagnostic.severity.ERROR] = "!e",
+      [vim.diagnostic.severity.WARN] = "!w",
+      [vim.diagnostic.severity.INFO] = "!i",
+      [vim.diagnostic.severity.HINT] = "!h",
+    },
+    linehl = {
+      [vim.diagnostic.severity.ERROR] = "hl-DiagnosticSignError",
+      [vim.diagnostic.severity.WARN] = "hl-DiagnosticSignWarn",
+      [vim.diagnostic.severity.INFO] = "hl-DiagnosticSignInfo",
+      [vim.diagnostic.severity.HINT] = "hl-DiagnosticSignHint",
+    },
+    numhl = {
+      [vim.diagnostic.severity.ERROR] = "hl-DiagnosticSignError",
+      [vim.diagnostic.severity.WARN] = "hl-DiagnosticSignWarn",
+      [vim.diagnostic.severity.INFO] = "hl-DiagnosticSignInfo",
+      [vim.diagnostic.severity.HINT] = "hl-DiagnosticSignHint",
+    },
+  },
+})

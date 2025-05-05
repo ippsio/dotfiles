@@ -57,15 +57,15 @@ color stat-untracked   default default
 # diff old系(赤系)
 #----------------------
 color diff-del           205   default
-color diff-del-highlight 205   default standout
+color diff-del-highlight 124   white standout
 #color "-"             203     053
 #color " -"            203     053
 
 #----------------------
 # new系
 #----------------------
-color diff-add           014    default
-color diff-add-highlight 014    default standout
+color diff-add           033    default
+color diff-add-highlight 020    white standout
 # color "+"             227     default standout
 # color "+"             227     default standout
 
