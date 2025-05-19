@@ -42,10 +42,7 @@ augroup END
 
 augroup fileTypeIndent
   autocmd!
-  "autocmd BufNewFile,BufRead *.toml setlocal tabstop=2 softtabstop=2 shiftwidth=2
-  "autocmd BufNewFile,BufRead *.vim setlocal tabstop=2 softtabstop=2 shiftwidth=2
-  "autocmd BufNewFile,BufRead *.md setlocal tabstop=2 softtabstop=2 shiftwidth=2
-  autocmd FileType markdown setlocal tabstop=2 softtabstop=2 shiftwidth=2 foldenable foldmethod=syntax
+  autocmd FileType markdown setlocal tabstop=2 softtabstop=2 shiftwidth=2 indentexpr= foldenable foldmethod=syntax
   autocmd FileType vim setlocal indentexpr=
   " ある行をコメントアウトしたくて「#」を打った瞬間、vimが気を利かせてインデントを整える事がある。これが好きじゃないので止まってもらう。
   autocmd FileType yaml setlocal indentkeys=

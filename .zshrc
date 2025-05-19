@@ -29,3 +29,7 @@ source ~/dotfiles/zshrc/60_zsh_plugin_manage.zsh
 FINISH_TIME=$(epocms_c)
 printf "zshrc load finished (%dms).\n" $((FINISH_TIME - START_TIME))
 
+# NOTE: ターミナルのカラーテーマは各ターミナルの設定で実施しています。
+# https://github.com/dexpota/kitty-themes.git
+# ~/dotfiles/.config/kitty/kitty.conf 等。
+

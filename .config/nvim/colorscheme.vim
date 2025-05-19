@@ -1,5 +1,5 @@
 " colorscheme blue
-colorscheme cyberdream
+" colorscheme cyberdream
 " colorscheme darkblue
 " colorscheme default
 " colorscheme delek
@@ -14,7 +14,7 @@ colorscheme cyberdream
 " colorscheme murphy
 " colorscheme nightfly
 " colorscheme onedark
-" colorscheme catppuccin
+colorscheme catppuccin
 " colorscheme onelight
 " colorscheme pablo
 " colorscheme peachpuff

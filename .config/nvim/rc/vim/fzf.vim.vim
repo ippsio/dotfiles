@@ -14,7 +14,7 @@ let g:fzf_layout = {'window': { 'width': 0.95, 'height': 0.95 } }
 " let g:fzf_layout = { 'window': '10new' }
 
 " ジャンプリストをfzfで絞り込む
-"nnoremap <BS> :Jumps<CR>
+nnoremap <BS> :<C-u>Jumps<CR>
 
 " バッファ一覧をfzfで絞り込む
 nnoremap ; :Buffers<CR>
@@ -318,12 +318,14 @@ function! Jumps()
     \ { key, val -> extend(val, {'fname': getbufinfo(val.bufnr)[0].name }) })
 
   let jumptext = map(copy(jumps), { index, val -> 
-    \ (val.fname).':'.(val.lnum).':'.(val.col+1).': '.GetLine(val.bufnr, val.lnum) })
+    \ (substitute(val.fname, '^' . expand('$HOME'), '~', '')).':'.(val.lnum).':'.(val.col+1).': '.GetLine(val.bufnr, val.lnum) })
+  "let jumptext = map(copy(jumps), { index, val -> 
+  "  \ (val.fname).':'.(val.lnum).':'.(val.col+1).': '.GetLine(val.bufnr, val.lnum) })
 
   call fzf#run(fzf#vim#with_preview(fzf#wrap({
     \ 'source': jumptext,
     \ 'column': 1,
-    \ 'options': ['--delimiter', ':', '--bind', 'alt-a:select-all,alt-d:deselect-all', '--preview-window', '+{2}-/2'],
+    \ 'options': ['--delimiter', ':', '--bind', 'alt-a:select-all,alt-d:deselect-all,j:down,k:up', '--preview-window', '+{2}-/2'],
     \ 'sink': function('GoTo')})))
 endfunction
 

@@ -7,6 +7,7 @@
 " 同じく、@でrecordingした内容を再生することも邪魔なので無効化
 nnoremap q <Nop>
 xnoremap q <Nop>
+vnoremap q <Esc>
 nnoremap @ <Nop>
 xnoremap @ <Nop>
 

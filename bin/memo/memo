@@ -2,10 +2,7 @@
 source memo_functions
 
 mkdir_if_base_dir_not_exists
-cd "${BASE_DIR}" && (
-  mkdir_if_note_dir_not_exists
-  make_todays_note_if_not_exists
-  select_note
-  git_commit_note
-)
-
+mkdir_if_note_dir_not_exists
+make_todays_note_if_not_exists
+select_note
+git_commit_note

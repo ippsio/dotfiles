@@ -1,6 +1,8 @@
-#!/usr/bin/env bash
+#git_blame_colored!/usr/bin/env bash
+echo "\$1='$1', \$2='$2', \$3='$3', \$4='$4'"
+
 echo "$0"| home_as_tilde
-readonly HIGHLIGHT_STANDARD=5
+readonly HIGHLIGHT_STANDARD=20
 readonly ABBREV_HASH_LENGT=6
 readonly ARG_FILENAME="$1"
 readonly ARG_HIGHLIGHT_LINENO="${2:-1}"
@@ -14,8 +16,8 @@ fi
 # 対象ファイルの絶対パス
 file_realpath=$(realpath "${ARG_FILENAME}")
 filename_against_home=$(echo "${file_realpath}"| home_as_tilde)
-echo
-echo "ARG_FILENAME=${filename_against_home}";
+# echo
+# echo "ARG_FILENAME=${filename_against_home}";
 
 # git blame開始/終了行の取得。
 blame_lineno_from=$(( ARG_HIGHLIGHT_LINENO - HIGHLIGHT_STANDARD + 1))
@@ -29,8 +31,8 @@ fi
 # GITリポジトリの場合はその情報を表示します。
 git_reponame=$(git_reponame);
 if [[ -n "${git_reponame}" ]]; then
-  echo "GIT_REPO={${git_reponame}}";
-  echo "GIT_BRANCH={$(git branch --show-current 2>/dev/null)}";
+  # echo "GIT_REPO={${git_reponame}}";
+  # echo "GIT_BRANCH={$(git branch --show-current 2>/dev/null)}";
   file_realpath_dir=$(dirname "${file_realpath}")
   git_repo_dir=$(cd "$file_realpath_dir" || exit; git rev-parse --git-dir 2>/dev/null)
   git_repo_root_dir=$(dirname "${git_repo_dir}")
