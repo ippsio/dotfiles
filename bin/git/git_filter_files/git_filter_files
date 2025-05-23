@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+# 引数で指定された検索ワードを使ってgit grepを繰り返します。
+# すべての検索ワードを含むファイルだけを返します。
+filter() {
+  files=""
+  i=0
+  for w in $1; do
+    tmp=$(git grep --name-only -F "$w"| sort)
+    if [[ $i == 0 ]]; then
+      files="$tmp"
+    else
+      files=$(comm -12 <(echo "$files") <(echo "$tmp"))
+    fi
+    i=$(( i +  1))
+    shift
+  done
+  printf '%s' "${files}"
+}
+
+filtered=$(filter "$@")
+if [[ -z "$filtered" ]]; then
+  cnt=0
+else
+  cnt=$(echo "$filtered"| wc -l| tr -d ' ')
+fi
+echo "${filtered}"
+printf "%d results.\n" "$cnt"

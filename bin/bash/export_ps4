@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# set -x等した時の"+"印出力時に、情報を追加したり背景色を設定したりします。
+# (set -x; ls)
+export PS4=$'\e[100m$(eval printf "%.0s+" {1.."${#BASH_SOURCE[@]}"}) $(home_as_tilde "${BASH_SOURCE}(L${LINENO})"):\e[0m\n'

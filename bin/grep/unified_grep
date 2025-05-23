@@ -1,11 +1,13 @@
-#!/bin/bash
+#!/usr/bin/env bash
 if ( is_git_repo ); then
   git_grep "$@"
   untracked_files=$(git status --short| grep "^??"| awk '{ printf "%s ", $2 }')
-  if [[ ! -z "${untracked_files}" ]]; then
+  if [[ -n "${untracked_files}" ]]; then
     echo "==ripgrep==(Because git-untracked file found)"
+
+    # shellcheck disable=SC2086 # (Double quote to prevent globbing and word splitting.)
     rg_wrap "$@" -- ${untracked_files}
   fi
 else
-  rg_wrap "$@"
+   rg_wrap "$@"
 fi

@@ -1,24 +1,9 @@
 #!/bin/bash
-tput_cols=0
-if ( tput cols>/dev/null 2>&1 ); then
-  tput_cols=$(tput cols)
-  if [[ ${tput_cols} -gt 120 ]]; then
-    width=120
-  else
-    # NOTE: tig経由、かつターミナルの画面幅が狭い場合、
-    # 実際の画面幅と関係なく'80'等の固定値が返るかもしれません。
-    # 例えば実際には30位の画面幅の場合も固定値が返るかもしれません。
-    # 画面幅が広い分には正しく動作しそうです。
-    width=${tput_cols}
-  fi
-fi
-git_log_h_s=$(git log -1 --pretty="%h %s" "$1");
-if [[ -n "${git_log_h_s}" ]]; then
-  msg="HASH COPIED!\n=> ${git_log_h_s}\n";
-  printf '%s' "$(git rev-parse --short $1)"| pbcopy;
+h=$(git log -1 --pretty="%h" "$1");
+if [[ -n "${h}" ]]; then
+  printf "%s" "$h"| pbcopy
+  printf "HASH COPIED '%s' " "${h}";
 else
-  msg="NOTHING WAS COPIED!\n";
+  printf 'NOTHING WAS COPIED!'
 fi
-tmux popup -w${width} -h5 -E "printf '%s' '${git_log_h_s}'; read -n 1 -t 1;";
-printf '%s' "$msg"| tr "\n" " ";
 

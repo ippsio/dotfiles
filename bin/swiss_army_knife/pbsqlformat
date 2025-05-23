@@ -1,27 +1,16 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -eu
-use_own_rule=true
 
-# sqlformat で整形
-# 無い場合は brew install sqlparse 等でインストール
+# sqlformat で整形します（無い場合は brew install sqlparse 等でインストールして下さい）
 before_format="$(pbpaste)"
-after_format=$(echo "${before_format}"| sqlformat -r -k upper -)
+after_format=$(echo "${before_format}"| sqlformat --reindent --keywords=upper -)
 
-# 独自の整形処理(自分好みに整形してね)
-if ( ${use_own_rule} ); then
-  IFS=$'\n'
-  after_format=$(for line in $(echo "${after_format}"); do
-    line=$(echo "${line}"| sed -E 's/^[ ]+//')
+# 気に入らない部分を自分で再整形します（行頭の空白は削除）
+after_format=$(echo "${after_format}"| perl -pe "s/^[ ]+//g")
 
-    # 行末がカンマなら この行は改行しない。
-    [[ "${line: -1}" == "," ]] && printf "%s " "${line}" || printf "%s\n" "${line}";
-  done)
-fi
+# 気に入らない部分を自分で再整形します（行末がカンマなら、その行の改行は削除）
+after_format=$(echo "${after_format}"| perl -pe "s/,[\r\n]+/, /g")
 
 # 結果出力
-# printf "[before]\n%s\n---\n[after]\n%s\n" "${before_format}" "${after_format}"
 printf "%s\n" "${after_format}"
-
-# 結果をクリップボードにコピー
-# printf "%s" "${after_format}"| pbcopy
 

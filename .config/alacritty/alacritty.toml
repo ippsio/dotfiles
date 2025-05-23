@@ -24,12 +24,27 @@ foreground = "#c7c7c7"
 
 [font]
 size = 20
-offset = {x=0, y=-2}
+offset = {x=0, y=-1}
 #normal = {family = "Noto Mono for Powerline"}
 #normal = {family = "JetBrainsMono Nerd Font Mono"}
 #normal = {family = "Source code Pro for Powerline"}
 #normal = {family = "Inconsolata-g for Powerline"}
-normal = {family = "Inconsolata-dz for Powerline"}
+#normal = {family = "Inconsolata-dz for Powerline"}
+#normal = {family = "InconsolataDz Nerd Font"}
+#normal = {family = "NotoMono Nerd Font"}
+#normal = {family = "FiraCode Nerd Font Mono"}
+normal = {family = "InconsolataGo Nerd Font Mono"}
+#normal = {family = "FantasqueSansM Nerd Font Mono"}
+#normal = {family = "GoMono Nerd Font Mono"}
+#normal = {family = "CaskaydiaCove Nerd Font Mono"}
+#normal = {family = "Hack Nerd Font Mono"}
+#normal = {family = "RobotoMono Nerd Font Mono"}
+#normal = {family = "VictorMono Nerd Font Mono"}
+#normal = {family = "AurulentSansM Nerd Font Mono"}
+#normal = {family = "Cousine Nerd Font Mono"}
+#normal = {family = "DroidSansM Nerd Font Mono"}
+
+
 
 [[keyboard.bindings]]
 key = "F11"
@@ -44,11 +59,36 @@ chars = "\u0014N" # これは<ctrl-t>N
 key = "F12"
 chars = "\u0014z" # これは<ctrl-t>z
 
-[shell]
+[[keyboard.bindings]]
+key = "w"
+mods = "Command"
+chars = "" # Cmd+wの無効化(うっかりAlacrittyを閉じてほしくない その1)
+
+[[keyboard.bindings]]
+key = "q"
+mods = "Command"
+chars = "" # Cmd+qの無効化(うっかりAlacrittyを閉じてほしくない その2)
+
+[[keyboard.bindings]]
+key = "m"
+mods = "Command"
+chars = "" # Cmd+mの無効化(うっかり最小化しないでほしい)
+
+[[keyboard.bindings]]
+key = "t"
+mods = "Command"
+chars = "" # Cmd+mの無効化(うっかりタブを開かないでほしい)
+
+[[keyboard.bindings]]
+key = "n"
+mods = "Command"
+chars = "" # Cmd+mの無効化(うっかり新規ウインドウを開かないでほしい)
+
+[terminal.shell]
 args = ["-l"]
 program = "/opt/homebrew/bin/zsh"
 
 [window]
 decorations = "full"
-opacity = 0.8
+opacity = 1.0
 

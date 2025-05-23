@@ -1,3 +1,6 @@
+zle -N triggered_by_tab
+bindkey "^I" triggered_by_tab
+
 # TAB(=CTRL+I)補完
 function triggered_by_tab() {
   # Directory completion

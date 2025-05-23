@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+HEADER="X-goog-api-key: ${GOOGLE_CLOUD_DAILY_API_API_KEY}"
+URL="https://www.googleapis.com/youtube/v3/videos?part=snippet&hl=ja&id=${1}"
+JQ_QUERY_TEMPLATE=$(cat <<EOF
+id: \(.id)
+channelTitle: \(.snippet.channelTitle)
+publishedAt: \(.snippet.publishedAt)
+title: \(.snippet.localized.title // .snippet.title)
+description: \(.snippet.localized.description // .snippet.description)
+EOF
+)
+curl -s -H"$HEADER" "$URL"| jq -r '.items[]| "'"${JQ_QUERY_TEMPLATE}"'"'

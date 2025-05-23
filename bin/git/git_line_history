@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+file="$1"
+lineno_lookup="$2"
+verbose="$3"
+script_dir=$(dirname "$0")
+source "$script_dir/func/func_git_line_history_lookup"
+
+commits=$(set -x; git log --date=iso --pretty="%h" --full-history --simplify-merges --max-count=1000 -- "$file")
+if [[ -n "$verbose" ]]; then
+  echo "$commits"
+fi
+commits_count=$(echo "$commits"| wc -l| tr -d ' ')
+for i in $(seq 1 "$commits_count"); do
+  commit_hash_newer=$(echo "$commits"| awk -v v_i="$i" '{ if (NR == v_i+0) { print $0 } }')
+  commit_hash_older=$(echo "$commits"| awk -v v_i="$i" '{ if (NR == v_i+1) { print $0 } }')
+  if [[ -z "$commit_hash_newer" || -z "$commit_hash_older" ]]; then
+    exit 0
+  fi
+
+  command_eval="lookup $commit_hash_newer $commit_hash_older $file $lineno_lookup"
+  printf "%s" "$command_eval"
+  result_lookup=$(eval "$command_eval")
+  tail_n1=$(echo "$result_lookup"| tail -n 1)
+  if [[ "${tail_n1::9}" == "NOT FOUND" ]]; then
+    echo ". $tail_n1"
+    exit 0
+  fi
+
+  lineno_lookup_next=$(echo "$tail_n1"| awk -F ',' '{ print $1 }')
+  printf ". newer:%s(L%d)->older:%s(L%d)\n" "$commit_hash_newer" "$lineno_lookup" "$commit_hash_older" "$lineno_lookup_next"
+  if [[ "$verbose" == "debug" || "$tail_n1" =~ [0-9]+,different ]]; then
+    commit_older=$(git log --date=iso --pretty="%s %ad %an %s" -1 "$commit_hash_older")
+    commit_newer=$(git log --date=iso --pretty="%s %ad %an %s" -1 "$commit_hash_newer")
+    echo "<difference_found>-------------------------------------------------------------"
+    printf "OLDER: %s\nNEWER: %s\n\n" "$commit_older" "$commit_newer"
+    echo "$result_lookup"
+    echo "-------------------------------------------------------------</difference_found>"
+  fi
+
+  lineno_lookup="${lineno_lookup_next//#/}"
+done

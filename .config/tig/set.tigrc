@@ -6,15 +6,7 @@ set diff-highlight = true
 # ======================
 # 各viewの表示
 # ======================
-# set main-view   = line-number:yes,interval=1 id:yes,color date author commit-title:graph=yes,refs=yes
-# set blame-view  = date author id:yes,color line-number:yes,interval=1 text
-# set pager-view  = line-number:yes,interval=1 text
-# set stage-view  = line-number:yes,interval=1 text
-# set log-view    = line-number:yes,interval=1 text
-# set blob-view   = line-number:yes,interval=1 text
-# set diff-view   = line-number:yes,interval=1 text:yes,commit-title-overflow=no
-# set grep-view   = line-number:yes,interval=1 line-number:yes,interval=1 file-name line-number:yes,interval=1 text:yes,commit-title-overflow=no
-set main-view   = line-number:yes,interval=1 id:yes,color date author commit-title:graph=yes,refs=yes
+set main-view   = line-number:yes,interval=1 id:yes,color date author:width=15 commit-title:graph=yes,refs=yes
 set blame-view  = date author id:yes,color line-number:yes,interval=1 text
 set pager-view  = line-number:yes,interval=1 text
 set stage-view  = line-number:yes,interval=1 text
@@ -36,15 +28,16 @@ set blame-view-date-format = "%Y/%m/%d %H:%M(%a)"
 # diffビュー
 # ======================
 # diffの前後の見える範囲をデフォルトよりちょっとだけ広げる
-set diff-context = 7
+#set diff-context = 7
 
 # ======================
 # ビューの分割
 # ======================
 # ビューを水平方向あるいは垂直方向に分割するかどうか
-set vertical-split = no
+#set vertical-split = no
+set vertical-split = yes
 # Width of the right-most view in a vertically split display
-set split-view-width = 80%
+set split-view-width = 70%
 # 水平方向の分割表示時の下のビューの高さ
 set split-view-height = 80%
 

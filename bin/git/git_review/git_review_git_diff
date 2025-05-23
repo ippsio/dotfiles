@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+home_as_tilde "$0"| xargs -I {} echo "'{}' called"  1>&2
+source git_review_core "$@"
+{
+  set -x
+  export GIT_MERGE_BASE=${merge_base_hash}
+  git --no-pager diff "${merge_base_hash}"
+}| nvim -R

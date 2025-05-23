@@ -1,4 +1,7 @@
 #!/usr/bin/env zsh
+zle -N zle_ctrl_f
+bindkey "^F" zle_ctrl_f
+
 zle_ctrl_f() {
   BUFFER_WAS=${BUFFER}
   ARG=""

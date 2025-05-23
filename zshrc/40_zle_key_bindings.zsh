@@ -1,4 +1,6 @@
 #!/usr/bin/env zsh
+# NOTE: エスケープシーケンスは cat -vで調べられるよ。
+
 # emacs like
 bindkey -e
 
@@ -12,41 +14,32 @@ bindkey " " execute_zle_space
 
 # ctrl-i(=tab)
 source ~/dotfiles/zshrc/42_zle_tab.zsh
-zle -N triggered_by_tab
-bindkey "^I" triggered_by_tab
-
 # ctrl-d(=del)で前方削除
 bindkey "^[[3~" delete-char
-
 # ctrl-f
 source ~/dotfiles/zshrc/43_zle_ctrl_f.zsh
-zle -N zle_ctrl_f
-bindkey "^F" zle_ctrl_f
-
 # ctrl-g
 source ~/dotfiles/zshrc/43_zle_ctrl_g.zsh
-zle -N zle_ctrl_g
-bindkey "^G" zle_ctrl_g
 
 # zle_space関数終了後、一定時間(ms)はキーが入力を破棄する。
 # 早くキー操作しすぎた場合、コマンドプロンプトに期待しないキー入力が入る。この入力を破棄する。
 readonly KEY_INPUT_THROUGH_MILLIS=100
 zle_through_or_self_insert() {
-  if [[ $(( $(epocms) - ${zle_space_timer} )) -gt $KEY_INPUT_THROUGH_MILLIS ]]; then
+  difference=$(( t - zle_space_timer ))
+  if [[ ${difference} -ge $KEY_INPUT_THROUGH_MILLIS ]]; then
+    zle self-insert
+    return 0
+  elif [[ ${difference} -lt $(( 10 * 1000 )) ]]; then
+    # 端末の時計を過去に戻ったりすると、キー入力が一切通らなくなることがあった。
+    # 明らかすぎる時間のズレがあればこのブロックに到達し、キー入力が受け付けられるようにする。
+    zle_space_timer=$t
     zle self-insert
     return 0
   fi
 }
-
 zle -N zle_through_or_self_insert
-# keysの結果＝printf "$(printf '\\x%x ' {33..127}) "
-keys="!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_\`abcdefghijklmnopqrstuvwxyz{|}~"
-for ((i=0; i<${#keys}; i++)); do
-  # ハイフンはエスケープが必要
-  # bindkey "-" zle_through_or_self_insert #=> zle "zle_through_or_self_insert" undefined-key
-  # bindkey "\-" zle_through_or_self_insert #=> OK
-  __key="${keys:${i}:1}"
-  bindkey "${__key/-/\-}" zle_through_or_self_insert
+for key in $(echo $(printf '"\\x%x" ' {33..127})); do
+  bindkey "\${key}" zle_through_or_self_insert
 done
 
 # Shift+<Left> で親階層のフォルダに移動
@@ -55,6 +48,17 @@ zle -N execute_zle_shift_left
 bindkey "^[[1;2D" execute_zle_shift_left
 
 source ~/dotfiles/zshrc/44_zle_enter.zsh
-zle -N execute_zle_enter
-bindkey '^M' execute_zle_enter
+
+# f1で ~/dotfiles/bin配下に存在するコマンドの候補をFZFで選択するインタフェースを提供する。
+zle_f1() {
+  BUFFER=$( (rg --follow --files ~/dotfiles/bin\
+    | awk '{ ABSOLUTE=$0; gsub(/^.*\//, "", $1); BASENAME=$0; print BASENAME"\t("ABSOLUTE")" }'| column -t\
+    | (fzf --query "^${BUFFER}" --nth 1 || printf "%s" "${BUFFER}")\
+    | awk '{ printf $1 }' )
+  )
+  zle end-of-line
+  return 0
+}
+zle -N zle_f1
+bindkey "^[OP" zle_f1
 

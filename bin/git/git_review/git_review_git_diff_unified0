@@ -1,0 +1,3 @@
+#!/bin/bash
+source ~/dotfiles/bin/git/git_review_core || exit $?
+(set -x; export GIT_MERGE_BASE=${merge_base_hash}; git --no-pager diff --unified=0 ${merge_base_hash}| nvim -R)

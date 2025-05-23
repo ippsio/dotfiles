@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+CACHE_DIR=~/.cache/youtube_transcrip/a/b/
+JQ_TEMPLATE='.[][]|= . +'\
+'{'\
+'"text": (.text | gsub("\n"; " ")),'\
+'"start_m": "\(.start / 60| floor| if . < 10 then "0\(.|tostring)" else tostring end)",'\
+'"start_s": "\(.start % 60| floor| if . < 10 then "0\(.|tostring)" else tostring end)",'\
+'}| .[][]'\
+'| "\(.start_m):\(.start_s)\t\(.text)"'
+
+f() {
+  get_youtube_video_info "${1}"
+  echo "---"
+  echo
+  youtube_transcript_api "${1}" --languages "${2}" --format json| jq -r "${JQ_TEMPLATE}"
+  for _i in {1..10}; do echo; done
+}
+
+if ( ! type "youtube_transcript_api">/dev/null 2>&1 ); then
+  pip install youtube-transcript-api
+fi
+
+if [[ ! -d "$CACHE_DIR" ]]; then
+  mkdir -p "$CACHE_DIR"
+fi
+
+if [[ ! -e "$CACHE_DIR/${1}_en.txt" || ! -e "$CACHE_DIR/${1}_ja.txt" ]]; then
+  f "$1" en > "$CACHE_DIR/${1}_en.txt"
+  f "$1" ja > "$CACHE_DIR/${1}_ja.txt"
+fi
+
+nvim -d "$CACHE_DIR/${1}_en.txt" "$CACHE_DIR/${1}_ja.txt"

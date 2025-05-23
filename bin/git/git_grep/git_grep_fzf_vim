@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+prompt=$(echo "$0"| home_as_tilde)
+source _prepare.sh
+eval "${GIT_GREP_CMD_START}"| fzf \
+  -m --print-query --ansi --delimiter='\t' --tabstop=2 --prompt="\$1='$1'"\
+  --prompt="$prompt " \
+  --info=inline \
+  --no-hscroll \
+  --style=minimal \
+  --bind "start:reload:$GIT_GREP_CMD_START"\
+  --bind "ctrl-/:toggle-preview" \
+  --bind "ctrl-_:toggle-preview" \
+  --bind "ctrl-b:page-up" \
+  --bind "ctrl-c:print-query" \
+  --bind "ctrl-f:page-down" \
+  --bind "ctrl-p:execute(git_pull_request_open_by_file_line {2} {3})" \
+  --bind "tab:execute(git_pull_request_show_by_file_line {2} {3})" \
+  --bind="enter:execute(nvim {2} +{3} < /dev/tty > /dev/tty)" \
+  --preview-window 'bottom,60%,border-bottom,+{2}+3/3,~3' \
+  --preview="git_blame_colored {2} {3} {q}"
+echo "---"
+echo "GIT_GREP_CMD=$GIT_GREP_CMD \"$1\""

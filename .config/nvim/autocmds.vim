@@ -3,6 +3,62 @@ augroup vim-start
   autocmd VimEnter * silent! clearjumps
 augroup END
 
+augroup markdown_indent
+  autocmd!
+  autocmd FileType markdown setlocal tabstop=2
+  autocmd FileType markdown setlocal softtabstop=2
+  autocmd FileType markdown setlocal shiftwidth=2
+  autocmd FileType markdown setlocal indentexpr=
+augroup END
+let g:in_codeblock = 0
+function! MyMarkdownFoldExpr()
+  let line = getline(v:lnum)
+
+  if l:line =~ '^```'
+    let g:in_codeblock = !g:in_codeblock
+    return '='
+  elseif g:in_codeblock
+    return '='
+  elseif line =~ '^#\{1,2} '
+    " # とか ## で始まる行はfoldlevelを一律に1ってことにする。
+    " こういうパートは初期状態で折りたたまれないようにする(foldlevel=1)
+    return '>1'
+  elseif line =~ '^#\{3,} '
+    " ### とか #### とか ##### とかで始まる行はfoldlevelを一律に2ってことにする。
+    " こういうパートは初期状態で折りたたまれるようにする(foldlevel=1)
+    " また、### " の深さによらず折りたたまれ過ぎないようにする。見通しを良くする。何度も折りたたみを開くのは苦痛。
+    return '>2'
+  else
+    return '='
+  endif
+endfunction
+
+function! MyMarkdownFoldText()
+  let heading = substitute(getline(v:foldstart), '^#\+', '', '')
+  let level = strlen(matchstr(getline(v:foldstart), '^#\+'))
+  let indent = repeat('#', level)
+  let rows = ' (' . string(v:foldend-v:foldstart+1) . '行) '
+  let title = substitute(heading, '^ ', ' ', '')
+  let fill = repeat('-', winwidth(0) - strwidth(indent . title) - 4)
+  return indent . title . rows . ' ' . fill
+endfunction
+
+augroup markdown_folds
+  autocmd!
+  autocmd FileType markdown setlocal tabstop=2
+  autocmd FileType markdown setlocal softtabstop=2
+  autocmd FileType markdown setlocal shiftwidth=2
+  autocmd FileType markdown setlocal indentexpr=
+  autocmd FileType markdown setlocal foldopen=block,mark,percent,quickfix,search,tag,undo
+  autocmd FileType markdown setlocal foldmethod=expr
+  autocmd FileType markdown setlocal foldexpr=MyMarkdownFoldExpr()
+  autocmd FileType markdown setlocal foldtext=MyMarkdownFoldText()
+  autocmd FileType markdown setlocal foldlevel=1
+  autocmd FileType markdown setlocal foldenable
+  autocmd FileType markdown setlocal foldminlines=0
+  autocmd FileType markdown setlocal foldcolumn=1
+augroup END
+
 """augroup QfAutoCommands
 """  autocmd!
 """  " vim上でのgrep, vimgrep, rg(ripgrep)の結果を、即quickfixウインドウに表示する
@@ -23,7 +79,7 @@ augroup vimrc-highlight
   autocmd Syntax conf if 10000 < line('$') | syntax sync minlines=100 | endif
 
   " .slimなファイルのファイルタイプがslimであると、vimが気づいてくれない時があったので、その対策。
-  autocmd BufNewFile,BufRead *.slim setlocal filetype=slim
+  " autocmd BufNewFile,BufRead *.slim setlocal filetype=slim
 
   " .coffeeなファイルのファイルタイプがcoffeeであると、vimが気づいてくれない時があったので、その対策。
   autocmd BufNewFile,BufRead *.coffee setlocal filetype=coffee
@@ -35,21 +91,22 @@ augroup vimrc-highlight
   " .tomlなファイルのファイルタイプはvimとして扱った方が個人的にシンタックスハイライトが好み
   "autocmd BufNewFile,BufRead *.toml setlocal filetype=vim
 
-  " ft=*.rb,pythonなら、コード規約遵守のための縦線を引く(120桁目位に）。
-  " autocmd BufRead,BufEnter,BufWinEnter * let &colorcolumn=join(range(0, 0), ",")
-  autocmd BufRead,BufEnter,BufWinEnter *.rb let &colorcolumn=join(range(121, 121), ",")
-  autocmd BufRead,BufEnter,BufWinEnter *.rake let &colorcolumn=join(range(121, 121), ",")
-  autocmd BufRead,BufEnter,BufWinEnter *.py let &colorcolumn=join(range(121, 121), ",")
+  " ft=*.rb,pythonなら、コード規約遵守のための縦線を引く(140桁目位に）。
+  autocmd BufRead,BufEnter,BufWinEnter *.rb,*.rake,*.py let &colorcolumn=join(range(141, 141), ",")
 
 augroup END
 
 augroup fileTypeIndent
   autocmd!
-  autocmd BufNewFile,BufRead *.toml setlocal tabstop=2 softtabstop=2 shiftwidth=2
-  autocmd BufNewFile,BufRead *.vim setlocal tabstop=2 softtabstop=2 shiftwidth=2
+
   autocmd FileType vim setlocal indentexpr=
   " ある行をコメントアウトしたくて「#」を打った瞬間、vimが気を利かせてインデントを整える事がある。これが好きじゃないので止まってもらう。
   autocmd FileType yaml setlocal indentkeys=
+augroup END
+
+augroup windowResize
+  autocmd!
+  autocmd VimResized * wincmd =
 augroup END
 
 """augroup aufugitive
@@ -74,6 +131,11 @@ augroup FileTypeRuby
   " validate? のような末尾の?も、区切り文字ではなく単語として扱ってもらう。
   au FileType ruby setlocal iskeyword+=!
 
+  au FileType ruby setlocal 
+    \ foldmethod=indent
+    \ foldlevel=99
+    \ foldcolumn=9
+    \ foldenable
   " これは無いほうが使いやすかったのでコメントアウト
   " " hoge.map(&:fuga) の中身の &:fuga を、単語として扱ってもらう。
   " " au FileType ruby setlocal iskeyword+=:
@@ -92,6 +154,11 @@ augroup FileTypeRuby
   " id="hoge">
   " </p>
   au FileType eruby setlocal indentexpr=
+augroup END
+
+augroup FileTypeGitCommit
+  autocmd!
+  au FileType gitcommit setlocal tw=7
 augroup END
 
 augroup AutocmdEventVisualize

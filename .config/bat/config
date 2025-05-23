@@ -46,5 +46,6 @@
 #--map-syntax "*.ino:C++"
 #--map-syntax ".ignore:Git Ignore"
 --wrap never
+--terminal-width -100
 --color=always
 --style=numbers

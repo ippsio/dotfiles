@@ -3,17 +3,28 @@
 # Switch between Ripgrep mode and fzf filtering mode (CTRL-T)
 rm -f /tmp/rg-fzf-{r,f}
 RG_PREFIX="rg --column --line-number --no-heading --color=always --smart-case "
+export _MODE1="(*1.RG)<-->  2.FZF "
+export _MODE2="  1.RG <-->(*2.FZF) "
+
+TRANSFORM2=$(cat << 'EOF'
+TEMPLATE="%s(change)+change-prompt(%s)+%s-search+transform-query:echo \{q} > %s; cat %s"
+if [[ "$FZF_PROMPT" == "$_MODE2" ]]; then
+  printf "$TEMPLATE" rebind "$_MODE1" disable /tmp/rg-fzf-f /tmp/rg-fzf-r
+elif [[ "$FZF_PROMPT" == "$_MODE1" ]]; then
+  printf "$TEMPLATE" unbind "$_MODE2" enable /tmp/rg-fzf-r /tmp/rg-fzf-f
+fi
+EOF
+)
 INITIAL_QUERY="${*:-}"
 : | fzf --ansi --disabled --query "$INITIAL_QUERY" \
+    --info inline \
+    --delimiter : \
+    --prompt "$_MODE1" \
+    --header 'TAB: switch mode' \
+    --color "hl:-1:underline,hl+:-1:underline:reverse" \
     --bind "start:reload:$RG_PREFIX {q}" \
     --bind "change:reload:sleep 0.1; $RG_PREFIX {q} || true" \
-    --bind 'ctrl-f:transform:[[ ! $FZF_PROMPT =~ ripgrep ]] &&
-      echo "rebind(change)+change-prompt(1. ripgrep> )+disable-search+transform-query:echo \{q} > /tmp/rg-fzf-f; cat /tmp/rg-fzf-r" ||
-      echo "unbind(change)+change-prompt(2. fzf> )+enable-search+transform-query:echo \{q} > /tmp/rg-fzf-r; cat /tmp/rg-fzf-f"' \
-    --color "hl:-1:underline,hl+:-1:underline:reverse" \
-    --prompt '1. ripgrep> ' \
-    --delimiter : \
-    --header 'CTRL-S: Switch between ripgrep/fzf' \
+    --bind "tab:transform:${TRANSFORM2}" \
+    --bind 'enter:become(nvim {1} +{2})' \
     --preview 'bat --color=always {1} --highlight-line {2}' \
-    --preview-window 'up,60%,border-bottom,+{2}+3/3,~3' \
-    --bind 'enter:become(nvim {1} +{2})'
+    --preview-window 'up,60%,border-bottom,+{2}+3/3,~3'
