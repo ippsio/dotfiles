@@ -15,4 +15,5 @@ for dir in $(find ~/dotfiles/bin -type d); do
 done
 diff_highlight_path=$(find -s /opt/homebrew/Cellar/git/*/share/git-core/contrib/diff-highlight -depth 0)
 export PATH=${diff_highlight_path}:${PATH}
-export IRBRC=~/.irbrc2
+export IRBRC=~/.irbrc
+export FZF_DEFAULT_OPTS_FILE=~/.config/fzf/.fzfrc

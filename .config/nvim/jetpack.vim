@@ -38,8 +38,8 @@ Jetpack 'Shougo/pum.vim'
 " lsp
 " lsp> config
 Jetpack 'neovim/nvim-lspconfig'
-Jetpack 'williamboman/mason-lspconfig.nvim'
-Jetpack 'williamboman/mason.nvim'
+Jetpack 'williamboman/mason-lspconfig.nvim', {'tag': 'v1.0.0'}
+Jetpack 'williamboman/mason.nvim', {'tag': 'v1.0.0'}
 Jetpack 'ray-x/lsp_signature.nvim'
 " lsp> progress message
 Jetpack 'j-hui/fidget.nvim'
@@ -109,7 +109,7 @@ Jetpack 'ippsio/clip_diff.vim'
 Jetpack 'monaqa/dial.nvim'
 
 " markdown
-Jetpack 'preservim/vim-markdown'
+"Jetpack 'preservim/vim-markdown'
 "Jetpack 'lukas-reineke/headlines.nvim'
 
 let s:available_pkg = stdpath('data') . '/' . 'site' . '/pack/jetpack/opt/available_packages.json'

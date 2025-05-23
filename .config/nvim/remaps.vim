@@ -16,9 +16,14 @@ xnoremap @ <Nop>
 nnoremap <F1> <Nop>
 inoremap <F1> <Nop>
 
+nnoremap <F5> :e<CR>
+
 " [ブロック選択]
 " vを二回で行末まで選択
 vnoremap v $h
+
+nnoremap <expr> i foldlevel('.') > 0 && foldclosed('.') != -1 ? 'za' : 'i'
+nnoremap <expr> - foldlevel('.') > 0 ? 'za' : '-'
 
 " [ハイライト]
 " space2度押しでカーソル下の文字をハイライト。

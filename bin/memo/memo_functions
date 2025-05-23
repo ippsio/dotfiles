@@ -38,6 +38,7 @@ make_todays_note_if_not_exists() {
 }
 select_note() {
   fzf --ansi --info=inline --prompt="(${KIND})"\
+      --style=minimal \
       --bind "start:reload:(${FZF_START})"\
       --bind "j:down" --bind "k:up"  --bind "q:abort"\
       --bind "enter:execute(${NVIM_CMD})"\

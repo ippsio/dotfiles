@@ -109,18 +109,40 @@ command! -bang -nargs=* Grep
   \   'options': '-m'
   \   . ' --delimiter="\t" '
   \   . ' --tabstop=3 '
+  \   . ' --style=minimal '
   \   . ' --ansi '
   \   . ' --prompt "fzf.vim.vim Grep (' . <q-args> . ') > " '
   \   . ' --info=inline '
   \   . ' --layout reverse '
   \   . ' --with-nth=1.. '
   \   . ' --nth=1.. '
+  \   . ' --highlight-line '
+  \   . ' --no-hscroll '
   \   . ' --bind "tab:execute(git_pull_request_open_by_file_line {2} {3})" '
   \   . ' --bind "ctrl-_:toggle-preview" '
   \   . ' --preview "git_blame_colored {2} {3} ' . shellescape(<q-args>) . ' {q}"'
-  \   . ' --preview-window="wrap:down:75%" ',
+  \   . ' --preview-window "bottom,60%,border-bottom,+{2}+3/3,~3" ',
   \   'window': { 'width': 0.95, 'height': 0.99 }
   \   })
+
+" 指定された文字をすべて含むファイルの一覧を取得します。
+command! -bang -nargs=* Gff
+  \ call fzf#run(fzf#wrap({
+  \   'source': 'git_filter_files <q-args>',
+  \   'sink':   function('s:open_file'),
+  \   'options': '--disabled '
+  \   . ' --query "' . <q-args> . ' " '
+  \   . ' --info=inline '
+  \   . ' --prompt "fzf.vim.vim Gff > " '
+  \   . ' --ansi '
+  \   . ' --bind "change:reload:git_filter_files {q}||true" '
+  \   . ' --preview "git_blame_colored {}" '
+  \   . ' --preview-window="wrap:right:75%" ',
+  \ }))
+
+function! s:open_file(file) abort
+  execute 'edit' fnameescape(a:file)
+endfunction
 
 " ファイルの内容をgit-grep、及びripgrepで検索して、さらにfzfで絞り込む
 command! -bang -nargs=* GitDeepblame

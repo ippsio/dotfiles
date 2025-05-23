@@ -7,8 +7,7 @@ require("mason-lspconfig").setup({
     "lua_ls",
     "pylsp",
     "solargraph",
-    "rubocop",
-    "ts_ls",
+    --"rubocop",
     "sqlls",
     "jdtls"
   }
@@ -134,15 +133,6 @@ require("mason-lspconfig").setup_handlers({
       }
     }
   end,
-  ["markdown_oxide"] = function()
-    require("lspconfig").markdown_oxide.setup({
-      default_config = {
-        cmd = { "markdown-oxide" },
-        filetypes = { "markdown" },
-        --root_dir = util.root_pattern(".git", "."),
-      }
-    })
-  end,
   ["denols"] = function()
     require("lspconfig").denols.setup({
       capabilities = require("ddc_source_lsp").make_client_capabilities()
@@ -157,19 +147,26 @@ require("mason-lspconfig").setup_handlers({
       }
     }
   end,
-  ["rubocop"] = function()
-    require("lspconfig").rubocop.setup {
-      cmd = { "bundle", "exec", "rubocop", "--lsp" },
-      root_dir = require("lspconfig.util").root_pattern("Gemfile", ".git"),
-    }
-  end,
+  --["rubocop"] = function()
+  --  require("lspconfig").rubocop.setup {
+  --    cmd = { "bundle", "exec", "rubocop", "--lsp" },
+  --    root_dir = require("lspconfig.util").root_pattern("Gemfile", ".git"),
+  --  }
+  --end,
   ["bashls"] = function()
     require("lspconfig").bashls.setup {
-      cmd = { "bundle", "exec", "rubocop", "--lsp" },
       cmd = { "node", "--experimental-wasm-reftypes", vim.fn.stdpath("data") .. "/mason/packages/bash-language-server/node_modules/.bin/bash-language-server", "start" },
     }
   end,
-
+  -- ["markdown_oxide"] = function()
+  --   require("lspconfig").markdown_oxide.setup({
+  --     default_config = {
+  --       cmd = { "markdown-oxide" },
+  --       filetypes = { "markdown" },
+  --       --root_dir = util.root_pattern(".git", "."),
+  --     }
+  --   })
+  -- end,
 
 
 
