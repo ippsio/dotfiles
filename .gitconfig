@@ -132,7 +132,5 @@
 [user]
 	name = 
 	email = 
-[commit]
-	template = ~/.stCommitMsg
 [merge]
   # ff = false

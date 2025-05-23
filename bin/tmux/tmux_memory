@@ -1,6 +1,6 @@
 #!/bin/bash
 
-memory_info_str=$(~/dotfiles/bin/memory_info)
+memory_info_str=$(~/dotfiles/bin/statistics/memory_info)
 usage=$(      echo "${memory_info_str}"| grep "usage:"      | awk -F ':' '{ print $2 }')
 application=$(echo "${memory_info_str}"| grep "application:"| awk -F ':' '{ print $2 }')
 wired=$(      echo "${memory_info_str}"| grep "wired:"      | awk -F ':' '{ print $2 }')
@@ -10,9 +10,12 @@ used=$(       echo "${memory_info_str}"| grep "used:"       | awk -F ':' '{ prin
 printf "#[fg=colour253,bg=colour240]"
 printf "RAM% 2.1fG" "${used}"
 
-# 画面幅が一定以上ならusedメモリの詳細も表示
-if [[ $(~/dotfiles/bin/tmux/tmux_client_width) -gt 160 ]]; then
-  printf "#[fg=colour241,bg=colour236]"
-  printf "(${usage}%%|app%.1f|wir%.1f|cmp%.1f)" "${application}" "${wired}" "${compressed}"
+# trueにするとメモリの詳細を表示する
+if false; then
+  # 画面幅が一定以上ならusedメモリの詳細も表示
+  if [[ $(~/dotfiles/bin/tmux/tmux_client_width) -gt 160 ]]; then
+    printf "#[fg=colour241,bg=colour236]"
+    printf "(${usage}%%|app%.1f|wir%.1f|cmp%.1f)" "${application}" "${wired}" "${compressed}"
+  fi
 fi
 printf "#[default]"

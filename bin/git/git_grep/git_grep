@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+source _prepare.sh
+eval "${GIT_GREP_CMD_START}"
+

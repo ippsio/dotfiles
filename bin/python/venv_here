@@ -1,21 +1,32 @@
 #!/bin/bash
-[[ -e .envrc ]] && echo ".envrc exists." && exit 1
-if [[ ! -d .venv ]]; then
-  (set -x; python3 -m venv .venv)
-else
-  echo ".venv exists."
+if [[ ! -e .python-version ]]; then
+  pyenv versions
+  python_version=$(pyenv versions| grep -E '^\*'| awk '{ print $2 }')
+  if [[ -z "$python_version" ]]; then
+    echo "decide python version first."
+    exit 1
+  fi
+  (set -x; pyenv local "$python_version")
 fi
 
-dot_envrc=$(cat << EOF
+_envrc_content=$(cat << EOF
+# ================================================================
 [[ -e .venv/bin/activate ]] || python3 -m venv .venv
 source .venv/bin/activate
+# ================================================================
 EOF
 )
-
-if [[ ! -f .envrc ]]; then
-  echo "${dot_envrc}"
-  read -r -p "Generate .envrc ? (Push CTRL-c to cancel if you don't wanna .envrc)"
-  (set -x; echo "${dot_envrc}" > .envrc)
+if [[ -d .venv ]]; then
+  echo ".venv exists."
 else
-  echo ".envrc exists."
+  (set -x; python3 -m venv .venv)
 fi
+
+if [[ -f .envrc ]]; then
+  echo ".envrc exists."
+else
+  echo "$_envrc_content"| tee .envrc
+fi
+
+(set -x; direnv allow)
+(set -x; which python)

@@ -1,0 +1,2 @@
+require('incline').setup {
+}

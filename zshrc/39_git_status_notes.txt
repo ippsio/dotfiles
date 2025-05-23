@@ -1,0 +1,49 @@
+# ${git_status}がとり得るケース
+# ## master...origin/master [ahead 1]
+# ## master...origin/master [behind 1]
+# ## master...origin/master [ahead 1, behind 1]
+#
+# # なぜgit status とgit rev-list のahead/ behind に差が出るのか、俺はその理由を知らない..
+# # ただし差が出る事がある。差が出る時はだいたいstatusのaheadとbehindが0。そういうケースを疑ってrev-listする。
+# if [[ ${ahead_7} -eq 0 && ${behind_8} -eq 0 ]]; then
+#    if [[ git branch -a --format="%(refname:short)"|grep "^$origin/${hook_com[branch]}$" > /dev/null 2>&1 ]]; then
+#     local revlist=$(git rev-list --left-right --count origin/${hook_com[branch]}...${hook_com[branch]})
+#     ahead_7=$(echo "${revlist}"| awk '{ print $2 }')
+#     behind_8=$(echo "${revlist}"| awk '{ print $1 }')
+#    else
+#      ahead_7="9999"
+#    fi
+# fi
+
+# <indexに載ってるもの>
+# local updated_in_index=$(             echo "${git_XY}"| egrep -c "^(M[ MD])")
+# local added_to_index=$(               echo "${git_XY}"| egrep -c "^(A[ MD])")
+# local deleted_from_index=$(           echo "${git_XY}"| egrep -c "^(D[ ])")
+# local renamed_in_index=$(             echo "${git_XY}"| egrep -c "^(R[ MD])")
+# local copied_in_index=$(              echo "${git_XY}"| egrep -c "^(C[ MD])")
+# local not_updated=$(                  echo "${git_XY}"| egrep -c "^([AMD][ ])")
+# local index_and_work_tree_matches=$(  echo "${git_XY}"| egrep -c "^([MARC][ ])")
+# 上記を参考にすると、これからgit commitしないといかんものはつまり、これだ
+# local index_6=$(echo "${git_XY}"| egrep -c "^([MADRC][ MD])")
+# # </indexに載ってるもの>
+#
+#
+# <worktreeの変更>
+# local work_tree_changed_since_index=$(echo "${git_XY}"| egrep -c "^([ MARC]M)")
+# local deleted_in_work_tree=$(         echo "${git_XY}"| egrep -c "^([ MARC]D)")
+# local renamed_in_work_tree=$(         echo "${git_XY}"| egrep -c "^([ D]R)")
+# local copied_in_work_tree=$(          echo "${git_XY}"| egrep -c "^([ D]C)")
+
+# local unmerged_both_deleted=$(        echo "${git_XY}"| egrep -c "^(DD)")
+# local unmerged_added_by_us=$(         echo "${git_XY}"| egrep -c "^(AU)")
+# local unmerged_deleted_by_them=$(     echo "${git_XY}"| egrep -c "^(UD)")
+# local unmerged_added_by_them=$(       echo "${git_XY}"| egrep -c "^(UA)")
+# local unmerged_deleted_by_us=$(       echo "${git_XY}"| egrep -c "^(DU)")
+# local unmerged_both_added=$(          echo "${git_XY}"| egrep -c "^(AA)")
+# local unmerged_both_modified=$(       echo "${git_XY}"| egrep -c "^(UU)")
+
+# 上記を参考にすると、これからgit addしないといかんものはつまり、これだ
+# local unstaged_4=$(                     echo "${git_XY}"| egrep -c "^([ MADRC][MDRC])")
+# 上記を参考にすると、merge時の競合を解決しないといけないものはたぶんこれ。
+# local unmerged_5=$(                     echo "${git_XY}"| egrep -c "^([DAU][DAU])")
+

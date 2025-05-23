@@ -7,6 +7,7 @@
 " 同じく、@でrecordingした内容を再生することも邪魔なので無効化
 nnoremap q <Nop>
 xnoremap q <Nop>
+vnoremap q <Esc>
 nnoremap @ <Nop>
 xnoremap @ <Nop>
 
@@ -15,9 +16,14 @@ xnoremap @ <Nop>
 nnoremap <F1> <Nop>
 inoremap <F1> <Nop>
 
+nnoremap <F5> :e<CR>
+
 " [ブロック選択]
 " vを二回で行末まで選択
 vnoremap v $h
+
+nnoremap <expr> i foldlevel('.') > 0 && foldclosed('.') != -1 ? 'za' : 'i'
+nnoremap <expr> - foldlevel('.') > 0 ? 'za' : '-'
 
 " [ハイライト]
 " space2度押しでカーソル下の文字をハイライト。
@@ -26,6 +32,7 @@ function s:hi_word()
   " （\<や\>は、単語の境界を示す特殊文字）
   normal "zyiw
   let @/ = '\<' . @z . '\>'
+  "let @/ = @z
   call feedkeys(":set hlsearch\<CR>", "n")
   normal `z
 endfunction
@@ -41,23 +48,13 @@ endfunction
 nmap <silent> <Esc> :<C-u>nohlsearch<CR>
 
 " [検索]
-" <F3> でハイライト中の文字(zレジスタの文字)をGrep。
-nnoremap <F3>       mz:call <SID>grep_z_register()<CR>
+" <F4> でハイライト中の文字(zレジスタの文字)をGrep。
+nnoremap <F4>       mz:call <SID>grep_z_register()<CR>
 function s:grep_z_register()
   " NOTE: どうやら2回escapeすると期待動作する。1回escapeだと期待動作しない。理由は知らん。
   let l:search_word = escape(@z, '\"$`')
   let l:search_word = escape(l:search_word, '\"$`')
   call feedkeys(":Grep " . l:search_word . "\<CR>", "n")
-endfunction
-
-" [検索]
-" <F4> でハイライト中の文字(zレジスタの文字)をGrep。
-nnoremap <F4>       mz:call <SID>git_deepblame_z_register()<CR>
-function s:git_deepblame_z_register()
-  " NOTE: どうやら2回escapeすると期待動作する。1回escapeだと期待動作しない。理由は知らん。
-  let l:search_word = escape(@z, '\"$`')
-  let l:search_word = escape(l:search_word, '\"$`')
-  call feedkeys(":GitDeepblame " . l:search_word . "\<CR>", "n")
 endfunction
 
 " [コマンドモードでの入力値の置換]
@@ -78,9 +75,6 @@ nnoremap <space>\  :<C-u>vnew<CR>
 nnoremap <space>\| :<C-u>vnew<CR>
 " ウインドウの高さの統一
 nnoremap <space>= <C-w>=
-
-" [jumplist]
-nnoremap <Del> <C-u><C-i>
 
 " VISUALモードで連続ペーストできるようにする
 " この設定をしたい理由：
@@ -114,12 +108,23 @@ cnoremap <Down> <C-n>
 nnoremap qq    :<C-u>:q<CR>
 " ノーマルモード中に素早くqqと入力した場合は:q<CR>とみなす
 nnoremap Q     :<C-u>q<CR>
-nnoremap <silent> W :<C-u>:w<CR>:echo 'SAVED! ' . strftime("%Y/%m/%d %H:%M:%S") . '[' . substitute(expand("%:p"), $HOME, "~", "g") . ']'<CR>
+nnoremap <silent> W :call <SID>SaveFile()<CR>
+
+function! s:SaveFile()
+  try
+    silent :w
+    let l:msg = 'SAVED! ' . strftime("%Y/%m/%d %H:%M:%S") . '[' . substitute(expand("%:p"), $HOME, "~", "g") . ']'
+    let l:maxlen = v:echospace + ((&cmdheight - 1) * &columns)
+    echom strpart(l:msg, 0, l:maxlen)
+  catch
+    echo "保存に失敗しました: " . v:errmsg
+  endtry
+endfunction
 
 " [その他]
 " ファイル名と行番号を表示する。ついでにファイル名をクリップボードにコピーする。
 " nnoremap <silent> <C-g> :let @* = substitute(expand("%:p"), $HOME, "~", "g")<CR><C-g>
-nnoremap <C-g> :call <SID>CopyFilename()<CR>
+nnoremap <silent> <C-g> :call <SID>CopyFilename()<CR>
 
 function! s:CopyFilename()
   let l:dot_git = system('cd ' . expand('%:h') . '; git rev-parse --git-dir 2>/dev/null')
@@ -136,5 +141,7 @@ function! s:CopyFilename()
   endif
   let l:path = substitute(l:file, "[\\n|\\r]", "", "g")
   let @* = l:path
-  echo "Filename copied '" . l:path . "'"
+  let l:msg = "Filename copied '" . l:path . "'"
+  let l:maxlen = v:echospace + ((&cmdheight - 1) * &columns)
+  echom strpart(l:msg, 0, l:maxlen)
 endfunction

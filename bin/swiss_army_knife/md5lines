@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+(
+  lineno=0
+  IFS=$'\n'
+  for line in $(cat "$1"); do
+    lineno=$((lineno + 1))
+    h=$(printf "%s" "$line"| md5sum| awk '{ print $1 }')
+    printf "%02d %s| %s\n" "$lineno" "$h" "$line"
+  done < "$1"
+)

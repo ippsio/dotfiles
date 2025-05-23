@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+if ! is_git_repo; then
+  exit 1
+fi
+CMD="git_filter_files {q}"
+INITIAL_QUERY="${*:-}"
+(
+  cd "$(git_root)" || exit 1
+  fzf --ansi \
+    --disabled \
+    --style minimal \
+    --print-query \
+    --query "$INITIAL_QUERY" \
+    --bind "start:reload:$CMD" \
+    --bind 'esc:print-query+abort' \
+    --bind 'ctrl-c:print-query+abort' \
+    --bind "change:reload:sleep 0.1; $CMD || true" \
+    --delimiter : \
+    --preview 'git_blame_colored {1}' \
+    --preview-window 'bottom,60%,border-bottom,+{2}+3/3,~3' \
+    --bind 'enter:become(nvim {1})'
+)
+    # --preview-window 'bottom,60%,border-bottom,+{2}+3/3,~3' \
