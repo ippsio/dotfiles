@@ -1,23 +1,24 @@
-augroup vim-start
-  autocmd!
-  autocmd VimEnter * silent! clearjumps
-augroup END
+"augroup vim-start
+"  autocmd!
+"  autocmd VimEnter * silent! clearjumps
+"augroup END
 
 augroup markdown_indent
   autocmd!
-  autocmd FileType markdown setlocal tabstop=2
-  autocmd FileType markdown setlocal softtabstop=2
-  autocmd FileType markdown setlocal shiftwidth=2
   autocmd FileType markdown setlocal indentexpr=
+  autocmd FileType markdown setlocal shiftwidth=2
+  autocmd FileType markdown setlocal softtabstop=2
+  autocmd FileType markdown setlocal tabstop=2
 augroup END
-let g:in_codeblock = 0
+let s:in_codeblock = 0
 function! MyMarkdownFoldExpr()
   let line = getline(v:lnum)
+  let line_next = getline(v:lnum+1)
 
   if l:line =~ '^```'
-    let g:in_codeblock = !g:in_codeblock
+    let s:in_codeblock = !s:in_codeblock
     return '='
-  elseif g:in_codeblock
+  elseif s:in_codeblock
     return '='
   elseif line =~ '^#\{1,2} '
     " # とか ## で始まる行はfoldlevelを一律に1ってことにする。
@@ -28,6 +29,12 @@ function! MyMarkdownFoldExpr()
     " こういうパートは初期状態で折りたたまれるようにする(foldlevel=1)
     " また、### " の深さによらず折りたたまれ過ぎないようにする。見通しを良くする。何度も折りたたみを開くのは苦痛。
     return '>2'
+  elseif line == ''
+    if line_next == ''
+      return '<0'
+    else
+      return '='
+    endif
   else
     return '='
   endif
@@ -45,10 +52,6 @@ endfunction
 
 augroup markdown_folds
   autocmd!
-  autocmd FileType markdown setlocal tabstop=2
-  autocmd FileType markdown setlocal softtabstop=2
-  autocmd FileType markdown setlocal shiftwidth=2
-  autocmd FileType markdown setlocal indentexpr=
   autocmd FileType markdown setlocal foldopen=block,mark,percent,quickfix,search,tag,undo
   autocmd FileType markdown setlocal foldmethod=expr
   autocmd FileType markdown setlocal foldexpr=MyMarkdownFoldExpr()
@@ -56,7 +59,7 @@ augroup markdown_folds
   autocmd FileType markdown setlocal foldlevel=1
   autocmd FileType markdown setlocal foldenable
   autocmd FileType markdown setlocal foldminlines=0
-  autocmd FileType markdown setlocal foldcolumn=1
+  autocmd FileType markdown setlocal foldcolumn=0
 augroup END
 
 """augroup QfAutoCommands
@@ -134,7 +137,7 @@ augroup FileTypeRuby
   au FileType ruby setlocal 
     \ foldmethod=indent
     \ foldlevel=99
-    \ foldcolumn=9
+    \ foldcolumn=0
     \ foldenable
   " これは無いほうが使いやすかったのでコメントアウト
   " " hoge.map(&:fuga) の中身の &:fuga を、単語として扱ってもらう。

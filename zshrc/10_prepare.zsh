@@ -1,7 +1,8 @@
 #!/usr/bin/env zsh
 source ~/dotfiles/zshrc/10_prepare_funcs.zsh
+
 prepare_by_brew xz
-prepare_by_brew nvim neovim
+# prepare_by_brew nvim neovim
 prepare_by_brew zsh
 prepare_by_brew tmux
 prepare_by_brew direnv
@@ -21,10 +22,11 @@ prepare_by_brew java openjdk
 prepare_by_brew mvn maven
 prepare_by_brew urlview
 prepare_by_brew extract_url
+
 nodir_then_gitclone "${TMUX_PLUGINS}/tpm" "tmux-plugins/tpm"
 nodir_then_gitclone "${ZINIT_ROOT}" "zdharma/zinit.git" "${ZINIT_ROOT}/bin"
 nodir_then_gitclone "${HOME}/setting_box" "ippsio/setting_box.git"
-chk_pynvim_or_install
+# chk_pynvim_or_install
 
 # mkdir
 mkdir -p ~/.tmux/log/

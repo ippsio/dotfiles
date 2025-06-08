@@ -121,7 +121,7 @@ command! -bang -nargs=* Grep
   \   . ' --bind "tab:execute(git_pull_request_open_by_file_line {2} {3})" '
   \   . ' --bind "ctrl-_:toggle-preview" '
   \   . ' --preview "git_blame_colored {2} {3} ' . shellescape(<q-args>) . ' {q}"'
-  \   . ' --preview-window "bottom,60%,border-bottom,+{2}+3/3,~3" ',
+  \   . ' --preview-window "bottom,60%,border-top,+{2}+3/3,~3" ',
   \   'window': { 'width': 0.95, 'height': 0.99 }
   \   })
 
@@ -347,7 +347,7 @@ function! Jumps()
   call fzf#run(fzf#vim#with_preview(fzf#wrap({
     \ 'source': jumptext,
     \ 'column': 1,
-    \ 'options': ['--delimiter', ':', '--bind', 'alt-a:select-all,alt-d:deselect-all,j:down,k:up', '--preview-window', '+{2}-/2'],
+    \ 'options': ['--delimiter', ':', '--bind', 'alt-a:select-all,alt-d:deselect-all,j:down,k:up', '--preview-window', 'bottom,border-top,60%,+{2}'],
     \ 'sink': function('GoTo')})))
 endfunction
 

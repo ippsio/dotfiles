@@ -1,5 +1,5 @@
 " colorscheme blue
-" colorscheme cyberdream
+colorscheme cyberdream
 " colorscheme darkblue
 " colorscheme default
 " colorscheme delek
@@ -14,7 +14,7 @@
 " colorscheme murphy
 " colorscheme nightfly
 " colorscheme onedark
-colorscheme catppuccin
+" colorscheme catppuccin
 " colorscheme onelight
 " colorscheme pablo
 " colorscheme peachpuff
@@ -25,10 +25,10 @@ colorscheme catppuccin
 " colorscheme slate
 " colorscheme sorbet
 " colorscheme torte
-"colorscheme vim
+" colorscheme vim
 " colorscheme wildcharm
 " colorscheme zaibatsu
-"colorscheme zellner
+" colorscheme zellner
 
 "hi link diffAdd String
 " hi DiffAdd     guifg=#123 ctermbg=31

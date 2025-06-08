@@ -1,2 +1,11 @@
-#!/bin/bash
-git rev-parse --show-superproject-working-tree --show-toplevel 2>&1| head -1
+#!/usr/bin/env bash
+if [[ -n $1 ]]; then
+  if [[ -f $1 ]]; then
+    directory=$(dirname "$1")
+    cd "${directory}" && git rev-parse --show-superproject-working-tree --show-toplevel 2>&1| head -1 || exit 1
+  elif [[ -d $1 ]]; then
+    cd "$1" && git rev-parse --show-superproject-working-tree --show-toplevel 2>&1| head -1 || exit 1
+  fi
+else
+  git rev-parse --show-superproject-working-tree --show-toplevel 2>&1| head -1
+fi

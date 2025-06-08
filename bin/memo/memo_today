@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+source memo_functions
+
+mkdir_if_base_dir_not_exists
+mkdir_if_note_dir_not_exists
+make_todays_note_if_not_exists
+(
+  cd "$BASE_DIR"|| exit
+  file=$(note_of_today)
+  nvim "$file"
+)
+git_commit_note

@@ -22,7 +22,10 @@ nnoremap <F5> :e<CR>
 " vを二回で行末まで選択
 vnoremap v $h
 
+" [折りたたみ]
 nnoremap <expr> i foldlevel('.') > 0 && foldclosed('.') != -1 ? 'za' : 'i'
+nnoremap <expr> o foldlevel('.') > 0 && foldclosed('.') != -1 ? 'zo' : 'o'
+vnoremap <expr> o foldlevel('.') > 0 && foldclosed('.') != -1 ? 'zo' : 'o'
 nnoremap <expr> - foldlevel('.') > 0 ? 'za' : '-'
 
 " [ハイライト]
@@ -31,6 +34,7 @@ nnoremap <silent> <Space><Space> mz:call <SID>hi_word()<CR>
 function s:hi_word()
   " （\<や\>は、単語の境界を示す特殊文字）
   normal "zyiw
+
   let @/ = '\<' . @z . '\>'
   "let @/ = @z
   call feedkeys(":set hlsearch\<CR>", "n")

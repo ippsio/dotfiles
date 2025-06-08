@@ -5,15 +5,13 @@
 export EDITOR=nvim
 export ZINIT_ROOT=~/.zinit
 export TMUX_PLUGINS=~/.cache/tmux/plugins
-
-for file in ~/dotfiles/zshrc/00_export/rc/*.zsh; do
-  source "${file}"
-done
-
-for dir in $(find ~/dotfiles/bin -type d); do
-  export PATH=${PATH}:${dir}
-done
-diff_highlight_path=$(find -s /opt/homebrew/Cellar/git/*/share/git-core/contrib/diff-highlight -depth 0)
-export PATH=${diff_highlight_path}:${PATH}
-export IRBRC=~/.irbrc
 export FZF_DEFAULT_OPTS_FILE=~/.config/fzf/.fzfrc
+
+for f in ~/dotfiles/zshrc/00_export/rc/*.zsh; do source "$f"; done
+for d in $(
+  find ~/dotfiles/bin -type d
+  find -s /opt/homebrew/Cellar/git/*/share/git-core/contrib/diff-highlight -type d -depth 0
+  ); do PATH=${PATH}:${d}; done
+
+export PATH
+

@@ -36,6 +36,9 @@ make_todays_note_if_not_exists() {
     echo -e "${content}">>"${TODAYS_NOTE}"
   fi
 }
+note_of_today() {
+  echo "${TODAYS_NOTE}"
+}
 select_note() {
   fzf --ansi --info=inline --prompt="(${KIND})"\
       --style=minimal \

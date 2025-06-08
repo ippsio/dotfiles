@@ -1,6 +1,14 @@
+zle -N do_zle_space
+bindkey " " do_zle_space
+
+do_zle_space() {
+  zle_space
+  return 0
+}
+
 # スペースでよく使うコマンドを展開
 zle_space() {
-  #printf "BUFFER=[${BUFFER}] LBUFFER=[${LBUFFER}] RBUFFER=[${RBUFFER}]\n"
+  # printf "BUFFER=[${BUFFER}] LBUFFER=[${LBUFFER}] RBUFFER=[${RBUFFER}]\n"
 
   # globalaliasの展開
   # NOTE: 一般的に大文字が使われるらしいので、ここでも大文字（と数字）でのみチェックしている。
@@ -246,3 +254,4 @@ zle_space() {
   zle self-insert
   return 1
 }
+

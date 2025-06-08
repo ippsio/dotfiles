@@ -13,6 +13,8 @@ zinit light 'junegunn/fzf-bin'
 zinit ice src"shell/key-bindings.zsh"
 zinit light "junegunn/fzf"
 
+zinit light romkatv/zsh-defer
+
 # zinit ice src"shell/completion.zsh"
 # zinit light "junegunn/fzf"
 
@@ -32,3 +34,4 @@ zstyle ':completion:*' menu no
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
 # switch group using `<` and `>`
 zstyle ':fzf-tab:*' switch-group '<' '>'
+

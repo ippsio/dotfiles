@@ -110,7 +110,13 @@ Jetpack 'monaqa/dial.nvim'
 
 " markdown
 "Jetpack 'preservim/vim-markdown'
-"Jetpack 'lukas-reineke/headlines.nvim'
+
+" outline
+Jetpack 'hedyhli/outline.nvim'
+Jetpack 'stevearc/aerial.nvim'
+
+" calendar
+Jetpack 'itchyny/calendar.vim'
 
 let s:available_pkg = stdpath('data') . '/' . 'site' . '/pack/jetpack/opt/available_packages.json'
 let s:available_pkg_text = filereadable(s:available_pkg) ? join(readfile(s:available_pkg)) : "{}"
