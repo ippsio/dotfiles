@@ -8,7 +8,7 @@ precmd() {
     local untracked=$(echo "${xy}"| grep -Ec "^(\?\?)")
     local unstaged=$(echo "${xy}"| grep -Ec "^([ MADRC][MDRC])")
     local unmerged=$(echo "${xy}"| grep -Ec "^([DAU][DAU])")
-    local WORKTREE="%F{193}?${untracked} !${unstaged} x${unmerged}%f "
+    local WORKTREE="%F{1}?${untracked} !${unstaged} x${unmerged}%f "
 
     local stash=$(git stash list 2>/dev/null| grep -Ec "^stash@")
     local STASH="%F{241}\$${stash}%f "
@@ -24,7 +24,7 @@ precmd() {
     local branch="$(git branch --show-current)"
     local remote=$(git config --local branch.${branch}.remote)
     local commit_msg=$(git log -1 --date=format:"%m/%d %H:%M" --pretty='%h %ad %an %s')
-    local REPO_BRANCH="%F{118}${repo} %F{118}${branch}%f %F{red}track(${remote:-none}) %F{186}${commit_msg}%f"
+    local REPO_BRANCH="%F{8}${repo} %F{8}${branch}%f %F{red}track(${remote:-none}) %F{8}${commit_msg}%f"
 
     local merging=$(test -f "$(git rev-parse --git-dir)/MERGE_HEAD" && echo 'MERGING' || echo '')
     local GIT_CAUTION="%K{1}${merging}%f%k "
@@ -39,7 +39,7 @@ precmd() {
   fi
 
   local EXIT_CD="%F{red}%(?..\$?=%? )%f"
-  local BG="%(1j|%F{226}bg:%j%f|)"
+  local BG="%(1j|%F{5}bg:%j%f|)"
   local PWD="%F{137}%~ %f"
   PROMPT_ARRAY+=( "${EXIT_CD}${BG}${PWD}%F{245}#%f " )
   PROMPT=$(print -l "${PROMPT_ARRAY[@]}")

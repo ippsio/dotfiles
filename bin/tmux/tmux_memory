@@ -7,14 +7,14 @@ wired=$(      echo "${memory_info_str}"| grep "wired:"      | awk -F ':' '{ prin
 compressed=$( echo "${memory_info_str}"| grep "compressed:" | awk -F ':' '{ print $2 }')
 used=$(       echo "${memory_info_str}"| grep "used:"       | awk -F ':' '{ print $2 }')
 
-printf "#[fg=colour253,bg=colour240]"
+# printf "#[fg=colour253,bg=colour240]"
 printf "RAM% 2.1fG" "${used}"
 
 # trueにするとメモリの詳細を表示する
 if false; then
   # 画面幅が一定以上ならusedメモリの詳細も表示
   if [[ $(~/dotfiles/bin/tmux/tmux_client_width) -gt 160 ]]; then
-    printf "#[fg=colour241,bg=colour236]"
+    # printf "#[fg=colour241,bg=colour236]"
     printf "(${usage}%%|app%.1f|wir%.1f|cmp%.1f)" "${application}" "${wired}" "${compressed}"
   fi
 fi

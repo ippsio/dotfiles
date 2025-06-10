@@ -1,5 +1,5 @@
 " colorscheme blue
-colorscheme cyberdream
+" colorscheme cyberdream
 " colorscheme darkblue
 " colorscheme default
 " colorscheme delek
@@ -28,7 +28,7 @@ colorscheme cyberdream
 " colorscheme vim
 " colorscheme wildcharm
 " colorscheme zaibatsu
-" colorscheme zellner
+colorscheme zellner
 
 "hi link diffAdd String
 " hi DiffAdd     guifg=#123 ctermbg=31
@@ -40,11 +40,12 @@ colorscheme cyberdream
 
 " hi link diffAdded diffAdd
 " hi link diffRemoved Tag
-hi Search guifg=#1e2124 guibg=#5ef1ff
-hi link CurSearch Search
-hi link IncSearch Search
-hi rubyAccess guibg=darkOrange
 
-hi NormalFloat guibg=#660000 " blend=50
-hi FloatBorder guifg=#cccccc  "blend=50
+"hi Search guifg=#1e2124 guibg=#5ef1ff
+"hi link CurSearch Search
+"hi link IncSearch Search
+"hi rubyAccess guibg=darkOrange
+"
+"hi NormalFloat guibg=#660000 " blend=50
+"hi FloatBorder guifg=#cccccc  "blend=50
 "

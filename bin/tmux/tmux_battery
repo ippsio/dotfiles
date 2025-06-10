@@ -50,25 +50,26 @@ get_str_tmux_battery() {
   bat_percentage="$(get_battery_percentage)"
   bat_remain=$(get_battery_remain)
 
-  local prefix="BAT"
   local mark=" "
   if is_charging; then
     [[ $(expr $(date +'%S') % 2) -eq 1 ]] && mark=" " || mark="+"
   fi
 
-  if [[ ${bat_percentage} -ge 80 ]]; then
-    printf "#[fg=colour58,bg=colour249]"
-  elif [[ ${bat_percentage} -ge 60 ]] && [[ ${bat_percentage} -lt 80 ]]; then
-    printf "#[bg=colour58]"
-  elif [[ ${bat_percentage} -ge 40 ]] && [[ ${bat_percentage} -lt 60 ]]; then
-    printf "#[bg=colour96]"
-  elif [[ ${bat_percentage} -ge 20 ]] && [[ ${bat_percentage} -lt 40 ]]; then
-    printf "#[bg=colour89]"
-  elif [[ ${bat_percentage} -lt 20 ]]; then
-    printf "#[bg=colour160]"
+  if false; then
+    if [[ ${bat_percentage} -ge 80 ]]; then
+      printf "#[fg=colour58,bg=colour249]"
+    elif [[ ${bat_percentage} -ge 60 ]] && [[ ${bat_percentage} -lt 80 ]]; then
+      printf "#[bg=colour58]"
+    elif [[ ${bat_percentage} -ge 40 ]] && [[ ${bat_percentage} -lt 60 ]]; then
+      printf "#[bg=colour96]"
+    elif [[ ${bat_percentage} -ge 20 ]] && [[ ${bat_percentage} -lt 40 ]]; then
+      printf "#[bg=colour89]"
+    elif [[ ${bat_percentage} -lt 20 ]]; then
+      printf "#[bg=colour160]"
+    fi
   fi
 
-  printf "${prefix}${mark}${bat_percentage}%%"
+  printf "${mark}${bat_percentage}%%"
 
   # 画面幅が一定以上ならバッテリーの残時間（または残充電時間）も表示
   if [[ $(~/dotfiles/bin/tmux/tmux_client_width) -gt 160 ]]; then
