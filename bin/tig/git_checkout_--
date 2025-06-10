@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 file="$1"
 echo "file='${file}'"
 if [[ -z "${file}" ]]; then
@@ -10,7 +10,7 @@ hr() { eval printf '%.0s-' '{1..'"$(tput cols)"'}'; return 0;}
 echoc() { printf "\e[38;5;7m\e[48;5;1m%s\e[0m\n" "$1"; return 0; }
 
 # check
-( set -x; git --no-pager diff -- "${file}" )
+# ( set -x; git --no-pager diff -- "${file}" )
 diff_result=$(git --no-pager diff -- "${file}")
 if [[ -z "${diff_result}" ]]; then
   echo "No changes."

@@ -14,13 +14,13 @@
 
 [diff]
   tool = nvimdiff
-  compactionHeuristic = true
+  # compactionHeuristic = true
 
 [difftool]
   prompt = false
 
 [difftool "nvimdiff"]
-  cmd = "(set -x; nvim -d \"$LOCAL\" \"$REMOTE\")"
+  cmd = "nvim -d \"$LOCAL\" \"$REMOTE\""
 
 [color "diff-highlight"]
   oldNormal = 203 234

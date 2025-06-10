@@ -1,5 +1,5 @@
 #!/usr/bin/env zsh
-tS=$(~/dotfiles/bin/epocms/epocms_c)
+t0=$(~/dotfiles/bin/epocms/epocms_c)
 
 autoload -Uz compinit && compinit -u
 source ~/dotfiles/zshrc/00_zsh_on_tmux.zsh
@@ -19,5 +19,5 @@ zsh-defer eval "$(nodenv init -)"
 zsh-defer eval "$(pyenv init --path)"
 zsh-defer eval "$(rbenv init -)"
 
-tE=$(~/dotfiles/bin/epocms/epocms_c)
-printf "zshrc loaded (%dms).\n" $((tE - tS))
+t1=$(~/dotfiles/bin/epocms/epocms_c)
+printf "zshrc loaded (%dms).\n" $((t1 - t0))

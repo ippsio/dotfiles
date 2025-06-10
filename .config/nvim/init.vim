@@ -2,12 +2,11 @@
 runtime! vars.vim
 runtime! settings.vim
 runtime! remaps.vim
-runtime! jetpack.vim
 runtime! autocmds.vim
-"runtime! highlights.vim
+runtime! jetpack.vim
 try
   runtime! colorscheme.vim
-  " hi CursorWord ctermbg=144 guibg=#cc0000
 catch
 endtry
+runtime! jetpack_loadrc.vim
 runtime! rc/functions/Hi.vim

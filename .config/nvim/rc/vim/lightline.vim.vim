@@ -1,27 +1,45 @@
 set laststatus=3
 let g:lightline = {
   \  'colorscheme': 'Tomorrow',
-  \  'inactive': {'left': [ ['mode', 'paste'], ['readonly', 'filepath']], 'right': [ ['lineinfo']] },
-  \  'active': {  'left': [ ['mode', 'paste'], ['readonly', 'filepath']], 'right': [ ['info'], ['lineinfo']] },
-  \  'component': { 'lineinfo': '%v:%l/%L(%p%%)%<', 'info': '%{%StrGitMergeBase()%}(%{%StrUnderCursor()%} 0x%02B)' . &fileformat . '|' . &fileencoding . '%<'},
-  \  'component_function': { 'filepath': 'FileName', 'git': 'StrGitMergeBase'},
+  \  'inactive': {
+  \    'left': [
+  \      ['mode', 'paste'],
+  \      ['readonly', 'filepath']
+  \    ],
+  \    'right': [
+  \      ['lineinfo']
+  \    ]
+  \  },
+  \  'active': {
+  \    'left': [
+  \      ['mode', 'paste'],
+  \      ['readonly', 'filepath']
+  \    ],
+  \    'right': [
+  \      ['info'],
+  \      ['lineinfo']
+  \    ]
+  \  },
+  \  'component': {
+  \    'lineinfo': '%v:%l/%L(%p%%)%<',
+  \    'info': join([
+  \      '%{%StrGitMergeBase()%}',
+  \      '(%{%StrUnderCursor()%} 0x%02B)',
+  \      &fileformat . '|' . &fileencoding . '%<'
+  \    ], '')
+  \  },
+  \  'component_function': {
+  \    'filepath': 'FileName',
+  \    'git': 'StrGitMergeBase',
+  \  },
   \ }
 
-function! LinterStatus() abort
-  let l:counts = ale#statusline#Count(bufnr(''))
-
-  let l:all_errors = l:counts.error + l:counts.style_error
-  let l:all_non_errors = l:counts.total - l:all_errors
-
-  return l:counts.total == 0 ? 'OK' : printf(
-  \ '%dW %dE',
-  \ all_non_errors,
-  \ all_errors
-  \)
-endfunction
-
 function! FileName()
-  return substitute(expand("%:p"), $HOME, "~", "g") . ( &modified ? '|+' : '')
+  return join([
+    \ substitute(expand("%:p"), $HOME, "~", "g"),
+    \ ( &modified ? '|+' : ''),
+    \ '(&ft=' . &ft . ')',
+    \ ], '')
 endfunction
 
 function! StrUnderCursor()

@@ -5,7 +5,6 @@
 export EDITOR=nvim
 export ZINIT_ROOT=~/.zinit
 export TMUX_PLUGINS=~/.cache/tmux/plugins
-export FZF_DEFAULT_OPTS_FILE=~/.config/fzf/.fzfrc
 
 for f in ~/dotfiles/zshrc/00_export/rc/*.zsh; do source "$f"; done
 for d in $(
@@ -15,3 +14,4 @@ for d in $(
 
 export PATH
 
+export FZF_DEFAULT_OPTS='--ansi --exact --reverse --prompt="❯ " --color hl:#ffaf00,bg+:#a7a7a7,hl+:#ffd700'

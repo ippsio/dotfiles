@@ -9,7 +9,7 @@ readonly TODAYS_NOTE="${BASE_DIR}/${KIND}/${today_ym}/${today_ymda1}.md"
 readonly PREVIEW="(echo '# {}'; bat '{}' --color=always --style=numbers)"
 readonly RG_CMD="rg --files --hidden -g '20*.{md,txt}' --sortr=path ${BASE_DIR}/${KIND}"
 readonly FZF_START="${RG_CMD}| sed -E 's#^${HOME}#~#'"
-readonly NVIM_CMD="/usr/bin/env bash -c '(set -x; nvim -c 5 {} < /dev/tty > /dev/tty)'"
+readonly FZF_NVIM_CMD="/usr/bin/env bash -c '(set -x; nvim -c 5 {} < /dev/tty > /dev/tty)'"
 
 mkdir_if_base_dir_not_exists() {
   if [ ! -d "${BASE_DIR}" ]; then
@@ -44,7 +44,7 @@ select_note() {
       --style=minimal \
       --bind "start:reload:(${FZF_START})"\
       --bind "j:down" --bind "k:up"  --bind "q:abort"\
-      --bind "enter:execute(${NVIM_CMD})"\
+      --bind "enter:execute(${FZF_NVIM_CMD})"\
       --preview="${PREVIEW}" --preview-window=right,65%\
     && return 0\
     || return 1
@@ -54,6 +54,13 @@ git_commit_note() {
     git add -A
     now=$(date '+%Y/%m/%d(%a) %H時%M分%S秒')
     git commit -m "${now}" 1>/dev/null && git log --date=iso --pretty='%h %ad %an %s' -1 --name-only
+  )
+}
+nvim_note_today() {
+  (
+    cd "$BASE_DIR"|| exit
+    file=$(note_of_today)
+    nvim "$file"
   )
 }
 
