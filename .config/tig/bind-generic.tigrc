@@ -1,0 +1,25 @@
+# カーソル移動
+bind generic <C-b> move-page-up
+bind generic <C-f> move-page-down
+bind generic <Up>   move-up
+bind generic <Down> move-down
+bind generic <Right> none
+bind generic <Left> none
+# 分割されたビューがある時は、分割元を１行、上下に移動
+bind generic <C-k> previous
+bind generic <C-j> next
+bind generic g      move-first-line
+bind generic G      move-last-line
+
+bind generic C      none # do not cherry-pick
+bind generic l      none # do now open log view
+# うっかりgit pushさせない
+bind generic P      none
+bind generic ? view-help
+# grep
+bind generic E      view-grep
+# bind generic <Hash> +bash -c "~/dotfiles/bin/tig/yank_commit_hash_subject %(commit)"
+bind generic <Hash> +bash -c "~/dotfiles/bin/tig/yank_commit_hash_subject %(commit)"
+bind generic h none
+bind generic V :toggle split-view-height -10%   # Decrease split height
+

@@ -3,6 +3,7 @@ set git-colors = no
 # 装飾について
 # 	Valid attributes include: *normal*, *blink*, *bold*, *dim*, *reverse*,
 # 	*standout*, and *underline*. Note, not all attributes may be supported
+
 color default           default default
 color commit            default default
 color 'Refs: '          default default
@@ -12,17 +13,27 @@ color 'Commit: '        default default
 color 'CommitDate: '    default default
 color 'Merge: '         default default dim
 color 'Date: '          default default dim
-
-#color id                223 default
+#color id               default default
 color date              default default dim
-color graph-commit      default default
 color cursor            default default underline
-color main-tracked      105     default bold
-color title-blur        234     default dim
-color title-focus       023     default
+color mode 0 0
+
+color graph-commit      default default
+color main-commit       default default
+color main-tracked      default default standout
+color main-remote       default default standout
+color main-head         default default standout
+color main-tag          default default standout
+color main-local-tag    default default standout
+color main-ref          default default standout
+color main-replace      default default standout
+color title-focus       default default standout
+color title-blur        default default standout dim
 color author            default default
-color help-group        011     default
+color help-group        default default standout
+color help-action       default default bold
 color line-number       default     default
+color header            default default standout
 
 #------------------------------------------------------------
 # `diff --git a/xxxx b/xxxx`みたいな箇所(グレー地に白文字)

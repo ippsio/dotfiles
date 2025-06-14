@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
-pane_style_was=$(tmux select-pane -g)
-f="${1:-240}"
-t="${2:-240}"
-for i in $( ( seq "${f}" "${t}"; seq "${t}" "${f}" ) | awk 'prev != $0 { print } { prev = $0 }' ); do
-  eval "tmux select-pane -P bg=colour${i}"
-  sleep "${3:-0.05}"
-done
-eval "tmux select-pane -P ${pane_style_was}"
-# tmux display-panes -d 10
+if false; then
+  pane_style_was=$(tmux select-pane -g)
+  f="${1:-240}"
+  t="${2:-240}"
+  set -x
+  for i in $( ( seq "${f}" "${t}"; seq "${t}" "${f}" ) | awk 'prev != $0 { print } { prev = $0 }' ); do
+    eval "tmux select-pane -P bg=colour${i}"
+    sleep "${3:-0.05}"
+  done
+  eval "tmux select-pane -P ${pane_style_was}"
+  # tmux display-panes -d 10
+fi

@@ -56,8 +56,8 @@ Jetpack 'itchyny/vim-parenmatch'
 Jetpack 'itchyny/lightline.vim'
 Jetpack 'bronson/vim-trailing-whitespace'
 Jetpack 'cohama/vim-insert-linenr'
-Jetpack 'norcalli/nvim-colorizer.lua'
-Jetpack 'vim-scripts/tango.vim'
+"Jetpack 'norcalli/nvim-colorizer.lua'
+"Jetpack 'vim-scripts/tango.vim'
 
 " debugger
 " Jetpack 'mfussenegger/nvim-dap'
@@ -96,11 +96,12 @@ Jetpack 'yuki-yano/fern-preview.vim'
 Jetpack 'tpope/vim-projectionist'
 
 "colorscheme
-Jetpack 'bluz71/vim-nightfly-colors'
-Jetpack 'navarasu/onedark.nvim'
-Jetpack 'catppuccin/nvim'
-Jetpack 'olimorris/onedarkpro.nvim'
-Jetpack 'scottmckendry/cyberdream.nvim'
+"Jetpack 'bluz71/vim-nightfly-colors'
+"Jetpack 'navarasu/onedark.nvim'
+"Jetpack 'catppuccin/nvim'
+"Jetpack 'olimorris/onedarkpro.nvim'
+"Jetpack 'scottmckendry/cyberdream.nvim'
+"Jetpack 'lifepillar/vim-colortemplate'
 
 " window
 Jetpack 'declancm/maximize.nvim'

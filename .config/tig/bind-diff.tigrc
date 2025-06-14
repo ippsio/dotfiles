@@ -1,0 +1,18 @@
+bind diff h      view-close
+bind diff l      view-blame
+# 経験・実験より知った事ですが、Shift+Upは'A'、Shift+Downは'B'として扱われるようです。
+# <Shift-Up>、<ShiftUp>、<S-Up>等としても、Shift+Up時のキーバインド設定を行ないたいという意志がtigに伝わりません。
+# Shift+Upで前のファイル
+bind diff A previous
+# Shift+Downで次のファイル
+bind diff B next
+bind diff    ]      :/^@@
+bind diff    [      :?^@@
+bind diff    g      :/^---$ # goto file list
+bind diff o none
+bind diff [ :toggle diff-context -1		   # Decrease context (-U arg)
+bind diff ] :toggle diff-context +1		   # Increase context
+
+bind diff <Space> >git_difftool_handler %(file)	%(commit)	%(revargs)
+bind main    O       +bash -c "~/dotfiles/bin/git_pull_request_open_by_hash %(commit)"
+#revargs=%(revargs),fileargs=%(fileargs),cmdlineargs=%(cmdlineargs),

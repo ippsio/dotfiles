@@ -1,0 +1,27 @@
+#!/usr/bin/env zsh
+#
+export GRAY8=8
+export GRAY232=232
+export GRAY233=233
+export GRAY234=234
+export GRAY235=235
+export GRAY236=236
+export GRAY237=237
+export GRAY238=238
+export GRAY239=239
+export GRAY240=240
+export GRAY241=241
+export GRAY242=242
+export GRAY243=243
+export GRAY244=244
+export GRAY245=245
+export GRAY246=246
+export GRAY247=247
+export GRAY248=248
+export GRAY249=249
+export GRAY250=250
+export GRAY251=251
+export GRAY252=252
+export GRAY253=253
+export GRAY254=254
+export GRAY255=255

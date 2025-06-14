@@ -1,0 +1,2 @@
+bind blame l      view-blame
+bind blame h      back

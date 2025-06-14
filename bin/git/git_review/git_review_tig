@@ -11,5 +11,5 @@ source git_review_core "$@"
 }| {
   set -x
   export GIT_MERGE_BASE=${merge_base_hash}
-  tig show "${merge_base_hash}"...HEAD
+  tig show "${merge_base_hash}"
 }

@@ -7,7 +7,8 @@ let g:lightline = {
   \      ['readonly', 'filepath']
   \    ],
   \    'right': [
-  \      ['lineinfo']
+  \      ['lineinfo'],
+  \      ['filetype_diffOrNot']
   \    ]
   \  },
   \  'active': {
@@ -17,7 +18,8 @@ let g:lightline = {
   \    ],
   \    'right': [
   \      ['info'],
-  \      ['lineinfo']
+  \      ['lineinfo'],
+  \      ['filetype_diffOrNot']
   \    ]
   \  },
   \  'component': {
@@ -29,16 +31,25 @@ let g:lightline = {
   \    ], '')
   \  },
   \  'component_function': {
+  \    'filetype_diffOrNot': 'FileType_DiffOrNot',
+  \    'filetype': 'FileType',
   \    'filepath': 'FileName',
   \    'git': 'StrGitMergeBase',
   \  },
   \ }
 
+function! FileType_DiffOrNot()
+  return join([
+    \ '(',
+    \ 'ft=' . &ft,
+    \ &diff ? ',&diff' : '',
+    \ ')',
+    \ ], '')
+endfunction
 function! FileName()
   return join([
     \ substitute(expand("%:p"), $HOME, "~", "g"),
     \ ( &modified ? '|+' : ''),
-    \ '(&ft=' . &ft . ')',
     \ ], '')
 endfunction
 

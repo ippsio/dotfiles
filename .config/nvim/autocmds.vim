@@ -2,6 +2,46 @@
 "  autocmd!
 "  autocmd VimEnter * silent! clearjumps
 "augroup END
+augroup MyDiffExitDetector
+  autocmd!
+  autocmd WinClosed * call s:MaybeBdeleteDiff(expand('<afile>'))
+augroup END
+
+function! s:MaybeBdeleteDiff(winid_str) abort
+  let winid = str2nr(a:winid_str)
+  let bufnr = winbufnr(winid)
+  if bufnr == -1 | return | endif
+
+  " diffなウインドウのバッファの一覧
+  let diff_bufs = map(filter(range(1, winnr('$')), 'getwinvar(v:val, "&diff")'), 'winbufnr(v:val)')
+
+  " diffなウインドウのバッファの一覧に、winid(今回閉じられたウインドウのバッファ)が無い場合、即時return
+  if index(diff_bufs, bufnr) == -1 | return | endif
+
+  " lsコマンドの結果として得られるバッファの一覧
+  let listed_bufs = map(filter(getbufinfo(), 'v:val.listed'), 'v:val.bufnr')
+
+  " バッファをbdelete!します。
+  if !bufexists(bufnr) | return | endif
+  execute 'bdelete!' bufnr
+
+  " 削除された分のバッファを、それぞれのバッファの一覧から差し引きます。
+  let diff_bufs = filter(diff_bufs, 'v:val != bufnr')
+  let listed_bufs = filter(listed_bufs, 'v:val != bufnr')
+
+  " diff_bufs
+  " のサイズは1になっているはずですが、例外があるかどうか調べられていないので、一旦サイズをチェックしておきます。
+  if len(diff_bufs) != 1 | return | endif
+
+  if diff_bufs == listed_bufs
+    " この場合、bdelete!するとvimによって新しい[No Name]バッファが作成されてしまいます。それは困るのでquitします。
+    quit
+  else
+    " この場合、bdelete!すると残りのdiffなバッファを閉じます。これにより、diffバッファを綺麗に削除できたはずです。
+    if !bufexists(diff_bufs[0]) | return | endif
+    execute 'bdelete!' diff_bufs[0]
+  endif
+endfunction
 
 augroup markdown_indent
   autocmd!

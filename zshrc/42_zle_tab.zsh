@@ -18,7 +18,10 @@ function triggered_by_tab() {
   for c in $cmds; do
     [[ $BUFFER =~ "^${c} *$" ]] && BUFFER="${c} ./" && zle end-of-line # complete first './'.
     if [[ $BUFFER =~ "^${c} *.+/+$" ]]; then
-      BUFFER="${c} $(fzf_list_file ${${BUFFER#${c} }:-.} --PROMPT=${c})" && zle end-of-line
+      fzf_response=$(fzf_list_file ${${BUFFER#${c} }:-.} --PROMPT=${c})
+      if [[ -n "${fzf_response}" ]]; then
+        BUFFER="${c} ${fzf_response}" && zle end-of-line
+      fi
       return 0
     fi
   done

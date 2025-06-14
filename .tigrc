@@ -1,4 +1,11 @@
 # source ~/.config/tig/color.tigrc
 source ~/.config/tig/color-light.tigrc
 source ~/.config/tig/set.tigrc
-source ~/.config/tig/bind.tigrc
+
+source ~/.config/tig/bind-blame.tigrc
+source ~/.config/tig/bind-diff.tigrc
+source ~/.config/tig/bind-generic.tigrc
+source ~/.config/tig/bind-main.tigrc
+source ~/.config/tig/bind-stage.tigrc
+source ~/.config/tig/bind-status.tigrc
+

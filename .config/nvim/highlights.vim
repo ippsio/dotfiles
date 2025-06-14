@@ -1,81 +1,56 @@
-"set notermguicolors
-" if has('nvim')
-"   set termguicolors
-"   let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-"   let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-" endif
+set notermguicolors
+"if has('nvim')
+"  set termguicolors
+"  let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+"  let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+"endif
 
 " カーソル行
-hi CursorLine cterm=underline ctermbg=239
+hi CursorLine cterm=underline
 
-" 補完ポップアップ
-hi Pmenu ctermfg=195 ctermbg=237
-hi PmenuSel ctermfg=255 ctermbg=33
-hi PmenuSbar ctermbg=190
-hi PmenuThumb ctermbg=27
+"" 補完ポップアップ
+hi Pmenu       ctermfg=253  ctermbg=236
+hi PmenuSel    ctermfg=237  ctermbg=253 cterm=underline
+hi PmenuSbar   ctermfg=237  ctermbg=253 cterm=underline
 
 " コード規約上120文字な言語があったりするので、その目安に線を引く
 hi ColorColumn ctermbg=235 cterm=NONE
 
 " 検索単語
-hi Search ctermbg=89 ctermfg=208
-
-" フォーカスのないウインドウ
-hi NormalNC ctermfg=251
+hi Search     ctermfg=NONE ctermbg=211
 
 " コメント
-hi Comment ctermbg=236 ctermfg=6
-hi vimLineComment ctermbg=236 ctermfg=6
-hi link vimCommentString Comment
-hi vimCommentTitle ctermbg=23
-hi vimCommentTitleLeader ctermbg=23
-"hi pythonTripleQuotes ctermbg=1
+hi Comment        ctermfg=244 ctermbg=NONE
+hi Todo           ctermfg=244 ctermbg=NONE cterm=reverse
 
 " 変数、文字列
-hi Constant ctermfg=105
-hi PreProc ctermfg=170
-hi String ctermfg=75
-
-" ruby
-hi rubySymbol ctermbg=0 ctermfg=170
-hi link rubyString String
-hi rubyTodo ctermbg=94
+hi Constant   ctermfg=95   ctermbg=253
+hi PreProc    ctermfg=134  ctermbg=NONE
+hi String     ctermfg=243  ctermbg=NONE
+hi Function   ctermfg=NONE ctermbg=252
+hi Special    ctermfg=102  ctermbg=NONE
+hi Identifier ctermfg=245  ctermbg=NONE
 
 " 行番号
-hi LineNr ctermfg=136
+hi LineNr    ctermfg=238 ctermbg=NONE
 " directory
-hi Directory ctermbg=16 ctermfg=75
+hi Directory ctermfg=242 ctermbg=NONE
 
-hi Type ctermbg=16 ctermfg=48
-hi Visual ctermfg=220 ctermbg=237
-" markdown
-hi markdownCode          ctermbg=236 ctermfg=255
-hi markdownCodeDelimiter ctermbg=88 ctermfg=211
-"hi markdownListMarker guibg=#456789 guifg=#ffff00 gui=bold
-"hi markdownError guibg=#222622
-
-hi Statement ctermfg=178
+hi Type    ctermfg=100 ctermbg=NONE cterm=bold
+hi Visual  ctermfg=NONE ctermbg=NONE cterm=reverse
+hi Statement ctermfg=172 ctermbg=NONE
 
 " vimdiffの色設定
-hi DiffAdd     ctermfg=123 ctermbg=031
-hi DiffAdded   ctermfg=123 ctermbg=031
-hi DiffRemoved ctermfg=210 ctermbg=240
-hi DiffChange  ctermfg=210 ctermbg=240
-hi DiffDelete  ctermfg=238 ctermbg=99
-hi DiffText ctermfg=168 ctermbg=117
-
-" rst
-hi rstSections ctermfg=224 ctermbg=198
-
-" man
-hi manHeader ctermfg=224 ctermbg=198
-
-" qfixgrep
-hi qfFileName ctermfg=118
-hi QuickFixLine ctermfg=222 ctermbg=69
+hi DiffAdd     ctermfg=203  ctermbg=NONE
+hi DiffAdded   ctermfg=203  ctermbg=NONE
+hi DiffRemoved ctermfg=063  ctermbg=NONE
+hi DiffChange  ctermfg=063  ctermbg=NONE
+hi DiffDelete  ctermfg=NONE ctermbg=250
+hi DiffText    ctermfg=18 ctermbg=NONE
 
 " vimContinue
 hi vimContinue ctermfg=70 ctermbg=54
 hi vimOperParen ctermfg=222
 hi vimUserFunc ctermfg=10
 
+hi MatchParen ctermfg=56 ctermbg=NONE

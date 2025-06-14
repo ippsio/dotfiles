@@ -40,7 +40,7 @@ call ddc#custom#patch_global('filterParams',
 \   matcher_lazy_1: #{maxMatchLength: -1},
 \   matcher_lazy_2: #{maxMatchLength: -2},
 \   matcher_fuzzy: #{camelcase: v:true, splitMode: 'word'},
-\   converter_fuzzy: #{hlGroup: 'MiniTrailspace'}
+\   converter_fuzzy: #{hlGroup: 'SpellBad'}
 \ })
 "   matcher_fuzzy: #{camelcase: v:true, splitMode: 'character'},
 

@@ -17,6 +17,7 @@ nnoremap <F1> <Nop>
 inoremap <F1> <Nop>
 
 nnoremap <F5> :e<CR>
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "	"
 
 " [ブロック選択]
 " vを二回で行末まで選択
