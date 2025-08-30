@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 obtain() { echo "$1"| grep "$2"| grep -Eo '[0-9]+'| xargs -I {} echo "scale=8; {} * ${3:-1}"| bc ; return 0; }
 
 vm_stat_results=$(vm_stat)

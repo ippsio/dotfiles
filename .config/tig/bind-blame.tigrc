@@ -1,2 +1,3 @@
 bind blame l      view-blame
 bind blame h      back
+bind blame   ;      @hub browse -- commit/%(commit)

@@ -1,28 +1,40 @@
 #!/usr/bin/env bash
 # ANSI 8-bitカラー番号から24ビットカラーを取得するための関数
 convert_to_rgb() {
-    local color="$1"
-    
-    if [ "$color" -lt 16 ]; then
-        # 標準の16色 (0-15)のカラーコードを定義
-        local colors=(
-            "#000000" "#800000" "#008000" "#808000" "#000080" "#800080" "#008080" "#c0c0c0"
-            "#808080" "#ff0000" "#00ff00" "#ffff00" "#0000ff" "#ff00ff" "#00ffff" "#ffffff"
-        )
-        echo "${colors[$color]}"
-    elif [ "$color" -ge 16 ] && [ "$color" -le 231 ]; then
-        # 16-231は6x6x6のカラーマトリックス
-        local color_index=$((color - 16))
-        local r=$(( (color_index / 36) * 51 ))
-        local g=$(( ((color_index / 6) % 6) * 51 ))
-        local b=$(( (color_index % 6) * 51 ))
-        printf "#%02x%02x%02x\n" "$r" "$g" "$b"
-    else
-        # 232-255はグレースケール
-        local gray=$(( (color - 232) * 10 + 8 ))
-        printf "#%02x%02x%02x\n" "$gray" "$gray" "$gray"
-    fi
+  local color="$1"
+
+  if [ "$color" -lt 16 ]; then
+    # 標準の16色 (0-15)のカラーコードを定義
+    case $color in
+      0)  echo "#000000";; # 0
+      1)  echo "#800000";; # 1
+      2)  echo "#008000";; # 2
+      3)  echo "#808000";; # 3
+      4)  echo "#000080";; # 4
+      5)  echo "#800080";; # 5
+      6)  echo "#008080";; # 6
+      7)  echo "#c0c0c0";; # 7
+      8)  echo "#808080";; # 8
+      9)  echo "#ff0000";; # 9
+      10) echo "#00ff00";; # 10
+      11) echo "#ffff00";; # 11
+      12) echo "#0000ff";; # 12
+      13) echo "#ff00ff";; # 13
+      14) echo "#00ffff";; # 14
+      15) echo "#ffffff";; # 15
+    esac
+  elif [[ $color -ge 16 ]] && [[ $color -le 231 ]]; then
+    # 16-231は6x6x6のカラーマトリックス
+    local color_index=$((color - 16))
+    local r=$(( ( color_index / 36)       * 51 ))
+    local g=$(( ((color_index /  6) %  6) * 51 ))
+    local b=$(( (color_index  %  6)       * 51 ))
+    printf "#%02x%02x%02x\n" "$r" "$g" "$b"
+  elif [[ $color -ge 232 ]] && [[ $color -le 255 ]]; then
+    # 232-255はグレースケール
+    local gray=$(( (color - 232) * 10 + 8 ))
+    printf "#%02x%02x%02x\n" "$gray" "$gray" "$gray"
+  fi
 }
 
-# ANSIカラーコード17を24ビットカラーで表示
-convert_to_rgb 17
+convert_to_rgb "$1"

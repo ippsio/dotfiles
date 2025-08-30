@@ -5,6 +5,11 @@ bind generic <Up>   move-up
 bind generic <Down> move-down
 bind generic <Right> none
 bind generic <Left> none
+
+# Shift+Up, Shift+Downが押された場合の設定です。
+bind generic <ScrollBack> previous
+bind generic <ScrollFwd> next
+
 # 分割されたビューがある時は、分割元を１行、上下に移動
 bind generic <C-k> previous
 bind generic <C-j> next

@@ -5,9 +5,9 @@ source git_review_core "$@"
 {
   echo "${review_json}";
   echo "---";
-  GIT_DIFF_CMD="git diff --stat=200 --stat-name-width=160 -p ${merge_base_hash}"
-  echo "${GIT_DIFF_CMD}"
-  eval "${GIT_DIFF_CMD}"
+  CMD="git diff --stat=200 --stat-name-width=160 -p ${merge_base_hash}"
+  echo "${CMD}"
+  eval "${CMD}"
 }| {
   set -x
   export GIT_MERGE_BASE=${merge_base_hash}

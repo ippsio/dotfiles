@@ -38,8 +38,10 @@ Jetpack 'Shougo/pum.vim'
 " lsp
 " lsp> config
 Jetpack 'neovim/nvim-lspconfig'
-Jetpack 'williamboman/mason-lspconfig.nvim', {'tag': 'v1.0.0'}
-Jetpack 'williamboman/mason.nvim', {'tag': 'v1.0.0'}
+"Jetpack 'williamboman/mason-lspconfig.nvim', {'tag': 'v1.0.0'}
+"Jetpack 'williamboman/mason.nvim', {'tag': 'v1.0.0'}
+Jetpack 'williamboman/mason-lspconfig.nvim'
+Jetpack 'williamboman/mason.nvim'
 Jetpack 'ray-x/lsp_signature.nvim'
 " lsp> progress message
 Jetpack 'j-hui/fidget.nvim'
@@ -87,6 +89,10 @@ Jetpack 'tpope/vim-rails'
 Jetpack 'vim-ruby/vim-ruby', { 'for': [ 'ruby', 'rake', 'eruby', 'slim'] }
 Jetpack 'vim-scripts/ruby-matchit', { 'for': [ 'ruby', 'rake'] }
 Jetpack 'tpope/vim-dispatch'
+Jetpack 'thoughtbot/vim-rspec'
+
+" Breadcrumb
+Jetpack 'SmiteshP/nvim-navic'
 
 " file manager
 Jetpack 'lambdalisue/fern.vim'
@@ -100,8 +106,8 @@ Jetpack 'tpope/vim-projectionist'
 "Jetpack 'navarasu/onedark.nvim'
 "Jetpack 'catppuccin/nvim'
 "Jetpack 'olimorris/onedarkpro.nvim'
-"Jetpack 'scottmckendry/cyberdream.nvim'
-"Jetpack 'lifepillar/vim-colortemplate'
+Jetpack 'scottmckendry/cyberdream.nvim'
+Jetpack 'lifepillar/vim-colortemplate'
 
 " window
 Jetpack 'declancm/maximize.nvim'
@@ -119,6 +125,17 @@ Jetpack 'stevearc/aerial.nvim'
 
 " calendar
 Jetpack 'itchyny/calendar.vim'
+
+" vim_abolish
+Jetpack 'tpope/vim-abolish'
+
+"Jetpack 'github/copilot.vim'
+Jetpack 'jackMort/ChatGPT.nvim'
+Jetpack 'MunifTanjim/nui.nvim'
+Jetpack 'nvim-lua/plenary.nvim'
+Jetpack 'folke/trouble.nvim'
+Jetpack 'nvim-telescope/telescope.nvim'
+
 
 let s:available_pkg = stdpath('data') . '/' . 'site' . '/pack/jetpack/opt/available_packages.json'
 let s:available_pkg_text = filereadable(s:available_pkg) ? join(readfile(s:available_pkg)) : "{}"

@@ -4,11 +4,11 @@ runtime! settings.vim
 runtime! remaps.vim
 runtime! autocmds.vim
 runtime! jetpack.vim
-runtime! highlights.vim
-""try
-""  runtime! colorscheme.vim
-""catch
-""endtry
+try
+  " runtime! highlights.vim
+  runtime! colorscheme.vim
+catch
+endtry
 runtime! jetpack_loadrc.vim
 runtime! rc/functions/Hi.vim
 

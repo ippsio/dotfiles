@@ -1377,9 +1377,9 @@ confirm_os_window_close -1
 
 
 # % git clone --depth 1 https://github.com/dexpota/kitty-themes.git ~/.config/kitty/kitty-themes
-# include ./kitty-themes/themes/3024_Day.conf
+include ./kitty-themes/themes/3024_Day.conf
 # include ./kitty-themes/themes/3024_Night.conf
-# include ./kitty-themes/themes/AdventureTime.conf
+include ./kitty-themes/themes/AdventureTime.conf
 # include ./kitty-themes/themes/Afterglow.conf
 # include ./kitty-themes/themes/AlienBlood.conf
 # include ./kitty-themes/themes/Alucard.conf
@@ -1399,7 +1399,7 @@ confirm_os_window_close -1
 # include ./kitty-themes/themes/Broadcast.conf
 # include ./kitty-themes/themes/Brogrammer.conf
 # include ./kitty-themes/themes/C64.conf
-include ./kitty-themes/themes/CLRS.conf
+# include ./kitty-themes/themes/CLRS.conf
 # include ./kitty-themes/themes/Chalk.conf
 # include ./kitty-themes/themes/Chalkboard.conf
 # include ./kitty-themes/themes/Ciapre.conf
@@ -2791,7 +2791,7 @@ map cmd+w none
 
 
 # BEGIN_KITTY_FONTS
-font_family      family="JetBrainsMonoNL Nerd Font Mono"
+font_family      family="Anonymous Pro for Powerline"
 bold_font        auto
 italic_font      auto
 bold_italic_font auto

@@ -1,9 +1,9 @@
-set notermguicolors
-"if has('nvim')
-"  set termguicolors
-"  let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-"  let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-"endif
+"set notermguicolors
+if has('nvim')
+  set termguicolors
+  let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+  let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+endif
 
 " カーソル行
 hi CursorLine cterm=underline
@@ -36,21 +36,21 @@ hi LineNr    ctermfg=238 ctermbg=NONE
 " directory
 hi Directory ctermfg=242 ctermbg=NONE
 
-hi Type    ctermfg=100 ctermbg=NONE cterm=bold
+hi Type    ctermfg=100  ctermbg=NONE cterm=bold
 hi Visual  ctermfg=NONE ctermbg=NONE cterm=reverse
 hi Statement ctermfg=172 ctermbg=NONE
 
 " vimdiffの色設定
-hi DiffAdd     ctermfg=203  ctermbg=NONE
-hi DiffAdded   ctermfg=203  ctermbg=NONE
+hi DiffAdd     ctermfg=18  ctermbg=195
+hi DiffAdded   ctermfg=18  ctermbg=195
 hi DiffRemoved ctermfg=063  ctermbg=NONE
-hi DiffChange  ctermfg=063  ctermbg=NONE
-hi DiffDelete  ctermfg=NONE ctermbg=250
-hi DiffText    ctermfg=18 ctermbg=NONE
+hi DiffChange  ctermfg=063  ctermbg=195
+hi DiffDelete  ctermfg=NONE ctermbg=NONE
+hi DiffText    ctermfg=NONE ctermbg=NONE cterm=reverse
 
 " vimContinue
 hi vimContinue ctermfg=70 ctermbg=54
 hi vimOperParen ctermfg=222
 hi vimUserFunc ctermfg=10
 
-hi MatchParen ctermfg=56 ctermbg=NONE
+hi MatchParen ctermfg=6 ctermbg=NONE

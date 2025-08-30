@@ -15,11 +15,20 @@ source ~/dotfiles/zshrc/30_prompt.zsh
 source ~/dotfiles/zshrc/40_bindkey.zsh
 source ~/dotfiles/zshrc/50_cmd_hack.zsh
 source ~/dotfiles/zshrc/60_zsh_plugin.zsh
-zsh-defer eval "$(direnv hook zsh)"
-zsh-defer eval "$(goenv init -)"
-zsh-defer eval "$(nodenv init -)"
-zsh-defer eval "$(pyenv init --path)"
-zsh-defer eval "$(rbenv init -)"
+if zsh-defer>/dev/null 2>&1; then
+  zsh-defer eval "$(direnv hook zsh)"
+  zsh-defer eval "$(goenv init -)"
+  zsh-defer eval "$(nodenv init -)"
+  zsh-defer eval "$(pyenv init --path)"
+  zsh-defer eval "$(rbenv init -)"
+else
+  eval "$(direnv hook zsh)"
+  eval "$(goenv init -)"
+  eval "$(nodenv init -)"
+  eval "$(pyenv init --path)"
+  eval "$(rbenv init -)"
+fi
 
 t1=$(~/dotfiles/bin/epocms/epocms_c)
 printf "zshrc loaded (%dms).\n" $((t1 - t0))
+

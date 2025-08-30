@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 FROM=${HOME}
 INTO='~'
 if [ -z "$1" ]; then

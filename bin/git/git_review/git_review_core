@@ -44,7 +44,7 @@ fi
 if [[ ! "${base_branch}" =~ ^origin\/ ]]; then
   base_branch=origin/${base_branch}
 fi
-merge_base_hash_long=$(git merge-base "${base_branch}" HEAD)
+merge_base_hash_long=$(set -x; git merge-base "${base_branch}" HEAD)
 merge_base_hash=$(git rev-parse --short "${merge_base_hash_long}")
 merge_base_log=$(git log -1 --date="format:%Y-%m-%d %H:%M:%S" --pretty="(%h) %ad %an %s" "${merge_base_hash}")
 merge_base_log=${merge_base_log//\"/\\\"}

@@ -1,5 +1,5 @@
 " colorscheme blue
-" colorscheme cyberdream
+"colorscheme cyberdream
 " colorscheme darkblue
 " colorscheme default
 " colorscheme delek
@@ -19,7 +19,7 @@
 " colorscheme pablo
 " colorscheme peachpuff
 " colorscheme quiet
-" colorscheme retrobox
+"colorscheme retrobox
 " colorscheme ron
 " colorscheme shine
 " colorscheme slate

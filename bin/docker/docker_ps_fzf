@@ -1,15 +1,12 @@
-#!/bin/bash
-CMD='docker ps -a --format "table {{.ID}}\t{{.Names}}\t{{.Image}}\t{{.Status}}\t{{.RunningFor}}\t{{.Command}}\t{{.Ports}}"'
-
-_FZF_PROMPT="$( [ -L $0 ] && basename $(readlink $0) || basename $0) > "
-
-ROW=$(eval "${CMD}" | fzf --sync --info=inline --header-lines=1 --prompt="${_FZF_PROMPT}" --header="${CMD}")
-
-if [[ ! -z ${ROW} ]]; then
-  CONTAINER_HASH=$(echo "${ROW}"| awk '{ printf "%s", $1 }')
-  echo "${CONTAINER_HASH}"
-  exit 0;
-else
-  exit 1;
+#!/usr/bin/env bash
+f="$0"
+[ -L "$f" ] && f=$(readlink "$f")
+bn=$(basename "$f")
+fzf_prompt="$bn > "
+res=$(docker ps -a --format "table {{.ID}}\t {{.Names}}\t {{.Image}}\t {{.Status}}\t {{.RunningFor}}\t {{.Command}}\t {{.Ports}}"\
+  | fzf --sync --info=inline --header-lines=1 --prompt="${fzf_prompt}")
+if [[ -z "$res" ]]; then
+  exit 1
 fi
+echo "$res"| awk '{ printf "%s", $1 }'
 

@@ -1,39 +1,40 @@
 #!/usr/bin/env zsh
 
-source ${ZINIT_ROOT}/bin/zinit.zsh
-zinit light zsh-users/zsh-autosuggestions
+# Clone zcomet if necessary
+if [[ ! -f ${ZDOTDIR:-${HOME}}/.zcomet/bin/zcomet.zsh ]]; then
+  command git clone https://github.com/agkozak/zcomet.git ${ZDOTDIR:-${HOME}}/.zcomet/bin
+fi
+source ${ZDOTDIR:-${HOME}}/.zcomet/bin/zcomet.zsh
+
+# zsh-autosuggestions
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=143'
+zcomet load zsh-users/zsh-autosuggestions
 
-zinit light "zsh-users/zsh-completions"
+# zsh-completions
+zcomet load zsh-users/zsh-completions
 
-zinit ice atclone"__zsh_version 4.3" atpull"__zsh_version 4.3"
+# zsh-history-substring-search
+zcomet load zsh-users/zsh-history-substring-search
 
-zinit light "zsh-users/zsh-history-substring-search"
+# fzf-bin
+zcomet load junegunn/fzf-bin
 
-zinit light 'junegunn/fzf-bin'
+init_zsh_defer_inside_fzf_tab() {
+  zcomet load romkatv/zsh-defer
+  zcomet load Aloxaf/fzf-tab
 
-# 以下2行セット("junegunn/fzf"から"shell/key-bindings.zsh"だけ使う)
-zinit ice src"shell/key-bindings.zsh"
-zinit light "junegunn/fzf"
+  zstyle ':completion:*:git-checkout:*' sort false
+  zstyle ':completion:*:descriptions' format '[%d]'
+  zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+  zstyle ':completion:*' menu no
+  zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
+  zstyle ':fzf-tab:*' fzf-flags --color='fg:17,bg:240,hl:1,fg+:0,bg+:244' --bind=tab:accept
+}
 
-zinit light "romkatv/zsh-defer"
-zinit light Aloxaf/fzf-tab
-# disable sort when completing `git checkout`
-zstyle ':completion:*:git-checkout:*' sort false
+init_key_bindings() {
+  zcomet load junegunn/fzf shell/key-bindings.zsh
+}
 
-# set descriptions format to enable group support
-# NOTE: don't use escape sequences here, fzf-tab will ignore them
-zstyle ':completion:*:descriptions' format '[%d]'
+init_zsh_defer_inside_fzf_tab
+init_key_bindings
 
-# set list-colors to enable filename colorizing
-# zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
-zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
-
-# force zsh not to show completion menu, which allows fzf-tab to capture the unambiguous prefix
-zstyle ':completion:*' menu no
-
-# preview directory's content with eza when completing cd
-zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
-
-# switch group using `<` and `>`
-zstyle ':fzf-tab:*' switch-group '<' '>'

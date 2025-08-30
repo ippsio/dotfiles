@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
-today_ym=$(LC_ALL=C date '+%Y_%m')
-today_ymda1=$(LC_ALL=C date '+%Y_%m%d_%a')
-today_ymda2=$(LC_ALL=C date '+%Y/%m/%d(%a)')
-readonly KIND="memo"
+epoc=$(date '+%s')
+today_ym=$(LC_ALL=C date -r "$epoc" '+%Y_%m')
+today_ymda1=$(LC_ALL=C date -r "$epoc" '+%Y_%m%d_%a')
+today_ymda2=$(LC_ALL=C date -r "$epoc" '+%Y/%m/%d(%a)')
+arg_kind="${1:-memo}"
+readonly KIND="${arg_kind}"
 readonly BASE_DIR=~/notes
 readonly NOTE_DIR="${BASE_DIR}/${KIND}/${today_ym}"
 readonly TODAYS_NOTE="${BASE_DIR}/${KIND}/${today_ym}/${today_ymda1}.md"

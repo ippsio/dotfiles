@@ -15,6 +15,11 @@ zle_space() {
   [[ $LBUFFER =~ ' [A-Z0-9]+$' ]] \
   && zle _expand_alias
 
+  if [[ $BUFFER =~ '.* $' ]]; then
+    zle fzf-tab-complete
+    return 0
+  fi
+
   # cd
   if [[ $BUFFER =~ '^goto$' || $BUFFER =~ '^g$' ]]; then
     BUFFER="$(goto_candidate_fzf)"
@@ -35,7 +40,7 @@ zle_space() {
   fi
 
   # git grep(git_grep_fzf_vimでは、git管理外でも検索できるよう、-c grep.fallbackToNoIndex=true 付きにしてあります。)
-  if [[ $BUFFER =~ '^gg' ]]; then
+  if [[ $BUFFER =~ '^gg$' ]]; then
     BUFFER="git_grep_fzf_vim ${RBUFFER}" && zle end-of-line
     return 0
   fi
@@ -158,7 +163,8 @@ zle_space() {
 
     #  bundle exec rake + completion
     if [[ $BUFFER =~ '^rake$' ]]; then
-      BUFFER="bundle exec rake $(fzf_bundle_exec_rake)" && zle end-of-line
+      selected=$(fzf_bundle_exec_rake)
+      BUFFER="bundle exec rake $selected" && zle end-of-line
       return 0
     fi
 

@@ -188,20 +188,31 @@ target=$(
     # Git log.
     # --------------------------------------------------
     decorate -verbose_log; echo "${GIT_LOG}"; printf '\e[0m';
+    #eval "${GIT_LOG}" \
+    #  | awk -F '\t' \
+    #    -v deco_git_hash=$(escape_SQ $(decorate -git_hash)) \
+    #    -v deco_git_cd=$(escape_SQ $(decorate -git_cd)) \
+    #    -v deco_git_an=$(escape_SQ $(decorate -git_an)) \
+    #    -v deco_git_d=$(escape_SQ $(decorate -git_d)) \
+    #    -v deco_git_s=$(escape_SQ $(decorate -git_s)) \
+    #    '{
+    #       printf \"%2s\", NR;
+    #       printf \"	\"; printf \"%s\", deco_git_hash; printf \"%s\", \$1; printf \"\033[0m\"; # %h
+    #       printf \"	\"; printf \"%s\", deco_git_cd; printf \"%s\", \$2; printf \"\033[0m\"; # (%cd)
+    #       printf \"	\"; printf \"%s\", deco_git_an; printf \"%s\", \$3; printf \"\033[0m\"; # %an
+    #       printf \"	\"; printf \"%s\", deco_git_d; printf \"%s\", \$4; printf \"\033[0m\"; # %d
+    #       printf \"%s\", deco_git_s; printf \"%s\", \$5; printf \"\033[0m\"; # %s
+    #       printf \"\n\";
+    #    }'
     eval "${GIT_LOG}" \
       | awk -F '\t' \
-        -v deco_git_hash=$(escape_SQ $(decorate -git_hash)) \
-        -v deco_git_cd=$(escape_SQ $(decorate -git_cd)) \
-        -v deco_git_an=$(escape_SQ $(decorate -git_an)) \
-        -v deco_git_d=$(escape_SQ $(decorate -git_d)) \
-        -v deco_git_s=$(escape_SQ $(decorate -git_s)) \
         '{
            printf \"%2s\", NR;
-           printf \"	\"; printf \"%s\", deco_git_hash; printf \"%s\", \$1; printf \"\033[0m\"; # %h
-           printf \"	\"; printf \"%s\", deco_git_cd; printf \"%s\", \$2; printf \"\033[0m\"; # (%cd)
-           printf \"	\"; printf \"%s\", deco_git_an; printf \"%s\", \$3; printf \"\033[0m\"; # %an
-           printf \"	\"; printf \"%s\", deco_git_d; printf \"%s\", \$4; printf \"\033[0m\"; # %d
-           printf \"%s\", deco_git_s; printf \"%s\", \$5; printf \"\033[0m\"; # %s
+           printf \"	%s\", \$1;  # %h
+           printf \"	%s\", \$2;  # (%cd)
+           printf \"	%s\", \$3;  # %an
+           printf \"	%s\", \$4;  # %d
+           printf \"%s\", \$5;  # %s
            printf \"\n\";
         }'
     horizontal_line;

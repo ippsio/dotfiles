@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-t0=$(epocms)
+t0=$(~/dotfiles/bin/epocms/epocms)
 echo
-echo "$0"| home_as_tilde
+echo "$0"| ~/dotfiles/bin/swiss_army_knife/home_as_tilde
 echo "\$1='$1', \$2='$2', \$3='$3', \$4='$4'"
 echo
 
@@ -12,7 +12,7 @@ readonly ARG_FNAME="$1"
 readonly ARG_HI_LINE="${2:-1}"
 readonly ARG_SEARCHWORDS="$4"
 readonly AUTHOR_LEN=6
-GIT_ROOT=$(git_root "$1")
+GIT_ROOT=$(~/dotfiles/bin/git/git_root "$1")
 FNAME_ABS=$(realpath "${ARG_FNAME}")
 # shellcheck disable=SC2001 # (See if you can use ${variable//search/replace} instead.)
 FNAME_REL=$(echo "${FNAME_ABS}"| sed "s#${GIT_ROOT}/##")

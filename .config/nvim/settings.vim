@@ -11,9 +11,6 @@
 set shada-=j
 set shadafile=~/.cache/nvim/my.shada
 
-
-set notermguicolors
-
 " nocompatible compatibleオプションをオフにする
 set nocompatible
 

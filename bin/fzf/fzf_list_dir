@@ -29,11 +29,11 @@ ls -UlaFG --color=always "${abs_path}"
 EOF
 )
 
-FIND_RESULT=$(set -x; find -Es\
+FIND_RESULT=$(find -Es\
   "${TARGET_DIR}"\
   -type d\
   -not -regex '.*/(\.git|\.git/).*'\
-  -maxdepth 2 2>/dev/null\
+  -maxdepth 1 2>/dev/null\
   | grep -v "^${TARGET_DIR}$"\
   | sed 's#^(\./)##; s#$#/#g'\
   | home_as_tilde

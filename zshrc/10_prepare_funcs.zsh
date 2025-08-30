@@ -6,7 +6,7 @@ prepare_by_brew() {
   fi
 }
 nodir_then_gitclone() {
-  if [ -z $1 ]; then
+  if [ ! -d $1 ]; then
     echo "$2 not found. git clone."
     git clone https://github.com/$2 ${3:-$1}
   fi

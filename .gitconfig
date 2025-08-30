@@ -20,7 +20,7 @@
   prompt = false
 
 [difftool "nvimdiff"]
-  cmd = "nvim -d \"$LOCAL\" \"$REMOTE\""
+  cmd = "nvim +'set readonly nomodifiable' +'wincmd w | set readonly nomodifiable' -d \"$LOCAL\" \"$REMOTE\""
 
 [color "diff-highlight"]
   oldNormal = 203 default

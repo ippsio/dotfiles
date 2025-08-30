@@ -14,5 +14,4 @@ for d in $(
 
 export PATH
 
-#export FZF_DEFAULT_OPTS='--ansi --exact --reverse --prompt="❯ " --color hl:#ffaf00,bg+:#a7a7a7,hl+:#ffd700'
-export FZF_DEFAULT_OPTS='--ansi --exact --reverse --prompt="❯ " --color hl:#ffaf00,bg+:248'
+export FZF_DEFAULT_OPTS='--ansi --exact --reverse --prompt="❯ " --color hl:1,bg+:248'

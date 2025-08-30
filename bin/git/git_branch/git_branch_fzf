@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-home_as_tilde "$0"| xargs -I {} echo "'{}' called"  1>&2
+# home_as_tilde "$0"| xargs -I {} echo "'{}' called"  1>&2
 
 COMMIT_LOG_ROWS=15
-! (set -x; is_git_repo) && echo "Not a git repository. " && exit 1
+! is_git_repo && echo "Not a git repository. " && exit 1
 if [ -L "$0" ]; then
   link=$(readlink "$0")
   _ME=$(basename "$link")

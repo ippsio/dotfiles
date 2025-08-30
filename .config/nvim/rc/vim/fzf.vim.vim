@@ -120,7 +120,7 @@ command! -bang -nargs=* Grep
   \   . ' --no-hscroll '
   \   . ' --bind "tab:execute(git_pull_request_open_by_file_line {2} {3})" '
   \   . ' --bind "ctrl-_:toggle-preview" '
-  \   . ' --preview "git_blame_colored {2} {3} ' . shellescape(<q-args>) . ' {q}"'
+  \   . ' --preview "~/dotfiles/bin/git/git_blame/git_blame_colored {2} {3} ' . shellescape(<q-args>) . ' {q}"'
   \   . ' --preview-window "bottom,60%,border-top,+{2}+3/3,~3" ',
   \   'window': { 'width': 0.95, 'height': 0.99 }
   \   })
@@ -136,7 +136,7 @@ command! -bang -nargs=* Gff
   \   . ' --prompt "fzf.vim.vim Gff > " '
   \   . ' --ansi '
   \   . ' --bind "change:reload:git_filter_files {q}||true" '
-  \   . ' --preview "git_blame_colored {}" '
+  \   . ' --preview "~/dotfiles/bin/git/git_blame/git_blame_colored {}" '
   \   . ' --preview-window="wrap:right:75%" ',
   \ }))
 

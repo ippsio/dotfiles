@@ -4,5 +4,5 @@ bind main l      enter
 bind main    R !git rebase -i %(commit)~
 bind main    a !git commit --amend
 bind main    O +bash -c "~/dotfiles/bin/git_pull_request_open_by_hash %(commit)"
-bind main  t !bash -c "git difftool %(commit)^ %(commit)"
 
+bind main    ;      @hub browse -- commit/%(commit)
