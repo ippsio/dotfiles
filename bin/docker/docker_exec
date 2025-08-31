@@ -1,6 +1,5 @@
-#!/bin/bash
-CONTAINER_ID=$(docker_ps_fzf)
-if [[ ! -z ${CONTAINER_ID} ]]; then
-  echo -n "docker exec -it ${CONTAINER_ID} /bin/bash --login"
+#!/usr/bin/env bash
+container_id=$(docker_ps_fzf)
+if [[ -n "${container_id}" ]]; then
+  printf "docker exec -it %s /bin/bash --login" "${container_id}"
 fi
-

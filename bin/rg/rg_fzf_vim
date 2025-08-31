@@ -1,9 +1,4 @@
-#!/bin/bash
-if [ -L $0 ] && basename $(readlink $0); then
-  _ME=$(basename $(readlink $0))
-else
-  _ME=$(basename $0)
-fi
+#!/usr/bin/env bash
 rg_wrap "$@" \
   | fzf \
     -m \
@@ -11,7 +6,7 @@ rg_wrap "$@" \
     --ansi \
     --delimiter='	' \
     --tabstop=2 \
-    --prompt="(${_ME})" \
+    --prompt="($(basename $0))" \
     --header="${FZF_HEADER}" \
     --bind "enter:execute(nvim {2} +{3} < /dev/tty > /dev/tty)" \
     --bind='ctrl-/:toggle-preview' \

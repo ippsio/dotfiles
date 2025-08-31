@@ -1,9 +1,0 @@
-#!/bin/bash
-source git_review_core $@|| exit $?
-(
-  echo "${review_json}";
-  echo "---";
-  GIT_DIFF_CMD="git diff --stat=200 --stat-name-width=160 -p ${merge_base_hash}"
-  echo "${GIT_DIFF_CMD}"
-  eval "${GIT_DIFF_CMD}"
-)| (set -x; export GIT_MERGE_BASE=${merge_base_hash}; tig show ${merge_base_hash}...HEAD)

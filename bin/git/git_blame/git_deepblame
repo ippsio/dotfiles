@@ -35,7 +35,7 @@ q_shell_escaped=$(printf '%s\n' "${q_raw}"| sed -e 's/[^^]/[&]/g; s/\^/\\^/g')
 q_shell_escaped="${q_shell_escaped//\`/\\\`}"
 q_shell_escaped="${q_shell_escaped//\"/\\\"}"
 
-cd $(git_obtain_root "$files") && (
+cd $(git_root "$files") && (
   printf "[%s]\n" "$(basename $0)"
   printf "PARAMETERS\n  in=%s\n  files=%s\n  q_raw=%s\n  q_shell_escaped=%s\n" "${range}" "${files}" "${q_raw}" "${q_shell_escaped}"
   git_log_g_res_cmd="git --no-pager log --date=format:'%Y-%m-%d %H:%M' --pretty='%h	%ad	%an	%s' -G\"${q_shell_escaped}\"${range} -- ${files}"

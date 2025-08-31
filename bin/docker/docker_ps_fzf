@@ -1,12 +1,15 @@
 #!/usr/bin/env bash
-f="$0"
-[ -L "$f" ] && f=$(readlink "$f")
-bn=$(basename "$f")
-fzf_prompt="$bn > "
-res=$(docker ps -a --format "table {{.ID}}\t {{.Names}}\t {{.Image}}\t {{.Status}}\t {{.RunningFor}}\t {{.Command}}\t {{.Ports}}"\
-  | fzf --sync --info=inline --header-lines=1 --prompt="${fzf_prompt}")
-if [[ -z "$res" ]]; then
-  exit 1
-fi
-echo "$res"| awk '{ printf "%s", $1 }'
 
+item() { printf "{{%s}}\t" "$1"; return 0; }
+items=""
+items+=$(item .ID)
+items+=$(item .Names)
+items+=$(item .Image)
+#items+=$(item .Status)
+#items+=$(item .RunningFor)
+#items+=$(item .Command)
+items+=$(item .Ports)
+
+docker ps -a --format "table $items"\
+  | fzf --sync --info=inline --header-lines=1 --prompt="$(basename "$0") > "\
+  | awk '{ printf "%s", $1 }' || exit 1
