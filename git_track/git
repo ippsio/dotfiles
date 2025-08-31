@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-cmd="git $*"
-result=$(eval "$cmd")
-echo "$cmd" >> track.log
-echo "$result"
