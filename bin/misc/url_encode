@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # ```
 # 使用例
 # % urlencode "記号入りの文字列<>&abc"

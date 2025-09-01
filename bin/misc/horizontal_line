@@ -1,2 +1,2 @@
-#!/bin/bash
+#!/usr/bin/env bash
 eval printf '%.0s-' '{1..'$(tput cols)'}';

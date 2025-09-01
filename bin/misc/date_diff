@@ -1,4 +1,5 @@
-#!/bin/bash # caution: unix only
+#!/usr/bin/env bash
+# caution: unix only
 epoc() { date -j -f "%Y-%m-%d %H:%M:%S %z" "$1" "+%s" || return $?; }
 epoc_to_local() { date -r $1 +'%Y-%m-%d %H:%M:%S %z' || return $?; }
 epoc_to_utc() { date -u -r $1 +'%Y-%m-%d %H:%M:%S %z' || return $?; }
