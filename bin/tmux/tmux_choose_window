@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # This is the default WINDOW_TREE_DEFAULT_FORMAT
 # ~/ghq/github.com/tmux/tmux/window-tree.c
@@ -69,7 +69,7 @@
 # }
 
 # So ... This is customized style.
-WINDOW_TREE_CUSTOM_FORMAT=`cat << EOF
+WINDOW_TREE_CUSTOM_FORMAT=$(cat << EOF
 #{?pane_format,
   #{?pane_active,
     #[fg=default ]#[bg=default]-->#[fg=color193]#[bg=color234] PANE(ACTIVE) #{pane_current_command}#{?pane_marked,M,}#{?#{&&:#{pane_title},#{!=:#{pane_title},#{host_short}}},: "#{pane_title}",},
@@ -92,7 +92,7 @@ WINDOW_TREE_CUSTOM_FORMAT=`cat << EOF
   }
 }
 EOF
-`
+)
 WINDOW_TREE_CUSTOM_FORMAT=$(echo "${WINDOW_TREE_CUSTOM_FORMAT}"| sed -r 's/^[ ]+//'| perl -pe 's/\n//g')
 tmux choose-window -F "${WINDOW_TREE_CUSTOM_FORMAT}"
 

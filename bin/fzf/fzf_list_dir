@@ -1,55 +1,39 @@
 #!/usr/bin/env bash
-if [[ -z "$1" || "$1" == "." || "$1" == "./" ]]; then
-  TARGET_DIR="."
-  FZF_QUERY=""
-else
-  TARGET_DIR=$(home_as_home "${1#./}")
-  if [[ ! -e "${TARGET_DIR}" ]]; then
-    echo "$1"
-    exit
-  fi
-  FZF_QUERY=$(home_as_tilde "${1#./}")
-fi
-TARGET_DIR=$(home_as_home "${TARGET_DIR}")
-TARGET_DIR_TILDE=$(home_as_tilde "${TARGET_DIR}")
-
-# FZFプロンプト
-FZF_PROMPT_BASENAME=$(basename "$0")
-FZF_PROMPT_TARGET_DIR=$(home_as_tilde "${TARGET_DIR}")
-FZF_PROMPT="${FZF_PROMPT_BASENAME} (dir='${FZF_PROMPT_TARGET_DIR})') > "
-
-# FZFプレビュー処理スクリプト
-FZF_PREVIEW_SCRIPT=$(cat <<'EOF'
-abs_path=$(echo '{}'| sed -e "s#^~#${HOME}#")
-abs_path=$(realpath "${abs_path}")
-abs_path=$(echo "${abs_path}/"| sed 's#//$#/#');
-echo "${abs_path}";
-echo;
-ls -UlaFG --color=always "${abs_path}"
-EOF
-)
-
-FIND_RESULT=$(find -Es\
-  "${TARGET_DIR}"\
-  -type d\
-  -not -regex '.*/(\.git|\.git/).*'\
-  -maxdepth 1 2>/dev/null\
-  | grep -v "^${TARGET_DIR}$"\
-  | sed 's#^(\./)##; s#$#/#g'\
-  | home_as_tilde
-)
-
-CANDIDATES=$(cat <<EOF
-${TARGET_DIR_TILDE/./}..
-${TARGET_DIR_TILDE/./}.
-${FIND_RESULT}
-EOF
-)
-
-echo "${CANDIDATES}"\
-  | fzf +m\
-    --prompt="${FZF_PROMPT}"\
+get_list() {
+  (
+    echo "${2/./}.."
+    echo "${2/./}."
+    find -Es "$1" -type d -not -regex '.*/(\.git|\.git/).*' -maxdepth 1 2>/dev/null\
+      | grep -v "^${1}$"\
+      | sed 's#^(\./)##; s#$#/#g'\
+      | home_as_tilde
+  )
+}
+make_fzf_preview() {
+  printf '%s\n' "d_abs=\$(echo '{}'| sed -e \"s#^~#\${HOME}#\")"
+  printf '%s\n' "d_abs=\$(realpath \"\${d_abs}\")"
+  printf '%s\n' "d_abs=\$(echo \"\${d_abs}/\"| sed 's#//\$#/#');"
+  printf '%s\n' "echo \"\${d_abs}\";"
+  printf '%s\n' "echo;"
+  printf '%s\n' "ls -UlaFG --color=always \"\${d_abs}\""
+}
+apply_fzf() {
+  get_list "$1" "$2"| fzf +m\
+    --query="$3 "\
+    --prompt="$4"\
+    --info=inline\
+    --bind "ctrl-_:toggle-preview" \
     --preview-window=right:60%:wrap\
-    --preview="${FZF_PREVIEW_SCRIPT}"\
-    --query="${FZF_QUERY} "\
-  || printf "%s" "$1"
+    --preview="$5"
+}
+
+dir=$(dirname "$0")
+source "${dir}/func/fzf_list_functions.sh"
+basename0=$(basename "$0")
+target_dir_h_as_h=$(get_target_dir_h_as_h "$1")
+target_dir_h_as_t=$(home_as_tilde "$target_dir_h_as_h")
+fzf_prompt=$(printf "%s (dir='%s')" "$basename0" "$target_dir_h_as_t")
+fzf_query=$(get_fzf_query "$1")
+fzf_preview=$(make_fzf_preview)
+res=$(apply_fzf "$target_dir_h_as_h" "$target_dir_h_as_t" "$fzf_query" "$fzf_prompt" "$fzf_preview"|| printf "%s" "$1")
+echo "$res"

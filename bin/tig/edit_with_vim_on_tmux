@@ -1,9 +1,0 @@
-#!/usr/bin/env zsh
-
-file="$1"
-line="$2"
-
-(
-  source /Users/i/dotfiles/zshrc/00_export.zsh
-  tmux display-popup -E -w 90% -h 95% -x W -y W -d "$PWD" "nvim +${line:-1} '$file'"
-) >/dev/null 2>&1 &

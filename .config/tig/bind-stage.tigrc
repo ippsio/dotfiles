@@ -7,7 +7,7 @@ bind stage A previous
 # Shift+Downで次のファイル
 bind stage B next
 bind stage C      !git commit
-bind stage - >bash -c "~/dotfiles/bin/tig/git_checkout_-- %(file)"
+bind stage - >bash -c "~/dotfiles/bin/tig/tig_git_checkout_-- %(file)"
 bind stage h view-close-no-quit
-bind stage e >zsh -c "~/dotfiles/bin/tig/edit_with_vim_on_tmux %(file) %(lineno)"
+bind stage E >bash -c "~/dotfiles/bin/tig/tig_edit_with_vim_on_tmux %(file) %(lineno)"
 

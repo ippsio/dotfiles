@@ -46,20 +46,20 @@ if [[ -n "${json_selected}" ]]; then
   exit
 fi
 
-prs=$(set -x; git_pull_request_search_with_branch "${CURRENT_BRANCH}")|| exit $?
+prs=$(set -x; git_pr_search_with_branch "${CURRENT_BRANCH}")|| exit $?
 pr_numbers=$(echo "$prs"| awk -F '\t' '{ print $1 }')
 # shellcheck disable=SC2116
 for pr_number in $(echo "$pr_numbers"); do
   [[ "${pr_number}" == "GIT_SEARCH_PR:PR_NOT_FOUND" ]] && continue
   timer_clock_start_at=$(epocms)
-  json_git_pull_request_get=$(set -x; git_pull_request_get "${pr_number}")|| exit $?
+  json_git_pr_get=$(set -x; git_pr_get "${pr_number}")|| exit $?
   timer_clock_end_at=$(epocms)
-  head_ref=$(echo "${json_git_pull_request_get}"| jq -r '.head.ref')
-  base_ref=$(echo "${json_git_pull_request_get}"| jq -r '.base.ref')
-  html_url=$(echo "${json_git_pull_request_get}"| jq -r '.html_url')
-  user=$(echo "${json_git_pull_request_get}"| jq -r '.user.login')
-  pr_title=$(echo "${json_git_pull_request_get}"| jq -r '.title')
-  created_at=$(echo "${json_git_pull_request_get}"| jq -r '.created_at')
+  head_ref=$(echo "${json_git_pr_get}"| jq -r '.head.ref')
+  base_ref=$(echo "${json_git_pr_get}"| jq -r '.base.ref')
+  html_url=$(echo "${json_git_pr_get}"| jq -r '.html_url')
+  user=$(echo "${json_git_pr_get}"| jq -r '.user.login')
+  pr_title=$(echo "${json_git_pr_get}"| jq -r '.title')
+  created_at=$(echo "${json_git_pr_get}"| jq -r '.created_at')
   fetch_tat=$(( timer_clock_end_at - timer_clock_start_at ))
 
   if [[ "$head_ref" != "${CURRENT_BRANCH}" ]]; then

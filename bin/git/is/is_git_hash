@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 if [[ ! $1 =~ [0-9abcdef]{7,40}$ ]]; then
   exit 1 # is not a valid commit hash.

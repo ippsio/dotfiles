@@ -23,8 +23,7 @@ bind generic P      none
 bind generic ? view-help
 # grep
 bind generic E      view-grep
-# bind generic <Hash> +bash -c "~/dotfiles/bin/tig/yank_commit_hash_subject %(commit)"
-bind generic <Hash> +bash -c "~/dotfiles/bin/tig/yank_commit_hash_subject %(commit)"
+bind generic <Hash> +bash -c "~/dotfiles/bin/tig/tig_yank_commit_hash_subject %(commit)"
 bind generic h none
 bind generic V :toggle split-view-height -10%   # Decrease split height
 

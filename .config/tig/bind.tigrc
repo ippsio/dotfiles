@@ -5,4 +5,3 @@ source ~/.config/tig/bind-diff.tigrc
 source ~/.config/tig/bind-main.tigrc
 source ~/.config/tig/bind-stage.tigrc
 source ~/.config/tig/bind-status.tigrc
-

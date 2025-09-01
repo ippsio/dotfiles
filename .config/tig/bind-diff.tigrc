@@ -12,9 +12,9 @@ bind diff    g      :/^---$ # goto file list
 bind diff [ :toggle diff-context -1		   # Decrease context (-U arg)
 bind diff ] :toggle diff-context +1		   # Increase context
 
-bind diff o >git_difftool_handler %(file)	%(commit)	%(revargs)
-bind diff Tab >git_difftool_handler %(file)	%(commit)	%(revargs)
+bind diff o >tig_git_difftool_handler %(file)	%(commit)	%(revargs)
+bind diff Tab >tig_git_difftool_handler %(file)	%(commit)	%(revargs)
 
-bind diff e >zsh -c "~/dotfiles/bin/tig/edit_with_vim_on_tmux %(file) %(lineno)"
+bind diff E >bash -c "~/dotfiles/bin/tig/tig_edit_with_vim_on_tmux %(file) %(lineno)"
 #revargs=%(revargs),fileargs=%(fileargs),cmdlineargs=%(cmdlineargs),
 bind diff    ;      @hub browse -- commit/%(commit)

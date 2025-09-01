@@ -2,7 +2,7 @@
 
 t0=$(~/dotfiles/bin/epocms/epocms)
 echo
-echo "$0"| ~/dotfiles/bin/swiss_army_knife/home_as_tilde
+echo "$0"| ~/dotfiles/bin/misc/home_as_tilde
 echo "\$1='$1', \$2='$2', \$3='$3', \$4='$4'"
 echo
 

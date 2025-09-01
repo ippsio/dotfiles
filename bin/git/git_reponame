@@ -1,2 +1,2 @@
-#!/bin/bash
+#!/usr/bin/env bash
 git remote get-url origin 2>/dev/null| awk -F '[:/]' '{ printf "%s/%s\n",$(NF-1),$(NF) }'| sed 's/\.git$//'

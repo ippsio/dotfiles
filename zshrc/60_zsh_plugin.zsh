@@ -35,6 +35,6 @@ init_key_bindings() {
   zcomet load junegunn/fzf shell/key-bindings.zsh
 }
 
-init_zsh_defer_inside_fzf_tab
+# init_zsh_defer_inside_fzf_tab
 init_key_bindings
 

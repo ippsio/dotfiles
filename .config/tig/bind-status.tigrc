@@ -1,10 +1,10 @@
 bind status l      enter
 bind status <Right> enter
 bind status C      !git commit
-bind status - >bash -c "~/dotfiles/bin/tig/git_checkout_-- %(file)"
+bind status - >bash -c "~/dotfiles/bin/tig/tig_git_checkout_-- %(file)"
 bind status D ?bash -c "(set -x; rm %(file))"
 bind status <C-d> ?bash -c "(set -x; rm %(file))"
 bind status <C-g> +bash -c "printf '%s' %(file)| pbcopy; echo \"FILENAME COPIED '%(file)'\""
 bind status  t >bash -c "git difftool %(commit)^ $(commit) %(file)"
-bind status e >zsh -c "~/dotfiles/bin/tig/edit_with_vim_on_tmux %(file) %(lineno)"
+bind status E >bash -c "~/dotfiles/bin/tig/tig_edit_with_vim_on_tmux %(file) %(lineno)"
 

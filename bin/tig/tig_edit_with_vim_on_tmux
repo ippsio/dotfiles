@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+file="$1"
+line="$2"
+script="
+source ~/dotfiles/zshrc/00_export.zsh
+eval '$(direnv hook zsh)'
+nvim +${line:-1} '$file'
+"
+
+tmux display-popup -E -w 90% -h 95% -x W -y W -d "$PWD" "$script">/dev/null 2>&1 &

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 perl_epocms() { perl -MTime::HiRes -e 'printf("%.0f\n",Time::HiRes::time()*1000)'; }
 hline() { eval printf '%.0s-' "{1..120}"; echo; return 0; }
 readonly DELIMITER=$'\t'
