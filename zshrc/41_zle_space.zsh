@@ -114,7 +114,7 @@ zle_space() {
 
     # git push origin HEAD
     if [[ $BUFFER =~ '^gps$' ]]; then
-      if [[ -n "$(git_obtain_remote_of_branch)" ]]; then
+      if [[ -n "$(git_get_remote_of_branch)" ]]; then
         BUFFER="git push origin HEAD " && zle end-of-line
       else
         BUFFER="git push -u origin HEAD " && zle end-of-line
