@@ -1,58 +1,37 @@
 zle -N triggered_by_tab
 bindkey "^I" triggered_by_tab
 
-# TAB(=CTRL+I)補完
 function triggered_by_tab() {
-  # Directory completion
-  if [[ -z "$BUFFER" ]]; then
-    dir=$(fzf_list_dir)
-    if [[ -n "$dir" ]]; then
-      LBUFFER="cd $dir"
-      zle end-of-line
-      return 0
-    else
-      BUFFER=""
-      zle end-of-line
-      return 0
-    fi
-  else
-    local -a cmds=("cd" "find")
-    for c in $cmds; do
-      [[ $BUFFER =~ "^${c} *$" ]] && BUFFER="${c} ./" && zle end-of-line # complete first './'.
-      if [[ $BUFFER =~ "^${c} *.+/+$" ]]; then
-        BUFFER="${c} $(fzf_list_dir ${${BUFFER#${c} }:-.} --PROMPT=${c})" && zle end-of-line
-        return 0
-      fi
-    done
+  ha=$(bufheadargs)
 
-    # File name completion
-    local -a cmds=("vim" "nvim" "source" "ls" "ll")
-    for c in $cmds; do
-      [[ $BUFFER =~ "^${c} *$" ]] && BUFFER="${c} ./" && zle end-of-line # complete first './'.
-      if [[ $BUFFER =~ "^${c} *.+/+$" ]]; then
-        fzf_response=$(fzf_list_file ${${BUFFER#${c} }:-.} --PROMPT=${c})
-        if [[ -n "${fzf_response}" ]]; then
-          BUFFER="${c} ${fzf_response}" && zle end-of-line
-        fi
-        return 0
-      fi
-    done
-
-    if $(is_git_repo); then
-      if [[ $BUFFER =~ "^.*origin/+$" ]]; then
-        RBUFFER="$(git branch --show-current)"
-        zle end-of-line
-        return
-      fi
-    fi
-
-    # tig + completion
-    [[ $BUFFER =~ '^tig +$' ]] \
-    && zle autosuggest-clear \
-    && BUFFER="tig $(git_branch_fzf| sed -e 's#^origin/##')" && zle end-of-line && return
+  isbuf "^$" && lbuf "cd ./"
+  isbuf "cd[ ]*$" && lbuf "$ha ./"
+  isbuf "ls[ ]*$" && lbuf "$ha ./"
+  isbuf "ll[ ]*$" && lbuf "$ha ./"
+  isbuf "vim[ ]*$" && lbuf "$ha ./"
+  isbuf "nvim[ ]*$" && lbuf "$ha ./"
+  isbuf "find[ ]*$" && lbuf "$ha ./"
+  isbuf "source[ ]*$" && lbuf "$ha ./"
+  if [[ $BUFFER =~ "^.*/$" ]]; then
+    ha=$(bufheadargs)
+    ta=$(buftailargs)
+    isbuf "cd[ ]+.+$" && lbuf "$ha " && rbuf "fzf_list_dir $ta --PROMPT=$ha" && return 0
+    isbuf "ls[ ]+.+$" && lbuf "$ha " && rbuf "fzf_list_file $ta --PROMPT=$ha" && return 0
+    isbuf "ll[ ]+.+$" && lbuf "$ha " && rbuf "fzf_list_file $ta --PROMPT=$ha" && return 0
+    isbuf "vim[ ]+.+$" && lbuf "$ha " && rbuf "fzf_list_file $ta --PROMPT=$ha" && return 0
+    isbuf "nvim[ ]+.+$" && lbuf "$ha " && rbuf "fzf_list_file $ta --PROMPT=$ha" && return 0
+    isbuf "find[ ]+.+$" && lbuf "$ha " && rbuf "fzf_list_dir  $ta --PROMPT=$ha" && return 0
+    isbuf "source[ ]+.+$" && lbuf "$ha " && rbuf "fzf_list_file $ta --PROMPT=$ha" && return 0
   fi
 
-  # 上記にヒットしなかたら、普通っぽい挙動にする
+  if $(is_git_repo); then
+    isbuf "tig" && lbuf "$ha " && rbuf "git_branch_fzf" && return 0
+    if [[ $BUFFER =~ "^.*origin/+$" ]]; then
+      RBUFFER="$(git branch --show-current)"
+      zle end-of-line
+      return
+    fi
+  fi
+
   zle expand-or-complete
 }
-

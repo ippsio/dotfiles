@@ -1,7 +1,6 @@
 alias ll='ls -Ulah -D "%Y-%m-%d %H:%M:%S" --color=auto'
 alias ls='ls -G'
 alias vim='nvim'
-alias -g D='-w --reverse $(git merge-base develop HEAD)...HEAD'
 alias -g cd..='cd ..'
 
 alias ctop='TERM="${TERM/#tmux/screen}" ctop'

@@ -16,8 +16,13 @@ xnoremap @ <Nop>
 nnoremap <F1> <Nop>
 inoremap <F1> <Nop>
 
+nnoremap <F3> gf
+
 nnoremap <F5> :e<CR>
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "	"
+
+" Shiftを押しならがTabを押せば、直接Tab文字が入力されるようにする(Tab文字単体で押しても、4文字位のスペースが入力されるだけなので時々不便なのである)。
+inoremap <S-Tab> <C-v><Tab>
 
 " [ブロック選択]
 " vを二回で行末まで選択

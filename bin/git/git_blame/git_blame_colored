@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
 t0=$(~/dotfiles/bin/epocms/epocms)
+basename0=$(basename "$0")
 echo
-echo "$0"| ~/dotfiles/bin/misc/home_as_tilde
+echo "$basename0"
 echo "\$1='$1', \$2='$2', \$3='$3', \$4='$4'"
 echo
 
@@ -151,4 +152,4 @@ is_present || exit 1
   fi
 )
 t1=$(epocms)
-echo $((t1 - t0))
+printf "(%s %dms)" "$basename0" $((t1 - t0))

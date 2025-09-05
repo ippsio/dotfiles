@@ -1,52 +1,89 @@
 #!/usr/bin/env bash
+basename0=$(basename "$0")
 h1="$1"
-h2_3dots="...$2"
-h2_two_dots="..${2:-HEAD}"
-git_log=$(escape_SQ "git log -1 --oneline --abbrev-commit --decorate=full --date=format-local:'%Y/%m/%d %H:%M:%S' --pretty=format:'%h	(%cd)	%an	%d	%s' ${h1}${h2_two_dots} -- {3}")
-git_diff_colored="git diff --color=always ${h1}${h2_3dots} -- {3}"
-if type "diff-highlight" > /dev/null 2>&1; then
-  git_diff_colored="${git_diff_colored}| diff-highlight"
-fi
-git_diff_numstat="(set -x; git diff --diff-filter=ACDMR --numstat ${h1}${h2_3dots})"
-files=$(eval "${git_diff_numstat}" | awk '
+h2="$2"
+get_git_log() {
+  cmd="git log -1 --oneline --abbrev-commit --decorate=full --date=format-local:'%Y/%m/%d %H:%M:%S' --pretty=format:'%h	(%cd)	%an	%d	%s' ${h1}..${h2:-HEAD} -- {3}"
+  escape_SQ "$cmd"
+}
+get_git_diff() {
+  if type "diff-highlight">/dev/null 2>&1; then
+    printf "git diff --color=always %s...%s {3}| diff-highlight" "$h1" "$h2"
+  else
+    printf "git diff --color=always %s...%s {3}" "$h1" "$h2"
+  fi
+}
+get_git_diff_numstat() {
+  printf 'git diff --diff-filter=ACDMR --numstat %s...%s' "$h1" "$h2"
+}
+get_git_log_fzf_cmd() {
+  printf 'git_log_fzf "%s..%s" {3}'  "$h1" "${h2:-HEAD}"
+}
+get_files() {
+  eval "$(get_git_diff_numstat)"| awk '
   {
-    printf "%2s", NR; printf "	"; printf "%+4s", "+" $1; printf "|"; printf "%-4s", $2 "-"; printf "	";
     if (index($0, "=>") == 0) {
-      printf "%s\n", $3
+      printf "%2s	%+4s|%-4s	%s\n", NR, "+"$1, $2"-", $3;
     } else {
-      printf "%s %s %s\n", $3,$4,$5;
+      printf "%2s	%+4s|%-4s	%s-	%s %s %s\n", NR, $1, $2, $3, $4, $5;
     }
-  }')
-fzf_preview="
-cd $(git_root);
-echo -n {1};
-echo -n '	';
-echo {2} | awk -F '|' '{ printf \"%s|%s\", \$1, \$2 }';
-echo -n '	';
-echo {3};
-
-echo '${git_log}';
-eval '${git_log}'| awk -F '\t' '{ printf \"%2s	%s\n\", NR, \$0; }'
-horizontal_line;
-echo;
-
-echo '${git_diff_colored}';
-echo;
-eval '${git_diff_colored}';"
-cr="
-"
-(
-  export GIT_MERGE_BASE=${h1};
-  git_root_dir=$(set -x; git_root)
-  cd "${git_root_dir}"|| exit;
-  echo "$files"| fzf --tabstop=1 --ansi --info=inline --nth=1,3 \
-    --prompt="$(printf '%s %s %s > ' \"$(basename $0)\" \"$1\" \"$2\")" \
-    --header="${git_diff_numstat}${cr} (enter: nvim)  (tab: tig) (ctrl-l: git_log_fzf)   (ctrl-/: preview toggle)" \
-    --bind="ctrl-v:execute(nvim {3} >/dev/tty)" \
-    --bind="tab:execute(tig ${h1}${h2_3dots} -- {3} </dev/tty >/dev/tty)" \
-    --bind="enter:execute((set -x; git difftool ${h1} -- {3} </dev/tty >/dev/tty))+clear-query" \
-    --bind="ctrl-l:execute(git_log_fzf \"${h1}${h2_two_dots}\" \"{3}\")" \
+  }'
+}
+get_fzf_prompt() {
+  printf '%s) %s %s > ' "$basename0" "$h1" "$h2"
+}
+get_fzf_header() {
+  printf '%s\n (enter: nvim)  (tab: tig) (ctrl-l: git_log_fzf)   (ctrl-/: preview toggle)' "$(get_git_diff_numstat)"
+}
+get_tig_cmd() {
+  printf "tig %s...%s -- {3} </dev/tty >/dev/tty" "$h1" "$h2"
+}
+get_difftool_cmd() {
+  printf "git difftool %s -- {3} </dev/tty >/dev/tty" "${h1}"
+}
+get_nvim_cmd() {
+  printf "nvim {3} >/dev/tty"
+}
+get_fzf_preview() {
+  printf '%s;\n' "cd $(git_root)"
+  printf '%s;\n' "echo -n {1}"
+  printf '%s;\n' "echo -n '	'"
+  printf '%s;\n' "echo {2} | awk -F '|' '{ printf \"%s|%s\", \$1, \$2 }'"
+  printf '%s;\n' "echo -n '	'"
+  printf '%s;\n' "echo {3}"
+  printf '%s;\n' "echo '$(get_git_log)'"
+  printf '%s;\n' "eval '$(get_git_log)'| awk -F '\t' '{ printf \"%2s	%s\n\", NR, \$0 }'"
+  printf '%s;\n' "horizontal_line"
+  printf '%s;\n' "echo"
+  printf '%s;\n' "echo '$(get_git_diff)'"
+  printf '%s;\n' "echo"
+  printf '%s;\n' "eval '$(get_git_diff)'"
+}
+do_fzf() {
+  prompt=$(get_fzf_prompt)
+  header=$(get_fzf_header)
+  tig_cmd=$(get_tig_cmd)
+  difftool_cmd=$(get_difftool_cmd)
+  nvim_cmd=$(get_nvim_cmd)
+  git_log_fzf_cmd=$(get_git_log_fzf_cmd)
+  preview=$(get_fzf_preview)
+  fzf \
+    --tabstop=1 \
+    --ansi \
+    --info=inline \
+    --nth=1,3 \
+    --prompt="$prompt" \
+    --header="$header" \
+    --bind="ctrl-v:execute($nvim_cmd)" \
+    --bind="tab:execute($tig_cmd)" \
+    --bind="enter:execute($difftool_cmd)+clear-query" \
+    --bind="ctrl-l:execute($git_log_fzf_cmd)" \
     --bind='ctrl-/:toggle-preview' \
     --preview-window=bottom:75% \
-    --preview="$fzf_preview"
-)| awk '{print $3}'
+    --preview="$preview"
+}
+(
+  export GIT_MERGE_BASE=${h1};
+  cd "$(git_root)"|| exit;
+  get_files| do_fzf
+)| awk '{ print $3 }'
