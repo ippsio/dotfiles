@@ -1,7 +1,14 @@
 #!/usr/bin/env bash
 basename0=$(basename "$0")
-h1="$1"
-h2="$2"
+shorten_if_hash() {
+  if is_git_hash "$1"; then
+    git rev-parse --short "$1"
+  else
+    echo "$1"
+  fi
+}
+h1=$(shorten_if_hash "$1")
+h2=$(shorten_if_hash "$2")
 get_git_log() {
   cmd="git log -1 --oneline --abbrev-commit --decorate=full --date=format-local:'%Y/%m/%d %H:%M:%S' --pretty=format:'%h	(%cd)	%an	%d	%s' ${h1}..${h2:-HEAD} -- {3}"
   escape_SQ "$cmd"

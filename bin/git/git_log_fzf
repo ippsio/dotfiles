@@ -2,47 +2,32 @@
 range=$1
 file=$2
 basename0=$(basename "$0")
-get_fzf_prompt() {
-  printf "%s (range=[%s],file=[%s]) > " "$basename0" "$range" "$file"
-}
-get_fzf_header() {
-  printf " (enter: git diff) (ctrl-p: PR) (ctrl-y: yank hash)"
-}
 do_git_log() {
-  git --no-pager log \
-    --graph \
-    --author-date-order \
-    --oneline \
-    --full-history \
-    --decorate=full \
-    --abbrev-commit \
-    --color=always \
-    --date=format-local:"%Y/%m/%d %H:%M(%a)" \
-    --pretty=format:"	%an	%s	%h	%cd	%d" "$range" -- "$file"
-}
-get_diff_merges() {
-  printf '%s' '--diff-merges=first-parent'
-}
-get_git_log_1p_cmd() {
-  if type "diff-highlight">/dev/null 2>&1; then
-    printf "git log -1 --color=always %s -p --stat --pretty=fuller --abbrev-commit {2} %s| diff-highlight" "$(get_diff_merges)" "$file"
-  else
-    printf "git log -1 --color=always %s -p --stat --pretty=fuller --abbrev-commit {2} %s" "$(get_diff_merges)" "$file"
-  fi
-}
-get_fzf_preview() {
-  printf '%s\n' "echo '$(get_git_log_1p_cmd)'"
-  printf '%s\n' "echo '---'"
-  printf '%s\n' "$(get_git_log_1p_cmd)| tail -n +2"
-}
-get_enter_cmd() {
-  printf 'git log -1 %s -p --stat --pretty=fuller --abbrev-commit {2} %s' "$(get_diff_merges)" "$file"
-  printf '  | nvim -R -c "set ft=diff nomod nolist nospell nu"> /dev/tty'
-}
-get_bind_tab_cmd() {
-  printf 'git log -1 -p {2} %s < /dev/tty > /dev/tty' "$file"
+  git --no-pager log --oneline --date=format-local:"%Y/%m/%d %H:%M(%a)" --pretty=format:"%h	%ad	%an	%s" "$range" -- "$file"
 }
 do_fzf() {
+  get_fzf_prompt() {
+    printf "%s (range=[%s],file=[%s]) > " "$basename0" "$range" "$file"
+  }
+  get_fzf_header() {
+    printf " (enter: git diff) (ctrl-p: PR) (ctrl-y: yank hash)"
+  }
+  get_fzf_preview() {
+    preview=$(printf "git log -1 --color=always -p --stat --pretty=fuller --abbrev-commit {2} %s" "$file")
+    if type "diff-highlight">/dev/null 2>&1; then
+      preview=$(printf "%s| diff-highlight" "$preview")
+    fi
+    printf '%s\n' "echo '$preview'"
+    printf '%s\n' "echo '---'"
+    printf '%s\n' "$preview| tail -n +2"
+  }
+  get_fzf_tab_cmd() {
+    printf 'git log -1 -p {2} %s < /dev/tty > /dev/tty' "$file"
+  }
+  get_fzf_enter_cmd() {
+    printf 'git log -1 -p --stat --pretty=fuller --abbrev-commit {2} %s' "$file"
+    printf '  | nvim -R -c "set ft=diff nomod nolist nospell nu"> /dev/tty'
+  }
   fzf \
     --ansi \
     --info=inline \
@@ -52,8 +37,10 @@ do_fzf() {
     --header="$(get_fzf_header)" \
     --no-sort \
     --delimiter='\t' \
-    --bind "enter:execute($(get_enter_cmd))" \
-    --bind "tab:execute($(get_bind_tab_cmd))" \
+    --bind "enter:execute($(get_fzf_enter_cmd))" \
+    --bind "tab:execute($(get_fzf_tab_cmd))" \
+    --bind "j:down" \
+    --bind "k:up" \
     --bind "ctrl-y:execute(echo -n {2}| pbcopy)" \
     --bind "ctrl-/:toggle-preview" \
     --bind "ctrl-_:toggle-preview" \
@@ -61,7 +48,4 @@ do_fzf() {
     --preview="$(get_fzf_preview)" \
     --preview-window=bottom:85%
 }
-do_awk() {
-  awk -F '	' '{ printf "%+2s	%s	%s	%s	%s	%s	%s\n", NR, $4, $5, $2, $1, $6, $3 }'
-}
-do_git_log| grep --fixed-strings '*' | do_awk | do_fzf
+do_git_log| awk -F '	' '{ printf "%+2s	%s\n", NR, $0 }' | do_fzf
