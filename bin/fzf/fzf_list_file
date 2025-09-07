@@ -25,9 +25,22 @@ make_fzf_preview() {
 apply_fzf() {
   get_list "$1"| fzf +m\
     --query="$3 "\
+    --disabled \
     --header="ctrl+'g':ripgrep, ctrl+'-':TogglePreview"\
     --prompt="$4"\
     --info=inline\
+    --bind 'a:ignore' --bind 'b:ignore' --bind 'c:ignore'\
+    --bind 'd:ignore' --bind 'e:ignore' --bind 'f:ignore'\
+    --bind 'g:ignore' --bind 'h:ignore'\
+    --bind 'i:enable-search+unbind(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z)'\
+    --bind 'j:Down' --bind 'k:Up'\
+    --bind 'l:ignore' --bind 'm:ignore' --bind 'n:ignore'\
+    --bind 'o:ignore' --bind 'p:ignore'\
+    --bind 'q:abort'\
+    --bind 'r:ignore' --bind 's:ignore' --bind 't:ignore'\
+    --bind 'u:ignore' --bind 'v:ignore' --bind 'w:ignore'\
+    --bind 'x:ignore' --bind 'y:ignore' --bind 'z:ignore'\
+    --bind 'esc:enable-search+unbind(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z)'\
     --bind "ctrl-_:toggle-preview" \
     --bind "ctrl-g:execute(rg_fzf_vim . $1 < /dev/tty > /dev/tty)" \
     --preview-window=right:60%:wrap\
