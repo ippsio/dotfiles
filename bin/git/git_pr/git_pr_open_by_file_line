@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 file=$1
 line=$2
-commit_hash=$(git blame -L "${line},${line} ${file}"| awk '{ print $1 }')
+commit_hash=$(git blame -L "${line},${line}" "${file}"| awk '{ print $1 }')
 pr_no=$(git_pr_no_by_hash "${commit_hash}"| sed -E 's/[[:blank:]]*//'| sed -E 's/#//')
 if [ -z "${pr_no}" ]; then
   echo "No PR found."
