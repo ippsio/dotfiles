@@ -3,11 +3,15 @@ range=$1
 file=$2
 basename0=$(basename "$0")
 do_git_log() {
-  git --no-pager log --oneline --date=format-local:"%Y/%m/%d %H:%M(%a)" --pretty=format:"%h	%ad	%an	%s" "$range" -- "$file"
+  if [[ -n "$file" ]]; then
+    git --no-pager log --oneline --date=format-local:"%Y/%m/%d %H:%M(%a)" --pretty=format:"%h	%ad	%an	%s" "$range" -- "$file"
+  else
+    git --no-pager log --oneline --date=format-local:"%Y/%m/%d %H:%M(%a)" --pretty=format:"%h	%ad	%an	%s" "$range"
+  fi
 }
 do_fzf() {
   get_fzf_prompt() {
-    printf "%s (range=[%s],file=[%s]) > " "$basename0" "$range" "$file"
+    printf "\$0=%s, \$1=[%s], \$2=[%s] > " "$basename0" "$range" "$file"
   }
   get_fzf_header() {
     printf " (enter: git diff) (ctrl-p: PR) (ctrl-y: yank hash)"
