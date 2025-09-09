@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 branch=$(git symbolic-ref --short HEAD)
 dir=$(dirname "$0")
-if ! "$dir"/may_stop_direct_commit "$branch"; then
+if ! "$dir"/is_committable_branch "$branch"; then
   exit 1
 fi
 
