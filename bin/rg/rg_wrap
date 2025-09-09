@@ -1,23 +1,27 @@
 #!/usr/bin/env bash
-results=$(rg \
-  --fixed-strings \
-  --field-match-separator '\t' \
-  --field-context-separator '\t' \
-  --no-context-separator \
-  --color=always \
-  --no-ignore \
-  --hidden \
-  --vimgrep \
-  --no-column \
-  --glob !.git/ \
-  --glob !.DS_Store \
-  "$@")
+do_rg() {
+  rg \
+    --fixed-strings \
+    --field-match-separator '\t' \
+    --field-context-separator '\t' \
+    --no-context-separator \
+    --color=always \
+    --no-ignore \
+    --hidden \
+    --vimgrep \
+    --no-column \
+    --glob !.git/ \
+    --glob !.DS_Store \
+    "$@"
+}
+do_awk() {
+  cnt=$(echo "$1"| wc -l| tr -d ' ')
+  echo "$1"| awk -v v_cnt="$cnt" '{ printf "(%3d/%d:ripgrep)	%s\n", NR, v_cnt, $0 }'
+}
+res=$(do_rg "$@")
 exit_cd=$?
-cnt=$(echo "${results}"| wc -l| tr -d ' ')
 if [[ "${exit_cd}" != 0 ]]; then
   echo "Not found"
-else
-  echo "${results}"| awk -v cnt="$cnt" '{ printf "(%3d/%d:ripgrep)	%s\n", NR, cnt, $0 }'
+  exit ${exit_cd}
 fi
-exit ${exit_cd}
-
+do_awk "$res"

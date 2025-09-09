@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+is_direct_commit_prohibited() {
+  [[ "$1" == "master" ]] && return 0
+  [[ "$1" == "develop" ]] && return 0
+  return 1
+}
+if is_direct_commit_prohibited "$1"; then
+  printf "X*x*X*x*X*x*X*x*X*x*X*x*X*x*X*x*X*x*X*x*X*x*X*x*X*x*\n"
+  printf " %s\n" "$0"
+  printf " * DIRECT_COMMIT_PROHIBITED INTO '%s' \n" "$1"
+  printf "X*x*X*x*X*x*X*x*X*x*X*x*X*x*X*x*X*x*X*x*X*x*X*x*X*x*\n"
+  exit 1
+fi

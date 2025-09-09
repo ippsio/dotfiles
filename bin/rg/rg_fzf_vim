@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-rg_wrap "$@" \
-  | fzf \
+do_fzf() {
+  fzf \
     -m \
     --info=inline \
     --ansi \
@@ -13,3 +13,5 @@ rg_wrap "$@" \
     --bind='ctrl-_:toggle-preview' \
     --preview 'bat --color=always {2} --highlight-line {3}' \
     --preview-window '+{3}+3/3,~7'
+}
+rg_wrap "$@"| do_fzf

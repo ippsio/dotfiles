@@ -10,7 +10,7 @@ do_zle_space() {
 zle_space() {
   expand_global_alias
 
-  isbuf "de" && lbuf "docker exec " && rbuf "docker_ps_fzf" && return 0
+  isbuf "de" && lbuf "" && rbuf "docker_ps_fzf_exec" && return 0
   isbuf "dej" && lbuf 'deepl-cli-ej ""' && zle backward-char && return 0
   isbuf "gej" && lbuf 'gc-translate-cli-ej ""' && zle backward-char && return 0
   isbuf "i" && lbuf "initvim" && zle accept-line && return 0

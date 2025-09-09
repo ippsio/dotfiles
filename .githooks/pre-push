@@ -1,8 +1,12 @@
-#!/bin/sh
-while read local_ref local_sha1 remote_ref remote_sha1
-do
-  BRANCH="${remote_ref##refs/heads/}"
-  DIR=$(cd $(dirname $0); pwd)
-  ${DIR}/guard_branches ${BRANCH} push
-done
-
+#!/usr/bin/env bash
+get_branch() {
+  while read -r _ _ remote_ref _; do
+    echo "${remote_ref##refs/heads/}"
+  done
+}
+dir=$(dirname "$0")
+branch=$(get_branch)
+if ! "$dir"/may_stop_direct_commit "$branch"; then
+  exit 1
+fi
+exit 1
