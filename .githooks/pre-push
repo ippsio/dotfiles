@@ -4,9 +4,12 @@ get_branch() {
     echo "${remote_ref##refs/heads/}"
   done
 }
+echo "---------"
+get_branch
+echo "---------"
+exit 1
 dir=$(dirname "$0")
 branch=$(get_branch)
 if ! "$dir"/may_stop_direct_commit "$branch"; then
   exit 1
 fi
-exit 1
