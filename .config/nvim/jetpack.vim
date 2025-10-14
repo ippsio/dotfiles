@@ -108,7 +108,7 @@ Jetpack 'tpope/vim-projectionist'
 "Jetpack 'olimorris/onedarkpro.nvim'
 Jetpack 'scottmckendry/cyberdream.nvim'
 Jetpack 'lifepillar/vim-colortemplate'
-
+Jetpack 'projekt0n/github-nvim-theme'
 " window
 Jetpack 'declancm/maximize.nvim'
 

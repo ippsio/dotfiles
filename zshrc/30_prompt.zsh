@@ -1,7 +1,22 @@
 autoload -Uz add-zsh-hook
+is_inside_work_tree() {
+  if git rev-parse --is-inside-work-tree>/dev/null 2>&1; then
+    return 0
+  else
+    return 1
+  fi
+}
+any_commits() {
+  if git log>/dev/null 2>&1; then
+    return 0
+  else
+    return 1
+  fi
+}
+
 precmd() {
   PROMPT_ARRAY=()
-  if git rev-parse --is-inside-work-tree>/dev/null 2>&1; then
+  if is_inside_work_tree && any_commits; then
     local git_status="$(git status --porcelain --branch --ahead-behind 2> /dev/null)"
     local xy=$(echo -e ${git_status}| sed -e "s/^\(..\).*$/\1/")
 

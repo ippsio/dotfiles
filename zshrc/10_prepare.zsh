@@ -2,7 +2,7 @@
 source ~/dotfiles/zshrc/10_prepare_funcs.zsh
 
 prepare_by_brew xz
-# prepare_by_brew nvim neovim
+prepare_by_brew nvim neovim
 prepare_by_brew zsh
 prepare_by_brew tmux
 prepare_by_brew direnv
