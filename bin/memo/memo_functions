@@ -14,7 +14,7 @@ readonly FZF_START="${RG_CMD}| sed -E 's#^${HOME}#~#'"
 readonly FZF_NVIM_CMD="/usr/bin/env bash -c '(set -x; nvim -c 5 {} < /dev/tty > /dev/tty)'"
 
 mkdir_if_base_dir_not_exists() {
-  if [ ! -d "${BASE_DIR}" ]; then
+  if [[ ! -d "${BASE_DIR}" ]]; then
     mkdir -p "${BASE_DIR}"
     cd "${BASE_DIR}"|| return 1
     git init
@@ -22,14 +22,14 @@ mkdir_if_base_dir_not_exists() {
   fi
 }
 mkdir_if_note_dir_not_exists() {
-  if [ ! -d "${NOTE_DIR}" ]; then
+  if [[ ! -d "${NOTE_DIR}" ]]; then
     mkdir -p "${NOTE_DIR}"
   fi
 }
 make_todays_note_if_not_exists() {
-  if [ ! -f "${TODAYS_NOTE}" ]; then
-    last_file=$(eval "${RG_CMD}"| head -1)
-    last_content=$(tail -n +5 "${last_file}" )
+  if [[ ! -f "${TODAYS_NOTE}" ]]; then
+    # last_file=$(eval "${RG_CMD}"| head -1)
+    # last_content=$(tail -n +5 "${last_file}" )
     content="\n"
     content="${content}# ${KIND} ${today_ymda2}\n"
     content="${content}\n"
