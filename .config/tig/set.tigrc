@@ -34,8 +34,8 @@ set blame-view-date-format = "%Y/%m/%d %H:%M(%a)"
 # ビューの分割
 # ======================
 # ビューを水平方向あるいは垂直方向に分割するかどうか
-#set vertical-split = no
-set vertical-split = yes
+set vertical-split = no
+# set vertical-split = yes
 # Width of the right-most view in a vertically split display
 set split-view-width = 70%
 # 水平方向の分割表示時の下のビューの高さ
