@@ -20,3 +20,4 @@ export FZF_DEFAULT_OPTS=\
 " --color marker:168:reverse"\
 " --color header:191:reverse"
 
+#export FZF_DEFAULT_OPTS='--ansi --exact --reverse --prompt="❯ " --color hl:1,bg+:248'

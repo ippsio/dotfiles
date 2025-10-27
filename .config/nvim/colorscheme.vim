@@ -28,7 +28,8 @@
 " colorscheme vim
 " colorscheme wildcharm
 " colorscheme zaibatsu
-colorscheme zellner
+" colorscheme zellner
+colorscheme github_light_high_contrast
 
 "hi link diffAdd String
 " hi DiffAdd     guifg=#123 ctermbg=31

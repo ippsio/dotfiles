@@ -1,16 +1,9 @@
 #!/usr/bin/env zsh
-# ----------------------------------
-# export environmental variables.
-# ----------------------------------
 export EDITOR=nvim
-export TMUX_PLUGINS=~/.cache/tmux/plugins
+export ZINIT_ROOT="$HOME/.zinit"
+export TMUX_PLUGINS="$HOME/.cache/tmux/plugins"
 
-for f in ~/dotfiles/zshrc/00_export/rc/*.zsh; do source "$f"; done
-for d in $(
-  find ~/dotfiles/bin -type d
-  find -s /opt/homebrew/Cellar/git/*/share/git-core/contrib/diff-highlight -type d -depth 0
-  ); do PATH=${PATH}:${d}; done
-
+for f in $HOME/dotfiles/zshrc/00_export/rc/*.zsh; do
+  source "$f"
+done
 export PATH
-
-export FZF_DEFAULT_OPTS='--ansi --exact --reverse --prompt="❯ " --color hl:1,bg+:248'
