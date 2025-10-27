@@ -1,10 +1,11 @@
 #!//usr/bin/env bash
 home_as_tilde "$0"| xargs -I {} echo "'{}' called"  1>&2
 # shellcheck disable=SC2155
-readonly JSON="$(set -x; git_root)/../pull_requests.json"
+readonly JSON="$(git_root)/../pull_requests.json"
 readonly CURRENT_BRANCH=${1:-$(set -x; git_branch_current)}
 readonly BASE_BRANCH=$2
-readonly NOW=$(date +'%Y-%m-%dT%H:%M:%SZ')
+now=$(date +'%Y-%m-%dT%H:%M:%SZ')
+readonly NOW="$now"
 readonly DQ='"'
 json_load() {
   content=$(cat "$JSON" 2>/dev/null)

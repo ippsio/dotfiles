@@ -10,6 +10,6 @@ source git_review_core "$@"
   eval "${GIT_DIFF_CMD}"
 }| {
   set -x
-  export GIT_MERGE_BASE=${merge_base_hash}
+  export MY_GIT_MERGE_BASE=${merge_base_hash}
   tig show "${merge_base_hash}"...HEAD
 }

@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
-home_as_tilde "$0"| xargs -I {} echo "'{}' called"  1>&2
+home_as_tilde "$0"| xargs -I {} echo "'{}' called" 1>&2
 
 source git_review_core "$@"
 {
-  echo "${review_json}";
+  f_get_review_json;
   echo "---";
-  CMD="git diff --stat=200 --stat-name-width=160 -p ${merge_base_hash}"
-  echo "${CMD}"
-  eval "${CMD}"
+  f_get_merge_base_cmd
+  f_get_merge_base_log
+  f_do_git_diff_with_stat
 }| {
-  set -x
-  export GIT_MERGE_BASE=${merge_base_hash}
-  tig show "${merge_base_hash}"
+  merge_base_hash=$(f_get_merge_base_hash)
+  export MY_GIT_MERGE_BASE=${merge_base_hash}
+  f_do_tig
 }

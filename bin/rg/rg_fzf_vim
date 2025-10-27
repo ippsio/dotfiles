@@ -2,6 +2,7 @@
 do_fzf() {
   fzf \
     -m \
+    --no-sort \
     --info=inline \
     --ansi \
     --delimiter='	' \

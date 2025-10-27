@@ -2,7 +2,21 @@
 do_docker_ps() {
   docker ps -a --format "table {{.ID}}	{{.Names}}	{{.Image}}	{{.Ports}}"
 }
+docker_ps_res_empty() {
+  rows=$(echo "$1"| awk '{ if (NR >= 2) { print $0 }}')
+  if [[ -z "$rows" ]]; then
+    echo "No docker containers found."
+    return 0
+  else
+    return 1
+  fi
+}
 do_fzf() {
   fzf --sync --info=inline --header-lines=1 --prompt="$(basename "$0") > "
 }
-do_docker_ps| do_fzf| awk '{ printf "%s", $1 }' || exit 1
+docker_ps_res=$(do_docker_ps)
+if docker_ps_res_empty "$docker_ps_res"; then
+  exit 1
+fi
+
+echo "$docker_ps_res"| do_fzf| awk '{ printf "%s", $1 }' || exit 1

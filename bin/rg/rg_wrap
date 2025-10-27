@@ -6,7 +6,7 @@ do_rg() {
     --field-context-separator '\t' \
     --no-context-separator \
     --color=always \
-    --no-ignore \
+    --ignore-dot --no-ignore-exclude --no-ignore-global --no-ignore-parent --ignore-vcs \
     --hidden \
     --vimgrep \
     --no-column \
@@ -20,8 +20,8 @@ do_awk() {
 }
 res=$(do_rg "$@")
 exit_cd=$?
-if [[ "${exit_cd}" != 0 ]]; then
+if [[ "$exit_cd" != 0 ]]; then
   echo "Not found"
-  exit ${exit_cd}
+  exit $exit_cd
 fi
 do_awk "$res"

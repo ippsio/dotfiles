@@ -23,8 +23,8 @@ let g:gitgutter_highlight_lines = 0
 let g:gitgutter_highlight_linenrs = 0
 
 function! s:UpdateMergeBase()
-  if $GIT_MERGE_BASE != ""
-    let g:gitgutter_diff_base = $GIT_MERGE_BASE
+  if $MY_GIT_MERGE_BASE != ""
+    let g:gitgutter_diff_base = $MY_GIT_MERGE_BASE
   endif
   GitGutter
 endfunction

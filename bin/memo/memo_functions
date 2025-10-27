@@ -11,7 +11,7 @@ readonly TODAYS_NOTE="${BASE_DIR}/${KIND}/${today_ym}/${today_ymda1}.md"
 readonly PREVIEW="(echo '# {}'; bat '{}' --color=always --style=numbers)"
 readonly RG_CMD="rg --files --hidden -g '20*.{md,txt}' --sortr=path ${BASE_DIR}/${KIND}"
 readonly FZF_START="${RG_CMD}| sed -E 's#^${HOME}#~#'"
-readonly FZF_NVIM_CMD="/usr/bin/env bash -c '(set -x; nvim -c 5 {} < /dev/tty > /dev/tty)'"
+readonly FZF_NVIM_CMD="/usr/bin/env bash -c 'nvim -c 5 {} < /dev/tty > /dev/tty'"
 
 mkdir_if_base_dir_not_exists() {
   if [[ ! -d "${BASE_DIR}" ]]; then
@@ -51,12 +51,35 @@ select_note() {
     && return 0\
     || return 1
 }
+git_commit_with_datetime() {
+  now=$(date '+%Y/%m/%d(%a) %H時%M分%S秒')
+  git commit -m "$now" 1>/dev/null
+  h=$(git log --pretty="%h" -1)
+  files=$(git show --name-only --pretty="" HEAD| xargs echo)
+  printf "%s (%s)\n" "$h" "$files"
+}
+git_fetch_note() {
+  cd "${BASE_DIR}" && (
+    git fetch origin
+  )
+}
+git_merge_note() {
+  cd "${BASE_DIR}" && (
+    git merge --ff
+  )
+}
 git_commit_note() {
   cd "${BASE_DIR}" && (
     git add -A
-    now=$(date '+%Y/%m/%d(%a) %H時%M分%S秒')
-    git commit -m "${now}" 1>/dev/null && git log --date=iso --pretty='%h %ad %an %s' -1 --name-only
+    git_commit_with_datetime
   )
+}
+git_push_note_if_connected_to_internet() {
+  if connected_to_internet; then
+    cd "${BASE_DIR}" && (
+      git push -u origin HEAD
+    )
+  fi
 }
 nvim_note_today() {
   (
@@ -65,4 +88,12 @@ nvim_note_today() {
     nvim "$file"
   )
 }
-
+connected_to_internet() {
+  if ping -c 1 -W 2 8.8.8.8 >/dev/null 2>&1; then
+    # インターネットに接続されている。
+    return 0
+  else
+    # インターネットに接続されていない。
+    return 1
+  fi
+}

@@ -7,6 +7,7 @@ runtime! jetpack.vim
 try
   " runtime! highlights.vim
   runtime! colorscheme.vim
+  hi Visual guibg=#ff55cc
 catch
 endtry
 runtime! jetpack_loadrc.vim

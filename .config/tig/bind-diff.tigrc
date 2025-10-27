@@ -1,5 +1,6 @@
 bind diff h      view-close
-bind diff l      view-blame
+#bind diff l      view-blame
+bind diff l      >bash -c "tig ${MY_TIG_ARGS} -- %(file) || exit 0"
 # 経験・実験より知った事ですが、Shift+Upは'A'、Shift+Downは'B'として扱われるようです。
 # <Shift-Up>、<ShiftUp>、<S-Up>等としても、Shift+Up時のキーバインド設定を行ないたいという意志がtigに伝わりません。
 # Shift+Upで前のファイル
@@ -9,12 +10,13 @@ bind diff B next
 bind diff    ]      :/^@@
 bind diff    [      :?^@@
 bind diff    g      :/^---$ # goto file list
-bind diff [ :toggle diff-context -1		   # Decrease context (-U arg)
-bind diff ] :toggle diff-context +1		   # Increase context
+bind diff [ :toggle diff-context -2		   # Decrease context (-U arg)
+bind diff ] :toggle diff-context +2		   # Increase context
 
 bind diff o >tig_git_difftool_handler %(file)	%(commit)	%(revargs)
 bind diff <Tab> >tig_git_difftool_handler %(file)	%(commit)	%(revargs)
 
-bind diff E >bash -c "~/dotfiles/bin/tig/tig_edit_with_vim_on_tmux %(file) %(lineno)"
+#bind diff E >bash -c "~/dotfiles/bin/tig/tig_edit_with_vim_on_tmux %(file) %(lineno)"
+bind diff E >bash -c "git_difftool %(file)"
 #revargs=%(revargs),fileargs=%(fileargs),cmdlineargs=%(cmdlineargs),
 bind diff    ;      @hub browse -- commit/%(commit)
