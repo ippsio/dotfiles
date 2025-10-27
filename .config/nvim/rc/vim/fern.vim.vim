@@ -7,6 +7,9 @@ nnoremap <silent> ,     :Fern %:h -reveal=% -drawer -toggle -width=60<CR>
 
 function! s:init_fern() abort
   nmap <buffer> <C-l> <C-w>l
+  nmap <buffer> h <Plug>(fern-action-leave)
+  nmap <buffer> <Left> <Plug>(fern-action-leave)
+  nmap <buffer> <Right> <Plug>(fern-action-open-or-expand)
 endfunction
 
 augroup fern-custom
