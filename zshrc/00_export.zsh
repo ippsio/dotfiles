@@ -3,7 +3,6 @@
 # export environmental variables.
 # ----------------------------------
 export EDITOR=nvim
-export ZINIT_ROOT=~/.zinit
 export TMUX_PLUGINS=~/.cache/tmux/plugins
 
 for f in ~/dotfiles/zshrc/00_export/rc/*.zsh; do source "$f"; done

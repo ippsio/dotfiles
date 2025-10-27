@@ -57,7 +57,7 @@ do_fzf() {
     --info=inline \
     --tabstop=1 \
     --delimiter="	" \
-    --nth=1,5,6,7 \
+    --nth=1,4,5,6,7 \
     --bind "tab:execute($(bind_tab))" \
     --bind "ctrl-l:execute(cd $(git_root); git_log_fzf {7})" \
     --preview-window down,15 \

@@ -6,24 +6,18 @@ execute_zle_enter() {
     return 0
   fi
 
-  if [[ "${BUFFER}" == ".dotfiles" ]]; then
+  if [[ "${BUFFER}" == "dotfiles" ]]; then
     BUFFER="cd ~/dotfiles/"
     zle accept-line
     return 0
   fi
 
-  if [[ "${BUFFER}" == ".nvim" ]]; then
-    BUFFER="cd ~/dotfiles/.config/nvim/"
-    zle accept-line
-    return 0
-  fi
-
-  if [[ "${BUFFER}" == "pss" ]]; then
-    BUFFER=" $(ps_fzf)"
-    zle reset-prompt
-    zle beginning-of-line
-    return 0
-  fi
+  #if [[ "${BUFFER}" == "pss" ]]; then
+  #  BUFFER=" $(ps_fzf)"
+  #  zle reset-prompt
+  #  zle beginning-of-line
+  #  return 0
+  #fi
 
   zle accept-line
   return 0

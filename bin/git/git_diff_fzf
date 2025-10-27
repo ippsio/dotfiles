@@ -90,7 +90,7 @@ do_fzf() {
     --preview="$preview"
 }
 (
-  export GIT_MERGE_BASE=${h1};
+  export MY_GIT_MERGE_BASE=${h1};
   cd "$(git_root)"|| exit;
   get_files| do_fzf
 )| awk '{ print $3 }'

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-range=$1
-file=$2
+range=$(echo "$1"| sed -E 's/^\.+//')
+file="$2"
 basename0=$(basename "$0")
 do_git_log() {
   if [[ -n "$file" ]]; then
@@ -11,7 +11,7 @@ do_git_log() {
 }
 do_fzf() {
   get_fzf_prompt() {
-    printf "\$0=%s, \$1=[%s], \$2=[%s] > " "$basename0" "$range" "$file"
+    printf '$0=%s, $1=[%s], $2=[%s] > ' "$basename0" "$range" "$file"
   }
   get_fzf_header() {
     printf " (enter: git diff) (ctrl-p: PR) (ctrl-y: yank hash)"
@@ -45,6 +45,7 @@ do_fzf() {
     --bind "tab:execute($(get_fzf_tab_cmd))" \
     --bind "j:down" \
     --bind "k:up" \
+    --bind "q:abort" \
     --bind "ctrl-y:execute(echo -n {2}| pbcopy)" \
     --bind "ctrl-/:toggle-preview" \
     --bind "ctrl-_:toggle-preview" \
@@ -52,4 +53,4 @@ do_fzf() {
     --preview="$(get_fzf_preview)" \
     --preview-window=bottom:85%
 }
-do_git_log| awk -F '	' '{ printf "%+2s	%s\n", NR, $0 }' | do_fzf
+do_git_log| awk -F '	' '{ printf "%+2s	%s\n", NR, $0 }' | do_fzf || exit 0

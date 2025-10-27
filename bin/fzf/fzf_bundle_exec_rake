@@ -2,9 +2,3 @@
 
 # NOTE: 以下のZLEの設定の時、`</dev/tty`が無いと`Switch to inspect mode`という表示が出てしまいます。
 bundle exec rake -AT </dev/tty | fzf | awk '{ print $2 }'
-
-# ZLEの設定(抜粋)
-# zle -N do_zle_space
-# bindkey " " do_zle_space
-# do_zle_space() { zle_space; return 0; }
-# zle_space() { [[ $BUFFER =~ '^rake$' ]] && BUFFER="bundle exec $(fzf_bundle_exec_rake)" && zle end-of-line; return 0; }

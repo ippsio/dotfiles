@@ -1,2 +1,5 @@
 #!/usr/bin/env bash
-cd ~ && nvim .zshrc
+(
+  cd ~ || exit
+  nvim .zshrc
+)

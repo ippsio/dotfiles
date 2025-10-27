@@ -24,6 +24,7 @@ make_fzf_preview() {
 }
 apply_fzf() {
   get_list "$1"| fzf +m\
+    --no-sort \
     --query="$3 "\
     --disabled \
     --header="ctrl+'g':ripgrep, ctrl+'-':TogglePreview"\

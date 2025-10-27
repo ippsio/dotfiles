@@ -9,6 +9,7 @@ do_fzf() {
   }
   fzf \
     -m \
+    --no-sort \
     --print-query \
     --ansi \
     --delimiter='\t' \

@@ -31,21 +31,84 @@ handle_exception() {
   esac
 }
 trap 'handle_exception $?' EXIT
-( set -x; is_git_repo )|| exit 101 # not a git repository
+is_git_repo || exit 101 # not a git repository
 
 commit1="$1"
-current_branch=$(set -x; git_branch_current)
-review_json=$(set -x; git_get_review_json "${current_branch}" "${commit1}")|| exit $?
-base_branch=$(echo "${review_json}"| jq -r '.base')
-if [[ -z "${base_branch}" ]]; then
-  exit 102 # CANNOT DECIDE BASE BRANCH
-fi
 
-if [[ ! "${base_branch}" =~ ^origin\/ ]]; then
-  base_branch=origin/${base_branch}
-fi
-merge_base_hash_long=$(set -x; git merge-base "${base_branch}" HEAD)
-merge_base_hash=$(git rev-parse --short "${merge_base_hash_long}")
-merge_base_log=$(git log -1 --date="format:%Y-%m-%d %H:%M:%S" --pretty="(%h) %ad %an %s" "${merge_base_hash}")
-merge_base_log=${merge_base_log//\"/\\\"}
-review_json=$(echo "${review_json}"| jq ".merge_base=\"${merge_base_log}\"")
+review_json=""
+f_get_review_json() {
+  if [[ -z "$review_json" ]]; then
+    current_branch=$(git_branch_current)
+    review_json=$(git_get_review_json "$current_branch" "$commit1")|| exit $?
+  fi
+  echo "$review_json"
+}
+f_get_review_json>/dev/null 2>&1
+
+base_branch=""
+f_get_base_branch() {
+  if [[ -z "$base_branch" ]]; then
+    local l_base_branch=""
+    l_base_branch=$(f_get_review_json| jq -r '.base')
+    if [[ -z "$l_base_branch" ]]; then
+      exit 102 # CANNOT DECIDE BASE BRANCH
+    fi
+
+    if [[ ! "$l_base_branch" =~ ^origin\/ ]]; then
+      l_base_branch=origin/${l_base_branch}
+    fi
+    base_branch="$l_base_branch"
+  fi
+
+  echo "$base_branch"
+}
+f_get_base_branch>/dev/null 2>&1
+
+f_get_merge_base_cmd() {
+  printf 'git merge-base "%s" HEAD' "$(f_get_base_branch)"
+}
+merge_base_hash=""
+f_get_merge_base_hash() {
+  if [[ -z "$merge_base_hash" ]]; then
+    cmd="$(f_get_merge_base_cmd)"
+    h=$(eval "$cmd")
+    merge_base_hash=$(git rev-parse --short "$h")
+  fi
+  echo "$merge_base_hash"
+}
+f_get_merge_base_hash>/dev/null 2>&1
+
+f_get_merge_base_log() {
+  local l_merge_base_hash=""
+  l_merge_base_hash=$(f_get_merge_base_hash)
+  log=$(git log -1 --date="format:%Y-%m-%d %H:%M:%S" --pretty=" #=> %h %ad %an %s" "$l_merge_base_hash")
+  log=${log//\"/\\\"}
+  echo "$log"
+}
+f_get_git_diff_with_stat_cmd() {
+  # マージベースとワーキングディレクトリとの比較。結果には未ステージの変更差分まで含まれます。
+  printf 'git diff --stat=200 --stat-name-width=160 -p %s' "$(f_get_merge_base_hash)"
+}
+f_do_git_diff_with_stat() {
+  CMD=$(f_get_git_diff_with_stat_cmd)
+  echo "${CMD}"
+  eval "${CMD}"
+}
+f_get_args_for_args() {
+  printf '%s...' "$(f_get_base_branch)"
+}
+f_get_tig_cmd() {
+  printf 'tig show %s' "$(f_get_args_for_args)"
+}
+f_do_export_my_tig_args() {
+  my_tig_args="$(f_get_args_for_args)"
+  export MY_TIG_ARGS="$my_tig_args"
+}
+f_do_tig() {
+  f_get_git_diff_with_stat_cmd
+  echo
+  f_do_export_my_tig_args
+  cmd="$(f_get_tig_cmd)"
+  echo "$cmd"
+  eval "$cmd"
+}
