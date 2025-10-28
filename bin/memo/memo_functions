@@ -1,33 +1,42 @@
 #!/usr/bin/env bash
 epoc=$(date '+%s')
-today_ym=$(LC_ALL=C date -r "$epoc" '+%Y_%m')
-today_ymda1=$(LC_ALL=C date -r "$epoc" '+%Y_%m%d_%a')
-today_ymda2=$(LC_ALL=C date -r "$epoc" '+%Y/%m/%d(%a)')
+to_ym() {
+  LC_ALL=C date -r "$1" '+%Y_%m'
+}
+to_ymda1() {
+  LC_ALL=C date -r "$1" '+%Y_%m%d_%a'
+}
+to_ymda2() {
+  LC_ALL=C date -r "$1" '+%Y/%m/%d(%a)'
+}
+today_ym=$(to_ym "$epoc")
+today_ymda1=$(to_ymda1 "$epoc")
+today_ymda2=$(to_ymda2 "$epoc")
 arg_kind="${1:-memo}"
-readonly KIND="${arg_kind}"
+readonly KIND="$arg_kind"
 readonly BASE_DIR=~/notes
-readonly NOTE_DIR="${BASE_DIR}/${KIND}/${today_ym}"
-readonly TODAYS_NOTE="${BASE_DIR}/${KIND}/${today_ym}/${today_ymda1}.md"
+readonly NOTE_DIR="$BASE_DIR/$KIND/$today_ym"
+readonly TODAYS_NOTE="$NOTE_DIR/$today_ymda1.md"
 readonly PREVIEW="(echo '# {}'; bat '{}' --color=always --style=numbers)"
-readonly RG_CMD="rg --files --hidden -g '20*.{md,txt}' --sortr=path ${BASE_DIR}/${KIND}"
-readonly FZF_START="${RG_CMD}| sed -E 's#^${HOME}#~#'"
+readonly RG_CMD="rg --files --hidden -g '20*.{md,txt}' --sortr=path $BASE_DIR/$KIND"
+readonly FZF_START="$RG_CMD| sed -E 's#^${HOME}#~#'"
 readonly FZF_NVIM_CMD="/usr/bin/env bash -c 'nvim -c 5 {} < /dev/tty > /dev/tty'"
 
 mkdir_if_base_dir_not_exists() {
-  if [[ ! -d "${BASE_DIR}" ]]; then
-    mkdir -p "${BASE_DIR}"
-    cd "${BASE_DIR}"|| return 1
+  if [[ ! -d "$BASE_DIR" ]]; then
+    mkdir -p "$BASE_DIR"
+    cd "$BASE_DIR"|| return 1
     git init
     cd ..
   fi
 }
 mkdir_if_note_dir_not_exists() {
-  if [[ ! -d "${NOTE_DIR}" ]]; then
-    mkdir -p "${NOTE_DIR}"
+  if [[ ! -d "$NOTE_DIR" ]]; then
+    mkdir -p "$NOTE_DIR"
   fi
 }
 make_todays_note_if_not_exists() {
-  if [[ ! -f "${TODAYS_NOTE}" ]]; then
+  if [[ ! -f "$TODAYS_NOTE" ]]; then
     # last_file=$(eval "${RG_CMD}"| head -1)
     # last_content=$(tail -n +5 "${last_file}" )
     content="\n"
@@ -35,14 +44,19 @@ make_todays_note_if_not_exists() {
     content="${content}\n"
     content="${content}---\n"
     content="${content}${last_content}"
-    echo -e "${content}">>"${TODAYS_NOTE}"
+    echo -e "${content}">>"$TODAYS_NOTE"
   fi
 }
 note_of_today() {
-  echo "${TODAYS_NOTE}"
+  echo "$TODAYS_NOTE"
+}
+md5_todays_note_or_blank() {
+  if [[ -f "$TODAYS_NOTE" ]]; then
+    md5sum "$TODAYS_NOTE"| awk '{ print $1 }'
+  fi
 }
 select_note() {
-  fzf --ansi --info=inline --prompt="(${KIND})"\
+  fzf --ansi --info=inline --prompt="($KIND)"\
       --style=minimal \
       --bind "start:reload:(${FZF_START})"\
       --bind "j:down" --bind "k:up"  --bind "q:abort"\
@@ -58,21 +72,50 @@ git_commit_with_datetime() {
   files=$(git show --name-only --pretty="" HEAD| xargs echo)
   printf "%s (%s)\n" "$h" "$files"
 }
-git_fetch_note() {
-  cd "${BASE_DIR}" && (
+git_fetch_notes() {
+  cd "$BASE_DIR" && (
     git fetch origin
   )
 }
-git_merge_note() {
-  cd "${BASE_DIR}" && (
+git_merge_notes() {
+  cd "$BASE_DIR" && (
     git merge --ff
   )
 }
-git_commit_note() {
+git_up_to_date_notes() {
+  md5a=$(md5_todays_note_or_blank)
+  git_fetch_notes>/dev/null 2>&1
+  merge_res=$(git_merge_notes 2>/dev/null)
+
+  if [[ -n "$md5a" ]]; then
+    md5b=$(md5_todays_note_or_blank)
+    if [[ "$md5a" != "$md5b" ]]; then
+      echo ">>> File changed on remote branch. Please reload."
+    # elif [[ "$merge_res" == "Already up to date." ]]; then
+    #   echo ">>> Already up to date."
+    fi
+  fi
+}
+git_any_cached() {
   cd "${BASE_DIR}" && (
-    git add -A
-    git_commit_with_datetime
+    cached=$(git status -s| wc -l| tr -d ' ')
+    if [[ $cached -ge 1 ]]; then
+      return 0
+    else
+      return 1
+    fi
   )
+}
+git_commit_note() {
+  if git_any_cached; then
+    cd "${BASE_DIR}" && (
+      git add -A
+      git_commit_with_datetime
+    )
+    return 0
+  else
+    return 1
+  fi
 }
 git_push_note_if_connected_to_internet() {
   if connected_to_internet; then
