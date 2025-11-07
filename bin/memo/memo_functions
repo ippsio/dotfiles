@@ -50,9 +50,26 @@ make_todays_note_if_not_exists() {
 note_of_today() {
   echo "$TODAYS_NOTE"
 }
-md5_todays_note_or_blank() {
+todays_note_present() {
   if [[ -f "$TODAYS_NOTE" ]]; then
+    echo 1
+    return 0
+  else
+    echo 0
+    return 1
+  fi
+}
+md5_todays_note_or_blank() {
+  if todays_note_present>/dev/null; then
     md5sum "$TODAYS_NOTE"| awk '{ print $1 }'
+  fi
+}
+file_on_remote() {
+  branch=$(git branch --show-current)
+  if git cat-file -e origin/$branch:$TODAYS_NOTE 2>/dev/null; then
+    return 0
+  else
+    return 1
   fi
 }
 select_note() {
@@ -72,27 +89,54 @@ git_commit_with_datetime() {
   files=$(git show --name-only --pretty="" HEAD| xargs echo)
   printf "%s (%s)\n" "$h" "$files"
 }
+remote_origin_url_present() {
+  remote_origin_url=$(git config --get remote.origin.url)
+  if [[ "$?" == 0 && -n "$remote_origin_url" ]]; then
+    return 0
+  else
+    return 1
+  fi
+}
 git_fetch_notes() {
-  cd "$BASE_DIR" && (
-    git fetch origin
-  )
+  if remote_origin_url_present && connected_to_internet; then
+    cd "$BASE_DIR" && (
+      git fetch origin
+    )
+  fi
 }
 git_merge_notes() {
   cd "$BASE_DIR" && (
     git merge --ff
   )
 }
+git_merge_tree() {
+  cd "$BASE_DIR" && (
+    branch=$(git branch --show-current)
+    merge_base=$(git merge-base HEAD "origin/$branch")
+    git merge-tree "$merge_base" HEAD "origin/$branch"
+  )
+}
 git_up_to_date_notes() {
-  md5a=$(md5_todays_note_or_blank)
+  md5a="$1"
+  todays_note_have_been_present="$2"
   git_fetch_notes>/dev/null 2>&1
-  merge_res=$(git_merge_notes 2>/dev/null)
+  merge_tree=$(git_merge_tree)
+  git_merge_notes>/dev/null 2>&1
+  todays_note_is_present=$(todays_note_present)
+  md5b=$(md5_todays_note_or_blank)
 
-  if [[ -n "$md5a" ]]; then
-    md5b=$(md5_todays_note_or_blank)
-    if [[ "$md5a" != "$md5b" ]]; then
+  if [[ "$todays_note_have_been_present" == "0" ]]; then
+    if [[ "$todays_note_is_present" == "1" ]]; then
       echo ">>> File changed on remote branch. Please reload."
-    # elif [[ "$merge_res" == "Already up to date." ]]; then
-    #   echo ">>> Already up to date."
+    fi
+  elif [[ "$todays_note_have_been_present" == "1" ]]; then
+    hunks=$(echo "$merge_tree"| grep -c "<<<<<")
+    if [[ "$hunks" == "0" ]]; then
+      if [[ "$md5a" != "$md5b" ]]; then
+        echo ">>> ファイルが変更されました。再読込して下さい"
+      fi
+    else
+      echo ">>> 競合があるかも。再読込して下さい"
     fi
   fi
 }
@@ -117,10 +161,29 @@ git_commit_note() {
     return 1
   fi
 }
+get_ahead_count() {
+  cd "${BASE_DIR}" && (
+    branch=$(git branch --show-current)
+    git rev-list "origin/${branch}..HEAD" --count
+  )
+}
 git_push_note_if_connected_to_internet() {
-  if connected_to_internet; then
+  if ! remote_origin_url_present; then
+    return 1
+  fi
+  if ! connected_to_internet; then
+    return 1
+  fi
+
+  ahead_count=$(get_ahead_count)
+  if (( ahead_count >= 1 )); then
     cd "${BASE_DIR}" && (
-      git push -u origin HEAD
+      res=$(git push -u origin HEAD 2>&1)
+      code=$?
+      if [[ $code -ne 0 ]]; then
+        echo "git pushできませんでした"
+        printf "%s" "$res"
+      fi
     )
   fi
 }
@@ -132,7 +195,7 @@ nvim_note_today() {
   )
 }
 connected_to_internet() {
-  if ping -c 1 -W 2 8.8.8.8 >/dev/null 2>&1; then
+  if curl -fs --connect-timeout 1 http://clients3.google.com/generate_204 >/dev/null 2>&1; then
     # インターネットに接続されている。
     return 0
   else

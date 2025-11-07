@@ -3,7 +3,12 @@ source memo_functions
 
 mkdir_if_base_dir_not_exists
 mkdir_if_note_dir_not_exists
-git_up_to_date_notes &
+
+note_md5=$(md5_todays_note_or_blank)
+note_presence=$(todays_note_present)
+git_up_to_date_notes "$note_md5" "$note_presence" &
+
 make_todays_note_if_not_exists
 nvim_note_today
-git_commit_note && git_push_note_if_connected_to_internet
+git_commit_note
+git_push_note_if_connected_to_internet &

@@ -63,6 +63,6 @@ precmd() {
   local EXIT_CD="%F{red}%(?..\$?=%? )%f"
   local BG="%(1j|%F{5}bg:%j%f|)"
   local PWD="%F{137}%~ %f"
-  PROMPT_ARRAY+=( "${EXIT_CD}${BG}${PWD}%F{245}#%f " )
+  PROMPT_ARRAY+=( "${EXIT_CD}${BG}${PWD}%F{245}%#%f " )
   PROMPT=$(print -l "${PROMPT_ARRAY[@]}")
 }

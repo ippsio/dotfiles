@@ -11,8 +11,8 @@ export FZF_DEFAULT_OPTS=\
 " --color bg:-1"\
 " --color hl:184"\
 " --color fg+:-1:underline"\
-" --color bg+:232"\
-" --color hl+:184"\
+" --color bg+:229"\
+" --color hl+:1"\
 " --color info:108:reverse"\
 " --color prompt:193:reverse"\
 " --color spinner:108"\
