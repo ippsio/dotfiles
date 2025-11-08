@@ -1,57 +1,90 @@
 #!/usr/bin/env bash
-epoc=$(date '+%s')
-to_ym() {
-  LC_ALL=C date -r "$1" '+%Y_%m'
-}
-to_ymda1() {
-  LC_ALL=C date -r "$1" '+%Y_%m%d_%a'
-}
-to_ymda2() {
-  LC_ALL=C date -r "$1" '+%Y/%m/%d(%a)'
-}
-today_ym=$(to_ym "$epoc")
-today_ymda1=$(to_ymda1 "$epoc")
-today_ymda2=$(to_ymda2 "$epoc")
-arg_kind="${1:-memo}"
-readonly KIND="$arg_kind"
-readonly BASE_DIR=~/notes
-readonly NOTE_DIR="$BASE_DIR/$KIND/$today_ym"
-readonly TODAYS_NOTE="$NOTE_DIR/$today_ymda1.md"
-readonly PREVIEW="(echo '# {}'; bat '{}' --color=always --style=numbers)"
-readonly RG_CMD="rg --files --hidden -g '20*.{md,txt}' --sortr=path $BASE_DIR/$KIND"
-readonly FZF_START="$RG_CMD| sed -E 's#^${HOME}#~#'"
-readonly FZF_NVIM_CMD="/usr/bin/env bash -c 'nvim -c 5 {} < /dev/tty > /dev/tty'"
+[[ -z "$1" ]] && exit 1
 
-mkdir_if_base_dir_not_exists() {
-  if [[ ! -d "$BASE_DIR" ]]; then
-    mkdir -p "$BASE_DIR"
-    cd "$BASE_DIR"|| return 1
-    git init
-    cd ..
+epoc=$(date '+%s')
+dt_fmt() { LC_ALL=C date -r "$epoc" "$1"; return 0; }
+category="${1:-daily}"
+get_category() {
+  echo "$category"
+}
+check_category() {
+  is_category_daily && return 0
+  is_category_onetime && return 0
+
+  printf "invalid category was given '%s'" "$category"
+  return 1
+}
+is_category_daily() {
+  [[ "$(get_category)" == "daily" ]]
+}
+is_category_onetime() {
+  [[ "$(get_category)" == "onetime" ]]
+}
+get_category_dir() {
+  dirname "$(get_file_by_category)"
+}
+make_category_dir_if_absent() {
+  if [[ ! -d "$(get_category_dir)" ]]; then
+    mkdir -p "$(get_category_dir)"
   fi
 }
-mkdir_if_note_dir_not_exists() {
-  if [[ ! -d "$NOTE_DIR" ]]; then
-    mkdir -p "$NOTE_DIR"
+get_file_by_category() {
+  case $(get_category) in
+    "daily")
+      echo "$(get_memo_base_dir)/$(get_category)/$(dt_fmt "+%Y_%m")/$(dt_fmt "+%Y_%m%d_%a").txt"
+      ;;
+    "onetime")
+      echo "$(get_memo_base_dir)/$(get_category)/$(dt_fmt "+%Y_%m%d")/$(dt_fmt "+%Y_%m%d_%H%M%S").txt"
+      ;;
+  esac
+}
+get_memo_base_dir() {
+  echo "$HOME/memo"
+}
+memo_base_dir_present() {
+  [[ -d "$(get_memo_base_dir)" ]]
+}
+memo_base_dir_absent() {
+  ! memo_base_dir_present
+}
+make_memo_base_dir_if_absent() {
+  if memo_base_dir_absent; then
+    mkdir -p "$(get_memo_base_dir)"
   fi
 }
-make_todays_note_if_not_exists() {
-  if [[ ! -f "$TODAYS_NOTE" ]]; then
-    # last_file=$(eval "${RG_CMD}"| head -1)
-    # last_content=$(tail -n +5 "${last_file}" )
-    content="\n"
-    content="${content}# ${KIND} ${today_ymda2}\n"
-    content="${content}\n"
-    content="${content}---\n"
-    content="${content}${last_content}"
-    echo -e "${content}">>"$TODAYS_NOTE"
+git_init_unless_git_repo() {
+  if ( ! memo_base_dir_present ); then
+    return 1
+  fi
+  (
+    cd "$(get_memo_base_dir)"|| return 1
+    if ! is_git_repo; then
+      git init
+    fi
+  )
+}
+echo_new_daily_file() {
+  content="\n"
+  content="${content}# $(dt_fmt "+%Y/%m/%d(%a)")\n"
+  content="${content}\n"
+  content="${content}---\n"
+  echo -e "${content}"
+}
+echo_new_onetime_file() {
+  printf ""
+}
+echo_new_file_content_by_category() {
+  if is_category_daily; then
+    echo_new_daily_file
+  elif is_category_onetime; then
+    echo_new_onetime_file
   fi
 }
-note_of_today() {
-  echo "$TODAYS_NOTE"
+make_new_onetime_file() {
+  touch "$(get_file_by_category)"
 }
-todays_note_present() {
-  if [[ -f "$TODAYS_NOTE" ]]; then
+file_present() {
+  if [[ -f "$(get_file_by_category)" ]]; then
     echo 1
     return 0
   else
@@ -59,28 +92,18 @@ todays_note_present() {
     return 1
   fi
 }
-md5_todays_note_or_blank() {
-  if todays_note_present>/dev/null; then
-    md5sum "$TODAYS_NOTE"| awk '{ print $1 }'
+md5_file_or_blank() {
+  if file_present>/dev/null; then
+    md5sum "$(get_file_by_category)"| awk '{ print $1 }'
   fi
 }
 file_on_remote() {
   branch=$(git branch --show-current)
-  if git cat-file -e origin/$branch:$TODAYS_NOTE 2>/dev/null; then
+  if git cat-file -e "origin/$branch:$(get_file_by_category)" 2>/dev/null; then
     return 0
   else
     return 1
   fi
-}
-select_note() {
-  fzf --ansi --info=inline --prompt="($KIND)"\
-      --style=minimal \
-      --bind "start:reload:(${FZF_START})"\
-      --bind "j:down" --bind "k:up"  --bind "q:abort"\
-      --bind "enter:execute(${FZF_NVIM_CMD})"\
-      --preview="${PREVIEW}" --preview-window=right,65%\
-    && return 0\
-    || return 1
 }
 git_commit_with_datetime() {
   now=$(date '+%Y/%m/%d(%a) %H時%M分%S秒')
@@ -91,45 +114,41 @@ git_commit_with_datetime() {
 }
 remote_origin_url_present() {
   remote_origin_url=$(git config --get remote.origin.url)
-  if [[ "$?" == 0 && -n "$remote_origin_url" ]]; then
-    return 0
-  else
-    return 1
-  fi
+  [[ "$?" == 0 && -n "$remote_origin_url" ]]
 }
-git_fetch_notes() {
+git_fetch() {
   if remote_origin_url_present && connected_to_internet; then
-    cd "$BASE_DIR" && (
+    cd "$(get_memo_base_dir)" && (
       git fetch origin
     )
   fi
 }
-git_merge_notes() {
-  cd "$BASE_DIR" && (
+git_merge() {
+  cd "$(get_memo_base_dir)" && (
     git merge --ff
   )
 }
 git_merge_tree() {
-  cd "$BASE_DIR" && (
+  cd "$(get_memo_base_dir)" && (
     branch=$(git branch --show-current)
     merge_base=$(git merge-base HEAD "origin/$branch")
     git merge-tree "$merge_base" HEAD "origin/$branch"
   )
 }
-git_up_to_date_notes() {
+git_update() {
   md5a="$1"
-  todays_note_have_been_present="$2"
-  git_fetch_notes>/dev/null 2>&1
+  file_have_been_present="$2"
+  git_fetch>/dev/null 2>&1
   merge_tree=$(git_merge_tree)
-  git_merge_notes>/dev/null 2>&1
-  todays_note_is_present=$(todays_note_present)
-  md5b=$(md5_todays_note_or_blank)
+  git_merge>/dev/null 2>&1
+  file_is_present=$(file_present)
+  md5b=$(md5_file_or_blank)
 
-  if [[ "$todays_note_have_been_present" == "0" ]]; then
-    if [[ "$todays_note_is_present" == "1" ]]; then
+  if [[ "$file_have_been_present" == "0" ]]; then
+    if [[ "$file_is_present" == "1" ]]; then
       echo ">>> File changed on remote branch. Please reload."
     fi
-  elif [[ "$todays_note_have_been_present" == "1" ]]; then
+  elif [[ "$file_have_been_present" == "1" ]]; then
     hunks=$(echo "$merge_tree"| grep -c "<<<<<")
     if [[ "$hunks" == "0" ]]; then
       if [[ "$md5a" != "$md5b" ]]; then
@@ -140,32 +159,38 @@ git_up_to_date_notes() {
     fi
   fi
 }
-git_any_cached() {
-  cd "${BASE_DIR}" && (
-    cached=$(git status -s| wc -l| tr -d ' ')
-    if [[ $cached -ge 1 ]]; then
-      return 0
-    else
-      return 1
-    fi
-  )
+git_up_to_date_notes_of_today() {
+  file_md5=$(md5_file_or_blank)
+  file_presence=$(file_present)
+  git_update "$file_md5" "$file_presence" &
 }
-git_commit_note() {
+git_any_cached() {
+  cd "$(get_memo_base_dir)" &&
+    [[ -n $(git status -s| wc -l| tr -d ' ') ]]
+}
+is_file_by_category_changed() {
+  file=$(get_file_by_category)
+  cd "$(get_memo_base_dir)" &&
+    [[ -n $(git status -s -- "$file") ]]
+}
+git_commit() {
   if git_any_cached; then
-    cd "${BASE_DIR}" && (
-      git add -A
-      git_commit_with_datetime
-    )
+    cd "$(get_memo_base_dir)" &&
+      (
+        git add -A
+        git_commit_with_datetime
+      )
     return 0
   else
     return 1
   fi
 }
 get_ahead_count() {
-  cd "${BASE_DIR}" && (
-    branch=$(git branch --show-current)
-    git rev-list "origin/${branch}..HEAD" --count
-  )
+  cd "$(get_memo_base_dir)" &&
+    (
+      branch=$(git branch --show-current)
+      git rev-list "origin/${branch}..HEAD" --count
+    )
 }
 git_push_note_if_connected_to_internet() {
   if ! remote_origin_url_present; then
@@ -176,22 +201,45 @@ git_push_note_if_connected_to_internet() {
   fi
 
   ahead_count=$(get_ahead_count)
-  if (( ahead_count >= 1 )); then
-    cd "${BASE_DIR}" && (
-      res=$(git push -u origin HEAD 2>&1)
-      code=$?
-      if [[ $code -ne 0 ]]; then
-        echo "git pushできませんでした"
-        printf "%s" "$res"
-      fi
-    )
+  if [[ $ahead_count -ge 1 ]]; then
+    cd "$(get_memo_base_dir)" &&
+      (
+        res=$(git push -u origin HEAD 2>&1)
+        code=$?
+        if [[ $code -ne 0 ]]; then
+          echo "git pushできませんでした"
+          printf "%s" "$res"
+        fi
+      )
   fi
 }
-nvim_note_today() {
+is_file_absent() {
+  [[ ! -f "$(get_file_by_category)" ]]
+}
+make_new_file_by_category_if_absent(){
+  if is_file_absent; then
+    echo_new_file_content_by_category> "$(get_file_by_category)"
+  fi
+}
+md5_new_file_content_by_category() {
+  echo_new_file_content_by_category| md5sum| awk '{ print $1 }'
+}
+md5_file_by_category() {
+  md5sum "$(get_file_by_category)"| awk '{ print $1 }'
+}
+may_rm_file_by_category() {
+  md5a=$(md5_new_file_content_by_category)
+  md5b=$(md5_file_by_category)
+  if [[ "$md5a" == "$md5b" ]]; then
+    rm "$(get_file_by_category)"
+  fi
+}
+open_file_with_nvim() {
   (
-    cd "$BASE_DIR"|| exit
-    file=$(note_of_today)
-    nvim "$file"
+    cd "$(get_memo_base_dir)"|| exit
+    make_new_file_by_category_if_absent
+    nvim "$(get_file_by_category)"
+    may_rm_file_by_category
   )
 }
 connected_to_internet() {
@@ -203,3 +251,8 @@ connected_to_internet() {
     return 1
   fi
 }
+
+check_category || exit 1
+make_memo_base_dir_if_absent
+git_init_unless_git_repo
+make_category_dir_if_absent

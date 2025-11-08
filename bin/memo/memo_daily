@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+source memo_functions daily
+
+false && git_up_to_date_notes_of_today &
+open_file_with_nvim && git_commit
+false && git_push_note_if_connected_to_internet &

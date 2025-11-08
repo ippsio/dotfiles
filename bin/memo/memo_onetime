@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+source memo_functions onetime
+
+open_file_with_nvim && git_commit
+
