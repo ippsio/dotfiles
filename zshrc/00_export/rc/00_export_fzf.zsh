@@ -9,15 +9,15 @@ export FZF_DEFAULT_OPTS=\
 " --no-unicode"\
 " --color fg:-1"\
 " --color bg:-1"\
-" --color hl:184"\
+" --color hl:#cccc00"\
 " --color fg+:-1:underline"\
-" --color bg+:229"\
-" --color hl+:1"\
-" --color info:108:reverse"\
-" --color prompt:193:reverse"\
-" --color spinner:108"\
-" --color pointer:168:underline"\
-" --color marker:168:reverse"\
-" --color header:191:reverse"
+" --color bg+:#ffff99"\
+" --color hl+:#800000"\
+" --color info:#669966:reverse"\
+" --color prompt:#333333:reverse"\
+" --color spinner:#669966"\
+" --color pointer:#cc3366:underline"\
+" --color marker:#cc3366:reverse"\
+" --color header:#ccff33:reverse"
 
 #export FZF_DEFAULT_OPTS='--ansi --exact --reverse --prompt="❯ " --color hl:1,bg+:248'
