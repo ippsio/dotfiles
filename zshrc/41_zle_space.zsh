@@ -14,7 +14,7 @@ zle_space() {
   isbuf "dej" && lbuf 'deepl-cli-ej ""' && zle backward-char && return 0
   isbuf "gej" && lbuf 'gc-translate-cli-ej ""' && zle backward-char && return 0
   isbuf "i" && lbuf "initvim" && zle accept-line && return 0
-  isbuf "rgg" "rg_fzf_vim " && return 0
+  isbuf "rgg" && lbuf "rg_fzf_vim " && return 0
   isbuf "scp " && rbuf "fzf_ssh_config" && return 0
   isbuf "ssh " && rbuf "fzf_ssh_config" && return 0
 

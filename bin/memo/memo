@@ -1,0 +1,159 @@
+#!/usr/bin/env bash
+{
+  [[ -z "$1" ]] && exit 1
+  category="${1:-daily}"
+  epoc=$(date '+%s')
+
+  dt_fmt() { LC_ALL=C date -r "$epoc" "$1"; return 0; }
+  get_category() {
+    echo "$category"
+  }
+  check_category() {
+    is_category_daily && return 0
+    is_category_onetime && return 0
+
+    printf "invalid category was given '%s'" "$category"
+    return 1
+  }
+  is_category_daily() {
+    [[ "$(get_category)" == "daily" ]]
+  }
+  is_category_onetime() {
+    [[ "$(get_category)" == "onetime" ]]
+  }
+  get_category_dir() {
+    dirname "$(get_file_by_category)"
+  }
+  make_category_dir_if_absent() {
+    if [[ ! -d "$(get_category_dir)" ]]; then
+      mkdir -p "$(get_category_dir)"
+    fi
+  }
+  get_file_by_category() {
+    case $(get_category) in
+      "daily")
+        echo "$(get_memo_base_dir)/$(get_category)/$(dt_fmt "+%Y_%m")/$(dt_fmt "+%Y_%m%d_%a").txt"
+        ;;
+      "onetime")
+        echo "$(get_memo_base_dir)/$(get_category)/$(dt_fmt "+%Y_%m%d")/$(dt_fmt "+%Y_%m%d_%H%M%S").txt"
+        ;;
+    esac
+  }
+  get_memo_base_dir() {
+    echo "$HOME/memo"
+  }
+  memo_base_dir_present() {
+    [[ -d "$(get_memo_base_dir)" ]]
+  }
+  memo_base_dir_absent() {
+    ! memo_base_dir_present
+  }
+  make_memo_base_dir_if_absent() {
+    if memo_base_dir_absent; then
+      mkdir -p "$(get_memo_base_dir)"
+    fi
+  }
+  git_init_unless_git_repo() {
+    if ( ! memo_base_dir_present ); then
+      return 1
+    fi
+    (
+      cd "$(get_memo_base_dir)"|| return 1
+      if ! is_git_repo; then
+        git init
+      fi
+    )
+  }
+  echo_new_daily_file() {
+    content="\n"
+    content="${content}# $(dt_fmt "+%Y/%m/%d(%a)")\n"
+    content="${content}\n"
+    content="${content}---\n"
+    echo -e "${content}"
+  }
+  echo_new_onetime_file() {
+    printf ""
+  }
+  echo_new_file_content_by_category() {
+    if is_category_daily; then
+      echo_new_daily_file
+    elif is_category_onetime; then
+      echo_new_onetime_file
+    fi
+  }
+  make_new_onetime_file() {
+    touch "$(get_file_by_category)"
+  }
+  git_commit_with_datetime() {
+    now=$(date '+%Y/%m/%d(%a) %H時%M分%S秒')
+    git commit -m "$now" 1>/dev/null
+    h=$(git log --pretty="%h" -1)
+    files=$(git show --name-only --pretty="" HEAD| xargs echo)
+    printf "%s (%s)\n" "$h" "$files"
+  }
+  git_any_cached() {
+    cd "$(get_memo_base_dir)" &&
+      [[ -n $(git status -s| wc -l| tr -d ' ') ]]
+  }
+  is_file_by_category_changed() {
+    file=$(get_file_by_category)
+    cd "$(get_memo_base_dir)" &&
+      [[ -n $(git status -s -- "$file") ]]
+  }
+  git_commit() {
+    if git_any_cached; then
+      cd "$(get_memo_base_dir)" &&
+        (
+          git add -A
+          git_commit_with_datetime
+        )
+      return 0
+    else
+      return 1
+    fi
+  }
+  get_ahead_count() {
+    cd "$(get_memo_base_dir)" &&
+      (
+        branch=$(git branch --show-current)
+        git rev-list "origin/${branch}..HEAD" --count
+      )
+  }
+  is_file_absent() {
+    [[ ! -f "$(get_file_by_category)" ]]
+  }
+  make_new_file_by_category_if_absent(){
+    if is_file_absent; then
+      echo_new_file_content_by_category> "$(get_file_by_category)"
+    fi
+  }
+  md5_new_file_content_by_category() {
+    echo_new_file_content_by_category| md5sum| awk '{ print $1 }'
+  }
+  md5_file_by_category() {
+    md5sum "$(get_file_by_category)"| awk '{ print $1 }'
+  }
+  may_rm_file_by_category() {
+    md5a=$(md5_new_file_content_by_category)
+    md5b=$(md5_file_by_category)
+    if [[ "$md5a" == "$md5b" ]]; then
+      rm "$(get_file_by_category)"
+    fi
+  }
+  open_file_with_nvim() {
+    (
+      cd "$(get_memo_base_dir)"|| exit
+      make_new_file_by_category_if_absent
+      nvim "$(get_file_by_category)"
+      may_rm_file_by_category
+    )
+  }
+}
+
+check_category || exit 1
+make_memo_base_dir_if_absent
+git_init_unless_git_repo
+make_category_dir_if_absent
+if open_file_with_nvim; then
+  git_commit
+fi
