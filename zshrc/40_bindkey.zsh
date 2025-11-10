@@ -3,7 +3,7 @@
 
 bindkey -e
 
-source ~/dotfiles/zshrc/40_functions/functions.zsh
+source ~/dotfiles/zshrc/40_funcs.zsh
 source ~/dotfiles/zshrc/41_zle_space.zsh
 source ~/dotfiles/zshrc/42_zle_tab.zsh
 source ~/dotfiles/zshrc/43_zle_ctrl_f.zsh

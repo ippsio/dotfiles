@@ -13,7 +13,6 @@ prepare_by_brew bat
 prepare_by_brew pyenv
 prepare_by_brew rbenv
 prepare_by_brew ruby-build
-prepare_by_brew nodenv
 prepare_by_brew rustc rust
 prepare_by_brew cargo
 prepare_by_brew java openjdk
