@@ -15,21 +15,30 @@ any_commits() {
 }
 
 precmd() {
+  t0=$($HOME/dotfiles/bin/epocms/epocms_c)
   PROMPT_ARRAY=()
   if is_inside_work_tree && any_commits; then
-    local git_status="$(git status --porcelain --branch --ahead-behind 2> /dev/null)"
-    local xy=$(echo -e ${git_status}| sed -e "s/^\(..\).*$/\1/")
+    if false; then
+      local git_status="$(git status --porcelain --branch --ahead-behind 2>/dev/null)"
+      local xy=$(echo -e ${git_status}| sed -e "s/^\(..\).*$/\1/")
 
-    local untracked=$(echo "${xy}"| grep -Ec "^(\?\?)")
-    local unstaged=$(echo "${xy}"| grep -Ec "^([ MADRC][MDRC])")
-    local unmerged=$(echo "${xy}"| grep -Ec "^([DAU][DAU])")
-
-    local stash=$(git stash list 2>/dev/null| grep -Ec "^stash@")
-
-    local staged=$(echo "${xy}"| grep -Ec "^([MADRC][ MD])")
-
-    local ahead=$(echo -e ${git_status}| grep -E "ahead [0-9]*"| sed -e "s/^.*\[ahead \([0-9]*\).*/\1/")
-    local behind=$(echo -e ${git_status}| grep -E "behind [0-9]*"| sed -e "s/^.*[ \[]behind \([0-9]*\).*/\1/")
+      local untracked=$(echo "${xy}"| grep -Ec "^(\?\?)")
+      local unstaged=$(echo "${xy}"| grep -Ec "^([ MADRC][MDRC])")
+      local unmerged=$(echo "${xy}"| grep -Ec "^([DAU][DAU])")
+      local stash=$(git stash list 2>/dev/null| grep -Ec "^stash@")
+      local staged=$(echo "${xy}"| grep -Ec "^([MADRC][ MD])")
+      local ahead=$( echo -e ${git_status}| grep -E "ahead [0-9]*"| sed -e "s/^.*\[ahead \([0-9]*\).*/\1/")
+      local behind=$(echo -e ${git_status}| grep -E "behind [0-9]*"| sed -e "s/^.*[ \[]behind \([0-9]*\).*/\1/")
+      ahead="${ahead:-0}"
+      behind="${behind:-0}"
+    else
+      local untracked=$(git ls-files --others --exclude-standard | wc -l| tr -d ' ')
+      local unstaged=$(git diff --name-only | wc -l| tr -d ' ')
+      local unmerged=$(git ls-files --unmerged | wc -l| tr -d ' ')
+      local stash=$(git stash list 2>/dev/null| grep -Ec "^stash@")
+      local staged=$(git diff --cached --name-only | wc -l| tr -d ' ')
+      read behind ahead < <(git rev-list --left-right --count @{upstream}...HEAD 2>/dev/null)
+    fi
 
     local repo=$(git_reponame)
     local branch="$(git branch --show-current)"
@@ -41,7 +50,7 @@ precmd() {
     local WORKTREE="%F{1}?${untracked} !${unstaged} x${unmerged}%f"
     local STASH="%F{241}\$${stash}%f "
     local STAGE="%F{61}+${staged}%f"
-    local AB="%F{200}A${ahead:-0} B${behind:-0}%f"
+    local AB="%F{200}A${ahead} B${behind}%f"
     local REPO_BRANCH="%F{8}${repo} %F{8}${branch}%f %F{red}track(${remote:-none}) %F{250}${commit_msg}%f"
     local GIT_CAUTION="%K{1}${merging}%f%k "
 
@@ -64,5 +73,7 @@ precmd() {
   local BG="%(1j|%F{5}bg:%j%f|)"
   local PWD="%F{137}%~ %f"
   PROMPT_ARRAY+=( "${EXIT_CD}${BG}${PWD}%F{245}%#%f " )
-  PROMPT=$(print -l "\n${PROMPT_ARRAY[@]}")
+  t1=$($HOME/dotfiles/bin/epocms/epocms_c)
+  td=$(( t1 - t0 ))
+  PROMPT=$(print -l "\n${PROMPT_ARRAY[@]} (${td}ms)")
 }
