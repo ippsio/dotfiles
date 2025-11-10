@@ -15,6 +15,9 @@ source $HOME/dotfiles/zshrc/40_bindkey.zsh
 source $HOME/dotfiles/zshrc/50_cmd_hack.zsh
 source $HOME/dotfiles/zshrc/60_zsh_plugin.zsh
 source $HOME/dotfiles/zshrc/70_eval_envs.zsh
+if [[ -e $HOME/.zshrc_additional ]]; then
+  source $HOME/.zshrc_additional
+fi
 
 t1=$($HOME/dotfiles/bin/epocms/epocms_c)
 td=$(( t1 - t0 ))

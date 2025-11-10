@@ -75,5 +75,5 @@ precmd() {
   PROMPT_ARRAY+=( "${EXIT_CD}${BG}${PWD}%F{245}%#%f " )
   t1=$($HOME/dotfiles/bin/epocms/epocms_c)
   td=$(( t1 - t0 ))
-  PROMPT=$(print -l "\n${PROMPT_ARRAY[@]} (${td}ms)")
+  PROMPT=$(print -l "\n${PROMPT_ARRAY[@]}")
 }
