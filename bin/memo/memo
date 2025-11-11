@@ -9,6 +9,7 @@
     echo "$category"
   }
   check_category() {
+    is_category_project && return 0
     is_category_daily && return 0
     is_category_daily_detail && return 0
     is_category_onetime && return 0
@@ -16,14 +17,20 @@
     printf "invalid category was given '%s'" "$category"
     return 1
   }
+  is_category() {
+    [[ "$(get_category)" == "$1" ]]
+  }
+  is_category_project() {
+    is_category project
+  }
   is_category_daily() {
-    [[ "$(get_category)" == "daily" ]]
+    is_category daily
   }
   is_category_daily_detail() {
-    [[ "$(get_category)" == "daily_detail" ]]
+    is_category daily_detail
   }
   is_category_onetime() {
-    [[ "$(get_category)" == "onetime" ]]
+    is_category onetime
   }
   get_category_dir() {
     dirname "$(get_file_with_given_category)"
@@ -36,6 +43,9 @@
   get_file_by_category() {
     category="$1"
     case "$category" in
+      project)
+        echo "$(get_memo_base_dir)/$category/$category.txt"
+        ;;
       daily | daily_detail)
         echo "$(get_memo_base_dir)/$category/$(dt_fmt "+%Y_%m")/$(dt_fmt "+%Y_%m%d_%a").txt"
         ;;
@@ -73,6 +83,14 @@
       fi
     )
   }
+  echo_new_project_file() {
+    daily_file=$(get_file_by_category daily)
+    content="\n"
+    content="${content}# プロジェクト進行状況\n"
+    content="${content}\n"
+    content="${content}---\n"
+    echo -e "${content}"
+  }
   echo_new_daily_file() {
     daily_detail_file=$(get_file_by_category daily_detail)
     content="\n"
@@ -95,7 +113,9 @@
     printf ""
   }
   echo_new_file_content_by_category() {
-    if is_category_daily; then
+    if is_category_project; then
+      echo_new_project_file
+    elif is_category_daily; then
       echo_new_daily_file
     elif is_category_daily_detail; then
       echo_new_daily_detail_file
@@ -145,8 +165,9 @@
     [[ ! -f "$(get_file_with_given_category)" ]]
   }
   make_new_file_by_category_if_absent(){
+    filename=$(get_file_with_given_category)
     if is_file_absent; then
-      echo_new_file_content_by_category> "$(get_file_with_given_category)"
+      echo_new_file_content_by_category> "$filename"
     fi
   }
   md5_new_file_content_by_category() {
