@@ -9,6 +9,7 @@
     echo "$category"
   }
   check_category() {
+    is_category_whole && return 0
     is_category_project && return 0
     is_category_daily && return 0
     is_category_daily_detail && return 0
@@ -20,18 +21,11 @@
   is_category() {
     [[ "$(get_category)" == "$1" ]]
   }
-  is_category_project() {
-    is_category project
-  }
-  is_category_daily() {
-    is_category daily
-  }
-  is_category_daily_detail() {
-    is_category daily_detail
-  }
-  is_category_onetime() {
-    is_category onetime
-  }
+  is_category_whole() { is_category whole; }
+  is_category_project() { is_category project; }
+  is_category_daily() { is_category daily; }
+  is_category_daily_detail() { is_category daily_detail; }
+  is_category_onetime() { is_category onetime; }
   get_category_dir() {
     dirname "$(get_file_with_given_category)"
   }
@@ -170,6 +164,11 @@
       echo_new_file_content_by_category> "$filename"
     fi
   }
+  make_new_files_by_category_if_absent(){
+    if is_file_absent; then
+      echo_new_file_content_by_category> "$filename"
+    fi
+  }
   md5_new_file_content_by_category() {
     echo_new_file_content_by_category| md5sum| awk '{ print $1 }'
   }
@@ -187,8 +186,23 @@
     (
       cd "$(get_memo_base_dir)"|| exit
       make_new_file_by_category_if_absent
-      nvim "$(get_file_with_given_category)"
+      nvim "$(get_file_by_category project)" "$(get_file_by_category daily)" "$(get_file_by_category daily_detail)" "$(get_file_by_category onetime)"
       may_rm_file_by_category
+    )
+  }
+  open_files_with_nvim() {
+    (
+      cd "$(get_memo_base_dir)"|| exit
+
+      [[ ! -d $(dirname $(get_file_by_category daily)) ]] && mkdir -p $(dirname $(get_file_by_category daily))
+      [[ ! -d $(dirname $(get_file_by_category daily_detail)) ]] && mkdir -p $(dirname $(get_file_by_category daily_detail))
+      [[ ! -d $(dirname $(get_file_by_category onetime)) ]] && mkdir -p $(dirname $(get_file_by_category onetime))
+
+      [[ ! -f $(get_file_by_category daily) ]] && echo_new_daily_file> "$(get_file_by_category daily)"
+      [[ ! -f $(get_file_by_category daily_detail) ]] && echo_new_daily_detail_file> "$(get_file_by_category daily_detail)"
+      [[ ! -f $(get_file_by_category onetime) ]] && echo_new_onetime_file> "$(get_file_by_category onetime)"
+
+      nvim "$(get_file_by_category project)" "$(get_file_by_category daily)" "$(get_file_by_category daily_detail)" "$(get_file_by_category onetime)"
     )
   }
 }
@@ -197,6 +211,10 @@ check_category || exit 1
 make_memo_base_dir_if_absent
 git_init_unless_git_repo
 make_category_dir_if_absent
-if open_file_with_nvim; then
-  git_commit
+if is_category_whole; then
+  open_files_with_nvim
+else
+  if open_file_with_nvim; then
+    git_commit
+  fi
 fi
