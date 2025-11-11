@@ -18,6 +18,6 @@ export FZF_DEFAULT_OPTS=\
 " --color spinner:#669966"\
 " --color pointer:#cc3366:underline"\
 " --color marker:#cc3366:reverse"\
-" --color header:#ccff33:reverse"
+" --color header:#bb9944:reverse"
 
 #export FZF_DEFAULT_OPTS='--ansi --exact --reverse --prompt="❯ " --color hl:1,bg+:248'
