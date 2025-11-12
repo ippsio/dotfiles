@@ -2,7 +2,10 @@
 
 epoc=$(date '+%s')
 format_dt() {
-  LC_ALL=C date -r "$epoc" "$1"; return 0;
+  LC_ALL=C date -r "$1" "$2"; return 0;
+}
+format_epoc_dt() {
+  format_dt "$epoc" "$1"
 }
 get_basedir() {
   echo "$HOME/memo"
@@ -17,10 +20,24 @@ get_sticky_file() {
   echo "$(get_basedir)/sticky.txt"
 }
 get_daily_file() {
-  echo "$(get_basedir)/daily/$(format_dt "+%Y_%m")/$(format_dt "+%Y_%m%d_%a").txt"
+  echo "$(get_basedir)/daily/$(format_epoc_dt "+%Y_%m")/$(format_epoc_dt "+%Y_%m%d_%a").txt"
 }
 get_daily_detail_file() {
-  echo "$(get_basedir)/daily_detail/$(format_dt "+%Y_%m")/$(format_dt "+%Y_%m%d_%a").txt"
+  echo "$(get_basedir)/daily_detail/$(format_epoc_dt "+%Y_%m")/$(format_epoc_dt "+%Y_%m%d_%a").txt"
+}
+get_sun_of_week() {
+  date -vsun '+%s'
+}
+get_sat_of_week() {
+  date -vsat '+%s'
+}
+get_weekly_file() {
+  sun_s=$(get_sun_of_week)
+  sat_s=$(get_sat_of_week)
+  sun_ym=$(format_dt "$sun_s" "+%Y_%m")
+  sun=$(format_dt "$sun_s" "+%Y_%m%d_%a")
+  sat=$(format_dt "$sat_s" "+%Y_%m%d_%a")
+  echo "$(get_basedir)/weekly/$sun_ym/${sun}-${sat}.txt"
 }
 ensure_basedir() {
   mkdir -p "$(get_basedir)"
@@ -43,6 +60,7 @@ ensure_file() {
 }
 ensure_files() {
   ensure_file "$(get_project_file)" "$(get_project_content)"
+  ensure_file "$(get_weekly_file)" "$(get_weekly_content)"
   ensure_file "$(get_daily_file)" "$(get_daily_content)"
   ensure_file "$(get_daily_detail_file)" "$(get_daily_detail_content)"
   ensure_file "$(get_todo_file)" "$(get_todo_content)"
@@ -63,11 +81,18 @@ get_sticky_content() {
 get_project_content() {
   get_content "プロジェクト進行状況"
 }
+get_weekly_content() {
+  sun_s=$(get_sun_of_week)
+  sat_s=$(get_sat_of_week)
+  sun=$(format_dt "$sun_s" "+%Y_%m%d_%a")
+  sat=$(format_dt "$sat_s" "+%Y_%m%d_%a")
+  get_content "週次：${sun}-${sat}"
+}
 get_daily_content() {
-  get_content "日次: $(format_dt '+%Y/%m/%d(%a)')"
+  get_content "日次: $(format_epoc_dt '+%Y/%m/%d(%a)')"
 }
 get_daily_detail_content() {
-  get_content "日次詳細: $(format_dt '+%Y/%m/%d(%a)')"
+  get_content "日次詳細: $(format_epoc_dt '+%Y/%m/%d(%a)')"
 }
 git_commit() {
   (
@@ -95,7 +120,6 @@ open_files_with_nvim() {
       -c 'wincmd h'
   )
 }
-
 ensure_basedir
 ensure_git_managed
 ensure_files
