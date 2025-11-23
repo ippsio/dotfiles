@@ -5,17 +5,8 @@ runtime! remaps.vim
 runtime! autocmds.vim
 runtime! jetpack.vim
 try
-  " runtime! highlights.vim
-  runtime! colorscheme.vim
-  hi Visual guibg=#ff55cc
+  "autocmd VimEnter * colorscheme github_dark_dimmed
 catch
 endtry
-runtime! jetpack_loadrc.vim
+"runtime! jetpack_loadrc.vim
 runtime! rc/functions/Hi.vim
-
-function! SayVisual()
-  silent normal! gv"zy
-  call system('say -v Samantha ', @z)
-  silent normal! gv
-endfunction
-vnoremap <silent> <leader>s :<C-u>call SayVisual()<CR>

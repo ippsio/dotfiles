@@ -42,21 +42,7 @@ call ddc#custom#patch_global('filterParams',
 \   matcher_fuzzy: #{camelcase: v:true, splitMode: 'word'},
 \   converter_fuzzy: #{hlGroup: 'SpellBad'}
 \ })
-"   matcher_fuzzy: #{camelcase: v:true, splitMode: 'character'},
 
-""" 旧設定
-""" call ddc#custom#patch_global('sourceOptions',
-""" \ #{
-""" \   _: #{
-""" \     minAutoCompleteLength: 1,
-""" \     matchers: ['matcher_initial', 'matcher_fuzzy'],
-""" \     sorters: ['sorter_fuzzy'],
-""" \     converters: ['converter_fuzzy']
-""" \   },
-""" \   around: #{mark: 'A'},
-""" \   file:   #{mark: 'F', isVolatile: v:true, forceCompletionPattern: '\S/\S*'},
-""" \   lsp:    #{mark: 'LSP', forceCompletionPattern: join(['\.\w*', '->\w*'], '|')}
-""" \ })
 call ddc#custom#patch_global('sourceOptions',
 \ #{
 \   _: #{

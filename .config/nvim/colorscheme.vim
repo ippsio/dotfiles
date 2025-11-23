@@ -19,7 +19,7 @@
 " colorscheme pablo
 " colorscheme peachpuff
 " colorscheme quiet
-"colorscheme retrobox
+" colorscheme retrobox
 " colorscheme ron
 " colorscheme shine
 " colorscheme slate
@@ -29,7 +29,8 @@
 " colorscheme wildcharm
 " colorscheme zaibatsu
 " colorscheme zellner
-colorscheme github_light_high_contrast
+" colorscheme github_light_high_contrast
+colorscheme github_dark_dimmed
 
 "hi link diffAdd String
 " hi DiffAdd     guifg=#123 ctermbg=31

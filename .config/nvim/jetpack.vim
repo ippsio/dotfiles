@@ -11,131 +11,223 @@ endif
 packadd vim-jetpack
 call jetpack#begin()
 " jetpack
-Jetpack 'tani/vim-jetpack', { 'opt': 1} "bootstrap
+call jetpack#add('tani/vim-jetpack', {'opt': 1}) "bootstrap
 
 " vim
-Jetpack 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-Jetpack 'nvim-treesitter/playground', {'do': ':TSPlaygroundToggle'}
-Jetpack 'vim-jp/vimdoc-ja'
+call jetpack#add('nvim-treesitter/nvim-treesitter', {
+      \'on_event': 'VimEnter',
+      \'do': ':TSUpdate',
+      \})
+call jetpack#add('nvim-treesitter/playground', {
+      \ 'do': ':TSUpdate',
+      \ 'on': ['TSPlaygroundToggle', 'TSHighlightCapturesUnderCursor']
+      \ })
 
+call jetpack#add('vim-jp/vimdoc-ja', {
+      \'on_event': 'VimEnter'
+      \})
 " ddc
-Jetpack 'Shougo/ddc.vim'
-Jetpack 'vim-denops/denops.vim'
+call jetpack#add('Shougo/ddc.vim', {
+      \'requires': [
+      \  'vim-denops/denops.vim',
+      \],
+      \'hook_source': 'source $HOME/.config/nvim/rc/vim/ddc.vim.vim',
+      \})
+call jetpack#add('vim-denops/denops.vim', {
+      \'hook_source': 'source $HOME/.config/nvim/rc/vim/denops.vim.vim',
+      \})
 " ddc> ddc-source
-Jetpack 'Shougo/ddc-around'
-Jetpack 'Shougo/ddc-source-lsp'
-Jetpack 'LumaKernel/ddc-source-file'
+call jetpack#add('Shougo/ddc-around', { 'on_event': 'VimEnter', })
+call jetpack#add('Shougo/ddc-source-lsp', { 'on_event': 'VimEnter', })
+call jetpack#add('LumaKernel/ddc-source-file', { 'on_event': 'VimEnter', })
 " ddc> ddc-matcher,sorter,converter
-Jetpack 'Shougo/ddc-filter-converter_remove_overlap'
-Jetpack 'Shougo/ddc-sorter_rank'
-Jetpack 'Shougo/ddc-matcher_head'
-Jetpack 'tani/ddc-fuzzy'
+call jetpack#add('Shougo/ddc-filter-converter_remove_overlap', { 'on_event': 'VimEnter', })
+call jetpack#add('Shougo/ddc-sorter_rank', { 'on_event': 'VimEnter', })
+call jetpack#add('Shougo/ddc-matcher_head', { 'on_event': 'VimEnter', })
+call jetpack#add('tani/ddc-fuzzy', { 'on_event': 'VimEnter', })
 " ddc> ui
-Jetpack 'Shougo/ddc-ui-native'
-Jetpack 'Shougo/ddc-ui-pum'
-Jetpack 'Shougo/pum.vim'
+call jetpack#add('Shougo/ddc-ui-native', { 'on_event': 'VimEnter', })
+call jetpack#add('Shougo/ddc-ui-pum', { 'on_event': 'VimEnter', })
+call jetpack#add('Shougo/pum.vim', {
+      \'on_event': 'VimEnter',
+      \'hook_source': 'source $HOME/.config/nvim/rc/vim/pum.vim.vim',
+      \})
 
 " lsp
 " lsp> config
-Jetpack 'neovim/nvim-lspconfig'
-"Jetpack 'williamboman/mason-lspconfig.nvim', {'tag': 'v1.0.0'}
-"Jetpack 'williamboman/mason.nvim', {'tag': 'v1.0.0'}
-Jetpack 'williamboman/mason-lspconfig.nvim'
-Jetpack 'williamboman/mason.nvim'
-Jetpack 'ray-x/lsp_signature.nvim'
-" lsp> progress message
-Jetpack 'j-hui/fidget.nvim'
+call jetpack#add('williamboman/mason.nvim', {
+      \'on_event': 'VimEnter',
+      \})
+call jetpack#add('neovim/nvim-lspconfig', {
+      \'on_event': 'VimEnter',
+      \})
+call jetpack#add('williamboman/mason-lspconfig.nvim', {
+      \ 'on_event': 'VimEnter',
+      \ 'requires': [
+      \  'williamboman/mason.nvim',
+      \  'neovim/nvim-lspconfig',
+      \  'ray-x/lsp_signature.nvim'
+      \],
+      \'hook_source': 'source $HOME/.config/nvim/rc/lua/nvim-lspconfig.lua',
+      \})
+call jetpack#add('ray-x/lsp_signature.nvim', {
+      \ 'on_event': 'VimEnter',
+      \})
+"" lsp> progress message
+call jetpack#add('j-hui/fidget.nvim', {
+      \ 'on_event': 'VimEnter',
+      \})
+call jetpack#add('SmiteshP/nvim-navic', {
+      \ 'on_event': 'VimEnter',
+      \})
 
-" git
-Jetpack 'tpope/vim-fugitive'
-Jetpack 'airblade/vim-gitgutter'
-Jetpack 'iberianpig/tig-explorer.vim'
-"Jetpack 'rhysd/conflict-marker.vim'
+"
+"" git
+call jetpack#add('tpope/vim-fugitive', {
+      \'on_cmd': ['Git']
+      \})
+call jetpack#add('airblade/vim-gitgutter', {
+      \'on_event': 'VimEnter',
+      \'hook_source': 'source $HOME/.config/nvim/rc/vim/vim-gitgutter.vim',
+      \})
+call jetpack#add('iberianpig/tig-explorer.vim', {
+      \'on_event': 'VimEnter',
+      \})
+
+call jetpack#add('rhysd/conflict-marker.vim', {
+      \'on_event': 'VimEnter',
+      \'hook_source': 'source $HOME/.config/nvim/rc/vim/conflict-marker.vim.vim',
+      \})
 
 " viewability, statusline
-Jetpack 'itchyny/vim-cursorword'
-Jetpack 'itchyny/vim-parenmatch'
-Jetpack 'itchyny/lightline.vim'
-Jetpack 'bronson/vim-trailing-whitespace'
-Jetpack 'cohama/vim-insert-linenr'
-"Jetpack 'norcalli/nvim-colorizer.lua'
-"Jetpack 'vim-scripts/tango.vim'
-
-" debugger
-" Jetpack 'mfussenegger/nvim-dap'
-" Jetpack 'mfussenegger/nvim-dap-python'
-" Jetpack 'nvim-neotest/nvim-nio'
-" Jetpack 'rcarriga/nvim-dap-ui'
-" Jetpack 'theHamsta/nvim-dap-virtual-text'
+call jetpack#add('itchyny/vim-cursorword', {
+      \'on_event': 'VimEnter',
+      \'hook_source': 'source $HOME/.config/nvim/rc/vim/vim-cursorword.vim',
+      \})
+call jetpack#add('itchyny/vim-parenmatch', {
+      \'on_event': 'VimEnter',
+      \})
+call jetpack#add('itchyny/lightline.vim', {
+      \'on_event': 'VimEnter',
+      \'hook_source': 'source $HOME/.config/nvim/rc/vim/lightline.vim.vim',
+      \})
+call jetpack#add('bronson/vim-trailing-whitespace', {
+      \'on_event': 'VimEnter',
+      \'hook_source': 'source $HOME/.config/nvim/rc/vim/vim-trailing-whitespace.vim',
+      \})
+call jetpack#add('cohama/vim-insert-linenr', {
+      \'on_event': 'VimEnter',
+      \})
+call jetpack#add('norcalli/nvim-colorizer.lua', {
+      \'on_event': 'VimEnter',
+      \})
 
 " fzf
-Jetpack 'junegunn/fzf', { 'do': './install --all --no-bash --no-fish --no-zsh' }
-Jetpack 'junegunn/fzf.vim'
+call jetpack#add('junegunn/fzf', {
+      \'on_event': 'VimEnter',
+      \'do': './install --all --no-bash --no-fish --no-zsh',
+      \})
+call jetpack#add('junegunn/fzf.vim', {
+      \'on_event': 'VimEnter',
+      \'requires': ['junegunn/fzf'],
+      \'hook_source': 'source $HOME/.config/nvim/rc/vim/fzf.vim.vim',
+      \})
 
 " syntax
-Jetpack 'ap/vim-css-color', { 'for': [ 'css', 'scss' ]}
-Jetpack 'kchmck/vim-coffee-script', { 'for': [ 'coffee' ]}
-Jetpack 'leshill/vim-json', { 'for': [ 'json' ]}
-Jetpack 'mechatroner/rainbow_csv', { 'for': [ 'csv', 'tsv' ]}
-Jetpack 'stephpy/vim-yaml', { 'for': [ 'yaml' ]}
+call jetpack#add('ap/vim-css-color', {
+      \'for': [ 'css', 'scss' ]
+      \})
+call jetpack#add('kchmck/vim-coffee-script', {
+      \'for': ['coffee'],
+      \})
+call jetpack#add('leshill/vim-json', {
+      \'for': ['json'],
+      \})
+call jetpack#add('stephpy/vim-yaml', {
+      \'for': ['yaml'],
+      \})
 
 " text-object selection, surround
-Jetpack 'machakann/vim-sandwich'
+call jetpack#add('machakann/vim-sandwich', {
+      \'on_event': 'VimEnter',
+      \})
 
 " ruby development
-Jetpack 'AndrewRadev/splitjoin.vim', { 'for': [ 'ruby', 'rake', 'eruby', 'slim'] }
-Jetpack 'slim-template/vim-slim', { 'for': [ 'slim'] }
-Jetpack 'tpope/vim-rails'
-Jetpack 'vim-ruby/vim-ruby', { 'for': [ 'ruby', 'rake', 'eruby', 'slim'] }
-Jetpack 'vim-scripts/ruby-matchit', { 'for': [ 'ruby', 'rake'] }
-Jetpack 'tpope/vim-dispatch'
-Jetpack 'thoughtbot/vim-rspec'
-
-" Breadcrumb
-Jetpack 'SmiteshP/nvim-navic'
+call jetpack#add('AndrewRadev/splitjoin.vim', { 'for': [ 'ruby', 'rake', 'eruby', 'slim'] })
+call jetpack#add('slim-template/vim-slim', { 'for': [ 'slim'] })
+call jetpack#add('tpope/vim-rails', { 'for': [ 'ruby', 'rake', 'eruby', 'slim'] })
+call jetpack#add('vim-ruby/vim-ruby', { 'for': [ 'ruby', 'rake', 'eruby', 'slim'] })
+call jetpack#add('vim-scripts/ruby-matchit', { 'for': [ 'ruby', 'rake'] })
+call jetpack#add('tpope/vim-dispatch', {
+      \'on_event': 'VimEnter',
+      \'hook_source': 'source $HOME/.config/nvim/rc/vim/vim-dispatch.vim',
+      \})
+call jetpack#add('thoughtbot/vim-rspec', {'on_event': 'VimEnter'})
 
 " file manager
-Jetpack 'lambdalisue/fern.vim'
-Jetpack 'yuki-yano/fern-preview.vim'
+call jetpack#add('lambdalisue/fern.vim', {
+      \'on_event': 'VimEnter',
+      \'hook_source': 'source $HOME/.config/nvim/rc/vim/fern.vim.vim',
+      \})
+
+call jetpack#add('yuki-yano/fern-preview.vim', {
+      \'on_event': 'VimEnter',
+      \'hook_source': 'source $HOME/.config/nvim/rc/vim/fern-preview.vim.vim',
+      \})
 
 " jump between files
-Jetpack 'tpope/vim-projectionist'
+call jetpack#add('tpope/vim-projectionist', {
+      \'on_event': 'VimEnter',
+      \'hook_source': 'source $HOME/.config/nvim/rc/vim/vim-projectionist.vim',
+      \})
 
 "colorscheme
-"Jetpack 'bluz71/vim-nightfly-colors'
-"Jetpack 'navarasu/onedark.nvim'
-"Jetpack 'catppuccin/nvim'
-"Jetpack 'olimorris/onedarkpro.nvim'
-Jetpack 'scottmckendry/cyberdream.nvim'
-Jetpack 'lifepillar/vim-colortemplate'
-Jetpack 'projekt0n/github-nvim-theme'
-" window
-Jetpack 'declancm/maximize.nvim'
+call jetpack#add('projekt0n/github-nvim-theme', {
+      \'on_event': 'VimEnter',
+      \})
 
 " misc
-Jetpack 'ippsio/clip_diff.vim'
-Jetpack 'monaqa/dial.nvim'
-
-" markdown
-"Jetpack 'preservim/vim-markdown'
-
-" outline
-Jetpack 'hedyhli/outline.nvim'
-Jetpack 'stevearc/aerial.nvim'
-
-" calendar
-Jetpack 'itchyny/calendar.vim'
+call jetpack#add('ippsio/clip_diff.vim', {
+      \'on_event': 'VimEnter',
+      \'hook_source': 'source $HOME/.config/nvim/rc/vim/clip_diff.vim.vim',
+      \})
+call jetpack#add('monaqa/dial.nvim', {
+      \'on_event': 'VimEnter',
+      \'hook_source': 'source $HOME/.config/nvim/rc/lua/dial.nvim.lua',
+      \})
 
 " vim_abolish
-Jetpack 'tpope/vim-abolish'
+call jetpack#add('tpope/vim-abolish', {
+      \'on_event': 'VimEnter',
+      \})
 
-"Jetpack 'github/copilot.vim'
-Jetpack 'jackMort/ChatGPT.nvim'
-Jetpack 'MunifTanjim/nui.nvim'
-Jetpack 'nvim-lua/plenary.nvim'
-Jetpack 'folke/trouble.nvim'
-Jetpack 'nvim-telescope/telescope.nvim'
-
+call jetpack#add('github/copilot.vim', {
+      \'on_event': 'VimEnter',
+      \})
+" ChatGPT
+call jetpack#add('jackMort/ChatGPT.nvim', {
+      \'requires': [
+      \  'MunifTanjim/nui.nvim',
+      \  'folke/trouble.nvim',
+      \  'nvim-lua/plenary.nvim',
+      \  'nvim-telescope/telescope.nvim',
+      \],
+      \'hook_source': 'source $HOME/.config/nvim/rc/lua/ChatGPT.nvim.lua',
+      \'on_event': 'VimEnter',
+      \})
+call jetpack#add('MunifTanjim/nui.nvim', {
+      \'on_event': 'VimEnter',
+      \})
+call jetpack#add('folke/trouble.nvim', {
+      \'on_event': 'VimEnter',
+      \})
+call jetpack#add('nvim-lua/plenary.nvim', {
+      \'on_event': 'VimEnter',
+      \})
+call jetpack#add('nvim-telescope/telescope.nvim', {
+      \'on_event': 'VimEnter',
+      \})
+" ChatGPT
 
 let s:available_pkg = stdpath('data') . '/' . 'site' . '/pack/jetpack/opt/available_packages.json'
 let s:available_pkg_text = filereadable(s:available_pkg) ? join(readfile(s:available_pkg)) : "{}"
