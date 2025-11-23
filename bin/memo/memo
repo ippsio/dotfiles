@@ -105,19 +105,13 @@ git_commit() {
 open_files_with_nvim() {
   (
     cd "$(get_basedir)" || exit
-    f1=$(get_project_file)
-    f2=$(get_daily_file)
-    f3=$(get_daily_detail_file)
-    f4=$(get_todo_file)
-    f5=$(get_sticky_file)
-    nvim "$f1"\
-      -c "split $f2"\
-      -c 'wincmd 2k'\
-      -c "vsplit $f4"\
-      -c "vsplit $f5"\
-      -c 'wincmd j'\
-      -c "vsplit $f3"\
-      -c 'wincmd h'
+    project=$(get_project_file)
+    daily=$(get_daily_file)
+    daily_detail=$(get_daily_detail_file)
+    todo=$(get_todo_file)
+    sticky=$(get_sticky_file)
+    weekly=$(get_weekly_file)
+    nvim "$project" -c "vsplit $daily_detail | vsplit $sticky| wincmd 2h | split $weekly| split $daily| split $todo | wincmd 3k"
   )
 }
 ensure_basedir
