@@ -118,6 +118,7 @@ cnoremap <Down> <C-n>
 nnoremap qq    :<C-u>:q<CR>
 " ノーマルモード中に素早くqqと入力した場合は:q<CR>とみなす
 nnoremap Q     :<C-u>q<CR>
+nnoremap QA     :<C-u>qa<CR>
 nnoremap <silent> W :call <SID>SaveFile()<CR>
 
 function! s:SaveFile()

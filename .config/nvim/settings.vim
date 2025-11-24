@@ -111,7 +111,7 @@ set wrap
 set textwidth=0
 set list
 set listchars=tab:»-,trail:-,extends:»,precedes:«,nbsp:%
-set ambiwidth=double
+"set ambiwidth=double
 set synmaxcol=1024
 set t_Co=256
 

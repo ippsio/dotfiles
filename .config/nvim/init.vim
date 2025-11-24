@@ -4,9 +4,5 @@ runtime! settings.vim
 runtime! remaps.vim
 runtime! autocmds.vim
 runtime! jetpack.vim
-try
-  "autocmd VimEnter * colorscheme github_dark_dimmed
-catch
-endtry
-"runtime! jetpack_loadrc.vim
+autocmd VimEnter * colorscheme github_dark_dimmed
 runtime! rc/functions/Hi.vim
