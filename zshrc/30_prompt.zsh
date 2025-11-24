@@ -43,7 +43,7 @@ precmd() {
       local behind=$(echo -e ${git_status}| grep -E "behind [0-9]*"| sed -e "s/^.*[ \[]behind \([0-9]*\).*/\1/")
       ahead="${ahead:-0}"
       behind="${behind:-0}"
-    else
+    elif false; then
       local untracked=$(git ls-files --others --exclude-standard | wc -l| tr -d ' ')
       local unstaged=$(git diff --name-only | wc -l| tr -d ' ')
       local unmerged=$(git ls-files --unmerged | wc -l| tr -d ' ')
@@ -53,6 +53,36 @@ precmd() {
 
       # stash だけは別（ただし Git 非起動で読む方法あり）
       stash=$(git stash list 2>/dev/null | grep -c '^stash@')
+    else
+
+      local porcelain
+      porcelain=$(git status --porcelain=v2 -b 2>/dev/null) || return 1
+
+      # counters
+      local untracked=0 unstaged=0 staged=0 unmerged=0 ahead=0 behind=0 stash=0
+
+      local line
+      while IFS= read -r line; do
+        case "$line" in
+          \#\ branch.ab*)
+            # +ahead -behind にマッチ
+            ahead=${line#*+}
+            ahead=${ahead%% *}
+            behind=${line#*-}
+            behind=${behind%% *}
+            ;;
+          "1 "*)
+            # 1 <xy> <path>
+            local xy=${line:2:2}
+            case "$xy" in
+              "?M"|" M"| ".M") ((unstaged++)) ;;
+              "M"?) ((staged++)) ;;
+            esac
+            ;;
+          "2 "*) ((unmerged++)) ;;
+          "?"*) ((untracked++)) ;;
+        esac
+      done <<< "$porcelain"
     fi
 
     local _git="$(find_up .git)"
