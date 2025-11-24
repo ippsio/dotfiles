@@ -13,11 +13,23 @@ any_commits() {
     return 1
   fi
 }
+find_up() {
+  local name="$1"
+  local dir=$PWD
+  while [[ $dir != "/" ]]; do
+    if [[ -e $dir/$name ]]; then
+      echo "$dir/$name"
+      return 0
+    fi
+    dir=${dir:h}
+  done
+  return 1
+}
 
 precmd() {
-  t0=$($HOME/dotfiles/bin/epocms/epocms_c)
   PROMPT_ARRAY=()
   if is_inside_work_tree && any_commits; then
+    t0=$($HOME/dotfiles/bin/epocms/epocms_c)
     if false; then
       local git_status="$(git status --porcelain --branch --ahead-behind 2>/dev/null)"
       local xy=$(echo -e ${git_status}| sed -e "s/^\(..\).*$/\1/")
@@ -38,15 +50,22 @@ precmd() {
       local stash=$(git stash list 2>/dev/null| grep -Ec "^stash@")
       local staged=$(git diff --cached --name-only | wc -l| tr -d ' ')
       read behind ahead < <(git rev-list --left-right --count @{upstream}...HEAD 2>/dev/null)
+
+      # stash だけは別（ただし Git 非起動で読む方法あり）
+      stash=$(git stash list 2>/dev/null | grep -c '^stash@')
     fi
 
-    local repo=$(git_reponame)
-    local branch="$(git branch --show-current)"
-    local remote=$(git config --local branch.${branch}.remote)
-    local commit_msg=$(git log -1 --date=format:"%m/%d %H:%M" --pretty='%h %ad %an %s')
+    local _git="$(find_up .git)"
+    local remote01=$(cat "$_git/config"| grep -FA1 '[remote ')
+    local repo=$(echo "$remote01"| tail -n 1|awk -F':' '{ print $2 }'| sed 's/\.git$//')
+    local remote=$(echo "$remote01"| head -1| grep -Eo '("[a-z]+")'| sed 's/"//g')
+    local head=$(cat "$_git/HEAD")
+    local branch="${head#ref: refs/heads/}"
+    # NOTE: 重いのでコメントアウト
+    # local merging=$(test -f "$(git rev-parse --git-dir)/MERGE_HEAD" && echo 'MERGING' || echo '')
+    # NOTE: 重いのでコメントアウト
 
-    local merging=$(test -f "$(git rev-parse --git-dir)/MERGE_HEAD" && echo 'MERGING' || echo '')
-
+    t1=$($HOME/dotfiles/bin/epocms/epocms_c)
     local WORKTREE="%F{1}?${untracked} !${unstaged} x${unmerged}%f"
     local STASH="%F{241}\$${stash}%f "
     local STAGE="%F{61}+${staged}%f"
@@ -73,7 +92,6 @@ precmd() {
   local BG="%(1j|%F{5}bg:%j%f|)"
   local PWD="%F{137}%~ %f"
   PROMPT_ARRAY+=( "${EXIT_CD}${BG}${PWD}%F{245}%#%f " )
-  t1=$($HOME/dotfiles/bin/epocms/epocms_c)
   td=$(( t1 - t0 ))
   PROMPT=$(print -l "\n${PROMPT_ARRAY[@]}")
 }
