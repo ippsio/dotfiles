@@ -1,8 +1,8 @@
 #!/usr/bin/env zsh
-
+NAME="$0"
 nodenv_init_lazy() {
   type nodenv >/dev/null || return 1
-  echo "*** $0 nodenv lazy init ***"
+  echo "*** $NAME nodenv lazy init ***"
   echo 'eval "$(nodenv init -)"'
   eval "$(nodenv init -)"
   unset -f nodenv_init_lazy
@@ -13,7 +13,7 @@ nodenv_init_lazy() {
 }
 pyenv_init_lazy() {
   type pyenv >/dev/null || return 1
-  echo "*** $0 pyenv lazy init ***"
+  echo "*** $NAME pyenv lazy init ***"
   echo 'eval "$(pyenv init --path)"'
   eval "$(pyenv init --path)"
   unset -f pyenv_init_lazy
@@ -25,7 +25,7 @@ pyenv_init_lazy() {
 }
 rbenv_init_lazy() {
   type rbenv >/dev/null || return 1
-  echo "*** $0 rbenv lazy init ***"
+  echo "*** $NAME rbenv lazy init ***"
   echo 'eval "$(rbenv init -)"'
   eval "$(rbenv init -)"
   unset -f rbenv_init_lazy
