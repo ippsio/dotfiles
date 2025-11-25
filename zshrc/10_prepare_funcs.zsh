@@ -1,5 +1,5 @@
 #!/usr/bin/env zsh
-prepare_by_brew() {
+may_brew_install() {
   if ! ( type "$1" > /dev/null 2>&1 ); then
     echo "$1 not found. install."
     brew install ${2:-$1}
@@ -17,13 +17,13 @@ chk_pynvim_or_install() {
     python3 -m pip install pynvim --user
   fi
 }
-chkfile_or_flink() {
+may_ln_file() {
   if [ ! -L $1 ]; then
     echo "$1 not found. link! ($1<-$2)"
     ln -s $2 $1
   fi
 }
-chkfile_or_dlink() {
+may_ln_dir() {
   if [ ! -d $1 ]; then
     echo "$1 not found. link! ($1<-$2)"
     ln -s $2 $1

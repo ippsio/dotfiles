@@ -1,24 +1,25 @@
 #!/usr/bin/env zsh
-source ~/dotfiles/zshrc/10_prepare_funcs.zsh
+source $HOME/dotfiles/zshrc/10_prepare_funcs.zsh
 
-prepare_by_brew xz
-prepare_by_brew nvim neovim
-prepare_by_brew zsh
-prepare_by_brew tmux
-prepare_by_brew direnv
-prepare_by_brew rg
-prepare_by_brew tig
-prepare_by_brew fzf
-prepare_by_brew bat
-prepare_by_brew pyenv
-prepare_by_brew rbenv
-prepare_by_brew ruby-build
-prepare_by_brew rustc rust
-prepare_by_brew cargo
-prepare_by_brew java openjdk
-prepare_by_brew mvn maven
-prepare_by_brew urlview
-prepare_by_brew extract_url
+may_brew_install xz
+may_brew_install nvim neovim
+may_brew_install zsh
+may_brew_install tmux
+may_brew_install direnv
+may_brew_install rg
+may_brew_install tig
+may_brew_install fzf
+may_brew_install bat
+may_brew_install pyenv
+may_brew_install rbenv
+may_brew_install ruby-build
+may_brew_install rustc rust
+may_brew_install cargo
+may_brew_install java openjdk
+may_brew_install mvn maven
+may_brew_install urlview
+may_brew_install extract_url
+may_brew_install gsed
 
 nodir_then_gitclone "${TMUX_PLUGINS}/tpm" "tmux-plugins/tpm"
 # chk_pynvim_or_install
@@ -27,23 +28,23 @@ nodir_then_gitclone "${TMUX_PLUGINS}/tpm" "tmux-plugins/tpm"
 mkdir -p ~/.tmux/log/
 
 # check link.
-chkfile_or_dlink ~/.config/nvim          ~/dotfiles/.config/nvim
-chkfile_or_dlink ~/.config/bat           ~/dotfiles/.config/bat
-chkfile_or_dlink ~/.config/alacritty     ~/dotfiles/.config/alacritty
-chkfile_or_dlink ~/.config/tig          ~/dotfiles/.config/tig
-chkfile_or_dlink ~/.config/direnv          ~/dotfiles/.config/direnv
-chkfile_or_dlink ~/.config/kitty          ~/dotfiles/.config/kitty
+may_ln_dir ~/.config/nvim          ~/dotfiles/.config/nvim
+may_ln_dir ~/.config/bat           ~/dotfiles/.config/bat
+may_ln_dir ~/.config/alacritty     ~/dotfiles/.config/alacritty
+may_ln_dir ~/.config/tig          ~/dotfiles/.config/tig
+may_ln_dir ~/.config/direnv          ~/dotfiles/.config/direnv
+may_ln_dir ~/.config/kitty          ~/dotfiles/.config/kitty
 mkdir -p ~/.local/share/tig
 touch ~/.local/share/tig/history
 
 mkdir -p ~/.config/karabiner/assets
-chkfile_or_dlink ~/.config/karabiner/assets/complex_modifications     ~/dotfiles/.config/karabiner /assets/ complex_modifications
+may_ln_dir ~/.config/karabiner/assets/complex_modifications     ~/dotfiles/.config/karabiner /assets/ complex_modifications
 
-chkfile_or_flink ~/.gitattributes_global ~/dotfiles/.gitattributes_global
-chkfile_or_flink ~/.gitconfig            ~/dotfiles/.gitconfig
-chkfile_or_flink ~/.gitignore_global     ~/dotfiles/.gitignore_global
-chkfile_or_flink ~/.pryrc                ~/dotfiles/.pryrc
-chkfile_or_flink ~/.tigrc                ~/dotfiles/.tigrc
-chkfile_or_flink ~/.tmux.conf            ~/dotfiles/.tmux.conf
-chkfile_or_flink ~/.zshrc                ~/dotfiles/.zshrc
+may_ln_file ~/.gitattributes_global ~/dotfiles/.gitattributes_global
+may_ln_file ~/.gitconfig            ~/dotfiles/.gitconfig
+may_ln_file ~/.gitignore_global     ~/dotfiles/.gitignore_global
+may_ln_file ~/.pryrc                ~/dotfiles/.pryrc
+may_ln_file ~/.tigrc                ~/dotfiles/.tigrc
+may_ln_file ~/.tmux.conf            ~/dotfiles/.tmux.conf
+may_ln_file ~/.zshrc                ~/dotfiles/.zshrc
 
