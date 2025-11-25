@@ -7,4 +7,4 @@ bind status <C-d> ?bash -c "(set -x; rm %(file))"
 bind status <C-g> +bash -c "printf '%s' %(file)| pbcopy; echo \"FILENAME COPIED '%(file)'\""
 bind status  t >bash -c "git difftool %(commit)^ $(commit) %(file)"
 bind status E >bash -c "~/dotfiles/bin/tig/tig_edit_with_vim_on_tmux %(file) %(lineno)"
-
+bind status q quit

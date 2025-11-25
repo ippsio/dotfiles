@@ -1,4 +1,3 @@
-
 source ~/.config/tig/bind-generic.tigrc
 source ~/.config/tig/bind-blame.tigrc
 source ~/.config/tig/bind-diff.tigrc
