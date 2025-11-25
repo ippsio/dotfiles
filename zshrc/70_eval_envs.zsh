@@ -50,8 +50,9 @@ python3() { pyenv_init_lazy python3 "$@"; }
 
 export PATH="/Users/i/.rbenv/shims:${PATH}"
 export RBENV_SHELL=zsh
-ruby()   { rbenv_init_lazy ruby "$@"; }
-irb()    { rbenv_init_lazy irb "$@"; }
 bundle() { rbenv_init_lazy bundle "$@"; }
+irb()    { rbenv_init_lazy irb "$@"; }
+rails(   { rbenv_init_lazy rails "$@"; }
+ruby()   { rbenv_init_lazy ruby "$@"; }
 
 type direnv>/dev/null 2>&1 && eval "$(direnv hook zsh)"
