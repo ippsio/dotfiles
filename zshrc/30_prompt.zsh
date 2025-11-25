@@ -124,4 +124,5 @@ precmd() {
   PROMPT_ARRAY+=( "${EXIT_CD}${BG}${PWD}%F{245}%#%f " )
   td=$(( t1 - t0 ))
   PROMPT=$(print -l "\n${PROMPT_ARRAY[@]}")
+  RPROMPT=$(date +'%m/%d %H:%M:%S')
 }
