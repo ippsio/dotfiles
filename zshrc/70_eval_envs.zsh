@@ -52,7 +52,7 @@ export PATH="/Users/i/.rbenv/shims:${PATH}"
 export RBENV_SHELL=zsh
 bundle() { rbenv_init_lazy bundle "$@"; }
 irb()    { rbenv_init_lazy irb "$@"; }
-rails(   { rbenv_init_lazy rails "$@"; }
+rails()  { rbenv_init_lazy rails "$@"; }
 ruby()   { rbenv_init_lazy ruby "$@"; }
 
 type direnv>/dev/null 2>&1 && eval "$(direnv hook zsh)"

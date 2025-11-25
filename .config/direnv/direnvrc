@@ -1,1 +1,1 @@
-echo "########## DIRENV($@) ##########"
+echo "direnv ($@) ---------"| sed "s#$HOME#\$HOME#"
