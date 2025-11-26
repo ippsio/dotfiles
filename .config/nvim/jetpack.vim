@@ -50,7 +50,7 @@ call jetpack#add('j-hui/fidget.nvim', { 'on_event': 'VimEnter', })
 call jetpack#add('SmiteshP/nvim-navic', { 'on_event': 'VimEnter', })
 
 " git
-call jetpack#add('tpope/vim-fugitive', { 'on_cmd': ['Git'] })
+call jetpack#add('tpope/vim-fugitive', { 'on_event': 'VimEnter', 'hook_source': 'source $HOME/.config/nvim/rc/vim/vim-fugitive.vim', })
 call jetpack#add('airblade/vim-gitgutter', { 'on_event': 'VimEnter', 'hook_source': 'source $HOME/.config/nvim/rc/vim/vim-gitgutter.vim', })
 call jetpack#add('iberianpig/tig-explorer.vim', { 'on_event': 'VimEnter', })
 
@@ -84,7 +84,7 @@ call jetpack#add('tpope/vim-rails', { 'for': [ 'ruby', 'rake', 'eruby', 'slim'] 
 call jetpack#add('vim-ruby/vim-ruby', { 'for': [ 'ruby', 'rake', 'eruby', 'slim'] })
 call jetpack#add('vim-scripts/ruby-matchit', { 'for': [ 'ruby', 'rake'] })
 call jetpack#add('tpope/vim-dispatch', { 'on_event': 'VimEnter', 'hook_post_source': 'source $HOME/.config/nvim/rc/vim/vim-dispatch.vim', })
-call jetpack#add('thoughtbot/vim-rspec', {'on_event': 'VimEnter'})
+call jetpack#add('thoughtbot/vim-rspec', {'on_event': 'VimEnter', 'hook_post_source': 'source $HOME/dotfiles/.config/nvim/rc/vim/vim-rspec.vim'})
 
 " file manager
 call jetpack#add('lambdalisue/fern.vim', { 'on_event': 'VimEnter', 'hook_post_source': 'source $HOME/.config/nvim/rc/vim/fern.vim.vim', })

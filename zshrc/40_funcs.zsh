@@ -12,9 +12,12 @@ lbuf() {
   return 0
 }
 rbuf() {
-  RBUFFER+=$(eval "$1")
+  RBUFFER+="$1"
   zle end-of-line
   return 0
+}
+rbufval() {
+  eval "$1"
 }
 bufheadargs() {
   printf "%s" "$BUFFER"| awk '{ print $1 }'

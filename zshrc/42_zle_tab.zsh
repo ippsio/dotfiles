@@ -15,17 +15,17 @@ function triggered_by_tab() {
   if [[ $BUFFER =~ "^.*/$" ]]; then
     ha=$(bufheadargs)
     ta=$(buftailargs)
-    isbuf "cd[ ]+.+$" && lbuf "$ha " && rbuf "fzf_list_dir $ta --PROMPT=$ha" && return 0
-    isbuf "ls[ ]+.+$" && lbuf "$ha " && rbuf "fzf_list_file $ta --PROMPT=$ha" && return 0
-    isbuf "ll[ ]+.+$" && lbuf "$ha " && rbuf "fzf_list_file $ta --PROMPT=$ha" && return 0
-    isbuf "vim[ ]+.+$" && lbuf "$ha " && rbuf "fzf_list_file $ta --PROMPT=$ha" && return 0
-    isbuf "nvim[ ]+.+$" && lbuf "$ha " && rbuf "fzf_list_file $ta --PROMPT=$ha" && return 0
-    isbuf "find[ ]+.+$" && lbuf "$ha " && rbuf "fzf_list_dir  $ta --PROMPT=$ha" && return 0
-    isbuf "source[ ]+.+$" && lbuf "$ha " && rbuf "fzf_list_file $ta --PROMPT=$ha" && return 0
+    isbuf "cd[ ]+.+$" && rbuf_val=$(rbufval "fzf_list_dir $ta --PROMPT=$ha") && lbuf "$ha" && rbuf " $rbuf_val" && return 0
+    isbuf "ls[ ]+.+$" && rbuf_val=$(rbufval "fzf_list_file $ta --PROMPT=$ha") && lbuf "$ha" && rbuf " $rbuf_val" && return 0
+    isbuf "ll[ ]+.+$" && rbuf_val=$(rbufval "fzf_list_file $ta --PROMPT=$ha") && lbuf "$ha" && rbuf " $rbuf_val" && return 0
+    isbuf "vim[ ]+.+$" && rbuf_val=$(rbufval "fzf_list_file $ta --PROMPT=$ha") && lbuf "$ha" && rbuf " $rbuf_val" && return 0
+    isbuf "nvim[ ]+.+$" && rbuf_val=$(rbufval "fzf_list_file $ta --PROMPT=$ha") && lbuf "$ha" && rbuf " $rbuf_val" && return 0
+    isbuf "find[ ]+.+$" && rbuf_val=$(rbufval "fzf_list_dir  $ta --PROMPT=$ha") && lbuf "$ha" && rbuf " $rbuf_val" && return 0
+    isbuf "source[ ]+.+$" && rbuf_val=$(rbufval "fzf_list_file $ta --PROMPT=$ha") && lbuf "$ha" && rbuf " $rbuf_val" && return 0
   fi
 
   if $(is_git_repo); then
-    isbuf "tig" && lbuf "$ha " && rbuf "git_branch_fzf" && return 0
+    isbuf "tig" && rbuf_val=$(rbufval "git_branch_fzf") && lbuf "$ha" && rbuf " $rbuf_val" && return 0
     if [[ $BUFFER =~ "^.*origin/+$" ]]; then
       RBUFFER="$(git branch --show-current)"
       zle end-of-line

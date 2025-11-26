@@ -29,30 +29,35 @@ rbenv_init_lazy() {
   echo 'eval "$(rbenv init -)"'
   eval "$(rbenv init -)"
   unset -f rbenv_init_lazy
-  unset -f ruby
-  unset -f irb
   unset -f bundle
+  unset -f gem
+  unset -f irb
+  unset -f rails
+  unset -f rspec
+  unset -f ruby
   command "$@"
 }
 
-export PATH="/Users/i/.nodenv/shims:${PATH}"
+export PATH="$HOME/.nodenv/shims:${PATH}"
 export NODENV_SHELL=zsh
 node() { nodenv_init_lazy node "$@"; }
 npm()  { nodenv_init_lazy npm "$@"; }
 npx()  { nodenv_init_lazy npx "$@"; }
 
-export PATH="/Users/i/.pyenv/shims:${PATH}"
+export PATH="$HOME/.pyenv/shims:${PATH}"
 export PYENV_SHELL=zsh
 pip()     { pyenv_init_lazy pip "$@"; }
 pip3()    { pyenv_init_lazy pip3 "$@"; }
 python()  { pyenv_init_lazy python "$@"; }
 python3() { pyenv_init_lazy python3 "$@"; }
 
-export PATH="/Users/i/.rbenv/shims:${PATH}"
+export PATH="$HOME/.rbenv/shims:${PATH}"
 export RBENV_SHELL=zsh
 bundle() { rbenv_init_lazy bundle "$@"; }
+gem()    { rbenv_init_lazy gem "$@"; }
 irb()    { rbenv_init_lazy irb "$@"; }
 rails()  { rbenv_init_lazy rails "$@"; }
+rspec()  { rbenv_init_lazy rspec "$@"; }
 ruby()   { rbenv_init_lazy ruby "$@"; }
 
 type direnv>/dev/null 2>&1 && eval "$(direnv hook zsh)"
