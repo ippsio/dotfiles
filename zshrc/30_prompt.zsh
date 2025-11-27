@@ -1,108 +1,89 @@
 autoload -Uz add-zsh-hook
-is_inside_work_tree() {
-  if git rev-parse --is-inside-work-tree>/dev/null 2>&1; then
-    return 0
-  else
-    return 1
-  fi
-}
-any_commits() {
-  if git log>/dev/null 2>&1; then
-    return 0
-  else
-    return 1
-  fi
-}
 find_up() {
-  local name="$1"
-  local dir=$PWD
+  local dir
+  dir=$PWD
   while [[ $dir != "/" ]]; do
-    if [[ -e $dir/$name ]]; then
-      echo "$dir/$name"
-      return 0
-    fi
+    [[ -d $dir/$1 ]] && { echo $dir/$1; return 0; }
     dir=${dir:h}
   done
   return 1
 }
 
 precmd() {
-  PROMPT_ARRAY=()
-  if is_inside_work_tree && any_commits; then
-    t0=$($HOME/dotfiles/bin/epocms/epocms_c)
-    local porcelain
-    porcelain=$(git status --porcelain=v2 -b 2>/dev/null) || return 1
+  prompt_ar=()
+  local gitdir
+  gitdir="$(find_up .git)"
+  if [[ -n "$gitdir" ]]; then
+    t0=${${EPOCHREALTIME/./}[1,13]}
     local untracked=0 unstaged=0 staged=0 unmerged=0 ahead=0 behind=0 stash=0
+    local porcelain
+    porcelain=$(git status --porcelain=v2 --branch --show-stash 2>/dev/null || return 1)
+    t1=${${EPOCHREALTIME/./}[1,13]}
     local line
     while IFS= read -r line; do
       case "$line" in
         \#\ branch.ab*)
-          # +ahead -behind にマッチ
           ahead=${line#*+}
           ahead=${ahead%% *}
           behind=${line#*-}
           behind=${behind%% *}
           ;;
         "1 "*)
-          # 1 <xy> <path>
-          local xy=${line:2:2}
+          xy=${line:2:2}
           case "$xy" in
-            "?M"|" M"| ".M") ((unstaged++)) ;;
+            "?M"|" M"|".M") ((unstaged++)) ;;
             "M"?) ((staged++)) ;;
           esac
           ;;
         "2 "*) ((unmerged++)) ;;
         "?"*) ((untracked++)) ;;
+        \#\ stash*)
+          stash=${line##* }
+          ;;
       esac
     done <<< "$porcelain"
 
-    local _git="$(find_up .git)"
-    # local remote12=$(<$_git/config| grep -FA1 '[remote ')
-    local remote12=$(gsed -n '/\[remote / {N; p; q}' $_git/config)
-    # local repo=$(echo "$remote12"| tail -n 1|awk -F':' '{ print $2 }'| sed 's/\.git$//')
-    # local remote=$(echo "$remote12"| head -1| grep -Eo '("[a-z]+")'| sed 's/"//g')
-    local line_arr=(${(f)remote12})
-    local url_line="${line_arr[2]}"
-    local target_part=${url_line#*url = }
-    local target_part=${target_part#*:}
-    local repo=${target_part%.git}
-    local remote=${line_arr[1]}}
+    local cfg_rows
+    cfg_rows=$(while IFS= read -r line; do
+      if [[ $line == "[remote "* ]]; then
+        read -r next
+        print -- "$line"$'\n'"$next"
+        break
+      fi
+    done < $gitdir/config)
 
-    local head=$(<$_git/HEAD)
+    local cfg_ar=(${(f)cfg_rows})
+    local repo_tmp=${cfg_ar[2]#*url = }
+    local repo_tmp=${repo_tmp#*:}
+    local repo=${repo_tmp%.git}
+    local remote_tmp=${cfg_ar[1]#*\"}
+    local remote=${remote_tmp%%\"*}
+    local head=$(<$gitdir/HEAD)
     local branch="${head#ref: refs/heads/}"
-    t1=$($HOME/dotfiles/bin/epocms/epocms_c)
-    td=$(( t1 - t0 ))
+    local merging=""
+    [[ -f "$gitdir/MERGE_HEAD" ]] && merging="MERGING"
 
-    # NOTE: 重いのでコメントアウト
-    # local merging=$(test -f "$(git rev-parse --git-dir)/MERGE_HEAD" && echo 'MERGING' || echo '')
-    # NOTE: 重いのでコメントアウト
-
-    local WORKTREE="%F{1}?${untracked} !${unstaged} x${unmerged}%f"
-    local STASH="%F{241}\$${stash}%f "
-    local STAGE="%F{61}+${staged}%f"
-    local AB="%F{200}A${ahead} B${behind}%f"
-    local REPO_BRANCH="%F{8}${repo} %F{8}${branch}%f %F{red}track(${remote:-none}) %F{250}${commit_msg}%f"
-    local GIT_CAUTION="%K{1}${merging}%f%k "
-
-    local git_part=""
-    git_part+="[${WORKTREE}]"
-    git_part+="[${STASH} ${STAGE}]"
-    git_part+="[${AB}]"
-    git_part+="${GIT_CAUTION}"
-    git_part+="${REPO_BRANCH}(${td}ms)"
-    PROMPT_ARRAY="${git_part}"
+    local workingtree="%F{1}?${untracked} !${unstaged} x${unmerged}%f"
+    local stash_stage="%F{241}\$${stash}%f %F{61}+${staged}%f"
+    local aheadbehind="%F{200}A${ahead} B${behind}%f"
+    local git_caution="%K{1}${merging}%f%k "
+    local repo_branch="%F{8}${repo} %F{8}${branch}%f %F{red}track(${remote:-none})%f "
+    t2=${${EPOCHREALTIME/./}[1,13]}
+    td1=$(( t1 - t0 ))
+    td2=$(( t2 - t1 ))
+    prompt_ar="[${workingtree}][${stash_stage}][${aheadbehind}] ${git_caution}${repo_branch}(${td1}ms)(${td2}ms)"
   fi
 
   if [[ -n "${VIRTUAL_ENV_PROMPT}" ]]; then
     local python_venv_name=$(basename "${VIRTUAL_ENV}")
     local python_version_name=$(pyenv version-name)
-    PROMPT_ARRAY+=( "(python|${python_venv_name}|${python_version_name})" )
+    prompt_ar+=( "(python|${python_venv_name}|${python_version_name})" )
   fi
 
-  local EXIT_CD="%F{red}%(?..\$?=%? )%f"
-  local BG="%(1j|%F{5}bg:%j%f|)"
-  local PWD="%F{137}%~ %f"
-  PROMPT_ARRAY+=( "${EXIT_CD}${BG}${PWD}%F{245}%#%f " )
-  PROMPT=$(print -l "\n${PROMPT_ARRAY[@]}")
+  local exit_cd="%F{red}%(?..\$?=%? )%f"
+  local bg="%(1j|%F{5}bg:%j%f|)"
+  local pwd="%F{137}%~ %f"
+  prompt_ar+=( "${exit_cd}${bg}${pwd}%F{245}%#%f " )
+  PROMPT=$(print -l -- "\n${prompt_ar[@]}")
   RPROMPT="$(date +'%m/%d %H:%M:%S')"
 }

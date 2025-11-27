@@ -1,6 +1,10 @@
 #!/usr/bin/env zsh
+# EPOCHREALTIME(UNIX 時間を浮動小数点数で取得できるシェルの組み込み環境変数)を使用できるようにする
+zmodload zsh/datetime
+
 #zmodload zsh/zprof && zprof #zprof 見たい時はコメントアウト外す。
 t0=$($HOME/dotfiles/bin/epocms/epocms_c)
+t0=${${EPOCHREALTIME/./}[1,13]}
 
 autoload -Uz compinit && compinit -u
 source $HOME/dotfiles/zshrc/00_zsh_on_tmux.zsh
@@ -19,7 +23,8 @@ if [[ -e $HOME/.zshrc_additional ]]; then
   source $HOME/.zshrc_additional
 fi
 
-t1=$($HOME/dotfiles/bin/epocms/epocms_c)
+# t1=$($HOME/dotfiles/bin/epocms/epocms_c)
+t1=${${EPOCHREALTIME/./}[1,13]}
 td=$(( t1 - t0 ))
 printf "zshrc loaded (%dms).\n" $td
 
