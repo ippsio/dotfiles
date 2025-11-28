@@ -52,25 +52,27 @@ git_prompt() {
     done < $gitdir/config)
 
     local cfg_ar=(${(f)cfg_rows})
-    local repo_tmp=${cfg_ar[2]#*url = }
-    local repo_tmp=${repo_tmp#*:}
-    local repo=${repo_tmp%.git}
+    local repo=${cfg_ar[2]#*url = }
     local remote_tmp=${cfg_ar[1]#*\"}
     local remote=${remote_tmp%%\"*}
     local head=$(<$gitdir/HEAD)
     local branch="${head#ref: refs/heads/}"
-    local merging=""
+    local merging
     [[ -f "$gitdir/MERGE_HEAD" ]] && merging="MERGING"
 
-    local workingtree="%F{1}?${untracked} !${unstaged} x${unmerged}%f"
-    local stash_stage="%F{63}\$${stash}%f %F{168}+${staged}%f"
+    local workingtree="%F{1}?${untracked} !${unstaged}%f"
+    local unmerged_str
+    local stash_str
+    unmerged_str=$( [[ $unmerged -ge 1 ]] && print -n "UNMERGED:${unmerged} " )
+    stash_str=$( [[ $stash -ge 1 ]] && print -n "STASH:${stash} " )
+    local unmerged_stash_stage="%F{63}${unmerged_str}${stash_str}%f%F{168}+${staged}%f"
     local aheadbehind="%F{200}A${ahead} B${behind}%f"
     local git_caution="%K{1}${merging}%f%k "
     local repo_branch="%F{8}${repo} %F{8}${branch}%f %F{red}track(${remote:-none})%f "
     t2=${${EPOCHREALTIME/./}[1,13]}
     td1=$(( t1 - t0 ))
     td2=$(( t2 - t1 ))
-    echo "[${workingtree}][${stash_stage}][${aheadbehind}] ${git_caution}${repo_branch}(${td1}ms+${td2}ms)"
+    echo "[${workingtree}][${unmerged_stash_stage}][${aheadbehind}] ${git_caution}${repo_branch}(${td1}ms+${td2}ms)"
   fi
 }
 python_prompt() {
