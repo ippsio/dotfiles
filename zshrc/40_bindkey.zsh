@@ -3,10 +3,10 @@
 
 bindkey -e
 
-source ~/dotfiles/zshrc/40_funcs.zsh
-source ~/dotfiles/zshrc/41_zle_space.zsh
-source ~/dotfiles/zshrc/42_zle_tab.zsh
-source ~/dotfiles/zshrc/43_zle_ctrl_f.zsh
-source ~/dotfiles/zshrc/43_zle_ctrl_jk.zsh
-source ~/dotfiles/zshrc/44_zle_ctrl_cursor.zsh
-source ~/dotfiles/zshrc/44_zle_enter.zsh
+source $HOME/dotfiles/zshrc/40_funcs.zsh
+source $HOME/dotfiles/zshrc/41_zle_space.zsh
+source $HOME/dotfiles/zshrc/42_zle_tab.zsh
+source $HOME/dotfiles/zshrc/43_zle_ctrl_f.zsh
+source $HOME/dotfiles/zshrc/43_zle_ctrl_jk.zsh
+source $HOME/dotfiles/zshrc/44_zle_ctrl_cursor.zsh
+source $HOME/dotfiles/zshrc/44_zle_enter.zsh

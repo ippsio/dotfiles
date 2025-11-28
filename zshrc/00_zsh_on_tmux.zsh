@@ -1,5 +1,5 @@
 #!/usr/bin/env zsh
-source ~/dotfiles/zshrc/00_zsh_on_tmux_funcs.zsh
+source $HOME/dotfiles/zshrc/00_zsh_on_tmux_funcs.zsh
 
 if tmux_available; then
   tmux_session_new

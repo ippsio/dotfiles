@@ -1,8 +1,3 @@
 #!/usr/bin/env zsh
-
-if [[ -d ~/dotfiles/bin/ ]]; then
-  for dir in $(find ~/dotfiles/bin -type d); do
-    PATH="$dir:$PATH"
-  done
-fi
-export PATH
+dirs=($HOME/dotfiles/bin/**/*(/N))
+export PATH="${(j/:/)dirs}:$PATH"

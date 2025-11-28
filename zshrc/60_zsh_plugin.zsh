@@ -6,12 +6,8 @@ if [[ ! -f ${ZDOTDIR:-${HOME}}/.zcomet/bin/zcomet.zsh ]]; then
 fi
 source ${ZDOTDIR:-${HOME}}/.zcomet/bin/zcomet.zsh
 
-# zsh-autosuggestions
-ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=143'
-
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=11,bg=20'
 zcomet load zsh-users/zsh-autosuggestions
 zcomet load zsh-users/zsh-completions
 zcomet load zsh-users/zsh-history-substring-search
-zcomet load junegunn/fzf-bin
 zcomet load junegunn/fzf shell/key-bindings.zsh
-zcomet load romkatv/zsh-defer

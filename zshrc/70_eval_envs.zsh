@@ -38,20 +38,17 @@ rbenv_init_lazy() {
   command "$@"
 }
 
-export PATH="$HOME/.nodenv/shims:${PATH}"
 export NODENV_SHELL=zsh
 node() { nodenv_init_lazy node "$@"; }
 npm()  { nodenv_init_lazy npm "$@"; }
 npx()  { nodenv_init_lazy npx "$@"; }
 
-export PATH="$HOME/.pyenv/shims:${PATH}"
 export PYENV_SHELL=zsh
 pip()     { pyenv_init_lazy pip "$@"; }
 pip3()    { pyenv_init_lazy pip3 "$@"; }
 python()  { pyenv_init_lazy python "$@"; }
 python3() { pyenv_init_lazy python3 "$@"; }
 
-export PATH="$HOME/.rbenv/shims:${PATH}"
 export RBENV_SHELL=zsh
 bundle() { rbenv_init_lazy bundle "$@"; }
 gem()    { rbenv_init_lazy gem "$@"; }
@@ -60,4 +57,5 @@ rails()  { rbenv_init_lazy rails "$@"; }
 rspec()  { rbenv_init_lazy rspec "$@"; }
 ruby()   { rbenv_init_lazy ruby "$@"; }
 
-type direnv>/dev/null 2>&1 && eval "$(direnv hook zsh)"
+eval "$(direnv hook zsh)"
+export PATH="$HOME/.nodenv/shims:${PATH}:$HOME/.pyenv/shims:${PATH}:$HOME/.rbenv/shims:${PATH}"

@@ -1,30 +1,17 @@
 #!/usr/bin/env zsh
-is_on_tmux() {
-  if [[ -n "$TMUX" ]]; then
-    return 0
-  else
-    return 1
-  fi
+already_on_tmux() {
+  [[ -n "$TMUX" ]]
 }
 
-is_ps1_absent() {
-  if [[ -z "$PS1" ]]; then
-    return 0
-  else
-    return 1
-  fi
+is_ps1_present() {
+  [[ -n "$PS1" ]]
 }
 
 tmux_available() {
-  if is_on_tmux; then
-    return 1
-  elif is_ps1_absent; then
-    return 1
-  elif tmux_command_not_exists; then
-    return 1
-  else
-    return 0
-  fi
+  already_on_tmux && return 1
+  is_ps1_present || return 1
+  tmux_command_exists || return 1
+  return 0
 }
 
 tmux_idx_next_attach() {
@@ -43,13 +30,10 @@ tmux_idx_next_new() {
 }
 tmux_session_attach() {
   i=$(tmux_idx_next_attach)
-  if [[ -n "$i" ]]; then
-    if tmux attach-session -t "$i"; then
-      tmux_wait_for_bye
-      return 0
-    fi
-  else
-    return 1
+  [[ -z "$i" ]] || return 1
+  if tmux attach-session -t "$i"; then
+    tmux_wait_for_bye
+    return 0
   fi
 }
 tmux_session_new() {
@@ -65,11 +49,7 @@ tmux_wait_for_bye() {
   return 0
 }
 
-tmux_command_not_exists() {
-  if type "tmux" > /dev/null 2>&1; then
-    return 1
-  else
-    return 0
-  fi
+tmux_command_exists() {
+  type "tmux">/dev/null 2>&1
 }
 

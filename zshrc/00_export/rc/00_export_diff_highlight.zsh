@@ -1,5 +1,6 @@
 #!/usr/bin/env zsh
-for dir in $(find -s /opt/homebrew/Cellar/git/*/share/git-core/contrib/diff-highlight -type d -depth 0); do
-  PATH=$dir:$PATH
+dirs=(/opt/homebrew/Cellar/git/*/share/git-core/contrib/diff-highlight(N/))
+for d in $dirs; do
+  PATH="$d:$PATH"
 done
 export PATH
