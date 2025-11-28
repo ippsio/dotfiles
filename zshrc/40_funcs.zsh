@@ -1,23 +1,10 @@
 #!/usr/bin/env zsh
 
-isbuf() {
-  printf "%s" "$BUFFER"| grep -E "^$1[ ]*$">/dev/null 2>&1
-}
-addsp() {
-  LBUFFER+=" "
-}
-lbuf() {
-  LBUFFER="$1"
-  zle end-of-line
-  return 0
-}
-rbuf() {
-  RBUFFER+="$1"
-  zle end-of-line
-  return 0
-}
-rbufval() {
-  eval "$1"
+# buf1_match() {
+#   printf "%s" "$BUFFER"| grep -E "^$1[ ]*$">/dev/null 2>&1
+# }
+buf1_match() {
+  [[ "$BUFFER" =~ "^${1//\\/\\\\}[[:space:]]*$" ]]
 }
 bufheadargs() {
   printf "%s" "$BUFFER"| awk '{ print $1 }'
@@ -30,4 +17,23 @@ expand_global_alias() {
   if [[ $LBUFFER =~ ' [A-Z0-9]+$' ]]; then
     zle _expand_alias
   fi
+}
+lbuf_subtract() {
+  buf1_match "$1"|| return 1
+  LBUFFER="$2"
+  zle end-of-line
+}
+lbuf_subtract_back() {
+  lbuf_subtract "$1" "$2"|| return 1
+  zle backward-char
+}
+lbuf_subtract_accept() {
+  lbuf_subtract "$1" "$2"|| return 1
+  zle accept-line
+}
+lbuf_subtract_rbuf_eval() {
+  lbuf_subtract "$1" "$2"|| return 1
+  v=$(eval "$3")
+  RBUFFER+="$v"
+  zle end-of-line
 }
