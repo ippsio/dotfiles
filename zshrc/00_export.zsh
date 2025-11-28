@@ -5,6 +5,6 @@ export TMUX_PLUGINS="$HOME/.cache/tmux/plugins"
 
 rcs=($HOME/dotfiles/zshrc/00_export/rc/*.zsh(N))
 for f in $rcs; do
-  with_tat source "$f"
+  source "$f"
 done
 export PATH
