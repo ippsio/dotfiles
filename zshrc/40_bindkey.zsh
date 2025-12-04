@@ -9,4 +9,4 @@ source $HOME/dotfiles/zshrc/42_zle_tab.zsh
 source $HOME/dotfiles/zshrc/43_zle_ctrl_f.zsh
 source $HOME/dotfiles/zshrc/43_zle_ctrl_jk.zsh
 source $HOME/dotfiles/zshrc/44_zle_ctrl_cursor.zsh
-source $HOME/dotfiles/zshrc/44_zle_enter.zsh
+source $HOME/dotfiles/zshrc/44_zle_function_keys.zsh

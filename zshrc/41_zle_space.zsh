@@ -20,7 +20,7 @@ zle_space() {
 
   if $(is_git_repo); then
     lbuf_subtract "b" "git_branch_fzf " && return 0
-    lbuf_subtract "gco" "git checkout" && return 0
+    lbuf_subtract "gco" "git checkout " && return 0
     lbuf_subtract "gfo" "git fetch origin --prune" && return 0
 
     lbuf_subtract "gg" "git_grep_fzf_vim " && return 0

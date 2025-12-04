@@ -32,8 +32,9 @@ lbuf_subtract_accept() {
   zle accept-line
 }
 lbuf_subtract_rbuf_eval() {
-  lbuf_subtract "$1" "$2"|| return 1
+  buf1_match "$1"|| return 1
   v=$(eval "$3")
+  lbuf_subtract "$1" "$2"
   RBUFFER+="$v"
   zle end-of-line
 }
