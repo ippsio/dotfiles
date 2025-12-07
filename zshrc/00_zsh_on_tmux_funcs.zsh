@@ -33,7 +33,6 @@ tmux_session_attach() {
   if [[ -z "$i" ]]; then
     return 1
   elif tmux attach-session -t "$i"; then
-    tmux_wait_for_bye
     return 0
   else
     return 1
@@ -42,7 +41,6 @@ tmux_session_attach() {
 tmux_session_new() {
   i=$(tmux_idx_next_new)
   tmux new-session -s "$i"
-  tmux_wait_for_bye
   return 0
 }
 

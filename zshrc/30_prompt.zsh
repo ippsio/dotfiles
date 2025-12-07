@@ -77,13 +77,21 @@ git_prompt() {
 }
 python_prompt() {
   local verf=$(find_up .python-version)
-  [[ -z "$verf" ]] && return 0
-  printf "python %s%s" "${VIRTUAL_ENV:t}" "$(<$verf)"
+  if [[ -z "$verf" ]]; then
+    return 0
+  elif [[ -n "${VIRTUAL_ENV}" ]]; then
+    printf "(python %s,%s)" "$(<$verf)" "${VIRTUAL_ENV/$HOME/\$HOME}"
+  else
+    printf "(python %s,%s)" "$(<$verf)" "${verf/$HOME/\$HOME}"
+  fi
 }
 rbenv_prompt() {
   local verf=$(find_up .ruby-version)
-  [[ -z "$verf" ]] && return 0
-  printf "rbenv %s" "$(<$verf)"
+  if [[ -z "$verf" ]]; then
+    return 0
+  else
+    printf "(ruby %s,%s)" "$(<$verf)" "${verf/$HOME/\$HOME}"
+  fi
 }
 basic_prompt() {
   local exit_cd="%F{red}%(?..\$?=%? )%f"
@@ -93,24 +101,17 @@ basic_prompt() {
 }
 
 precmd() {
-  lprompt_arr=()
-  rprompt_arr=()
+  LLIST=()
+  LLIST+=( "$(rbenv_prompt)" )
+  LLIST+=( "$(python_prompt)" )
+  LLIST+=( "$(git_prompt)" )
+  LLIST+=( "$(basic_prompt)" )
+  LLIST=(${LLIST[@]:#""(f)})
 
-  git_prompt_part=$(git_prompt)
-  [[ -n "$git_prompt_part" ]] && lprompt_arr+=( "$git_prompt_part" )
+  RLIST=()
+  RLIST+=( "$(date +'%m/%d %H:%M:%S')" )
+  RLIST=(${RLIST[@]:#""(f)})
 
-  basic_prompt_part=$(basic_prompt)
-  [[ -n "$basic_prompt_part" ]] && lprompt_arr+=( "$basic_prompt_part" )
-
-  rbenv_prompt_part=$(rbenv_prompt)
-  [[ -n "$rbenv_prompt_part" ]] && rprompt_arr+=( "$rbenv_prompt_part" )
-
-  python_prompt_part=$(python_prompt)
-  [[ -n "$python_prompt_part" ]] && rprompt_arr+=( "$python_prompt_part" )
-
-  date_prompt_part="$(date +'%m/%d %H:%M:%S')"
-  rprompt_arr+=( "$date_prompt_part" )
-
-  PROMPT=$( print -l -- "\n${lprompt_arr[@]}")
-  RPROMPT=$(print -n --   "${(j:| :)rprompt_arr[*]}")
+  PROMPT=$( print -n -- "\n${(j:\n:)LLIST[@]}")
+  RPROMPT=$(print -n --   "${(j:| :)RLIST[@]}")
 }
