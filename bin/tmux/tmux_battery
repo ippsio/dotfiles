@@ -38,6 +38,7 @@ charging_mark() {
 
 get_status() {
   charging_mark="$(charging_mark)"
+  charging_mark="${charging_mark:- }"
   percent="$(percent)"
   remaining="$(remaining)"
   width=$(~/dotfiles/bin/tmux/tmux_client_width)
