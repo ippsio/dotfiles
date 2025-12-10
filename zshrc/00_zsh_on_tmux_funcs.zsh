@@ -39,13 +39,13 @@ tmux_session_attach() {
   fi
 }
 tmux_session_new() {
-  i=$(tmux_idx_next_new)
+  local i=$(tmux_idx_next_new)
   tmux new-session -s "$i"
   return 0
 }
 
 tmux_wait_for_bye() {
-  for i in $(seq 3 1); do echo "$i"; sleep 1; done
+  for i in $(seq 3 1); do echo "$i"; sleep 0.5; done
   echo "bye"
   sleep 1
   return 0
