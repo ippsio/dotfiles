@@ -110,11 +110,10 @@ precmd() {
   LLIST+=( "$(git_prompt)" )
   LLIST+=( "$(basic_prompt)" )
   LLIST=(${LLIST[@]:#""(f)})
-
-  RLIST=()
-  RLIST+=( "$(date +'%m/%d %H:%M:%S')" )
-  RLIST=(${RLIST[@]:#""(f)})
-
   PROMPT=$( print -n -- "\n${(j:\n:)LLIST[@]}")
-  RPROMPT=$(print -n --   "${(j:| :)RLIST[@]}")
+
+  # RLIST=()
+  # RLIST+=( "$(date +'%m/%d %H:%M:%S')" )
+  # RLIST=(${RLIST[@]:#""(f)})
+  # RPROMPT=$(print -n --   "${(j:| :)RLIST[@]}")
 }
