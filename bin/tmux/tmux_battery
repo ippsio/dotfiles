@@ -10,6 +10,9 @@ is_discharging() {
 percent() {
   pmset -g ps | grep -o '[0-9]\+%' | tr -d '%'
 }
+wattage() {
+  pmset -g ac| grep -F "Wattage"| grep -o '[0-9]\+'
+}
 
 remaining() {
   local res="$(pmset -g ps | grep -o '[0-9]\+:[0-9]\+')"
@@ -40,13 +43,15 @@ get_status() {
   charging_mark="$(charging_mark)"
   charging_mark="${charging_mark:- }"
   percent="$(percent)"
+  wattage="$(wattage)"
+  wattage="${wattage:---}"
   remaining="$(remaining)"
   width=$(~/dotfiles/bin/tmux/tmux_client_width)
 
   if [[ $width -gt 160 ]]; then
-    printf "%s%2d%%(%s)" "$charging_mark" "$percent" "$remaining"
+    printf "%s%2d%%(%sW,%s)" "$charging_mark" "$percent" "$wattage" "$remaining"
   else
-    printf "%s%2d%%" "$charging_mark" "$percent"
+    printf "%s%2d%%(%sW)" "$charging_mark" "$percent" "$wattage"
   fi
 }
 
