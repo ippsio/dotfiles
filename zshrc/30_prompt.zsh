@@ -35,6 +35,7 @@ git_prompt() {
           case "$xy" in
             "?M"|" M"|".M") ((unstaged++)) ;;
             "M"?) ((staged++)) ;;
+            "A"?) ((staged++)) ;;
           esac
           ;;
         "2 "*) ((unmerged++)) ;;
@@ -59,6 +60,8 @@ git_prompt() {
     local branch="${head#ref: refs/heads/}"
     local merging
     [[ -f "$gitdir/MERGE_HEAD" ]] && merging="MERGING"
+    local cherrypicking
+    [[ -f "$gitdir/CHERRY_PICK_HEAD" ]] && cherrypicking="CHERRYPICKING"
 
     local workingtree="%F{1}?${untracked} !${unstaged}%f"
     local unmerged_str
@@ -67,7 +70,7 @@ git_prompt() {
     stash_str=$( [[ $stash -ge 1 ]] && print -n "STASH:${stash} " )
     local unmerged_stash_stage="%F{63}${unmerged_str}${stash_str}%f%F{168}+${staged}%f"
     local aheadbehind="%F{200}A${ahead} B${behind}%f"
-    local git_caution="%K{1}${merging}%f%k "
+    local git_caution="%K{1}${merging}${cherrypicking}%f%k "
     local repo_branch="%F{8}${repo} %F{8}${branch}%f %F{red}track(${remote:-none})%f "
     t2=${${EPOCHREALTIME/./}[1,13]}
     td1=$(( t1 - t0 ))
