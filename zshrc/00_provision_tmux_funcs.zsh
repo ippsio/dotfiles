@@ -1,14 +1,15 @@
 #!/usr/bin/env zsh
-on_tmux() {
-  [[ -n "$TMUX" ]]
+TMUX_LOG_DIR="$HOME/.tmux/log"
+
+not_on_tmux_yet() {
+  [[ -z "$TMUX" ]]
 }
 
 is_ps1_absent() {
   [[ -z "$PS1" ]]
 }
 
-tmux_usable() {
-  on_tmux && return 1
+tmux_usable_environment() {
   is_ps1_absent && return 1
   tmux_command_not_found && return 1
   return 0
@@ -45,13 +46,21 @@ tmux_session_new() {
 }
 
 tmux_wait_for_bye() {
-  for i in $(seq 3 1); do echo "$i"; sleep 0.5; done
-  echo "bye"
-  sleep 1
+  for i in 3 2 1 "bye"; do echo "$i"; sleep 0.5; done
   return 0
 }
 
 tmux_command_not_found() {
   type "tmux">/dev/null 2>&1 && return 1 || return 0
 }
-
+tmux_logfile_path() {
+  local dt="$(date +%Y-%m-%d_%H%M%S.%s)"
+  local logfile_path="$TMUX_LOG_DIR/$dt.log"
+  logfile_path=${logfile_path/$HOME/\$HOME}
+  echo "$logfile_path"
+}
+start_tmux_logging() {
+  local logfile_path="$1"
+  echo "tmux_logfile_path=$logfile_path"
+  tmux pipe-pane "exec gawk '{print strftime(\"%Y-%m-%d %H:%M:%S.%s\"), \$0; fflush()}' >> $logfile_path"
+}
