@@ -62,5 +62,5 @@ tmux_logfile_path() {
 start_tmux_logging() {
   local logfile_path="$1"
   echo "tmux_logfile_path=$logfile_path"
-  tmux pipe-pane "exec gawk '{print strftime(\"%Y-%m-%d %H:%M:%S.%s\"), \$0; fflush()}' >> $logfile_path"
+  tmux pipe-pane "$HOME/dotfiles/zshrc/00_provision_tmux_log_gawk.zsh >> $logfile_path"
 }
