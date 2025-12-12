@@ -24,4 +24,4 @@ fi
 
 t1=${${EPOCHREALTIME/./}[1,13]}
 printf "zshrc loaded (%dms).\n" $(( t1 - t0 ))
-type zprof> /dev/null && zprof
+type zprof> /dev/null && zprof || return 0

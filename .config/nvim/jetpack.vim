@@ -80,7 +80,7 @@ call jetpack#add('machakann/vim-sandwich', { 'on_event': 'VimEnter', })
 " ruby development
 call jetpack#add('AndrewRadev/splitjoin.vim', { 'for': [ 'ruby', 'rake', 'eruby', 'slim'] })
 call jetpack#add('slim-template/vim-slim', { 'for': [ 'slim'] })
-call jetpack#add('tpope/vim-rails', { 'for': [ 'ruby', 'rake', 'eruby', 'slim'] })
+call jetpack#add('tpope/vim-rails')
 call jetpack#add('vim-ruby/vim-ruby', { 'for': [ 'ruby', 'rake', 'eruby', 'slim'] })
 call jetpack#add('vim-scripts/ruby-matchit', { 'for': [ 'ruby', 'rake'] })
 call jetpack#add('tpope/vim-dispatch', { 'on_event': 'VimEnter', 'hook_post_source': 'source $HOME/.config/nvim/rc/vim/vim-dispatch.vim', })
