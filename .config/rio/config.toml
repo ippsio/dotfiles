@@ -197,8 +197,8 @@
 # will always look for regular font bounds whene
 #
 # You can also set family on root to overwrite all fonts.
-# [fonts]
-# family = "cascadiamono"
+[fonts]
+family = "Moralerspace Neon HWJPDOC"
 #
 # You can also specify extra fonts to load
 # [fonts]
@@ -222,10 +222,8 @@
 # ]
 #
 # Simple example:
-[fonts]
-#size = 18
-size = 24
-family = "HackGen Console NF"
+# [fonts]
+size = 20
 #
 # [fonts.regular]
 # family = "cascadiamono"
@@ -246,7 +244,7 @@ family = "HackGen Console NF"
 # family = "cascadiamono"
 # style = "Italic"
 # weight = 800
-
+# 
 # Scroll
 #
 # You can change how many lines are scrolled each time by setting this option.
