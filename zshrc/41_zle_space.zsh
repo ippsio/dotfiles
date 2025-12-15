@@ -19,7 +19,6 @@ zle_space() {
   lbuf_subtract_rbuf_eval "ssh " "ssh " "fzf_ssh_config" && return 0
 
   if $(is_git_repo); then
-    lbuf_subtract "b" "git_branch_fzf " && return 0
     lbuf_subtract "gfo" "git fetch origin --prune" && return 0
 
     lbuf_subtract "gg" "git_grep_fzf_vim " && return 0
@@ -28,7 +27,6 @@ zle_space() {
 
     lbuf_subtract_rbuf_eval "gco" "git checkout " "git_branch_fzf" && return 0
     lbuf_subtract_rbuf_eval "git branch -M" "git branch -M " "git branch --show-current" && return 0
-    lbuf_subtract_rbuf_eval "git checkout" "git checkout " "git_branch_fzf" && return 0
 
     lbuf_subtract "git co" "git checkout " && return 0
     lbuf_subtract "git log " "git log --date=iso --pretty='%h %ad %an %s' -1" && return 0
