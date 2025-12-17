@@ -6,18 +6,19 @@ zmodload zsh/datetime
 t0=${${EPOCHREALTIME/./}[1,13]}
 # with_tat() { local lt0=${${EPOCHREALTIME/./}[1,13]}; "$@"; local lt1=${${EPOCHREALTIME/./}[1,13]}; print -r -- "$* ($(( lt1 - lt0 ))ms)"; return 0; }
 autoload -Uz compinit && compinit -u
+source $HOME/dotfiles/zshrc/20_alias.zsh
 source $HOME/dotfiles/zshrc/00_provision_tmux.zsh
 source $HOME/dotfiles/zshrc/00_history.zsh
 source $HOME/dotfiles/zshrc/00_setopt.zsh
 source $HOME/dotfiles/zshrc/00_export.zsh
 source $HOME/dotfiles/zshrc/00_export_color.zsh
 source $HOME/dotfiles/zshrc/10_prepare.zsh
-source $HOME/dotfiles/zshrc/20_alias.zsh
 source $HOME/dotfiles/zshrc/30_prompt.zsh
 source $HOME/dotfiles/zshrc/40_bindkey.zsh
 source $HOME/dotfiles/zshrc/50_cmd_hack.zsh
 source $HOME/dotfiles/zshrc/60_zsh_plugin.zsh
 source $HOME/dotfiles/zshrc/70_eval_envs.zsh
+source $HOME/dotfiles/zshrc/80_functions.zsh
 if [[ -e $HOME/.zshrc_additional ]]; then
   source $HOME/.zshrc_additional
 fi

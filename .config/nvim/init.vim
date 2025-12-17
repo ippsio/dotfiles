@@ -4,5 +4,5 @@ runtime! settings.vim
 runtime! remaps.vim
 runtime! autocmds.vim
 runtime! jetpack.vim
-autocmd VimEnter * colorscheme github_dark_dimmed
+autocmd VimEnter * colorscheme bamboo
 runtime! rc/functions/Hi.vim

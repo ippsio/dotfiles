@@ -38,15 +38,10 @@ call jetpack#add('Shougo/pum.vim', { 'on_event': 'VimEnter', 'hook_post_source':
 " lsp
 " lsp> config
 call jetpack#add('williamboman/mason.nvim', { 'on_event': 'VimEnter' })
-call jetpack#add('neovim/nvim-lspconfig', { 'on_event': 'VimEnter', })
-call jetpack#add('williamboman/mason-lspconfig.nvim', {
-      \ 'on_event': 'VimEnter',
-      \ 'hook_post_source': 'source $HOME/.config/nvim/rc/lua/nvim-lspconfig.lua',
-      \ 'depends': [ 'williamboman/mason.nvim', 'neovim/nvim-lspconfig', 'ray-x/lsp_signature.nvim' ],
-      \ })
+call jetpack#add('neovim/nvim-lspconfig', { 'on_event': 'VimEnter', 'hook_source': 'source $HOME/.config/nvim/rc/lua/nvim-lspconfig.lua', })
 call jetpack#add('ray-x/lsp_signature.nvim', { 'on_event': 'VimEnter', })
 "" lsp> progress message
-call jetpack#add('j-hui/fidget.nvim', { 'on_event': 'VimEnter', })
+call jetpack#add('j-hui/fidget.nvim', { 'on_event': 'VimEnter', 'hook_post_source': 'source $HOME/.config/nvim/rc/lua/fidget.nvim.lua',})
 call jetpack#add('SmiteshP/nvim-navic', { 'on_event': 'VimEnter', })
 
 " git
@@ -88,6 +83,7 @@ call jetpack#add('thoughtbot/vim-rspec', {'on_event': 'VimEnter', 'hook_post_sou
 
 " file manager
 call jetpack#add('lambdalisue/fern.vim', { 'on_event': 'VimEnter', 'hook_post_source': 'source $HOME/.config/nvim/rc/vim/fern.vim.vim', })
+call jetpack#add('yukimura1227/vim-yazi')
 
 call jetpack#add('yuki-yano/fern-preview.vim', { 'on_event': 'VimEnter', 'hook_post_source': 'source $HOME/.config/nvim/rc/vim/fern-preview.vim.vim', })
 
@@ -96,6 +92,7 @@ call jetpack#add('tpope/vim-projectionist', { 'on_event': 'VimEnter', 'hook_post
 
 "colorscheme
 call jetpack#add('projekt0n/github-nvim-theme', { 'on_event': 'VimEnter', })
+call jetpack#add('ribru17/bamboo.nvim', { 'on_event': 'VimEnter', })
 
 " misc
 call jetpack#add('ippsio/clip_diff.vim', { 'on_event': 'VimEnter', 'hook_post_source': 'source $HOME/.config/nvim/rc/vim/clip_diff.vim.vim', })
@@ -104,7 +101,12 @@ call jetpack#add('monaqa/dial.nvim', { 'on_event': 'VimEnter', 'hook_post_source
 " vim_abolish
 call jetpack#add('tpope/vim-abolish', { 'on_event': 'VimEnter', })
 
-call jetpack#add('github/copilot.vim', { 'on_cmd': ['Copilot'], })
+call jetpack#add('github/copilot.vim', { 'on_event': 'VimEnter', })
+call jetpack#add('CopilotC-Nvim/CopilotChat.nvim', {
+      \ 'on_event': 'VimEnter',
+      \ 'hook_source': 'source $HOME/.config/nvim/rc/lua/CopilotChat.nvim.lua',
+      \ 'depends': ['nvim-lua/plenary.nvim'],
+      \ })
 " ChatGPT
 call jetpack#add('jackMort/ChatGPT.nvim', {
       \ 'on_cmd': ['ChatGPT', 'ChatGPTActAs', 'ChatGPTCompleteCode', 'ChatGPTEditWithInstructions', 'ChatGPTRun'],

@@ -1,9 +1,12 @@
 " 隠しファイルを表示
 let g:fern#default_hidden=1
 
-" ファイルツリーを開く
-nnoremap <silent> <C-n> :Fern .   -reveal=% -drawer -toggle -width=60<CR>
-nnoremap <silent> ,     :Fern %:h -reveal=% -drawer -toggle -width=60<CR>
+function! s:find_project_root() abort
+  let l:git_dir = finddir('.git', '.;')
+  return l:git_dir != '' ? fnamemodify(l:git_dir, ':h') : '.'
+endfunction
+
+nnoremap <silent> <C-n> :<C-u>execute 'Fern ' . <SID>find_project_root() . ' -reveal=' . expand('%:p') . ' -drawer -toggle -width=60'<CR>
 
 function! s:init_fern() abort
   nmap <buffer> <C-l> <C-w>l

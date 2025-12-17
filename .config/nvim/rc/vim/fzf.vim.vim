@@ -17,7 +17,7 @@ let g:fzf_layout = {'window': { 'width': 0.95, 'height': 0.95 } }
 nnoremap <BS> :<C-u>Jumps<CR>
 
 " バッファ一覧をfzfで絞り込む
-"nnoremap ; :Buffers<CR>
+nnoremap ; :Buffers<CR>
 
 " 現在開いてるファイルがgit管理下ならそのディレクトリを、そうでなければ現在のパスを返す。
 function! s:GetDir(args0)
