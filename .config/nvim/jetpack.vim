@@ -40,7 +40,7 @@ call jetpack#add('Shougo/pum.vim', { 'on_event': 'VimEnter', 'hook_post_source':
 call jetpack#add('williamboman/mason.nvim', { 'on_event': 'VimEnter' })
 call jetpack#add('neovim/nvim-lspconfig', { 'on_event': 'VimEnter', 'hook_source': 'source $HOME/.config/nvim/rc/lua/nvim-lspconfig.lua', })
 call jetpack#add('ray-x/lsp_signature.nvim', { 'on_event': 'VimEnter', })
-"" lsp> progress message
+" lsp> progress message
 call jetpack#add('j-hui/fidget.nvim', { 'on_event': 'VimEnter', 'hook_post_source': 'source $HOME/.config/nvim/rc/lua/fidget.nvim.lua',})
 call jetpack#add('SmiteshP/nvim-navic', { 'on_event': 'VimEnter', })
 
@@ -78,14 +78,29 @@ call jetpack#add('slim-template/vim-slim', { 'for': [ 'slim'] })
 call jetpack#add('tpope/vim-rails')
 call jetpack#add('vim-ruby/vim-ruby', { 'for': [ 'ruby', 'rake', 'eruby', 'slim'] })
 call jetpack#add('vim-scripts/ruby-matchit', { 'for': [ 'ruby', 'rake'] })
-call jetpack#add('tpope/vim-dispatch', { 'on_event': 'VimEnter', 'hook_post_source': 'source $HOME/.config/nvim/rc/vim/vim-dispatch.vim', })
+call jetpack#add('tpope/vim-dispatch', { 'on_event': 'VimEnter', 'hook_source': 'source $HOME/.config/nvim/rc/vim/vim-dispatch.vim', })
 call jetpack#add('thoughtbot/vim-rspec', {'on_event': 'VimEnter', 'hook_post_source': 'source $HOME/dotfiles/.config/nvim/rc/vim/vim-rspec.vim'})
 
 " file manager
-call jetpack#add('lambdalisue/fern.vim', { 'on_event': 'VimEnter', 'hook_post_source': 'source $HOME/.config/nvim/rc/vim/fern.vim.vim', })
 call jetpack#add('yukimura1227/vim-yazi')
-
-call jetpack#add('yuki-yano/fern-preview.vim', { 'on_event': 'VimEnter', 'hook_post_source': 'source $HOME/.config/nvim/rc/vim/fern-preview.vim.vim', })
+call jetpack#add('lambdalisue/fern.vim', { 'on_event': 'VimEnter', 'hook_source': 'source $HOME/.config/nvim/rc/vim/fern.vim.vim', })
+"call jetpack#add('yuki-yano/fern-preview.vim', { 'on_event': 'VimEnter', 'hook_post_source': 'source $HOME/.config/nvim/rc/vim/fern-preview.vim.vim', })
+"call jetpack#add('lambdalisue/fern-git-status.vim', { 'on_event': 'VimEnter', })
+call jetpack#add('lambdalisue/vim-nerdfont', { 'on_event': 'VimEnter', })
+call jetpack#add('lambdalisue/vim-fern-renderer-nerdfont', {
+      \ 'on_event': 'VimEnter',
+      \ 'hook_source': 'source $HOME/.config/nvim/rc/vim/vim-fern-renderer-nerdfont.vim',
+      \ 'depends': ['lambdalisue/fern.vim', 'lambdalisue/vim-nerdfont'],
+      \ })
+"call jetpack#add('lambdalisue/fern-mapping.vim', {
+"      \ 'on_event': 'VimEnter',
+"      \ 'depends': ['lambdalisue/fern.vim'],
+"      \ })
+"call jetpack#add('lambdalisue/fern-mapping-quickfix.vim', {
+"      \ 'on_event': 'VimEnter',
+"      \ 'depends': ['lambdalisue/fern.vim'],
+"      \ })
+call jetpack#add('easymotion/vim-easymotion', { 'on_event': 'VimEnter', })
 
 " jump between files
 call jetpack#add('tpope/vim-projectionist', { 'on_event': 'VimEnter', 'hook_post_source': 'source $HOME/.config/nvim/rc/vim/vim-projectionist.vim', })
@@ -123,7 +138,7 @@ call jetpack#add('folke/trouble.nvim', { 'on_cmd': ['ChatGPT', 'ChatGPTActAs', '
 call jetpack#add('nvim-lua/plenary.nvim')
 call jetpack#add('nvim-telescope/telescope.nvim', { 'hook_post_source': 'source $HOME/.config/nvim/rc/lua/telescope.nvim.lua', })
 " ChatGPT
-"
+
 call jetpack#add('i9wa4/vim-tmux-send-to-ai-cli', { 'on_event': 'VimEnter', })
 
 let s:available_pkg = stdpath('data') . '/' . 'site' . '/pack/jetpack/opt/available_packages.json'

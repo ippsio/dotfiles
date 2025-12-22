@@ -13,9 +13,6 @@ let g:fzf_layout = {'window': { 'width': 0.95, 'height': 0.95 } }
 " let g:fzf_layout = { 'window': '-tabnew' }
 " let g:fzf_layout = { 'window': '10new' }
 
-" ジャンプリストをfzfで絞り込む
-nnoremap <BS> :<C-u>Jumps<CR>
-
 " バッファ一覧をfzfで絞り込む
 nnoremap ; :Buffers<CR>
 
