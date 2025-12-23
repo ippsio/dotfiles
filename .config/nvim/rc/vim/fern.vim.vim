@@ -8,6 +8,7 @@ function! s:find_project_root() abort
 endfunction
 
 nnoremap <silent> <C-n> :<C-u>execute 'Fern ' . <SID>find_project_root() . ' -reveal=' . expand('%:p') . ' -drawer -toggle -width=60'<CR>
+nnoremap <silent> ,     :<C-u>execute 'Fern ' . <SID>find_project_root() . ' -reveal=' . expand('%:p') . ' -drawer -toggle -width=60'<CR>
 
 function! s:init_fern() abort
   nmap <buffer> <C-l> <C-w>l

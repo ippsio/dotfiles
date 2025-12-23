@@ -107,8 +107,9 @@ call jetpack#add('easymotion/vim-easymotion', { 'on_event': 'VimEnter', })
 call jetpack#add('tpope/vim-projectionist', { 'on_event': 'VimEnter', 'hook_post_source': 'source $HOME/.config/nvim/rc/vim/vim-projectionist.vim', })
 
 "colorscheme
-call jetpack#add('projekt0n/github-nvim-theme', { 'on_event': 'VimEnter', 'hook_post_source': 'colorscheme github_dark_default', })
+"call jetpack#add('projekt0n/github-nvim-theme', { 'on_event': 'VimEnter', 'hook_post_source': 'colorscheme github_dark_default', })
 "call jetpack#add('ribru17/bamboo.nvim', { 'on_event': 'VimEnter', 'hook_post_source': 'colorscheme bamboo', })
+call jetpack#add('rebelot/kanagawa.nvim', { 'on_event': 'VimEnter', 'hook_post_source': 'colorscheme kanagawa', })
 
 " misc
 call jetpack#add('ippsio/clip_diff.vim', { 'on_event': 'VimEnter', 'hook_post_source': 'source $HOME/.config/nvim/rc/vim/clip_diff.vim.vim', })
