@@ -8,6 +8,7 @@ if !filereadable(s:jetpackfile)
   call system(printf('curl -fsSLo %s --create-dirs %s', s:jetpackfile, s:jetpackurl))
 endif
 
+" NOTE: Jetpackで追加したプラグインの保存先=> $HOME/.local/share/nvim/site/pack/jetpack/opt
 packadd vim-jetpack
 call jetpack#begin()
 " jetpack
@@ -52,7 +53,7 @@ call jetpack#add('iberianpig/tig-explorer.vim', { 'on_event': 'VimEnter', })
 call jetpack#add('rhysd/conflict-marker.vim', { 'on_event': 'VimEnter', 'hook_post_source': 'source $HOME/.config/nvim/rc/vim/conflict-marker.vim.vim', })
 
 " viewability, statusline
-call jetpack#add('itchyny/vim-cursorword', { 'on_event': 'VimEnter', 'hook_post_source': 'source $HOME/.config/nvim/rc/vim/vim-cursorword.vim', })
+call jetpack#add('itchyny/vim-cursorword', { 'on_event': ['VimEnter'], 'hook_post_source': 'source $HOME/.config/nvim/rc/vim/vim-cursorword.vim', })
 call jetpack#add('itchyny/vim-parenmatch', { 'on_event': 'VimEnter', })
 call jetpack#add('itchyny/lightline.vim', { 'hook_source': 'source $HOME/.config/nvim/rc/vim/lightline.vim.vim', })
 call jetpack#add('bronson/vim-trailing-whitespace', { 'on_event': 'VimEnter', 'hook_post_source': 'source $HOME/.config/nvim/rc/vim/vim-trailing-whitespace.vim', })
@@ -106,8 +107,8 @@ call jetpack#add('easymotion/vim-easymotion', { 'on_event': 'VimEnter', })
 call jetpack#add('tpope/vim-projectionist', { 'on_event': 'VimEnter', 'hook_post_source': 'source $HOME/.config/nvim/rc/vim/vim-projectionist.vim', })
 
 "colorscheme
-call jetpack#add('projekt0n/github-nvim-theme', { 'on_event': 'VimEnter', })
-call jetpack#add('ribru17/bamboo.nvim', { 'on_event': 'VimEnter', })
+call jetpack#add('projekt0n/github-nvim-theme', { 'on_event': 'VimEnter', 'hook_post_source': 'colorscheme github_dark_default', })
+"call jetpack#add('ribru17/bamboo.nvim', { 'on_event': 'VimEnter', 'hook_post_source': 'colorscheme bamboo', })
 
 " misc
 call jetpack#add('ippsio/clip_diff.vim', { 'on_event': 'VimEnter', 'hook_post_source': 'source $HOME/.config/nvim/rc/vim/clip_diff.vim.vim', })
@@ -141,10 +142,16 @@ call jetpack#add('nvim-telescope/telescope.nvim', { 'hook_post_source': 'source 
 
 call jetpack#add('i9wa4/vim-tmux-send-to-ai-cli', { 'on_event': 'VimEnter', })
 
+" プラグインの構成が変わっていた時、ネットワーク接続があれば、jetpack#sync()を実行する。
 let s:available_pkg = stdpath('data') . '/' . 'site' . '/pack/jetpack/opt/available_packages.json'
 let s:available_pkg_text = filereadable(s:available_pkg) ? join(readfile(s:available_pkg)) : "{}"
 if sort(jetpack#names()) != sort(keys(json_decode(s:available_pkg_text)))
-  call jetpack#sync()
+  if executable('ping')
+    call systemlist('timeout 0.1 ping -c 1 8.8.8.8 >/dev/null 2>&1')
+    if v:shell_error == 0
+      call jetpack#sync()
+    endif
+  endif
 endif
 
 call jetpack#end()
