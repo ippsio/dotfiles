@@ -101,7 +101,7 @@ call jetpack#add('lambdalisue/vim-fern-renderer-nerdfont', {
 "      \ 'on_event': 'VimEnter',
 "      \ 'depends': ['lambdalisue/fern.vim'],
 "      \ })
-call jetpack#add('easymotion/vim-easymotion', { 'on_event': 'VimEnter', })
+call jetpack#add('easymotion/vim-easymotion', { 'on_event': 'VimEnter', 'hook_post_source': 'source $HOME/.config/nvim/rc/vim/vim-easymotion.vim', })
 
 " jump between files
 call jetpack#add('tpope/vim-projectionist', { 'on_event': 'VimEnter', 'hook_post_source': 'source $HOME/.config/nvim/rc/vim/vim-projectionist.vim', })
