@@ -85,7 +85,7 @@ call jetpack#add('thoughtbot/vim-rspec', {'on_event': 'VimEnter', 'hook_post_sou
 " file manager
 call jetpack#add('yukimura1227/vim-yazi')
 call jetpack#add('lambdalisue/fern.vim', { 'on_event': 'VimEnter', 'hook_source': 'source $HOME/.config/nvim/rc/vim/fern.vim.vim', })
-"call jetpack#add('yuki-yano/fern-preview.vim', { 'on_event': 'VimEnter', 'hook_post_source': 'source $HOME/.config/nvim/rc/vim/fern-preview.vim.vim', })
+call jetpack#add('yuki-yano/fern-preview.vim', { 'on_event': 'VimEnter', 'hook_post_source': 'source $HOME/.config/nvim/rc/vim/fern-preview.vim.vim', })
 "call jetpack#add('lambdalisue/fern-git-status.vim', { 'on_event': 'VimEnter', })
 call jetpack#add('lambdalisue/vim-nerdfont', { 'on_event': 'VimEnter', })
 call jetpack#add('lambdalisue/vim-fern-renderer-nerdfont', {

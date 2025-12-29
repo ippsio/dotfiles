@@ -1,102 +1,69 @@
 #!/usr/bin/env bash
 
+base_dir="$HOME/memo"
+f_project="$base_dir/project/project.txt"
+f_todo="$base_dir/todo.txt"
+f_sticky="$base_dir/sticky.txt"
+
 epoc=$(date '+%s')
+format_epoc_dt() {
+  LC_ALL=C date -r "$epoc" "$1"; return 0;
+}
+dt_ymda=$(format_epoc_dt "+%Y_%m%d_%a")
+dt_ymda2=$(format_epoc_dt "+%Y/%m/%d(%a)")
+dt_ym=${dt_ymda:0:7}
+f_daily="$base_dir/daily/$dt_ym/$dt_ymda.txt"
+f_daily_detail="$base_dir/daily_detail/$dt_ym/$dt_ymda.txt"
+
 format_dt() {
   LC_ALL=C date -r "$1" "$2"; return 0;
 }
-format_epoc_dt() {
-  format_dt "$epoc" "$1"
-}
-get_basedir() {
-  echo "$HOME/memo"
-}
-get_project_file() {
-  echo "$(get_basedir)/project/project.txt"
-}
-get_todo_file() {
-  echo "$(get_basedir)/todo.txt"
-}
-get_sticky_file() {
-  echo "$(get_basedir)/sticky.txt"
-}
-get_daily_file() {
-  echo "$(get_basedir)/daily/$(format_epoc_dt "+%Y_%m")/$(format_epoc_dt "+%Y_%m%d_%a").txt"
-}
-get_daily_detail_file() {
-  echo "$(get_basedir)/daily_detail/$(format_epoc_dt "+%Y_%m")/$(format_epoc_dt "+%Y_%m%d_%a").txt"
-}
-get_sun_of_week() {
-  date -vsun '+%s'
-}
-get_sat_of_week() {
-  date -vsat '+%s'
-}
-get_weekly_file() {
-  sun_s=$(get_sun_of_week)
-  sat_s=$(get_sat_of_week)
-  sun_ym=$(format_dt "$sun_s" "+%Y_%m")
-  sun=$(format_dt "$sun_s" "+%Y_%m%d_%a")
-  sat=$(format_dt "$sat_s" "+%Y_%m%d_%a")
-  echo "$(get_basedir)/weekly/$sun_ym/${sun}-${sat}.txt"
-}
+sun_s=$(date -vsun '+%s')
+sat_s=$(date -vsat '+%s')
+sun_ym=$(format_dt "$sun_s" "+%Y_%m")
+sun=$(format_dt "$sun_s" "+%Y_%m%d_%a")
+sat=$(format_dt "$sat_s" "+%Y_%m%d_%a")
+f_weekly="$base_dir/weekly/$sun_ym/${sun}-${sat}.txt"
+
 ensure_basedir() {
-  mkdir -p "$(get_basedir)"
+  [[ -d $base_dir ]] || mkdir -p "$base_dir"
 }
-ensure_dir() {
-  [[ -d "$1" ]] || mkdir -p "$1"
+find_up() {
+  local dir=$PWD
+  while [[ $dir != "/" ]]; do
+    [[ -e $dir/$1 ]] && return 0
+    dir=${dir%/*}
+    dir=${dir:-/}
+  done
+  return 1
 }
 ensure_git_managed() {
   (
-    cd "$(get_basedir)"|| return 1
-    is_git_repo || git init
+    cd "$base_dir" || return 1
+    find_up .git || git init
   )
 }
 ensure_file() {
-  local f="$1"
-  fdir=$(dirname "$f")
-  ensure_dir "$fdir"
+  local file="$1"
   local content="$2"
-  [[ -f "$f" ]] || echo "$content">"$f"
+
+  [[ -f "$file" ]] && return 0
+  local fdir="${file%/*}"
+  [[ -d "$fdir" ]] || mkdir -p "$fdir"
+  printf "\n# %s\n---\n" "$content">"$file"
+  echo "">>"$file"
 }
 ensure_files() {
-  ensure_file "$(get_project_file)" "$(get_project_content)"
-  ensure_file "$(get_weekly_file)" "$(get_weekly_content)"
-  ensure_file "$(get_daily_file)" "$(get_daily_content)"
-  ensure_file "$(get_daily_detail_file)" "$(get_daily_detail_content)"
-  ensure_file "$(get_todo_file)" "$(get_todo_content)"
-  ensure_file "$(get_sticky_file)" "$(get_sticky_content)"
-}
-get_content() {
-  echo "# $1"
-  echo
-  echo "---"
-  echo
-}
-get_todo_content() {
-  get_content "TODO"
-}
-get_sticky_content() {
-  get_content "固定メモ"
-}
-get_project_content() {
-  get_content "プロジェクト進行状況"
-}
-get_weekly_content() {
-  sun_s=$(get_sun_of_week)
-  sat_s=$(get_sat_of_week)
-  sun=$(format_dt "$sun_s" "+%Y_%m%d_%a")
-  sat=$(format_dt "$sat_s" "+%Y_%m%d_%a")
-  get_content "週次：${sun}-${sat}"
-}
-get_daily_content() {
-  get_content "日次: $(format_epoc_dt '+%Y/%m/%d(%a)')"
-}
-get_daily_detail_content() {
-  get_content "日次詳細: $(format_epoc_dt '+%Y/%m/%d(%a)')"
+  ensure_file "$f_project" "プロジェクト進行状況"
+  ensure_file "$f_weekly" "週次：${sun}-${sat}"
+  ensure_file "$f_daily" "日次: $dt_ymda2"
+  ensure_file "$f_daily_detail" "日次詳細: $dt_ymda2"
+  ensure_file "$f_todo" "TODO"
+  ensure_file "$f_sticky" "固定メモ"
 }
 git_commit() {
   (
-    cd "$(get_basedir)" || return 1
+    cd "$base_dir" || return 1
     git add -A
     [[ -n $(git status -s| wc -l| tr -d ' ') ]] || return 1
     git commit -m "update" 1>/dev/null
@@ -104,16 +71,14 @@ git_commit() {
 }
 open_files_with_nvim() {
   (
-    cd "$(get_basedir)" || exit
-    project=$(get_project_file)
-    daily=$(get_daily_file)
-    daily_detail=$(get_daily_detail_file)
-    todo=$(get_todo_file)
-    sticky=$(get_sticky_file)
-    weekly=$(get_weekly_file)
-    nvim "$project" -c "vsplit $daily_detail | vsplit $sticky| wincmd 2h | split $weekly| split $daily| split $todo | wincmd 3k"
+    cd "$base_dir" || exit
+    nvim "$f_project" -c "set nowrap | vsplit $f_weekly\
+      | split $f_daily_detail | wincmd h | split $f_daily\
+      | wincmd k | wincmd l | vsplit $f_todo | vsplit $f_sticky\
+      | wincmd j"
   )
 }
+
 ensure_basedir
 ensure_git_managed
 ensure_files

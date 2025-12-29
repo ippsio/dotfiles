@@ -121,9 +121,9 @@ python_prompt() {
   if [[ -z "$verf" ]]; then
     return 0
   elif [[ -n "${VIRTUAL_ENV}" ]]; then
-    printf "(python %s,%s)" "$(<$verf)" "${VIRTUAL_ENV/$HOME/\$HOME}"
+    printf "%%F{66}(python %s,%s)%%f" "$(<$verf)" "${VIRTUAL_ENV/$HOME/\$HOME}"
   else
-    printf "(python %s,%s)" "$(<$verf)" "${verf/$HOME/\$HOME}"
+    printf "%%F{66}(python %s,%s)%%f" "$(<$verf)" "${verf/$HOME/\$HOME}"
   fi
 }
 rbenv_prompt() {
@@ -131,7 +131,7 @@ rbenv_prompt() {
   if [[ -z "$verf" ]]; then
     return 0
   else
-    printf "(ruby %s,%s)" "$(<$verf)" "${verf/$HOME/\$HOME}"
+    printf "%F{66}(ruby %s,%s)%f" "$(<$verf)" "${verf/$HOME/\$HOME}"
   fi
 }
 basic_prompt() {

@@ -72,7 +72,11 @@ vim.lsp.config("rubocop", {
 })
 
 vim.lsp.config("bashls", {
-  cmd = { "node", "--experimental-wasm-reftypes", vim.fn.stdpath("data") .. "/mason/packages/bash-language-server/node_modules/.bin/bash-language-server", "start" },
+  cmd = {
+    "node",
+    vim.fn.stdpath("data") .. "/mason/packages/bash-language-server/node_modules/.bin/bash-language-server",
+    "start"
+  },
 })
 vim.lsp.enable("bashls")
 
