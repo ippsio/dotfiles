@@ -128,9 +128,9 @@ git_prompt() {
     local git_caution=
     local git_caution_ar
     git_caution_ar=()
-    git_caution_ar+=( "%K{1}${merge}%k")
-    git_caution_ar+=( "%K{1}${cherrypick}%k")
-    git_caution_ar+=( "%K{1}${rebase}%k")
+    [[ -n "$merge" ]] && git_caution_ar+=( "%K{1}${merge}%k")
+    [[ -n "$cherrypick" ]] && git_caution_ar+=( "%K{1}${cherrypick}%k")
+    [[ -n "$rebase" ]] && git_caution_ar+=( "%K{1}${rebase}%k")
     git_caution_ar=(${git_caution_ar[@]:#""(f)})
     local git_caution=$( print -n -- "${(j: :)git_caution_ar[@]}")
 
