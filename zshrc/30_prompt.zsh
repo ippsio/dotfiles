@@ -149,9 +149,9 @@ git_prompt() {
     [[ -n "$git_caution" ]] && printf " %s" "$git_caution"
     [[ -n "$repo_branch" ]] && printf "%s" "$repo_branch"
     t2=${${EPOCHREALTIME/./}[1,13]}
-    td1=$(( t1 - t0 ))
-    td2=$(( t2 - t1 ))
-    echo "(${td1}ms+${td2}ms)"
+    local t_delta1=$(( t1 - t0 ))
+    local t_delta2=$(( t2 - t1 ))
+    printf "%%F{8}(%sms+%sms)%%f\n" "$t_delta1" "$t_delta2"
   fi
 }
 python_prompt() {
