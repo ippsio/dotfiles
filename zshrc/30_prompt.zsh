@@ -101,19 +101,57 @@ git_prompt() {
     local rebase
     [[ -f "$gitdir/REBASE_HEAD" ]] && rebase="REBASE "
 
-    local workingtree="%F{1}untracked:${untracked} unstaged:${unstaged}%f"
-    local unmerged_str
-    local stash_str
-    unmerged_str=$( [[ $unmerged -ge 1 ]] && print -n "UNMERGED:${unmerged} " )
-    stash_str=$( [[ $stash -ge 1 ]] && print -n "STASH:${stash} " )
-    local unmerged_stash_stage="%F{63}${unmerged_str}${stash_str}%f%F{168}staged:${staged}%f"
-    local aheadbehind="%F{200}A${ahead} B${behind}%f"
-    local git_caution="%K{1}${merge}${cherrypick}${rebase}%f%k"
-    local repo_branch="%F{8}${repo} %F{8}${branch}%f %F{red}track(${remote:-none})%f "
+    local workingtree=
+    local workingtree_ar
+    workingtree_ar=()
+    [[ $untracked -ge 1 ]] && workingtree_ar+=( "%F{1}untracked:${untracked}%f" )
+    [[ $unstaged -ge 1 ]] && workingtree_ar+=( "%F{1}unstaged:${unstaged}%f" )
+    workingtree_ar=(${workingtree_ar[@]:#""(f)})
+    local workingtree=$( print -n -- "${(j: :)workingtree_ar[@]}")
+
+    local unmerged_stash_stage=
+    local uss_ar
+    uss_ar=()
+    [[ $unmerged -ge 1 ]] && uss_ar+=( "%F{63}UNMERGED:${unmerged}%f" )
+    [[ $stash -ge 1 ]] && uss_ar+=( "%F{63}STASH:${stash}%f" )
+    [[ $staged -ge 1 ]] && uss_ar+=( "%F{168}staged:${staged}%f" )
+    uss_ar=(${uss_ar[@]:#""(f)})
+    local unmerged_stash_stage=$( print -n -- "${(j: :)uss_ar[@]}")
+
+    local aheadbehind=
+    local ab_ar
+    ab_ar=()
+    ab_ar+=( "%F{200}A${ahead}%f" )
+    ab_ar+=( "%F{200}B${behind}%f" )
+    local aheadbehind=$( print -n -- "${(j: :)ab_ar[@]}")
+
+    local git_caution=
+    local git_caution_ar
+    git_caution_ar=()
+    git_caution_ar+=( "%K{1}${merge}%k")
+    git_caution_ar+=( "%K{1}${cherrypick}%k")
+    git_caution_ar+=( "%K{1}${rebase}%k")
+    git_caution_ar=(${git_caution_ar[@]:#""(f)})
+    local git_caution=$( print -n -- "${(j: :)git_caution_ar[@]}")
+
+    local repo_branch=
+    local repo_branch_ar
+    repo_branch_ar=()
+    repo_branch_ar+=( "%F{8}${repo}" )
+    repo_branch_ar+=( "%F{8}${branch}" )
+    repo_branch_ar+=( "%F{red}track(${remote:-none})%f" )
+    repo_branch_ar=(${repo_branch_ar[@]:#""(f)})
+    local repo_branch=$( print -n -- "${(j: :)repo_branch_ar[@]}")
+
+    [[ -n "$workingtree" ]] && printf "[%s]" "$workingtree"
+    [[ -n "$unmerged_stash_stage" ]] && printf "[%s]" "$unmerged_stash_stage"
+    [[ -n "$aheadbehind" ]] && printf "[%s]" "$aheadbehind"
+    [[ -n "$git_caution" ]] && printf " %s" "$git_caution"
+    [[ -n "$repo_branch" ]] && printf "%s" "$repo_branch"
     t2=${${EPOCHREALTIME/./}[1,13]}
     td1=$(( t1 - t0 ))
     td2=$(( t2 - t1 ))
-    echo "[${workingtree}][${unmerged_stash_stage}][${aheadbehind}] ${git_caution}${repo_branch}(${td1}ms+${td2}ms)"
+    echo "(${td1}ms+${td2}ms)"
   fi
 }
 python_prompt() {
