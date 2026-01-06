@@ -3,7 +3,7 @@
 file="$1"
 line="$2"
 script="
-source ~/dotfiles/zshrc/00_export.zsh
+source $HOME/dotfiles/zshrc/00_export.zsh
 eval '$(direnv hook zsh)'
 nvim +${line:-1} '$file'
 "

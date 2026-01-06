@@ -64,11 +64,12 @@ format() {
 }
 
 format2() {
-  awk -v fname="$1" -v from="$2" -v to="$3" -v h="$(printf "%0${ABBREV_H_LEN}d" 0)" '
+  local fname
+  fname=$(basename "$1")
+  awk -v fname="$fname" -v from="$2" -v to="$3" '
     {
-      # 62b9a4b5 bin/tmux/tmux_memory (ippsio 2023-07-29  1) #!/usr/bin/env bash
       if (from <= NR && NR <= to) {
-        printf "%s %s (------ %s %2d) %s\n", h, fname, "0000-00-00", NR, $0
+        printf "%s(%2d) %s\n", fname, NR, $0
       }
     }
   '< "$1"
@@ -137,7 +138,7 @@ line_hi() {
 is_present || exit 1
 (
   cd "${GIT_ROOT}" || exit;
-  blame_res=$(git blame --line-porcelain -L "$(line_from)","$(line_to)" "${FNAME_REL}")
+  blame_res=$(git blame --line-porcelain -L "$(line_from)","$(line_to)" "${FNAME_REL}" 2>/dev/null)
   # shellcheck disable=SC2181
   if [[ $? == 0 ]]; then
     res=$(format "$blame_res")

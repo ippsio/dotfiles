@@ -10,4 +10,4 @@ bind stage C      !git commit
 bind stage - >bash -c "~/dotfiles/bin/tig/tig_git_checkout_-- %(file)"
 bind stage h view-close-no-quit
 bind stage E >bash -c "~/dotfiles/bin/tig/tig_edit_with_vim_on_tmux %(file) %(lineno)"
-
+bind stage <C-g> !bash -c "$HOME/dotfiles/bin/tig/tig_copy_filename %(file)"

@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 h=$(git log -1 --pretty="%h" "$1");
-if [[ -n "${h}" ]]; then
+if [[ -n "$h" ]]; then
   printf "%s" "$h"| pbcopy
-  printf "HASH COPIED '%s' " "${h}";
+  printf "HASH COPIED '%s' " "$h";
 else
   printf 'NOTHING COPIED!'
 fi

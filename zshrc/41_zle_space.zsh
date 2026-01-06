@@ -37,6 +37,7 @@ zle_space() {
   if [[ -e Gemfile ]]; then
     lbuf_subtract "be" "bundle exec " && return 0
     lbuf_subtract "c" "bundle exec rails c" && return 0
+    lbuf_subtract "s" "bundle exec rails s" && return 0
     lbuf_subtract_rbuf_eval "rake" "bundle exec rake " "fzf_bundle_exec_rake" && return 0
     lbuf_subtract "rs" "bundle exec rails s -b 0.0.0.0" && return 0
     lbuf_subtract "sidekiq" "bundle exec sidekiq -C config/sidekiq.yml" && return 0

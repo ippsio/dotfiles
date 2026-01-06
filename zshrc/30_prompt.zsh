@@ -137,8 +137,8 @@ git_prompt() {
     local repo_branch=
     local repo_branch_ar
     repo_branch_ar=()
-    repo_branch_ar+=( "%F{8}${repo}" )
-    repo_branch_ar+=( "%F{8}${branch}" )
+    repo_branch_ar+=( "%F{3}${repo}" )
+    repo_branch_ar+=( "%F{6}${branch}" )
     repo_branch_ar+=( "%F{red}track(${remote:-none})%f" )
     repo_branch_ar=(${repo_branch_ar[@]:#""(f)})
     local repo_branch=$( print -n -- "${(j: :)repo_branch_ar[@]}")
@@ -169,7 +169,7 @@ rbenv_prompt() {
   if [[ -z "$verf" ]]; then
     return 0
   else
-    printf "%F{66}(ruby %s,%s)%f" "$(<$verf)" "${verf/$HOME/\$HOME}"
+    printf "%%F{66}(ruby %s,%s)%f" "$(<$verf)" "${verf/$HOME/\$HOME}"
   fi
 }
 basic_prompt() {
