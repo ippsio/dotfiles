@@ -5,9 +5,12 @@ if ! tmux_usable_environment; then
 fi
 
 if not_on_tmux_yet; then
-  tmux_session_new
   while true; do
-    tmux_wait_for_bye
+    tmux_session_new
+    tmux_wait_for_bye && break
+  done
+
+  while true; do
     tmux_session_attach || exit
   done
 fi

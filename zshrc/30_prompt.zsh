@@ -169,7 +169,7 @@ rbenv_prompt() {
   if [[ -z "$verf" ]]; then
     return 0
   else
-    printf "%%F{66}(ruby %s,%s)%f" "$(<$verf)" "${verf/$HOME/\$HOME}"
+    printf "%%F{66}(ruby %s,%s)%%f" "$(<$verf)" "${verf/$HOME/\$HOME}"
   fi
 }
 basic_prompt() {

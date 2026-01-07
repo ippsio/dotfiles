@@ -14,10 +14,12 @@ function! s:init_fern() abort
   nmap <buffer> <C-l> <C-w>l
   nmap <buffer> <Left> <Plug>(fern-action-leave)
   nmap <buffer> <Right> <Plug>(fern-action-open-or-expand)
+  nmap <buffer> i <Plug>(fern-action-open:vsplit)
+  nmap <buffer> o <Plug>(fern-action-open:split)
 endfunction
 
 augroup fern-custom
   autocmd! *
   autocmd FileType fern call s:init_fern()
-  autocmd WinEnter * if &filetype != 'fern' | exec 'FernDo close -stay' | endif
+  "autocmd WinEnter * if &filetype != 'fern' | exec 'FernDo close -stay' | endif
 augroup END

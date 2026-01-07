@@ -46,7 +46,12 @@ tmux_session_new() {
 }
 
 tmux_wait_for_bye() {
-  for i in 3 2 1 "bye"; do echo "$i"; sleep 0.5; done
+  trap 'trap - INT; echo "Interupt"; return 1' INT # SIGINT(ctrl-c)したらreturn 1を実行。
+  for i in 3 2 1 "bye"; do
+    echo "$i"
+    sleep 0.5
+  done
+  trap - INT
   return 0
 }
 
