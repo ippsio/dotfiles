@@ -230,8 +230,7 @@
             "modifiers": {
               "optional": [
                 "control",
-                "option",
-                "command"
+                "option"
               ],
               "mandatory": [
                 "shift"
@@ -241,6 +240,35 @@
           "to": [
             {
               "key_code": "international1"
+            }
+          ],
+          "conditions": [
+            {
+              "type": "keyboard_type_if",
+              "keyboard_types": [
+                "jis"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "Change Command + ^ to expand font size",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "equal_sign",
+            "modifiers": {
+              "mandatory": ["command"],
+              "optional": ["control", "option"]
+            }
+          },
+          "to": [
+            {
+              "key_code": "semicolon",
+              "modifiers": ["left_command"]
             }
           ],
           "conditions": [
