@@ -137,8 +137,8 @@ git_prompt() {
     local repo_branch=
     local repo_branch_ar
     repo_branch_ar=()
-    repo_branch_ar+=( "%F{3}${repo}" )
-    repo_branch_ar+=( "%F{6}${branch}" )
+    repo_branch_ar+=( "%F{3} \uF113 ${repo}" )
+    repo_branch_ar+=( "%F{6} \uF126 ${branch}" )
     repo_branch_ar+=( "%F{red}track(${remote:-none})%f" )
     repo_branch_ar=(${repo_branch_ar[@]:#""(f)})
     local repo_branch=$( print -n -- "${(j: :)repo_branch_ar[@]}")
