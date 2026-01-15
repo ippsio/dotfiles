@@ -138,10 +138,16 @@ call jetpack#add('jackMort/ChatGPT.nvim', {
 call jetpack#add('MunifTanjim/nui.nvim', { 'on_cmd': ['ChatGPT', 'ChatGPTActAs', 'ChatGPTCompleteCode', 'ChatGPTEditWithInstructions', 'ChatGPTRun'], })
 call jetpack#add('folke/trouble.nvim', { 'on_cmd': ['ChatGPT', 'ChatGPTActAs', 'ChatGPTCompleteCode', 'ChatGPTEditWithInstructions', 'ChatGPTRun'], })
 call jetpack#add('nvim-lua/plenary.nvim')
-call jetpack#add('nvim-telescope/telescope.nvim', { 'hook_post_source': 'source $HOME/.config/nvim/rc/lua/telescope.nvim.lua', })
+call jetpack#add('nvim-telescope/telescope.nvim', {
+      \ 'hook_post_source': 'source $HOME/.config/nvim/rc/lua/telescope.nvim.lua',
+      \ })
 " ChatGPT
 
 call jetpack#add('i9wa4/vim-tmux-send-to-ai-cli', { 'on_event': 'VimEnter', })
+call jetpack#add('nvim-orgmode/orgmode', {
+      \ 'on_event': 'VimEnter',
+      \ 'hook_post_source': 'source $HOME/.config/nvim/rc/lua/orgmode.lua',
+      \ })
 
 " プラグインの構成が変わっていた時、ネットワーク接続があれば、jetpack#sync()を実行する。
 let s:available_pkg = stdpath('data') . '/' . 'site' . '/pack/jetpack/opt/available_packages.json'
