@@ -1,22 +1,22 @@
 [colors.normal]
 black = "#14191e"
-red = "#b43c29"
-green = "#00c200"
-yellow = "#c7c400"
 blue = "#2743c7"
-magenta = "#bf3fbd"
 cyan = "#00c5c7"
+green = "#00c200"
+magenta = "#bf3fbd"
+red = "#b43c29"
 white = "#c7c7c7"
+yellow = "#c7c400"
 
 [colors.bright]
 black = "#676767"
-red = "#dc7974"
-green = "#57e690"
-yellow = "#ece100"
 blue = "#a6aaf1"
-magenta = "#e07de0"
 cyan = "#5ffdff"
+green = "#57e690"
+magenta = "#e07de0"
+red = "#dc7974"
 white = "#feffff"
+yellow = "#ece100"
 
 [colors.primary]
 background = "#111120"
@@ -25,39 +25,7 @@ foreground = "#ececec"
 [font]
 size =14
 offset = {x=0, y=-1}
-#normal = {family = "Noto Mono for Powerline"}
-#normal = {family = "JetBrainsMono Nerd Font Mono"}
-#normal = {family = "Source code Pro for Powerline"}
-#normal = {family = "Inconsolata-g for Powerline"}
-#normal = {family = "Inconsolata-dz for Powerline"}
-#normal = {family = "InconsolataDz Nerd Font"}
-#normal = {family = "NotoMono Nerd Font"}
-#normal = {family = "FiraCode Nerd Font Mono"}
 normal = {family = "Moralerspace Neon HWJPDOC"}
-#normal = {family = "FantasqueSansM Nerd Font Mono"}
-#normal = {family = "GoMono Nerd Font Mono"}
-#normal = {family = "CaskaydiaCove Nerd Font Mono"}
-#normal = {family = "Hack Nerd Font Mono"}
-#normal = {family = "RobotoMono Nerd Font Mono"}
-#normal = {family = "VictorMono Nerd Font Mono"}
-#normal = {family = "AurulentSansM Nerd Font Mono"}
-#normal = {family = "Cousine Nerd Font Mono"}
-#normal = {family = "DroidSansM Nerd Font Mono"}
-
-
-
-[[keyboard.bindings]]
-key = "F11"
-chars = "\u0014n" # これは<ctrl-t>n
-
-[[keyboard.bindings]]
-key = "F11"
-mods = "Shift"
-chars = "\u0014N" # これは<ctrl-t>N
-
-[[keyboard.bindings]]
-key = "F12"
-chars = "\u0014z" # これは<ctrl-t>z
 
 [[keyboard.bindings]]
 key = "w"
@@ -84,11 +52,11 @@ key = "n"
 mods = "Command"
 chars = "" # Cmd+mの無効化(うっかり新規ウインドウを開かないでほしい)
 
-[terminal.shell]
-args = ["-l"]
-program = "/opt/homebrew/bin/zsh"
+[[keyboard.bindings]]
+key = "="
+mods = "Command|Shift"
+action = "IncreaseFontSize"
 
 [window]
 decorations = "full"
 opacity = 1.0
-
