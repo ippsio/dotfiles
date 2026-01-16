@@ -8,17 +8,24 @@
       "description": "Change shift + 2 from \" to @",
       "manipulators": [
         {
-          "type": "basic",
+          "conditions": [
+            {
+              "keyboard_types": [
+                "jis"
+              ],
+              "type": "keyboard_type_if"
+            }
+          ],
           "from": {
             "key_code": "2",
             "modifiers": {
+              "mandatory": [
+                "shift"
+              ],
               "optional": [
                 "control",
                 "option",
                 "command"
-              ],
-              "mandatory": [
-                "shift"
               ]
             }
           },
@@ -27,14 +34,7 @@
               "key_code": "open_bracket"
             }
           ],
-          "conditions": [
-            {
-              "type": "keyboard_type_if",
-              "keyboard_types": [
-                "jis"
-              ]
-            }
-          ]
+          "type": "basic"
         }
       ]
     },
@@ -42,17 +42,24 @@
       "description": "Change shift + 6 from & to ^",
       "manipulators": [
         {
-          "type": "basic",
+          "conditions": [
+            {
+              "keyboard_types": [
+                "jis"
+              ],
+              "type": "keyboard_type_if"
+            }
+          ],
           "from": {
             "key_code": "6",
             "modifiers": {
+              "mandatory": [
+                "shift"
+              ],
               "optional": [
                 "control",
                 "option",
                 "command"
-              ],
-              "mandatory": [
-                "shift"
               ]
             }
           },
@@ -61,14 +68,7 @@
               "key_code": "equal_sign"
             }
           ],
-          "conditions": [
-            {
-              "type": "keyboard_type_if",
-              "keyboard_types": [
-                "jis"
-              ]
-            }
-          ]
+          "type": "basic"
         }
       ]
     },
@@ -76,17 +76,24 @@
       "description": "Change shift + 7 from ' to &",
       "manipulators": [
         {
-          "type": "basic",
+          "conditions": [
+            {
+              "keyboard_types": [
+                "jis"
+              ],
+              "type": "keyboard_type_if"
+            }
+          ],
           "from": {
             "key_code": "7",
             "modifiers": {
+              "mandatory": [
+                "shift"
+              ],
               "optional": [
                 "control",
                 "option",
                 "command"
-              ],
-              "mandatory": [
-                "shift"
               ]
             }
           },
@@ -98,14 +105,7 @@
               ]
             }
           ],
-          "conditions": [
-            {
-              "type": "keyboard_type_if",
-              "keyboard_types": [
-                "jis"
-              ]
-            }
-          ]
+          "type": "basic"
         }
       ]
     },
@@ -113,17 +113,24 @@
       "description": "Change shift + 8 from ( to *",
       "manipulators": [
         {
-          "type": "basic",
+          "conditions": [
+            {
+              "keyboard_types": [
+                "jis"
+              ],
+              "type": "keyboard_type_if"
+            }
+          ],
           "from": {
             "key_code": "8",
             "modifiers": {
+              "mandatory": [
+                "shift"
+              ],
               "optional": [
                 "control",
                 "option",
                 "command"
-              ],
-              "mandatory": [
-                "shift"
               ]
             }
           },
@@ -135,14 +142,7 @@
               ]
             }
           ],
-          "conditions": [
-            {
-              "type": "keyboard_type_if",
-              "keyboard_types": [
-                "jis"
-              ]
-            }
-          ]
+          "type": "basic"
         }
       ]
     },
@@ -150,17 +150,24 @@
       "description": "Change shift + 9 from ) to (",
       "manipulators": [
         {
-          "type": "basic",
+          "conditions": [
+            {
+              "keyboard_types": [
+                "jis"
+              ],
+              "type": "keyboard_type_if"
+            }
+          ],
           "from": {
             "key_code": "9",
             "modifiers": {
+              "mandatory": [
+                "shift"
+              ],
               "optional": [
                 "control",
                 "option",
                 "command"
-              ],
-              "mandatory": [
-                "shift"
               ]
             }
           },
@@ -172,14 +179,7 @@
               ]
             }
           ],
-          "conditions": [
-            {
-              "type": "keyboard_type_if",
-              "keyboard_types": [
-                "jis"
-              ]
-            }
-          ]
+          "type": "basic"
         }
       ]
     },
@@ -187,17 +187,24 @@
       "description": "Change shift + 0 from 0 to )",
       "manipulators": [
         {
-          "type": "basic",
+          "conditions": [
+            {
+              "keyboard_types": [
+                "jis"
+              ],
+              "type": "keyboard_type_if"
+            }
+          ],
           "from": {
             "key_code": "0",
             "modifiers": {
+              "mandatory": [
+                "shift"
+              ],
               "optional": [
                 "control",
                 "option",
                 "command"
-              ],
-              "mandatory": [
-                "shift"
               ]
             }
           },
@@ -209,14 +216,7 @@
               ]
             }
           ],
-          "conditions": [
-            {
-              "type": "keyboard_type_if",
-              "keyboard_types": [
-                "jis"
-              ]
-            }
-          ]
+          "type": "basic"
         }
       ]
     },
@@ -224,16 +224,24 @@
       "description": "Change shift + - from = to _",
       "manipulators": [
         {
-          "type": "basic",
+          "conditions": [
+            {
+              "keyboard_types": [
+                "jis"
+              ],
+              "type": "keyboard_type_if"
+            }
+          ],
           "from": {
             "key_code": "hyphen",
             "modifiers": {
-              "optional": [
-                "control",
-                "option"
-              ],
               "mandatory": [
                 "shift"
+              ],
+              "optional": [
+                "control",
+                "option",
+                "command"
               ]
             }
           },
@@ -242,43 +250,7 @@
               "key_code": "international1"
             }
           ],
-          "conditions": [
-            {
-              "type": "keyboard_type_if",
-              "keyboard_types": [
-                "jis"
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "description": "Change Command + ^ to expand font size",
-      "manipulators": [
-        {
-          "type": "basic",
-          "from": {
-            "key_code": "equal_sign",
-            "modifiers": {
-              "mandatory": ["command"],
-              "optional": ["control", "option"]
-            }
-          },
-          "to": [
-            {
-              "key_code": "semicolon",
-              "modifiers": ["left_command"]
-            }
-          ],
-          "conditions": [
-            {
-              "type": "keyboard_type_if",
-              "keyboard_types": [
-                "jis"
-              ]
-            }
-          ]
+          "type": "basic"
         }
       ]
     },
@@ -286,14 +258,21 @@
       "description": "Change ^ to =",
       "manipulators": [
         {
-          "type": "basic",
+          "conditions": [
+            {
+              "keyboard_types": [
+                "jis"
+              ],
+              "type": "keyboard_type_if"
+            }
+          ],
           "from": {
             "key_code": "equal_sign",
             "modifiers": {
+              "mandatory": [],
               "optional": [
                 "control",
-                "option",
-                "command"
+                "option"
               ]
             }
           },
@@ -305,14 +284,7 @@
               ]
             }
           ],
-          "conditions": [
-            {
-              "type": "keyboard_type_if",
-              "keyboard_types": [
-                "jis"
-              ]
-            }
-          ]
+          "type": "basic"
         }
       ]
     },
@@ -320,17 +292,23 @@
       "description": "Change shift + ^ from ~ to +",
       "manipulators": [
         {
-          "type": "basic",
+          "conditions": [
+            {
+              "keyboard_types": [
+                "jis"
+              ],
+              "type": "keyboard_type_if"
+            }
+          ],
           "from": {
             "key_code": "equal_sign",
             "modifiers": {
-              "optional": [
-                "control",
-                "option",
-                "command"
-              ],
               "mandatory": [
                 "shift"
+              ],
+              "optional": [
+                "control",
+                "option"
               ]
             }
           },
@@ -342,14 +320,43 @@
               ]
             }
           ],
+          "type": "basic"
+        }
+      ]
+    },
+    {
+      "description": "Change command + ^ to expand(IncreaseFontSize)",
+      "manipulators": [
+        {
           "conditions": [
             {
-              "type": "keyboard_type_if",
               "keyboard_types": [
                 "jis"
+              ],
+              "type": "keyboard_type_if"
+            }
+          ],
+          "from": {
+            "key_code": "equal_sign",
+            "modifiers": {
+              "mandatory": [
+                "command"
+              ],
+              "optional": [
+                "option",
+                "control"
               ]
             }
-          ]
+          },
+          "to": [
+            {
+              "key_code": "semicolon",
+              "modifiers": [
+                "left_command"
+              ]
+            }
+          ],
+          "type": "basic"
         }
       ]
     },
@@ -357,7 +364,14 @@
       "description": "Change ¥ to `",
       "manipulators": [
         {
-          "type": "basic",
+          "conditions": [
+            {
+              "keyboard_types": [
+                "jis"
+              ],
+              "type": "keyboard_type_if"
+            }
+          ],
           "from": {
             "key_code": "international3",
             "modifiers": {
@@ -376,14 +390,7 @@
               ]
             }
           ],
-          "conditions": [
-            {
-              "type": "keyboard_type_if",
-              "keyboard_types": [
-                "jis"
-              ]
-            }
-          ]
+          "type": "basic"
         }
       ]
     },
@@ -391,17 +398,24 @@
       "description": "Change shift + ¥ from | to ~",
       "manipulators": [
         {
-          "type": "basic",
+          "conditions": [
+            {
+              "keyboard_types": [
+                "jis"
+              ],
+              "type": "keyboard_type_if"
+            }
+          ],
           "from": {
             "key_code": "international3",
             "modifiers": {
+              "mandatory": [
+                "shift"
+              ],
               "optional": [
                 "control",
                 "option",
                 "command"
-              ],
-              "mandatory": [
-                "shift"
               ]
             }
           },
@@ -413,14 +427,7 @@
               ]
             }
           ],
-          "conditions": [
-            {
-              "type": "keyboard_type_if",
-              "keyboard_types": [
-                "jis"
-              ]
-            }
-          ]
+          "type": "basic"
         }
       ]
     },
@@ -428,7 +435,14 @@
       "description": "Change @ to [",
       "manipulators": [
         {
-          "type": "basic",
+          "conditions": [
+            {
+              "keyboard_types": [
+                "jis"
+              ],
+              "type": "keyboard_type_if"
+            }
+          ],
           "from": {
             "key_code": "open_bracket",
             "modifiers": {
@@ -444,14 +458,7 @@
               "key_code": "close_bracket"
             }
           ],
-          "conditions": [
-            {
-              "type": "keyboard_type_if",
-              "keyboard_types": [
-                "jis"
-              ]
-            }
-          ]
+          "type": "basic"
         }
       ]
     },
@@ -459,17 +466,24 @@
       "description": "Change shift + @ from ` to {",
       "manipulators": [
         {
-          "type": "basic",
+          "conditions": [
+            {
+              "keyboard_types": [
+                "jis"
+              ],
+              "type": "keyboard_type_if"
+            }
+          ],
           "from": {
             "key_code": "open_bracket",
             "modifiers": {
+              "mandatory": [
+                "shift"
+              ],
               "optional": [
                 "control",
                 "option",
                 "command"
-              ],
-              "mandatory": [
-                "shift"
               ]
             }
           },
@@ -481,14 +495,7 @@
               ]
             }
           ],
-          "conditions": [
-            {
-              "type": "keyboard_type_if",
-              "keyboard_types": [
-                "jis"
-              ]
-            }
-          ]
+          "type": "basic"
         }
       ]
     },
@@ -496,7 +503,14 @@
       "description": "Change [ to ]",
       "manipulators": [
         {
-          "type": "basic",
+          "conditions": [
+            {
+              "keyboard_types": [
+                "jis"
+              ],
+              "type": "keyboard_type_if"
+            }
+          ],
           "from": {
             "key_code": "close_bracket",
             "modifiers": {
@@ -512,14 +526,7 @@
               "key_code": "backslash"
             }
           ],
-          "conditions": [
-            {
-              "type": "keyboard_type_if",
-              "keyboard_types": [
-                "jis"
-              ]
-            }
-          ]
+          "type": "basic"
         }
       ]
     },
@@ -527,17 +534,24 @@
       "description": "Change shift + [ from { to }",
       "manipulators": [
         {
-          "type": "basic",
+          "conditions": [
+            {
+              "keyboard_types": [
+                "jis"
+              ],
+              "type": "keyboard_type_if"
+            }
+          ],
           "from": {
             "key_code": "close_bracket",
             "modifiers": {
+              "mandatory": [
+                "shift"
+              ],
               "optional": [
                 "control",
                 "option",
                 "command"
-              ],
-              "mandatory": [
-                "shift"
               ]
             }
           },
@@ -549,14 +563,7 @@
               ]
             }
           ],
-          "conditions": [
-            {
-              "type": "keyboard_type_if",
-              "keyboard_types": [
-                "jis"
-              ]
-            }
-          ]
+          "type": "basic"
         }
       ]
     },
@@ -564,17 +571,24 @@
       "description": "Change shift + ; from + to :",
       "manipulators": [
         {
-          "type": "basic",
+          "conditions": [
+            {
+              "keyboard_types": [
+                "jis"
+              ],
+              "type": "keyboard_type_if"
+            }
+          ],
           "from": {
             "key_code": "semicolon",
             "modifiers": {
+              "mandatory": [
+                "shift"
+              ],
               "optional": [
                 "control",
                 "option",
                 "command"
-              ],
-              "mandatory": [
-                "shift"
               ]
             }
           },
@@ -583,14 +597,7 @@
               "key_code": "quote"
             }
           ],
-          "conditions": [
-            {
-              "type": "keyboard_type_if",
-              "keyboard_types": [
-                "jis"
-              ]
-            }
-          ]
+          "type": "basic"
         }
       ]
     },
@@ -598,7 +605,14 @@
       "description": "Change : to '",
       "manipulators": [
         {
-          "type": "basic",
+          "conditions": [
+            {
+              "keyboard_types": [
+                "jis"
+              ],
+              "type": "keyboard_type_if"
+            }
+          ],
           "from": {
             "key_code": "quote",
             "modifiers": {
@@ -617,14 +631,7 @@
               ]
             }
           ],
-          "conditions": [
-            {
-              "type": "keyboard_type_if",
-              "keyboard_types": [
-                "jis"
-              ]
-            }
-          ]
+          "type": "basic"
         }
       ]
     },
@@ -632,17 +639,24 @@
       "description": "Change shift + : from * to \"",
       "manipulators": [
         {
-          "type": "basic",
+          "conditions": [
+            {
+              "keyboard_types": [
+                "jis"
+              ],
+              "type": "keyboard_type_if"
+            }
+          ],
           "from": {
             "key_code": "quote",
             "modifiers": {
+              "mandatory": [
+                "shift"
+              ],
               "optional": [
                 "control",
                 "option",
                 "command"
-              ],
-              "mandatory": [
-                "shift"
               ]
             }
           },
@@ -654,14 +668,7 @@
               ]
             }
           ],
-          "conditions": [
-            {
-              "type": "keyboard_type_if",
-              "keyboard_types": [
-                "jis"
-              ]
-            }
-          ]
+          "type": "basic"
         }
       ]
     },
@@ -669,7 +676,14 @@
       "description": "Change ] to \\",
       "manipulators": [
         {
-          "type": "basic",
+          "conditions": [
+            {
+              "keyboard_types": [
+                "jis"
+              ],
+              "type": "keyboard_type_if"
+            }
+          ],
           "from": {
             "key_code": "backslash",
             "modifiers": {
@@ -688,14 +702,7 @@
               ]
             }
           ],
-          "conditions": [
-            {
-              "type": "keyboard_type_if",
-              "keyboard_types": [
-                "jis"
-              ]
-            }
-          ]
+          "type": "basic"
         }
       ]
     },
@@ -703,17 +710,24 @@
       "description": "Change shift + ] from } to |",
       "manipulators": [
         {
-          "type": "basic",
+          "conditions": [
+            {
+              "keyboard_types": [
+                "jis"
+              ],
+              "type": "keyboard_type_if"
+            }
+          ],
           "from": {
             "key_code": "backslash",
             "modifiers": {
+              "mandatory": [
+                "shift"
+              ],
               "optional": [
                 "control",
                 "option",
                 "command"
-              ],
-              "mandatory": [
-                "shift"
               ]
             }
           },
@@ -725,14 +739,7 @@
               ]
             }
           ],
-          "conditions": [
-            {
-              "type": "keyboard_type_if",
-              "keyboard_types": [
-                "jis"
-              ]
-            }
-          ]
+          "type": "basic"
         }
       ]
     }
