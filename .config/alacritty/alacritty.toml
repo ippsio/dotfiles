@@ -53,8 +53,14 @@ mods = "Command"
 chars = "" # Cmd+mの無効化(うっかり新規ウインドウを開かないでほしい)
 
 [[keyboard.bindings]]
-key = "="
-mods = "Command|Shift"
+# Karabiner elementsによって、
+# JISキーボードをUSキーボード配列相当に変換した上で、
+# JISキーボード上の `Command+~`を押した時にフォントサイズを拡大する。
+# PS: なぜ`~`の押下を`key = ";"`と表現しているのか、というのを説明するのが難しいが、
+# .config/karabiner/assets/complex_modifications/50_jis_to_us.jsonの
+# "description": "Change command + ^ to expand(IncreaseFontSize)" あたりを見るとわかるかもしれない。
+key = ";"
+mods = "Command"
 action = "IncreaseFontSize"
 
 [window]
