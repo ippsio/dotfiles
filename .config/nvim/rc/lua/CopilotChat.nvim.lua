@@ -15,6 +15,9 @@ require("CopilotChat").setup({
   question_header = '## User ',
   answer_header = '## Copilot ',
   error_header = '## Error ',
+  mappings = {
+    complete = false, -- Tab補完を無効化
+  }
 })
 -- バッファ全体を対象に日本語で質問
 function CopilotChatAsk(prompt_prefix, prompt_suffix)

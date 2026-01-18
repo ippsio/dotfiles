@@ -21,7 +21,11 @@ call jetpack#add('nvim-treesitter/playground', { 'do': ':TSUpdate', 'on': ['TSPl
 call jetpack#add('vim-jp/vimdoc-ja', { 'on_event': 'VimEnter' })
 " ddc
 call jetpack#add('vim-denops/denops.vim', { 'hook_post_source': 'source $HOME/.config/nvim/rc/vim/denops.vim.vim', })
-call jetpack#add('Shougo/ddc.vim', { 'on_event': ['InsertEnter', 'InsertLwave'], 'depends': [ 'vim-denops/denops.vim' ], 'hook_post_source': 'source $HOME/.config/nvim/rc/vim/ddc.vim.vim', })
+call jetpack#add('Shougo/ddc.vim', {
+      \ 'on_event': ['InsertEnter', 'InsertLeave'],
+      \ 'depends': [ 'vim-denops/denops.vim' ],
+      \ 'hook_post_source': 'source $HOME/.config/nvim/rc/vim/ddc.vim.vim',
+      \ })
 " ddc> ddc-source
 call jetpack#add('Shougo/ddc-around', { 'on_event': 'VimEnter', })
 call jetpack#add('Shougo/ddc-source-lsp', { 'on_event': 'VimEnter', })
@@ -110,15 +114,26 @@ call jetpack#add('tpope/vim-projectionist', { 'on_event': 'VimEnter', 'hook_post
 "call jetpack#add('projekt0n/github-nvim-theme', { 'on_event': 'VimEnter', 'hook_post_source': 'colorscheme github_dark_default', })
 "call jetpack#add('ribru17/bamboo.nvim', { 'on_event': 'VimEnter', 'hook_post_source': 'colorscheme bamboo', })
 call jetpack#add('rebelot/kanagawa.nvim', { 'on_event': 'VimEnter', 'hook_post_source': 'colorscheme kanagawa', })
+"call jetpack#add('vague-theme/vague.nvim', {
+"  \ 'on_event': 'VimEnter',
+"  \ 'hook_post_source': 'source $HOME/.config/nvim/rc/lua/vague.nvim.lua',
+"  \ })
 
 " misc
-call jetpack#add('ippsio/clip_diff.vim', { 'on_event': 'VimEnter', 'hook_post_source': 'source $HOME/.config/nvim/rc/vim/clip_diff.vim.vim', })
+call jetpack#add('ippsio/clip_diff.vim', {
+      \ 'on_event': 'VimEnter',
+      \ 'hook_post_source': 'source $HOME/.config/nvim/rc/vim/clip_diff.vim.vim',
+      \ })
 call jetpack#add('monaqa/dial.nvim', { 'on_event': 'VimEnter', 'hook_post_source': 'source $HOME/.config/nvim/rc/lua/dial.nvim.lua', })
 
 " vim_abolish
 call jetpack#add('tpope/vim-abolish', { 'on_event': 'VimEnter', })
 
-call jetpack#add('github/copilot.vim', { 'on_event': 'VimEnter', })
+" Copilot
+call jetpack#add('github/copilot.vim', {
+      \ 'on_event': 'InsertEnter',
+      \ 'hook_post_source': 'source $HOME/.config/nvim/rc/vim/copilot.vim.vim',
+      \ })
 call jetpack#add('CopilotC-Nvim/CopilotChat.nvim', {
       \ 'on_event': 'VimEnter',
       \ 'hook_source': 'source $HOME/.config/nvim/rc/lua/CopilotChat.nvim.lua',
@@ -135,8 +150,24 @@ call jetpack#add('jackMort/ChatGPT.nvim', {
       \ ],
       \ 'hook_post_source': 'source $HOME/.config/nvim/rc/lua/ChatGPT.nvim.lua',
       \ })
-call jetpack#add('MunifTanjim/nui.nvim', { 'on_cmd': ['ChatGPT', 'ChatGPTActAs', 'ChatGPTCompleteCode', 'ChatGPTEditWithInstructions', 'ChatGPTRun'], })
-call jetpack#add('folke/trouble.nvim', { 'on_cmd': ['ChatGPT', 'ChatGPTActAs', 'ChatGPTCompleteCode', 'ChatGPTEditWithInstructions', 'ChatGPTRun'], })
+call jetpack#add('MunifTanjim/nui.nvim', {
+      \ 'on_cmd': [
+      \   'ChatGPT',
+      \   'ChatGPTActAs',
+      \   'ChatGPTCompleteCode',
+      \   'ChatGPTEditWithInstructions',
+      \   'ChatGPTRun',
+      \ ],
+      \ })
+call jetpack#add('folke/trouble.nvim', {
+      \ 'on_cmd': [
+      \ 'ChatGPT',
+      \ 'ChatGPTActAs',
+      \ 'ChatGPTCompleteCode',
+      \ 'ChatGPTEditWithInstructions',
+      \ 'ChatGPTRun',
+      \ ],
+      \ })
 call jetpack#add('nvim-lua/plenary.nvim')
 call jetpack#add('nvim-telescope/telescope.nvim', {
       \ 'hook_post_source': 'source $HOME/.config/nvim/rc/lua/telescope.nvim.lua',
@@ -148,6 +179,12 @@ call jetpack#add('nvim-orgmode/orgmode', {
       \ 'on_event': 'VimEnter',
       \ 'hook_post_source': 'source $HOME/.config/nvim/rc/lua/orgmode.lua',
       \ })
+" Gemini
+call jetpack#add('kiddos/gemini.nvim', {
+      \ 'on_event': 'VimEnter',
+      \ 'hook_post_source': 'source $HOME/.config/nvim/rc/lua/gemini.nvim.lua',
+      \ })
+
 
 " プラグインの構成が変わっていた時、ネットワーク接続があれば、jetpack#sync()を実行する。
 let s:available_pkg = stdpath('data') . '/' . 'site' . '/pack/jetpack/opt/available_packages.json'

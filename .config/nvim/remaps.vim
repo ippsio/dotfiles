@@ -119,9 +119,6 @@ cnoremap <Down> <C-n>
 " [保存、終了系]
 " ノーマルモード中にQは:q<CR>とみなす
 nnoremap     qq :<C-u>:q<CR>
-cnoreabbrev  qq qa
-cnoreabbrev qqq qa!
-cnoreabbrev wqq wqa
 
 " ノーマルモード中に素早くqqと入力した場合は:q<CR>とみなす
 nnoremap Q :<C-u>q<CR>
