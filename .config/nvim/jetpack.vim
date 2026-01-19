@@ -16,7 +16,6 @@ call jetpack#add('tani/vim-jetpack', { 'opt': 1 })
 
 " vim
 call jetpack#add('nvim-treesitter/nvim-treesitter', { 'on_event': 'VimEnter', 'do': ':TSUpdate', })
-call jetpack#add('nvim-treesitter/playground', { 'do': ':TSUpdate', 'on': ['TSPlaygroundToggle', 'TSHighlightCapturesUnderCursor'] })
 
 call jetpack#add('vim-jp/vimdoc-ja', { 'on_event': 'VimEnter' })
 " ddc
@@ -113,7 +112,7 @@ call jetpack#add('tpope/vim-projectionist', { 'on_event': 'VimEnter', 'hook_post
 "colorscheme
 "call jetpack#add('projekt0n/github-nvim-theme', { 'on_event': 'VimEnter', 'hook_post_source': 'colorscheme github_dark_default', })
 "call jetpack#add('ribru17/bamboo.nvim', { 'on_event': 'VimEnter', 'hook_post_source': 'colorscheme bamboo', })
-call jetpack#add('rebelot/kanagawa.nvim', { 'on_event': 'VimEnter', 'hook_post_source': 'colorscheme kanagawa', })
+"call jetpack#add('rebelot/kanagawa.nvim', { 'on_event': 'VimEnter', 'hook_post_source': 'colorscheme kanagawa', })
 "call jetpack#add('vague-theme/vague.nvim', {
 "  \ 'on_event': 'VimEnter',
 "  \ 'hook_post_source': 'source $HOME/.config/nvim/rc/lua/vague.nvim.lua',
