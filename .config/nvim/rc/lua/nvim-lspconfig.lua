@@ -1,9 +1,5 @@
 -- winbar を有効にし、nvim-navic が提供する文字列を表示
 vim.o.winbar = "%{%v:lua.require'nvim-navic'.get_location()%}"
-
--- MasonとMason-LSPconfigのセットアップ
-require("mason").setup()
-
 local navic = require("nvim-navic")
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 vim.lsp.config('*', {

@@ -41,8 +41,15 @@ call jetpack#add('Shougo/pum.vim', { 'on_event': 'VimEnter', 'hook_post_source':
 
 " lsp
 " lsp> config
-call jetpack#add('williamboman/mason.nvim', { 'on_event': 'VimEnter' })
-call jetpack#add('neovim/nvim-lspconfig', { 'on_event': 'VimEnter', 'hook_source': 'source $HOME/.config/nvim/rc/lua/nvim-lspconfig.lua', })
+call jetpack#add('williamboman/mason.nvim', {
+      \ 'depends': ['neovim/nvim-lspconfig'],
+      \ 'on_event': 'VimEnter',
+      \ 'hook_source': 'source $HOME/.config/nvim/rc/lua/mason.nvim.lua',
+      \ })
+call jetpack#add('neovim/nvim-lspconfig', {
+      \ 'on_event': 'VimEnter',
+      \ 'hook_source': 'source $HOME/.config/nvim/rc/lua/nvim-lspconfig.lua',
+      \ })
 call jetpack#add('ray-x/lsp_signature.nvim', { 'on_event': 'VimEnter', })
 " lsp> progress message
 call jetpack#add('j-hui/fidget.nvim', { 'on_event': 'VimEnter', 'hook_post_source': 'source $HOME/.config/nvim/rc/lua/fidget.nvim.lua',})
