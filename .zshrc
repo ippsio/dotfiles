@@ -14,6 +14,7 @@ source $HOME/dotfiles/zshrc/00_export.zsh
 source $HOME/dotfiles/zshrc/00_export_color.zsh
 source $HOME/dotfiles/zshrc/10_prepare.zsh
 source $HOME/dotfiles/zshrc/30_prompt.zsh
+source $HOME/dotfiles/zshrc/31_zsh_hook.zsh
 source $HOME/dotfiles/zshrc/40_bindkey.zsh
 source $HOME/dotfiles/zshrc/50_cmd_hack.zsh
 source $HOME/dotfiles/zshrc/60_zsh_plugin.zsh

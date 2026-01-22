@@ -1,5 +1,6 @@
 bind stage l      view-blame
-bind stage <Left>      view-close
+bind stage <Left> view-close
+bind stage o      view-close
 # 経験・実験より知った事ですが、Shift+Upは'A'、Shift+Downは'B'として扱われるようです。
 # <Shift-Up>、<ShiftUp>、<S-Up>等としても、Shift+Up時のキーバインド設定を行ないたいという意志がtigに伝わりません。
 # Shift+Upで前のファイル

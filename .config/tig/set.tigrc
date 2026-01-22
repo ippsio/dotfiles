@@ -66,9 +66,8 @@ set ignore-case = true
 # diffビューの中で使うdiffオプションの空白で区切られた文字列
 set diff-options = -m --first-parent
 # マウスサポートを有効にするかどうか
-set mouse = true
+set mouse = false
 # 選択された行数をエディタコマンドへ渡すかどうか
 set editor-line-number = yes
 # リポジトリ内の監視されているファイルへの修正に基づいて、どうやってビューがリフレッシュされるかを設定
-set refresh-mode = periodic
-set refresh-interval = 3
+set refresh-mode = auto

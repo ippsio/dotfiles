@@ -1,5 +1,6 @@
-bind status l      enter
+bind status l       enter
 bind status <Right> enter
+bind status o       enter
 bind status C      !git commit
 bind status - >bash -c "~/dotfiles/bin/tig/tig_git_checkout_-- %(file)"
 bind status D ?bash -c "(set -x; rm %(file))"
