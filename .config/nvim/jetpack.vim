@@ -135,15 +135,28 @@ call jetpack#add('monaqa/dial.nvim', { 'on_event': 'VimEnter', 'hook_post_source
 " vim_abolish
 call jetpack#add('tpope/vim-abolish', { 'on_event': 'VimEnter', })
 
-" Copilot
-call jetpack#add('github/copilot.vim', {
-      \ 'on_event': 'InsertEnter',
-      \ 'hook_post_source': 'source $HOME/.config/nvim/rc/vim/copilot.vim.vim',
-      \ })
+" Copilot (disabled - using Claude via minuet-ai.nvim instead)
+"call jetpack#add('github/copilot.vim', {
+"      \ 'on_event': 'InsertEnter',
+"      \ 'hook_post_source': 'source $HOME/.config/nvim/rc/vim/copilot.vim.vim',
+"      \ })
 call jetpack#add('CopilotC-Nvim/CopilotChat.nvim', {
       \ 'on_event': 'VimEnter',
       \ 'hook_source': 'source $HOME/.config/nvim/rc/lua/CopilotChat.nvim.lua',
       \ 'depends': ['nvim-lua/plenary.nvim'],
+      \ })
+" Avante (Claude AI)
+call jetpack#add('yetone/avante.nvim', {
+      \ 'on_event': 'VimEnter',
+      \ 'do': 'make',
+      \ 'depends': ['nvim-lua/plenary.nvim', 'MunifTanjim/nui.nvim', 'nvim-treesitter/nvim-treesitter'],
+      \ 'hook_post_source': 'source $HOME/.config/nvim/rc/lua/avante.nvim.lua',
+      \ })
+" Minuet (Claude inline completion)
+call jetpack#add('milanglacier/minuet-ai.nvim', {
+      \ 'on_event': 'InsertEnter',
+      \ 'depends': ['nvim-lua/plenary.nvim'],
+      \ 'hook_post_source': 'source $HOME/.config/nvim/rc/lua/minuet-ai.nvim.lua',
       \ })
 " ChatGPT
 call jetpack#add('jackMort/ChatGPT.nvim', {

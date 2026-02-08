@@ -10,6 +10,7 @@ do_zle_space() {
 zle_space() {
   expand_global_alias
 
+  lbuf_subtract_rbuf_eval "ghq " "cd " "ghq list -p | fzf" && return 0
   lbuf_subtract_rbuf_eval "de" "" "docker_ps_fzf_exec" && return 0
   lbuf_subtract_back "dej" 'deepl-cli-ej ""' && return 0
   lbuf_subtract_back "gej" 'gc-translate-cli-ej ""' && return 0

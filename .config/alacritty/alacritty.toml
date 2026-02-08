@@ -47,10 +47,10 @@ key = "t"
 mods = "Command"
 chars = "" # Cmd+mの無効化(うっかりタブを開かないでほしい)
 
-[[keyboard.bindings]]
-key = "n"
-mods = "Command"
-chars = "" # Cmd+mの無効化(うっかり新規ウインドウを開かないでほしい)
+# [[keyboard.bindings]]
+# key = "n"
+# mods = "Command"
+# chars = "" # Cmd+mの無効化(うっかり新規ウインドウを開かないでほしい)
 
 [[keyboard.bindings]]
 # Karabiner elementsによって、

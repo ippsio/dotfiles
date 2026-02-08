@@ -24,7 +24,8 @@ tmux_idx_next_new() {
   (
     tmux ls -F "#S" 2>/dev/null
     seq 1 16
-  ) | sort --general-numeric-sort\
+  ) | grep '^[0-9]\+$'\
+    | sort --general-numeric-sort\
     | uniq --unique\
     | head -1
   return 0
