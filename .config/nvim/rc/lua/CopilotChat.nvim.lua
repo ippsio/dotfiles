@@ -1,5 +1,6 @@
 require("CopilotChat").setup({
   debug = false,
+  -- model = "gpt-5-mini",
   window = {
     layout = 'vertical',
   },
