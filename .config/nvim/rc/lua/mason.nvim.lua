@@ -3,7 +3,6 @@ require("mason").setup()
 local mason_registry = require("mason-registry")
 local ensure_installed = {
   "bash-language-server",
-  "gopls",
   "lua-language-server",
   "pyright",
   "ruby-lsp",
