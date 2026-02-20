@@ -83,6 +83,16 @@ vim.lsp.enable("ts_ls")
 
 -- Diagnostic の設定
 vim.diagnostic.enable(true)
+
+-- ファイル保存時にも診断設定を再適用する
+vim.api.nvim_create_autocmd("BufWritePost", {
+  callback = function()
+    vim.diagnostic.enable(true)
+    vim.diagnostic.config({
+      update_in_insert = true
+    })
+  end,
+})
 vim.diagnostic.config({
   update_in_insert = true,
   virtual_text = {

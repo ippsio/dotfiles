@@ -1,49 +1,98 @@
 #!/usr/bin/env bash
 readonly ARG1="$1"
+
 win_zoomed() {
-  if [[ $(tmux display-message -p '#{window_zoomed_flag}') == "1" ]]; then
-    return 0
-  else
-    return 1
-  fi
+  [[ $(tmux display-message -p '#{window_zoomed_flag}') == "1" ]]
 }
 
 reverse_if_needed() {
   if [[ "${ARG1}" == "--reverse" ]]; then
-    echo "$1"| tail -r
+    echo "$1" | tail -r
   else
     echo "$1"
   fi
 }
 
-select_next_win() {
-  w_list=$(tmux list-windows -F '#{window_index},active=#{window_active}')
-  w_list=$(echo "${w_list}"; echo "${w_list}")
-  w_list=$(reverse_if_needed "${w_list}")
-  w_idx=$(echo "${w_list}"| grep -A 1 "active=1"| awk -F',' 'NR==2 {print $1}')
-  tmux select-window -t "${w_idx}"
-}
-
 select_next_pane() {
+  local p_list p_idx
   p_list=$(tmux list-panes -F '#{pane_index},active=#{pane_active}')
   p_list=$(reverse_if_needed "${p_list}")
-  p_idx=$(echo "${p_list}"| grep -A 1 "active=1"| awk -F',' 'NR==2 {print $1}')
-  if [[ -z "${p_idx}" ]]; then
-    return 1
-  fi
+  p_idx=$(echo "${p_list}" | grep -A 1 "active=1" | awk -F',' 'NR==2 {print $1}')
+  [[ -z "${p_idx}" ]] && return 1
   tmux select-pane -t "${p_idx}"
 }
 
 select_first_pane() {
+  local p_list p_idx
   p_list=$(tmux list-panes -F '#{pane_index}')
   p_list=$(reverse_if_needed "${p_list}")
-  p_idx=$(echo "${p_list}"| awk -F',' 'NR==1 {print $1}')
+  p_idx=$(echo "${p_list}" | awk 'NR==1 {print $1}')
   tmux select-pane -t "${p_idx}"
 }
 
+is_last_window() {
+  local w_list last_entry
+  w_list=$(tmux list-windows -F '#{window_index},active=#{window_active}')
+  w_list=$(reverse_if_needed "${w_list}")
+  last_entry=$(echo "${w_list}" | tail -1)
+  echo "${last_entry}" | grep -q "active=1"
+}
+
+select_next_win() {
+  local w_list w_idx
+  w_list=$(tmux list-windows -F '#{window_index},active=#{window_active}')
+  w_list=$(echo "${w_list}"; echo "${w_list}")
+  w_list=$(reverse_if_needed "${w_list}")
+  w_idx=$(echo "${w_list}" | grep -A 1 "active=1" | awk -F',' 'NR==2 {print $1}')
+  tmux select-window -t "${w_idx}"
+}
+
+move_to_next_session() {
+  local s_list s_count current_session current_idx next_idx next_session
+  local w_list w_idx p_list p_idx zoomed
+
+  s_list=$(tmux list-sessions -F '#{session_name}')
+  s_count=$(echo "${s_list}" | wc -l | tr -d ' ')
+
+  if [[ "${s_count}" -le 1 ]]; then
+    # Single session: wrap within (existing behavior)
+    select_next_win
+    win_zoomed || select_first_pane
+    return
+  fi
+
+  # Find next/previous session using direction-aware list
+  s_list=$(reverse_if_needed "${s_list}")
+  current_session=$(tmux display-message -p '#{session_name}')
+  current_idx=$(echo "${s_list}" | grep -n "^${current_session}$" | head -1 | cut -d: -f1)
+  next_idx=$(( current_idx % s_count + 1 ))
+  next_session=$(echo "${s_list}" | sed -n "${next_idx}p")
+
+  # Determine first window in target session (direction-aware)
+  w_list=$(tmux list-windows -t "${next_session}" -F '#{window_index}')
+  w_list=$(reverse_if_needed "${w_list}")
+  w_idx=$(echo "${w_list}" | head -1)
+
+  # Select window, then pane if not zoomed
+  tmux select-window -t "${next_session}:${w_idx}"
+  zoomed=$(tmux display-message -t "${next_session}:${w_idx}" -p '#{window_zoomed_flag}')
+  if [[ "${zoomed}" != "1" ]]; then
+    p_list=$(tmux list-panes -t "${next_session}:${w_idx}" -F '#{pane_index}')
+    p_list=$(reverse_if_needed "${p_list}")
+    p_idx=$(echo "${p_list}" | head -1)
+    tmux select-pane -t "${next_session}:${w_idx}.${p_idx}"
+  fi
+
+  tmux switch-client -t "${next_session}"
+}
+
 move_to_next_win() {
-  select_next_win
-  win_zoomed || select_first_pane
+  if is_last_window; then
+    move_to_next_session
+  else
+    select_next_win
+    win_zoomed || select_first_pane
+  fi
 }
 
 if win_zoomed; then
