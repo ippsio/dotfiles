@@ -4,7 +4,7 @@
 --    disable = { }
 --  }
 --}
-require'nvim-treesitter.configs'.setup {
+require'nvim-treesitter'.setup {
   -- A list of parser names, or "all" (the five listed parsers should always be installed)
   ensure_installed = {
     "c",
@@ -14,6 +14,8 @@ require'nvim-treesitter.configs'.setup {
     "query",
     "python",
     "markdown",
+    "org",
+    "ruby",
   },
 
   -- Install parsers synchronously (only applied to `ensure_installed`)

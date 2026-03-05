@@ -18,7 +18,7 @@ inoremap <F1> <Nop>
 
 nnoremap <F3> gf
 
-nnoremap <F5> :e<CR>
+nnoremap <silent> <F5> :let w=winsaveview()<CR>:e<CR>:call winrestview(w)<CR>
 nnoremap <F6> :<C-u>:qa<CR>
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "	"
 
