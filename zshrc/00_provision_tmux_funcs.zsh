@@ -21,8 +21,8 @@ tmux_idx_next_attach() {
 }
 
 tmux_idx_next_new() {
+  tmux ls -F "#S" 2>/dev/null
   (
-    tmux ls -F "#S" 2>/dev/null
     seq 1 16
   ) | grep '^[0-9]\+$'\
     | sort --general-numeric-sort\

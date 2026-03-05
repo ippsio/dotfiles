@@ -143,6 +143,6 @@ set infercase
 " [マウス]
 " mouse マウス利用可能なモードを設定する。
 if has("mouse")
-  set mouse=a
+  set mouse=nv
 endif
 

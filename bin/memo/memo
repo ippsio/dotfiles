@@ -29,7 +29,8 @@ ensure_basedir() {
   [[ -d $base_dir ]] || mkdir -p "$base_dir"
 }
 find_up() {
-  local dir=$PWD
+  local dir
+  dir=$PWD
   while [[ $dir != "/" ]]; do
     [[ -e $dir/$1 ]] && return 0
     dir=${dir%/*}
