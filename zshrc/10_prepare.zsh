@@ -53,6 +53,7 @@ may_ln_dir $HOME/dotfiles/.config/kitty
 may_ln_dir $HOME/dotfiles/.config/nvim
 may_ln_dir $HOME/dotfiles/.config/rio
 may_ln_dir $HOME/dotfiles/.config/tig
+may_ln_dir $HOME/dotfiles/.config/ripgrep
 
 may_ln_file $HOME/dotfiles/.gitconfig
 may_ln_file $HOME/dotfiles/.gitignore_global

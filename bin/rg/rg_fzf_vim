@@ -15,4 +15,4 @@ do_fzf() {
     --preview 'bat --color=always {2} --highlight-line {3}' \
     --preview-window '+{3}+3/3,~7'
 }
-rg_wrap "$@"| do_fzf
+rg "$@"| do_fzf

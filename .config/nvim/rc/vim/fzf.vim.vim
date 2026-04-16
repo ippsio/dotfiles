@@ -101,7 +101,7 @@ endfunction
 " ファイルの内容をgit-grep、及びripgrepで検索して、さらにfzfで絞り込む
 command! -bang -nargs=* Grep
   \ call fzf#run({
-  \   'source': 'unified_grep "' . <q-args> . '"',
+  \   'source': 'rg "' . <q-args> . '"',
   \   'sink*': function('s:EditFile'),
   \   'options': '-m'
   \   . ' --delimiter="\t" '
@@ -117,8 +117,8 @@ command! -bang -nargs=* Grep
   \   . ' --no-hscroll '
   \   . ' --bind "tab:execute(git_pull_request_open_by_file_line {2} {3})" '
   \   . ' --bind "ctrl-_:toggle-preview" '
-  \   . ' --preview "~/dotfiles/bin/git/git_blame/git_blame_colored {2} {3} ' . shellescape(<q-args>) . ' {q}"'
-  \   . ' --preview-window "bottom,60%,border-top,+{2}+3/3,~3" ',
+  \   . ' --preview "~/dotfiles/bin/git/git_blame/git_blame_colored {1} {2} ' . shellescape(<q-args>) . ' {q}"'
+  \   . ' --preview-window "bottom,60%,border-top,~3,+{1}+3/2" ',
   \   'window': { 'width': 0.95, 'height': 0.99 }
   \   })
 

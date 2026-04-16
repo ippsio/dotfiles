@@ -8,18 +8,25 @@ untracked_file_exists() {
 
   return 0
 }
+is_use_git_grep() {
+  return 1
+}
 
-if is_git_repo; then
-  if untracked_file_exists; then
-    git_grep "$@"
+if is_use_git_grep; then
+  if is_git_repo; then
+    if untracked_file_exists; then
+      git_grep "$@"
 
-    echo "==ripgrep==(Because git-untracked file found)"
-    # shellcheck disable=SC2086 # (Double quote to prevent globbing and word splitting.)
-    rg_wrap "$@" -- ${untracked}
+      echo "==ripgrep==(Because git-untracked file found)"
+      # shellcheck disable=SC2086 # (Double quote to prevent globbing and word splitting.)
+      rg "$@" -- ${untracked}
 
+    else
+      git_grep "$@"
+    fi
   else
-    git_grep "$@"
+    rg "$@"
   fi
 else
-  rg_wrap "$@"
+  rg "$@"
 fi

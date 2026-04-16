@@ -91,8 +91,9 @@ show() {
     # ハイフンを含まない文字列でripgrepし、マッチする文字部分を色付けする
     IFS=$' \n-'
     # shellcheck disable=SC2001
-    for searchword in $(echo "${ARG_SEARCHWORDS}"| sed 's/\\["]/"/g'); do
-      word_highlighted=$(echo "${word_highlighted}"| rg --fixed-strings --case-sensitive --passthru --color=always "${searchword}")
+    search_words_except_hyphen=$(echo "${ARG_SEARCHWORDS}"| sed 's/\\["]/"/g')
+    for searchword in $search_words_except_hyphen; do
+      word_highlighted=$(echo "${word_highlighted}"| rg --no-filename --no-line-number --fixed-strings --case-sensitive --passthru --color=always "${searchword}")
     done
 
     # ハイフンだけの文字列でripgrepし、マッチする文字部分を色付けする
@@ -102,13 +103,7 @@ show() {
     for searchword_hyphen in $(echo "${unique_hyphens}"| sed 's/-/\\-/g'); do
       word_highlighted=$(echo "${word_highlighted}"| rg --passthru --color=always "${searchword_hyphen}")
     done
-    # terminal_width=$(terminal_width)
-    # 無理やりなwrapをするかしないか...
-    width_for_muriyari_wrap=$(( 2048 - 3 ))
-    # width_for_muriyari_wrap=$(( terminal_width - 3 ))
-    echo "${word_highlighted}"\
-      | cut -b 1-"${width_for_muriyari_wrap}"\
-      | bat --no-pager --style plain --color=always --highlight-line "${hi_lineno}"
+    echo "${word_highlighted}"| bat --no-pager --highlight-line "${hi_lineno}"
   )
 }
 

@@ -14,14 +14,4 @@ do_rg() {
     --glob !.DS_Store \
     "$@"
 }
-do_awk() {
-  cnt=$(echo "$1"| wc -l| tr -d ' ')
-  echo "$1"| awk -v v_cnt="$cnt" '{ printf "(%3d/%d:ripgrep)	%s\n", NR, v_cnt, $0 }'
-}
-res=$(do_rg "$@")
-exit_cd=$?
-if [[ "$exit_cd" != 0 ]]; then
-  echo "Not found"
-  exit $exit_cd
-fi
-do_awk "$res"
+do_rg "$@"
