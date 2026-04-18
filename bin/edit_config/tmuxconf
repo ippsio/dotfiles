@@ -1,5 +1,2 @@
 #!/usr/bin/env bash
-(
-  cd ~/dotfiles/ || exit
-  nvim .tmux.conf
-)
+cd ~/dotfiles/ && nvim .tmux.conf

@@ -1,5 +1,2 @@
 #!/usr/bin/env bash
-(
-  cd ~/dotfiles/.config/nvim/ || exit
-  nvim init.vim
-)
+cd ~/dotfiles/.config/nvim/ && nvim init.vim
