@@ -104,25 +104,32 @@ git_prompt() {
     local workingtree=
     local workingtree_ar
     workingtree_ar=()
-    [[ $untracked -ge 1 ]] && workingtree_ar+=( "%F{1}untracked:${untracked}%f" )
-    [[ $unstaged -ge 1 ]] && workingtree_ar+=( "%F{1}unstaged:${unstaged}%f" )
+    UNTRACKED="%F{#AA6666}"
+    UNSTAGED="%F{#AA6666}"
+    [[ $untracked -ge 1 ]] && workingtree_ar+=( "${UNTRACKED}untracked:${untracked}%f" )
+    [[ $unstaged -ge 1 ]] && workingtree_ar+=( "${UNSTAGED}unstaged:${unstaged}%f" )
     workingtree_ar=(${workingtree_ar[@]:#""(f)})
     local workingtree=$( print -n -- "${(j: :)workingtree_ar[@]}")
 
     local unmerged_stash_stage=
     local uss_ar
     uss_ar=()
-    [[ $unmerged -ge 1 ]] && uss_ar+=( "%F{63}UNMERGED:${unmerged}%f" )
-    [[ $stash -ge 1 ]] && uss_ar+=( "%F{63}STASH:${stash}%f" )
-    [[ $staged -ge 1 ]] && uss_ar+=( "%F{168}staged:${staged}%f" )
+    UNMERGED="%F{63}"
+    STASH="%F{63}"
+    STAGED="%F{168}"
+    [[ $unmerged -ge 1 ]] && uss_ar+=( "${UNMERGED}UNMERGED:${unmerged}%f" )
+    [[ $stash -ge 1 ]] && uss_ar+=( "${STASH}STASH:${stash}%f" )
+    [[ $staged -ge 1 ]] && uss_ar+=( "${STAGED}staged:${staged}%f" )
     uss_ar=(${uss_ar[@]:#""(f)})
     local unmerged_stash_stage=$( print -n -- "${(j: :)uss_ar[@]}")
 
     local aheadbehind=
     local ab_ar
+    AHEAD="%F{#AA2299}"
+    BEHIND="%F{#AA2299}"
     ab_ar=()
-    ab_ar+=( "%F{200}A${ahead}%f" )
-    ab_ar+=( "%F{200}B${behind}%f" )
+    ab_ar+=( "${AHEAD}A${ahead}%f" )
+    ab_ar+=( "${BEHIND}B${behind}%f" )
     local aheadbehind=$( print -n -- "${(j: :)ab_ar[@]}")
 
     local git_caution=
@@ -134,12 +141,15 @@ git_prompt() {
     git_caution_ar=(${git_caution_ar[@]:#""(f)})
     local git_caution=$( print -n -- "${(j: :)git_caution_ar[@]}")
 
+    REPO="%F{#999900}"
+    BRANCH="%F{cyan}"
+    TRACK="%F{#AA2299}"
     local repo_branch=
     local repo_branch_ar
     repo_branch_ar=()
-    repo_branch_ar+=( "%F{3} \uF113 ${repo}" )
-    repo_branch_ar+=( "%F{6} \uF126 ${branch}" )
-    repo_branch_ar+=( "%F{red}track(${remote:-none})%f" )
+    repo_branch_ar+=( "${REPO} \uF113 ${repo}" )
+    repo_branch_ar+=( "${BRANCH} \uF126 ${branch}" )
+    repo_branch_ar+=( "${TRACK}track(${remote:-none})%f" )
     repo_branch_ar=(${repo_branch_ar[@]:#""(f)})
     local repo_branch=$( print -n -- "${(j: :)repo_branch_ar[@]}")
 

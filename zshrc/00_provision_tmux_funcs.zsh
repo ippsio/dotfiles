@@ -67,6 +67,8 @@ tmux_logfile_path() {
 }
 start_tmux_logging() {
   local logfile_path="$1"
-  echo "tmux_logfile_path=$logfile_path"
+  local dir_size=$(du -shx "$TMUX_LOG_DIR"| cut -f1)
+  local dir_size_info="${TMUX_LOG_DIR/$HOME/\$HOME}=>$dir_size"
+  echo "tmux_logfile_path=$logfile_path ($dir_size_info)"
   tmux pipe-pane "$HOME/dotfiles/zshrc/00_provision_tmux_log_gawk.zsh >> $logfile_path"
 }
