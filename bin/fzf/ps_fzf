@@ -2,7 +2,9 @@
 
 # フォルダの選択I/Fを表示する。
 # プレビュー：そのフォルダ内のファイル一覧。
-(date; ps -ef) |
+{
+  date; ps -ef
+} |
   fzf --bind='ctrl-r:reload(date; ps -ef)' \
       --header=$'Press CTRL-R to reload.\n\n' \
       --header-lines=2 \

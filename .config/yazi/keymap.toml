@@ -12,3 +12,18 @@ desc = "Disable trash"
 on = "D"
 run = "noop"
 desc = "Disable permanent delete"
+
+[[mgr.prepend_keymap]]
+on = "a"
+run = "noop"
+desc = "Disable create"
+
+[[mgr.prepend_keymap]]
+on = "s"
+run = "noop"
+desc = "Disable search via fd"
+
+[[mgr.prepend_keymap]]
+on = "t"
+run = "noop"
+desc = "Disable tab"

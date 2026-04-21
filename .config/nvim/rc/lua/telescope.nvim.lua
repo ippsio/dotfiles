@@ -3,19 +3,20 @@ local telescope = require('telescope')
 telescope.setup {
     defaults = {
         layout_config = {
-            width = 0.85,
+            width = 0.96,
+            height = 0.96,
         },
         file_ignore_patterns = {
             "%.git/",
             "%vendor",
         },
     },
-    pickers = {
-        find_files = {
-            theme = "dropdown",
-            hidden = true,
-        },
-    },
+    --pickers = {
+    --    find_files = {
+    --        theme = "dropdown",
+    --        hidden = true,
+    --    },
+    --},
 }
 
 local vim = vim

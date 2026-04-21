@@ -146,3 +146,5 @@ if has("mouse")
   set mouse=nv
 endif
 
+" [ステータスライン]
+set laststatus=1

@@ -90,17 +90,17 @@ function! MyMarkdownFoldText()
   return indent . title . rows . ' ' . fill
 endfunction
 
-augroup markdown_folds
-  autocmd!
-  autocmd FileType markdown setlocal foldopen=block,mark,percent,quickfix,search,tag,undo
-  autocmd FileType markdown setlocal foldmethod=expr
-  autocmd FileType markdown setlocal foldexpr=MyMarkdownFoldExpr()
-  autocmd FileType markdown setlocal foldtext=MyMarkdownFoldText()
-  autocmd FileType markdown setlocal foldlevel=1
-  autocmd FileType markdown setlocal foldenable
-  autocmd FileType markdown setlocal foldminlines=0
-  autocmd FileType markdown setlocal foldcolumn=0
-augroup END
+"""augroup markdown_folds
+"""  autocmd!
+"""  autocmd FileType markdown setlocal foldopen=block,mark,percent,quickfix,search,tag,undo
+"""  autocmd FileType markdown setlocal foldmethod=expr
+"""  autocmd FileType markdown setlocal foldexpr=MyMarkdownFoldExpr()
+"""  autocmd FileType markdown setlocal foldtext=MyMarkdownFoldText()
+"""  autocmd FileType markdown setlocal foldlevel=1
+"""  autocmd FileType markdown setlocal foldenable
+"""  autocmd FileType markdown setlocal foldminlines=0
+"""  autocmd FileType markdown setlocal foldcolumn=0
+"""augroup END
 
 """augroup QfAutoCommands
 """  autocmd!

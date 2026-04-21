@@ -19,10 +19,20 @@ inoremap <F1> <Nop>
 nnoremap <F3> gf
 
 nnoremap <silent> <F5> :let w=winsaveview()<CR>:e<CR>:call winrestview(w)<CR>
+nnoremap <F1> :<C-u>:qa<CR>
 nnoremap <F6> :<C-u>:qa<CR>
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "	"
 
 nnoremap <BS> <C-u><C-o>
+
+nnoremap <S-Left> vh
+nnoremap <S-Down> vj
+nnoremap <S-Up> vk
+nnoremap <S-Right> vl
+vnoremap <S-Left> h
+vnoremap <S-Down> j
+vnoremap <S-Up> k
+vnoremap <S-Right> l
 
 " Shiftを押しならがTabを押せば、直接Tab文字が入力されるようにする(Tab文字単体で押しても、4文字位のスペースが入力されるだけなので時々不便なのである)。
 inoremap <S-Tab> <C-v><Tab>
@@ -74,6 +84,7 @@ endfunction
 " /で検索モードに入った際、/{pattern}の入力中は「/」や「?」をタイプすると自動で\エスケープする。
 cnoremap <expr> / getcmdtype() == '/' ? '\/' : '/'
 cnoremap <expr> ? getcmdtype() == '?' ? '\?' : '?'
+cnoremap <C-d> <Del>
 
 " [ウインドウ操作]
 " C-h, C-j, C-k, C-l でウインドウ間の移動
