@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+do_url_encode() {
+  printf '%s' "$1" | jq -sRr @uri
+}
+do_url_encode "$1"

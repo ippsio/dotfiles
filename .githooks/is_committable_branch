@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+is_commitable() {
+  [[ "$1" == "master" ]] && return 1
+  [[ "$1" == "develop" ]] && return 1
+  return 0
+}
+if is_commitable "$1"; then
+  exit 0
+else
+  printf "X*x*X*x*X*x*X*x*X*x*X*x*X*x*X*x*X*x*X*x*X*x*X*x*X*x*\n"
+  printf " %s\n" "$0"
+  printf " * DIRECT_COMMIT_PROHIBITED INTO '%s' \n" "$1"
+  printf "X*x*X*x*X*x*X*x*X*x*X*x*X*x*X*x*X*x*X*x*X*x*X*x*X*x*\n"
+  exit 1
+fi

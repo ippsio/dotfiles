@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+do_git_grep() {
+  git -c grep.fallbackToNoIndex=true grep -I --line-number --fixed-strings --null --color=always "$1"
+}
+# do_perl_pe() {
+#   perl -pe 's/\x0/\t/g'
+# }
+do_tr() {
+  tr '\0' '\t'
+}
+do_awk() {
+  cnt=$(echo "$1"| wc -l| tr -d ' ')
+  printf "%s" "$1"| awk -v v_cnt="$cnt" '{ printf "(%d/%d:git-grep)\t%s\n", NR, v_cnt, $0 }'
+}
+# res=$(do_git_grep "$1"| do_perl_pe)
+res=$(do_git_grep "$1"| do_tr)
+do_awk "$res"

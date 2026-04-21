@@ -1,0 +1,148 @@
+#!/usr/bin/env bash
+
+t0=$(~/dotfiles/bin/epocms/epocms)
+basename0=$(basename "$0")
+printf "%s '%s' '%s' '%s' '%s'\n" "$basename0" "$1" "$2" "$3" "$4"
+
+readonly HI_DEFAULT=5
+readonly ABBREV_H_LEN=6
+readonly ARG_FNAME="$1"
+readonly ARG_HI_LINE="${2:-1}"
+readonly ARG_SEARCHWORDS="$4"
+readonly AUTHOR_LEN=6
+GIT_ROOT=$(~/dotfiles/bin/git/git_root "$1")
+FNAME_ABS=$(realpath "${ARG_FNAME}")
+# shellcheck disable=SC2001 # (See if you can use ${variable//search/replace} instead.)
+FNAME_REL=$(echo "${FNAME_ABS}"| sed "s#${GIT_ROOT}/##")
+
+is_present() {
+  if [[ -n "${ARG_FNAME}" ]]; then
+    return 0
+  else
+    echo "No ARG_FNAME"
+    return 1
+  fi
+}
+
+format() {
+  echo "$1"| gawk -v author_len=${AUTHOR_LEN} '
+    # strftimeを使うためにはgawkが必要らしい。
+    /^[0-9a-f]{40}/ {
+      h = substr($1, 1, 8)
+      lineno = $3
+      pr = ""
+
+      # コミットハッシュの先頭2桁(16進数)の範囲は0〜255。これをCOLOR(10進数)として使う。
+      color = strtonum("0x" toupper(substr(h, 1, 2)))
+
+      # 色の調整。暗い色は見にくい。
+      if (0 == color) { color = 156 }
+      if (16  <= color && color <=  18) { color = color +  10 }
+      if (232 <= color && color <= 237) { color = color - 200 }
+      next
+    }
+    /^author / {
+      author = substr($0, 8, author_len)
+      next
+    }
+    /^author-time / {
+      timestr = strftime("%Y-%m-%d", $2)
+      next
+    }
+    /^summary / {
+      pr = ""
+      if ($0 ~ /#[0-9]+/) {
+        sub(/^.*#/, "", $0)
+        sub(/[^0-9].*$/, "", $0)
+        pr = $0
+      }
+      next
+    }
+    /^\t/ {
+      printf "\033[38;5;%dm%s (#%-5s)\033[0m (%-"author_len"s %s %4s) %s\n", color, h, pr, author, timestr, lineno, substr($0, 2)
+    }'
+}
+
+format2() {
+  local fname
+  fname=$(basename "$1")
+  awk -v fname="$fname" -v from="$2" -v to="$3" '
+    {
+      if (from <= NR && NR <= to) {
+        printf "%s(%2d) %s\n", fname, NR, $0
+      }
+    }
+  '< "$1"
+}
+
+show() {
+  word_highlighted="$1"
+  hi_lineno="$2"
+  (
+    # rg の --fixed-strings に対し、検索文字 "-hoge" を与えた場合、"-hoge" がハイフンを含むという理由でrgが正常動作しない。
+    #
+    # % echo "-abc --def"| rg "-abc"    #=> rg: ripgrep requires at least one pattern to execute a search
+    # % echo "-abc --def"| rg "--def"   #=> rg: unrecognized flag --def
+    # % echo "-abc --def"| rg "abc"     #=> -abc --def
+    # % echo "-abc --def"| rg "def"     #=> -abc --def
+    # % echo "-abc --def"| rg "\-abc"   #=> -abc --def
+    # % echo "-abc --def"| rg "\-\-def" #=> -abc --def
+
+    # ハイフンを含まない文字列でripgrepし、マッチする文字部分を色付けする
+    IFS=$' \n-'
+    # shellcheck disable=SC2001
+    search_words_except_hyphen=$(echo "${ARG_SEARCHWORDS}"| sed 's/\\["]/"/g')
+    for searchword in $search_words_except_hyphen; do
+      word_highlighted=$(echo "${word_highlighted}"| rg --no-filename --no-line-number --fixed-strings --case-sensitive --passthru --color=always "${searchword}")
+    done
+
+    # ハイフンだけの文字列でripgrepし、マッチする文字部分を色付けする
+    IFS=$' \n'
+    unique_hyphens=$(echo "${ARG_SEARCHWORDS}"| grep -Eo '(\-)+'| sort| uniq)
+    # shellcheck disable=SC2001
+    for searchword_hyphen in $(echo "${unique_hyphens}"| sed 's/-/\\-/g'); do
+      word_highlighted=$(echo "${word_highlighted}"| rg --passthru --color=always "${searchword_hyphen}")
+    done
+    echo "${word_highlighted}"| bat --no-pager --highlight-line "${hi_lineno}"
+  )
+}
+
+line_from() {
+  if [[ $(( ARG_HI_LINE + 1 - HI_DEFAULT)) -le 0 ]]; then
+    res=1
+  else
+    res=$(( ARG_HI_LINE + 1 - HI_DEFAULT))
+  fi
+  echo "$res"
+}
+
+line_to() {
+  # res=$(( line_from + $(tput lines)));
+  res=9999 # 適当
+  echo "$res"
+}
+
+line_hi() {
+  res=${HI_DEFAULT}
+  if [[ $(( ARG_HI_LINE + 1 - HI_DEFAULT)) -le 0 ]]; then
+    res="${ARG_HI_LINE}"
+  fi
+  echo "$res"
+}
+
+is_present || exit 1
+(
+  cd "${GIT_ROOT}" || exit;
+  blame_res=$(git blame --line-porcelain -L "$(line_from)","$(line_to)" "${FNAME_REL}" 2>/dev/null)
+  # shellcheck disable=SC2181
+  if [[ $? == 0 ]]; then
+    res=$(format "$blame_res")
+    show "${res}" "$(line_hi)"
+  else
+    # ここに来ることあるのかな???
+    res=$(format2 "${FNAME_ABS}" "$(line_from)" "$(line_to)")
+    show "${res}" "$(line_hi)"
+  fi
+)
+t1=$(epocms)
+printf "(%s %dms)" "$basename0" $((t1 - t0))

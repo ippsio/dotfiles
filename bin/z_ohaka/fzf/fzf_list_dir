@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+if [[ -z "$1" || "$1" == "." || "$1" == "./" ]]; then
+  TARGET_DIR="."
+  FZF_QUERY=""
+else
+  TARGET_DIR=$(home_as_home "${1#./}")
+  if [[ ! -e "${TARGET_DIR}" ]]; then
+    echo "$1"
+    exit
+  fi
+  FZF_QUERY=$(home_as_tilde "${1#./}")
+fi
+TARGET_DIR=$(home_as_home "${TARGET_DIR}")
+TARGET_DIR_TILDE=$(home_as_tilde "${TARGET_DIR}")
+
+# FZFプロンプト
+FZF_PROMPT_BASENAME=$(basename "$0")
+FZF_PROMPT_TARGET_DIR=$(home_as_tilde "${TARGET_DIR}")
+FZF_PROMPT="${FZF_PROMPT_BASENAME} (dir='${FZF_PROMPT_TARGET_DIR})') > "
+
+# FZFプレビュー処理スクリプト
+FZF_PREVIEW_SCRIPT=$(cat <<'EOF'
+abs_path=$(echo '{}'| sed -e "s#^~#${HOME}#")
+abs_path=$(realpath "${abs_path}")
+abs_path=$(echo "${abs_path}/"| sed 's#//$#/#');
+echo "${abs_path}";
+echo;
+ls -UlaFG --color=always "${abs_path}"
+EOF
+)
+
+FIND_RESULT=$(find -Es\
+  "${TARGET_DIR}"\
+  -type d\
+  -not -regex '.*/(\.git|\.git/).*'\
+  -maxdepth 1 2>/dev/null\
+  | grep -v "^${TARGET_DIR}$"\
+  | sed 's#^(\./)##; s#$#/#g'\
+  | home_as_tilde
+)
+
+CANDIDATES=$(cat <<EOF
+${TARGET_DIR_TILDE/./}..
+${TARGET_DIR_TILDE/./}.
+${FIND_RESULT}
+EOF
+)
+
+echo "${CANDIDATES}"\
+  | fzf +m\
+    --prompt="${FZF_PROMPT}"\
+    --preview-window=right:60%:wrap\
+    --preview="${FZF_PREVIEW_SCRIPT}"\
+    --query="${FZF_QUERY} "\
+  || printf "%s" "$1"

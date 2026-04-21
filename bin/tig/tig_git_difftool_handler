@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+get_extension() {
+  echo "${1##*.}"
+}
+prepare_tempfile() {
+  extension="$1"
+
+  temp=$(mktemp)
+  if [[ -n "$extension" ]]; then
+    temp2mv="${temp}.${extension}"
+    mv "${temp}" "${temp2mv}"
+    temp="${temp2mv}"
+  fi
+  trap '(set -x; rm -f "${temp}")' EXIT
+  echo "${temp}"
+}
+redirect_to_tempfile() {
+  arg_file="$1"
+  arg_revarg="$2"
+  arg_temp="$3"
+  git show "${arg_revarg}:${arg_file}">"${arg_temp}"
+}
+
+file="$1"
+shift
+commit="$1"
+shift
+revargs="$*"
+
+if [[ -n "$commit" && -n "${revargs[0]}" ]]; then
+  # NOTE: このブロックに入るケースについて。
+  #
+  # 例えば~/dotfiles/bin/git/git_review_tig コマンド起動時のdiffビューから本スクリプトを起動された時です。
+  # ブランチと派生元ブランチとのマージベースから、現在の作業ツリーまでの差分を確認するためのnvim -d を起動します。
+  # git difftool を実行すると、作業ツリーのファイルも一時ファイルとなってしまいます。
+  # 作業ツリーのファイルも一時ファイルとなった場合、編集できないし関連する開発中のファイルを参照できないし、面倒です。
+  # 編集したいですし、関連する開発中のファイルも参照したいので、手間ですがnvim -d を用いてgit difftool っぽい事をします。
+  extension=$(get_extension "$file")
+  temp=$(prepare_tempfile "${extension}")
+  redirect_to_tempfile "${file}" "${revargs[0]}" "${temp}"
+  (set -x; nvim -d "${temp}" "${file}")
+
+else
+  # NOTE: このブロックに入るケースについて。
+  #
+  # 例えば単にtigのdiffビューで単一のコミットを参照している時です。
+  # このケースは単に「ある1コミットでの修正前後の差分を確認したい」だけであり、「ファイルを編集したい」わけではないでしょう。
+  # ですのでgit difftool を実行します。
+  # git difftool を実行すると、作業ツリーのファイルも一時ファイルとなってしまいますが、上述の目的に対応できれば良いため問題ないと考えます。
+  (set -x; git difftool "$commit"^ "$commit" -- "$file")
+fi

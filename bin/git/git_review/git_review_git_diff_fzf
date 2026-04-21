@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+dir=$(dirname "$0")
+source "$dir/git_review_core" || exit $?
+(
+  set -x
+  export MY_GIT_MERGE_BASE=${merge_base_hash}
+  git_diff_fzf "$merge_base_hash"
+)

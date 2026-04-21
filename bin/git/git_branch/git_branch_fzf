@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+# home_as_tilde "$0"| xargs -I {} echo "'{}' called"  1>&2
+
+COMMIT_LOG_ROWS=15
+if ! is_git_repo; then
+  echo "Not a git repository."
+  exit 1
+fi
+basename0=$(basename "$0")
+get_branches() {
+  res=$(git branch --all --sort=-authordate --color=always --format='%(objectname:short)	%(authordate:format:%Y-%m-%d %H:%M:%S(%a))	%(authorname)	%(refname:short)	%(subject)')
+  echo "$res"| grep -E '	(develop|origin/develop)	'
+  echo "$res"| grep -E '	(master|origin/master)	'
+  echo "$res"| grep -Ev '	(HEAD|origin/HEAD|develop|origin/develop|master|origin/master)	'
+}
+do_awk() {
+  awk -F '	' '{
+    h = $1
+    ad = $2
+    an = $3
+    branch = $4
+    s = $5
+    printf "(%+3s)	%s	%s	%-8.8s	%s	%s \n", NR, h, ad, an, branch, s;
+  }'
+}
+do_fzf() {
+  bind_tab() {
+    printf '%s\n' "cd '$(git_root)'|| exit 1"
+    printf '%s\n' "git_log_fzf {5}"
+  }
+  fzf \
+    --ansi \
+    --prompt="$basename0 > " \
+    --no-sort \
+    --info=inline \
+    --tabstop=3 \
+    --delimiter="	" \
+    --nth=1,4,5,6,7 \
+    --bind "tab:execute($(bind_tab))" \
+    --bind "ctrl-l:execute(cd $(git_root); git_log_fzf {7})"
+  }
+get_branches\
+  | do_awk\
+  | do_fzf\
+  | awk -F '	' '{ sub(/^origin\//, "", $5); print $5 }'

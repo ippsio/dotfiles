@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+home_as_tilde "$0"| xargs -I {} echo "'{}' called"  1>&2
+
+current_branch=$(git_branch_current)
+branch=${1:-${current_branch}}
+if ! ( is_git_branch "${branch}"); then
+  exit 111 # INVALID_GIT_BRANCH_GIVEN
+fi
+url="https://api.github.com/search/issues?q=is:open%20type:pr%20repo:$(git_reponame)%20head:${branch}"
+res=$(github_send_get_request "$url"| jq -r ".items[] | [ \
+  .number \
+  , .state \
+  , .user.login \
+  , .title \
+  , .body \
+  , .html_url \
+  , .created_at \
+  , .updated_at \
+  , .closed_at \
+  ] | @tsv" 2>/dev/null
+)|| exit $?
+
+if [[ -n "${res}" ]]; then
+  echo "${res}"
+  exit 0
+else
+  echo "GIT_SEARCH_PR:PR_NOT_FOUND" 1>&2
+fi
+

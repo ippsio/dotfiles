@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -eu
+
+# sqlformat で整形します（無い場合は brew install sqlparse 等でインストールして下さい）
+before_format="$(pbpaste)"
+after_format=$(echo "${before_format}"| sqlformat --reindent --keywords=upper -)
+
+# 気に入らない部分を自分で再整形します（行頭の空白は削除）
+after_format=$(echo "${after_format}"| perl -pe "s/^[ ]+//g")
+
+# 気に入らない部分を自分で再整形します（行末がカンマなら、その行の改行は削除）
+after_format=$(echo "${after_format}"| perl -pe "s/,[\r\n]+/, /g")
+
+# 結果出力
+printf "%s\n" "${after_format}"
+

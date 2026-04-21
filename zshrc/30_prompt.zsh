@@ -1,227 +1,195 @@
-# vcs_info 設定
-autoload -Uz vcs_info
-
-# hook関数の登録。 ex) add-zsh-hook <hook名> <関数名>
 autoload -Uz add-zsh-hook
+find_up() {
+  local dir
+  dir=$PWD
+  while [[ $dir != "/" ]]; do
+    [[ -e $dir/$1 ]] && { echo $dir/$1; return 0; }
+    dir=${dir:h}
+  done
+  return 1
+}
 
-# zshでプロンプトをカラー表示する。
-# autoload -Uz colors
+git_prompt() {
+  local gitdir
+  gitdir="$(find_up .git)"
+  if [[ -n "$gitdir" ]]; then
+    t0=${${EPOCHREALTIME/./}[1,13]}
+    local untracked=0 unstaged=0 staged=0 unmerged=0 conflict=0 ahead=0 behind=0 stash=0
+    local porcelain
+    porcelain=$(git status --porcelain=v2 --branch --show-stash 2>/dev/null || return 1)
+    t1=${${EPOCHREALTIME/./}[1,13]}
+    local line
+    while IFS= read -r line; do
+      case "$line" in
+        "# branch.ab"*)
+          ahead=${line#*+}
+          ahead=${ahead%% *}
+          behind=${line#*-}
+          behind=${behind%% *}
+          ;;
+        "# stash"*)
+          stash=${line##* }
+          ;;
+        "1 "*)
+          local xy_for_1=${line:2:2}
+          case "$xy_for_1" in
+            " M" ) ((unstaged++)) ;; # 未ステージングの変更がある。
+            ".M" ) ((unstaged++)) ;; # 未ステージングの変更がある（ M と同義）。
+            "M " ) ((staged++)) ;; # ステージング済みの変更のみがある。
+            "M." ) ((staged++)) ;; # ステージング済みの変更のみがある（M  と同義）。
+            "MM" ) ((staged++)); ((unstaged++)) ;; # ステージング済みの変更と、未ステージングの変更の両方がある。
+            " A" )  ;; # $Y$ が A は追跡ファイルでは非常に稀（通常は $X$ が A）。実質的に ?? に近い状態。
+            ".A" )  ;; # $Y$ が A は追跡ファイルでは非常に稀（通常は $X$ が A）。
+            "A " ) ((staged++)) ;; # ステージング済みの追加がある。
+            "A." ) ((staged++)) ;; # ステージング済みの追加がある（A  と同義）。
+            "AM" ) ((staged++)); ((unstaged++)) ;; # ステージング済みの追加と、未ステージングの変更の両方がある。
+            "AD" ) ((staged++)); ((unstaged++)) ;; # ステージング済みの追加と、ワークツリーでの削除がある。
+            " D" ) ((unstaged++)) ;; # 未ステージングの削除がある。
+            ".D" ) ((unstaged++)) ;; # 未ステージングの削除がある（ D と同義）。
+            "D " ) ((staged++)) ;; # ステージング済みの削除がある。
+            "D." ) ((staged++)) ;; # ステージング済みの削除がある（D  と同義）。
+            "DD" ) ((unmerged++));((conflict++)) ;; # マージ競合（両方で削除された）。
+            "UU" ) ((unmerged++)); ((conflict++)) ;; # マージ競合（両方で変更された）。
+            "AU" ) ((unmerged++)); ((conflict++)) ;; # マージ競合（追加と競合）。
+            "UD" ) ((unmerged++)); ((conflict++)) ;; # マージ競合（更新と削除）。
+            "DA" ) ((unmerged++)); ((conflict++)) ;; # マージ競合（削除と追加）。
+          esac
+          ;;
+        "2 "*)
+          local xy_for_2=${line:2:2}
+          case "$xy_for_2" in
+            "R " ) ((staged++)) ;; # ステージング済みの名前変更のみ。新しいファイルはワークツリーでさらに変更されていない。
+            "R." ) ((staged++)) ;; # ステージング済みの名前変更のみ。新しいファイルはワークツリーでさらに変更されていない。
+            "RM" ) ((staged++)); ((unstaged++)) ;; # ステージング済みの名前変更と、新しいファイルに対する未ステージングの変更がある。
+            "RD" ) ((staged++)); ((unstaged++)) ;; # ステージング済みの名前変更と、新しいファイルに対するワークツリーでの削除がある。
+            "C " ) ((staged++)) ;; # ステージング済みのコピーのみ。新しいファイルはワークツリーでさらに変更されていない。
+            "C." ) ((staged++)) ;; # ステージング済みのコピーのみ。新しいファイルはワークツリーでさらに変更されていない。
+            "CM" ) ((staged++)); ((unstaged++)) ;; # ステージング済みのコピーと、新しいファイルに対する未ステージングの変更がある。
+            "CD" ) ((staged++)); ((unstaged++)) ;; # ステージング済みのコピーと、新しいファイルに対するワークツリーでの削除がある。
+          esac
+          ;;
+        "?"*) ((untracked++)) ;;
+      esac
+    done <<< "$porcelain"
 
-zstyle ':vcs_info:*' max-exports 1
-zstyle ':vcs_info:*' enable git
-zstyle ':vcs_info:*' formats '%m'
-zstyle ':vcs_info:*' actionformats '%m'
-zstyle ':vcs_info:git+set-message:*' hooks git-set-message-hook
+    local cfg_rows
+    cfg_rows=$(while IFS= read -r line; do
+      if [[ $line == "[remote "* ]]; then
+        read -r next
+        print -- "$line"$'\n'"$next"
+        break
+      fi
+    done < $gitdir/config)
 
-# ${git_status}がとり得るケース
-# ## master...origin/master [ahead 1]
-# ## master...origin/master [behind 1]
-# ## master...origin/master [ahead 1, behind 1]
-#
-# # なぜgit status とgit rev-list のahead/ behind に差が出るのか、俺はその理由を知らない..
-# # ただし差が出る事がある。差が出る時はだいたいstatusのaheadとbehindが0。そういうケースを疑ってrev-listする。
-# if [[ ${ahead_7} -eq 0 && ${behind_8} -eq 0 ]]; then
-#    if [[ git branch -a --format="%(refname:short)"|grep "^$origin/${hook_com[branch]}$" > /dev/null 2>&1 ]]; then
-#     local revlist=$(git rev-list --left-right --count origin/${hook_com[branch]}...${hook_com[branch]})
-#     ahead_7=$(echo "${revlist}"| awk '{ print $2 }')
-#     behind_8=$(echo "${revlist}"| awk '{ print $1 }')
-#    else
-#      ahead_7="9999"
-#    fi
-# fi
-
-# <indexに載ってるもの>
-# local updated_in_index=$(             echo "${git_XY}"| egrep -c "^(M[ MD])")
-# local added_to_index=$(               echo "${git_XY}"| egrep -c "^(A[ MD])")
-# local deleted_from_index=$(           echo "${git_XY}"| egrep -c "^(D[ ])")
-# local renamed_in_index=$(             echo "${git_XY}"| egrep -c "^(R[ MD])")
-# local copied_in_index=$(              echo "${git_XY}"| egrep -c "^(C[ MD])")
-# local not_updated=$(                  echo "${git_XY}"| egrep -c "^([AMD][ ])")
-# local index_and_work_tree_matches=$(  echo "${git_XY}"| egrep -c "^([MARC][ ])")
-# 上記を参考にすると、これからgit commitしないといかんものはつまり、これだ
-# local index_6=$(echo "${git_XY}"| egrep -c "^([MADRC][ MD])")
-# # </indexに載ってるもの>
-#
-#
-# <worktreeの変更>
-# local work_tree_changed_since_index=$(echo "${git_XY}"| egrep -c "^([ MARC]M)")
-# local deleted_in_work_tree=$(         echo "${git_XY}"| egrep -c "^([ MARC]D)")
-# local renamed_in_work_tree=$(         echo "${git_XY}"| egrep -c "^([ D]R)")
-# local copied_in_work_tree=$(          echo "${git_XY}"| egrep -c "^([ D]C)")
-
-# local unmerged_both_deleted=$(        echo "${git_XY}"| egrep -c "^(DD)")
-# local unmerged_added_by_us=$(         echo "${git_XY}"| egrep -c "^(AU)")
-# local unmerged_deleted_by_them=$(     echo "${git_XY}"| egrep -c "^(UD)")
-# local unmerged_added_by_them=$(       echo "${git_XY}"| egrep -c "^(UA)")
-# local unmerged_deleted_by_us=$(       echo "${git_XY}"| egrep -c "^(DU)")
-# local unmerged_both_added=$(          echo "${git_XY}"| egrep -c "^(AA)")
-# local unmerged_both_modified=$(       echo "${git_XY}"| egrep -c "^(UU)")
-
-# 上記を参考にすると、これからgit addしないといかんものはつまり、これだ
-# local unstaged_4=$(                     echo "${git_XY}"| egrep -c "^([ MADRC][MDRC])")
-# 上記を参考にすると、merge時の競合を解決しないといけないものはたぶんこれ。
-# local unmerged_5=$(                     echo "${git_XY}"| egrep -c "^([DAU][DAU])")
-# </worktreeの変更>
-+vi-git-set-message-hook() {
-  [[ $(git rev-parse --is-inside-work-tree 2> /dev/null) != "true" ]] && return 1
-  [[ "$1" != "0" ]] && return 0 # process when only for 1st messsge of zstyle formats, actionformats
-
-  # obtain git command results
-  local git_status="$(git status --porcelain --branch --ahead-behind 2> /dev/null)"
-  local git_XY=$(echo -e ${git_status}| sed -e "s/^\(..\).*$/\1/")
-
-  local repo_1=$(git_reponame)
-  local untracked_3=$(echo "${git_XY}"| grep -Ec "^(\?\?)")
-  local unstaged_4=$(echo "${git_XY}"| grep -Ec "^([ MADRC][MDRC])")
-  local unmerged_5=$(echo "${git_XY}"| grep -Ec "^([DAU][DAU])")
-  local index_6=$(echo "${git_XY}"| grep -Ec "^([MADRC][ MD])")
-  local ahead_7=$(echo -e ${git_status}| egrep -E "ahead [0-9]*"| sed -e "s/^.*\[ahead \([0-9]*\).*/\1/")
-  local behind_8=$(echo -e ${git_status}| grep -E "behind [0-9]*"| sed -e "s/^.*[ \[]behind \([0-9]*\).*/\1/")
-  local stash_9="$(git stash list 2>/dev/null| grep -Ec "^stash@")"
-  local has_remote_10=$(git config --local branch.${hook_com[branch]}.remote)
-  local parent_branch=
-  repo_1="${repo_1:-NOT_SPECIFIED}"
-  ahead_7="${ahead_7:-0}"
-  if [[ -z "${ahead_7}" ]]; then
-    local parent_branch=$(git_obtain_parent_branch)
-    if [[ -n "${parent_branch}" ]]; then
-      aheading=$(git log --oneline "${parent_branch}"..HEAD| wc -l| tr -d ' ')
-      ahead_7="${aheading}(${parent_branch}..HEAD)"
+    local cfg_ar=(${(f)cfg_rows})
+    local url=${cfg_ar[2]#*url = }
+    local repo
+    if [[ $url =~ "^git@" ]]; then
+      repo="${url#*:*}"
+    else
+      repo="${url#https://*/}"
     fi
+
+    local remote_tmp=${cfg_ar[1]#*\"}
+    local remote=${remote_tmp%%\"*}
+    local head=$(<$gitdir/HEAD)
+    local branch="${head#ref: refs/heads/}"
+    local merge
+    [[ -f "$gitdir/MERGE_HEAD" ]] && merge="MERGE "
+    local cherrypick
+    [[ -f "$gitdir/CHERRY_PICK_HEAD" ]] && cherrypick="CHERRYPICK "
+    local rebase
+    [[ -f "$gitdir/REBASE_HEAD" ]] && rebase="REBASE "
+
+    local workingtree=
+    local workingtree_ar
+    workingtree_ar=()
+    [[ $untracked -ge 1 ]] && workingtree_ar+=( "%F{1}untracked:${untracked}%f" )
+    [[ $unstaged -ge 1 ]] && workingtree_ar+=( "%F{1}unstaged:${unstaged}%f" )
+    workingtree_ar=(${workingtree_ar[@]:#""(f)})
+    local workingtree=$( print -n -- "${(j: :)workingtree_ar[@]}")
+
+    local unmerged_stash_stage=
+    local uss_ar
+    uss_ar=()
+    [[ $unmerged -ge 1 ]] && uss_ar+=( "%F{63}UNMERGED:${unmerged}%f" )
+    [[ $stash -ge 1 ]] && uss_ar+=( "%F{63}STASH:${stash}%f" )
+    [[ $staged -ge 1 ]] && uss_ar+=( "%F{168}staged:${staged}%f" )
+    uss_ar=(${uss_ar[@]:#""(f)})
+    local unmerged_stash_stage=$( print -n -- "${(j: :)uss_ar[@]}")
+
+    local aheadbehind=
+    local ab_ar
+    ab_ar=()
+    ab_ar+=( "%F{200}A${ahead}%f" )
+    ab_ar+=( "%F{200}B${behind}%f" )
+    local aheadbehind=$( print -n -- "${(j: :)ab_ar[@]}")
+
+    local git_caution=
+    local git_caution_ar
+    git_caution_ar=()
+    [[ -n "$merge" ]] && git_caution_ar+=( "%K{1}${merge}%k")
+    [[ -n "$cherrypick" ]] && git_caution_ar+=( "%K{1}${cherrypick}%k")
+    [[ -n "$rebase" ]] && git_caution_ar+=( "%K{1}${rebase}%k")
+    git_caution_ar=(${git_caution_ar[@]:#""(f)})
+    local git_caution=$( print -n -- "${(j: :)git_caution_ar[@]}")
+
+    local repo_branch=
+    local repo_branch_ar
+    repo_branch_ar=()
+    repo_branch_ar+=( "%F{3} \uF113 ${repo}" )
+    repo_branch_ar+=( "%F{6} \uF126 ${branch}" )
+    repo_branch_ar+=( "%F{red}track(${remote:-none})%f" )
+    repo_branch_ar=(${repo_branch_ar[@]:#""(f)})
+    local repo_branch=$( print -n -- "${(j: :)repo_branch_ar[@]}")
+
+    [[ -n "$workingtree" ]] && printf "[%s]" "$workingtree"
+    [[ -n "$unmerged_stash_stage" ]] && printf "[%s]" "$unmerged_stash_stage"
+    [[ -n "$aheadbehind" ]] && printf "[%s]" "$aheadbehind"
+    [[ -n "$git_caution" ]] && printf " %s" "$git_caution"
+    [[ -n "$repo_branch" ]] && printf "%s" "$repo_branch"
+    t2=${${EPOCHREALTIME/./}[1,13]}
+    local t_delta1=$(( t1 - t0 ))
+    local t_delta2=$(( t2 - t1 ))
+    printf "%%F{8}(%sms+%sms)%%f\n" "$t_delta1" "$t_delta2"
   fi
-  behind_8="${behind_8:-0}"
-  has_remote_10="track(${has_remote_10:-none})"
-
-  # misc (%m) に追加
-  hook_com[misc]="${repo_1}\t${hook_com[branch]}\t${untracked_3}\t${unstaged_4}\t${unmerged_5}\t${index_6}\t${ahead_7}\t${behind_8}\t${stash_9}\t${has_remote_10}\t${hook_com[action]}"
 }
-
-my_precmd_hook() { return 0; }
-my_chpwd_hook() { return 0; }
-my_periodic_hook() { return 0; }
-my_preexec_hook() { return 0; }
-my_zshaddhistory_hook() { return 0; }
-
-readonly REGEX_BINDING_PART="%K{[0-9]+}(vi-VISUAL|vi-NORMAL|vi-INSERT) %#"
-update_binding_part() {
-  if [[ $REGION_ACTIVE -ne 0 ]]; then
-    PROMPT=$(echo -e "$PROMPT"| sed -E "s/${REGEX_BINDING_PART}/%K{34}vi-VISUAL %#/")
-    zle reset-prompt
-  elif [[ $KEYMAP = vicmd ]]; then
-    PROMPT=$(echo -e "$PROMPT"| sed -E "s/${REGEX_BINDING_PART}/%K{54}vi-NORMAL %#/")
-    zle reset-prompt
-  elif [[ $KEYMAP = main ]]; then
-    PROMPT=$(echo -e "$PROMPT"| sed -E "s/${REGEX_BINDING_PART}/%K{17}vi-INSERT %#/")
-    zle reset-prompt
+python_prompt() {
+  local verf=$(find_up .python-version)
+  if [[ -z "$verf" ]]; then
+    return 0
+  elif [[ -n "${VIRTUAL_ENV}" ]]; then
+    printf "%%F{66}(python %s,%s)%%f" "$(<$verf)" "${VIRTUAL_ENV/$HOME/\$HOME}"
+  else
+    printf "%%F{66}(python %s,%s)%%f" "$(<$verf)" "${verf/$HOME/\$HOME}"
   fi
-  return 0
 }
-
-zle-line-init() { update_binding_part; return 0; }
-zle-line-pre-redraw() { update_binding_part; return 0; }
-zle-keymap-select() { update_binding_part; return 0; }
+rbenv_prompt() {
+  local verf=$(find_up .ruby-version)
+  if [[ -z "$verf" ]]; then
+    return 0
+  else
+    printf "%%F{66}(ruby %s,%s)%%f" "$(<$verf)" "${verf/$HOME/\$HOME}"
+  fi
+}
+basic_prompt() {
+  local exit_cd="%F{red}%(?..\$?=%? )%f"
+  local bg_job="%(1j|%F{5}bg:%j%f|)"
+  local working_dir="%F{137}%~ %f"
+  echo "${exit_cd}${bg_job}${working_dir}%F{245}%#%f "
+}
 
 precmd() {
-  LANG=en_US.UTF-8 vcs_info
-  psvar=( $(echo "${vcs_info_msg_0_}") )
+  LLIST=()
+  LLIST+=( "$(rbenv_prompt)" )
+  LLIST+=( "$(python_prompt)" )
+  LLIST+=( "$(git_prompt)" )
+  LLIST+=( "$(basic_prompt)" )
+  LLIST=(${LLIST[@]:#""(f)})
+  PROMPT=$( print -n -- "\n${(j:\n:)LLIST[@]}")
 
-  SEPARATOR_OPEN=" "
-  SEPARATOR_CLOSE=" "
-
-  # git basic infomations.
-  _mark_git_repo=""
-  _mark_branch=""
-  GIT_REPO_BRANCH="%K{118}%F{0}"
-  GIT_REPO_BRANCH+="%(1v|${SEPARATOR_OPEN}${_mark_git_repo}%1v|)"
-  GIT_REPO_BRANCH+="%f%k"
-  GIT_REPO_BRANCH+="%K{220}%F{0}"
-  GIT_REPO_BRANCH+="%(2v| ${_mark_branch}%2v${SEPARATOR_CLOSE}|)"
-  GIT_REPO_BRANCH+="%f%k"
-
-  # git working_tree
-  _mark_untracked="unt"
-  _mark_unstaged="uns"
-  _mark_unmerged="unm"
-  GIT_WORKING_TREE="%K{193}%F{241}"
-  GIT_WORKING_TREE+="%(3v|${SEPARATOR_OPEN}${_mark_untracked}%3v|)"
-  GIT_WORKING_TREE+="%(4v| ${_mark_unstaged}%4v|)"
-  GIT_WORKING_TREE+="%(5v| ${_mark_unmerged}%5v${SEPARATOR_CLOSE}|)"
-  GIT_WORKING_TREE+="%f%k"
-
-  _mark_stash="sta"
-  GIT_STASH="%K{193}%F{241}"
-  GIT_STASH+="%(9v|${_mark_stash}%9v|%v)"
-  GIT_STASH+="${SEPARATOR_CLOSE}"
-  GIT_STASH+="%f%k"
-
-  # git stage
-  _mark_staged="stg"
-  GIT_STAGE="%K{61}%F{153}"
-  GIT_STAGE+="%(6v|${SEPARATOR_OPEN}${_mark_staged}%6v${SEPARATOR_CLOSE}|)%k"
-  GIT_STAGE+="%f%k"
-
-  # git local repositry
-  _mark_ahead="ahe"
-  _mark_behind="beh"
-  GIT_LOCAL_REPO="%K{90}%F{200}"
-  GIT_LOCAL_REPO+="%(7v|${SEPARATOR_OPEN}${_mark_ahead}%7v|)"
-  GIT_LOCAL_REPO+="%(8v| ${_mark_behind}%8v${SEPARATOR_CLOSE}|)"
-  GIT_LOCAL_REPO+="%f%k"
-
-  # 10v,11v,12v,13vって....。たぶんもっといいやり方あるんだろうけど、調べるのが面倒臭かったんです..
-  GIT_CAUTION="%K{1}"
-  GIT_CAUTION+="%(10v| %10v |)"
-  GIT_CAUTION+="%(11v| %11v |)"
-  GIT_CAUTION+="%(12v| %12v |)"
-  GIT_CAUTION+="%(13v| %13v |)"
-  GIT_CAUTION+="%k"
-
-  # others
-  EXIT_CD="%K{red}%(?..${SEPARATOR_OPEN}\$?=%?${SEPARATOR_CLOSE})%k"
-  NUMBER_OF_JOBS="%F{226}bg(%j)"
-  CURRENT_DIRECTORY="%K{237}%F{255}${SEPARATOR_OPEN}%~${SEPARATOR_CLOSE} %f%k"
-
-  CHUNK1="${GIT_WORKING_TREE}${GIT_STASH}${GIT_STAGE}${GIT_LOCAL_REPO}"
-  CHUNK2="${GIT_REPO_BRANCH}"
-  CHUNK3="${EXIT_CD}${NUMBER_OF_JOBS}${CURRENT_DIRECTORY}${GIT_CAUTION}%K{238}%k"
-  CHUNK4="$(precmd_python_venv)%# "
-  # viモードの場合、これを指定しても良い。
-  #CHUNK4="%K{25}vi-INSERT %# "
-
-  PROMPT=$'\n'
-  [[ ! -z "${CHUNK1}" ]] && PROMPT+="${CHUNK1}"
-  [[ ! -z "${CHUNK2}" ]] && PROMPT+="${CHUNK2}"
-  [[ ! -z "${CHUNK3}" ]] && PROMPT+=$'\n'"${CHUNK3}"
-  [[ ! -z "${CHUNK4}" ]] && PROMPT+=$'\n'"${CHUNK4}"
+  # RLIST=()
+  # RLIST+=( "$(date +'%m/%d %H:%M:%S')" )
+  # RLIST=(${RLIST[@]:#""(f)})
+  # RPROMPT=$(print -n --   "${(j:| :)RLIST[@]}")
 }
-
-precmd_python_venv() {
-  if [[ ! -z "${VIRTUAL_ENV_PROMPT}" ]]; then
-    python_venv_name=$(basename "${VIRTUAL_ENV}")
-    python_version_name=$(pyenv version-name)
-    printf "(python|%s|%s) " "${python_venv_name}" "${python_version_name}"
-  fi
-  return 0
-}
-
-## 以前のプロンプトにはコマンドラインを確定した時刻を表示
-my-accept-line() {
-  PROMPT=$(echo -e "$PROMPT"| sed -E "s/${REGEX_BINDING_PART}/%#/")
-  zle .reset-prompt
-  zle .accept-line
-}
-
-# zshのフック登録
-add-zsh-hook precmd my_precmd_hook
-add-zsh-hook chpwd my_chpwd_hook
-add-zsh-hook periodic my_periodic_hook
-add-zsh-hook preexec my_preexec_hook
-add-zsh-hook zshaddhistory my_zshaddhistory_hook
-
-# viモードの場合、これを使っても良い。
-# zle -N zle-line-init
-# zle -N zle-keymap-select
-# zle -N zle-line-pre-redraw
-
-zle -N accept-line my-accept-line
-

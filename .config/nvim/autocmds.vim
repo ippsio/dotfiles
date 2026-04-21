@@ -1,7 +1,106 @@
-augroup vim-start
+"augroup vim-start
+"  autocmd!
+"  autocmd VimEnter * silent! clearjumps
+"augroup END
+augroup MyDiffExitDetector
   autocmd!
-  autocmd VimEnter * silent! clearjumps
+  autocmd WinClosed * call s:MaybeBdeleteDiff(expand('<afile>'))
 augroup END
+
+function! s:MaybeBdeleteDiff(winid_str) abort
+  let winid = str2nr(a:winid_str)
+  let bufnr = winbufnr(winid)
+  if bufnr == -1 | return | endif
+
+  " diffなウインドウのバッファの一覧
+  let diff_bufs = map(filter(range(1, winnr('$')), 'getwinvar(v:val, "&diff")'), 'winbufnr(v:val)')
+
+  " diffなウインドウのバッファの一覧に、winid(今回閉じられたウインドウのバッファ)が無い場合、即時return
+  if index(diff_bufs, bufnr) == -1 | return | endif
+
+  " lsコマンドの結果として得られるバッファの一覧
+  let listed_bufs = map(filter(getbufinfo(), 'v:val.listed'), 'v:val.bufnr')
+
+  " バッファをbdelete!します。
+  if !bufexists(bufnr) | return | endif
+  execute 'bdelete!' bufnr
+
+  " 削除された分のバッファを、それぞれのバッファの一覧から差し引きます。
+  let diff_bufs = filter(diff_bufs, 'v:val != bufnr')
+  let listed_bufs = filter(listed_bufs, 'v:val != bufnr')
+
+  " diff_bufs
+  " のサイズは1になっているはずですが、例外があるかどうか調べられていないので、一旦サイズをチェックしておきます。
+  if len(diff_bufs) != 1 | return | endif
+
+  if diff_bufs == listed_bufs
+    " この場合、bdelete!するとvimによって新しい[No Name]バッファが作成されてしまいます。それは困るのでquitします。
+    quit
+  else
+    " この場合、bdelete!すると残りのdiffなバッファを閉じます。これにより、diffバッファを綺麗に削除できたはずです。
+    if !bufexists(diff_bufs[0]) | return | endif
+    execute 'bdelete!' diff_bufs[0]
+  endif
+endfunction
+
+augroup markdown_indent
+  autocmd!
+  autocmd FileType markdown setlocal indentexpr=
+  autocmd FileType markdown setlocal shiftwidth=2
+  autocmd FileType markdown setlocal softtabstop=2
+  autocmd FileType markdown setlocal tabstop=2
+augroup END
+let s:in_codeblock = 0
+function! MyMarkdownFoldExpr()
+  let line = getline(v:lnum)
+  let line_next = getline(v:lnum+1)
+
+  if l:line =~ '^```'
+    let s:in_codeblock = !s:in_codeblock
+    return '='
+  elseif s:in_codeblock
+    return '='
+  elseif line =~ '^#\{1,2} '
+    " # とか ## で始まる行はfoldlevelを一律に1ってことにする。
+    " こういうパートは初期状態で折りたたまれないようにする(foldlevel=1)
+    return '>1'
+  elseif line =~ '^#\{3,} '
+    " ### とか #### とか ##### とかで始まる行はfoldlevelを一律に2ってことにする。
+    " こういうパートは初期状態で折りたたまれるようにする(foldlevel=1)
+    " また、### " の深さによらず折りたたまれ過ぎないようにする。見通しを良くする。何度も折りたたみを開くのは苦痛。
+    return '>2'
+  elseif line == ''
+    if line_next == ''
+      return '<0'
+    else
+      return '='
+    endif
+  else
+    return '='
+  endif
+endfunction
+
+function! MyMarkdownFoldText()
+  let heading = substitute(getline(v:foldstart), '^#\+', '', '')
+  let level = strlen(matchstr(getline(v:foldstart), '^#\+'))
+  let indent = repeat('#', level)
+  let rows = ' (' . string(v:foldend-v:foldstart+1) . '行) '
+  let title = substitute(heading, '^ ', ' ', '')
+  let fill = repeat('-', winwidth(0) - strwidth(indent . title) - 4)
+  return indent . title . rows . ' ' . fill
+endfunction
+
+"""augroup markdown_folds
+"""  autocmd!
+"""  autocmd FileType markdown setlocal foldopen=block,mark,percent,quickfix,search,tag,undo
+"""  autocmd FileType markdown setlocal foldmethod=expr
+"""  autocmd FileType markdown setlocal foldexpr=MyMarkdownFoldExpr()
+"""  autocmd FileType markdown setlocal foldtext=MyMarkdownFoldText()
+"""  autocmd FileType markdown setlocal foldlevel=1
+"""  autocmd FileType markdown setlocal foldenable
+"""  autocmd FileType markdown setlocal foldminlines=0
+"""  autocmd FileType markdown setlocal foldcolumn=0
+"""augroup END
 
 """augroup QfAutoCommands
 """  autocmd!
@@ -23,7 +122,7 @@ augroup vimrc-highlight
   autocmd Syntax conf if 10000 < line('$') | syntax sync minlines=100 | endif
 
   " .slimなファイルのファイルタイプがslimであると、vimが気づいてくれない時があったので、その対策。
-  autocmd BufNewFile,BufRead *.slim setlocal filetype=slim
+  " autocmd BufNewFile,BufRead *.slim setlocal filetype=slim
 
   " .coffeeなファイルのファイルタイプがcoffeeであると、vimが気づいてくれない時があったので、その対策。
   autocmd BufNewFile,BufRead *.coffee setlocal filetype=coffee
@@ -35,21 +134,22 @@ augroup vimrc-highlight
   " .tomlなファイルのファイルタイプはvimとして扱った方が個人的にシンタックスハイライトが好み
   "autocmd BufNewFile,BufRead *.toml setlocal filetype=vim
 
-  " ft=*.rb,pythonなら、コード規約遵守のための縦線を引く(120桁目位に）。
-  " autocmd BufRead,BufEnter,BufWinEnter * let &colorcolumn=join(range(0, 0), ",")
-  autocmd BufRead,BufEnter,BufWinEnter *.rb let &colorcolumn=join(range(121, 121), ",")
-  autocmd BufRead,BufEnter,BufWinEnter *.rake let &colorcolumn=join(range(121, 121), ",")
-  autocmd BufRead,BufEnter,BufWinEnter *.py let &colorcolumn=join(range(121, 121), ",")
+  " ft=*.rb,pythonなら、コード規約遵守のための縦線を引く(140桁目位に）。
+  autocmd BufRead,BufEnter,BufWinEnter *.rb,*.rake,*.py let &colorcolumn=join(range(141, 141), ",")
 
 augroup END
 
 augroup fileTypeIndent
   autocmd!
-  autocmd BufNewFile,BufRead *.toml setlocal tabstop=2 softtabstop=2 shiftwidth=2
-  autocmd BufNewFile,BufRead *.vim setlocal tabstop=2 softtabstop=2 shiftwidth=2
+
   autocmd FileType vim setlocal indentexpr=
   " ある行をコメントアウトしたくて「#」を打った瞬間、vimが気を利かせてインデントを整える事がある。これが好きじゃないので止まってもらう。
   autocmd FileType yaml setlocal indentkeys=
+augroup END
+
+augroup windowResize
+  autocmd!
+  autocmd VimResized * wincmd =
 augroup END
 
 """augroup aufugitive
@@ -74,6 +174,11 @@ augroup FileTypeRuby
   " validate? のような末尾の?も、区切り文字ではなく単語として扱ってもらう。
   au FileType ruby setlocal iskeyword+=!
 
+  au FileType ruby setlocal 
+    \ foldmethod=indent
+    \ foldlevel=99
+    \ foldcolumn=0
+    \ foldenable
   " これは無いほうが使いやすかったのでコメントアウト
   " " hoge.map(&:fuga) の中身の &:fuga を、単語として扱ってもらう。
   " " au FileType ruby setlocal iskeyword+=:
@@ -92,6 +197,11 @@ augroup FileTypeRuby
   " id="hoge">
   " </p>
   au FileType eruby setlocal indentexpr=
+augroup END
+
+augroup FileTypeGitCommit
+  autocmd!
+  au FileType gitcommit setlocal tw=7
 augroup END
 
 augroup AutocmdEventVisualize

@@ -1,0 +1,8 @@
+bind main M >tig --first-parent
+bind main C      none # do not cherry-pick
+bind main l      enter
+bind main    R !git rebase -i %(commit)~
+bind main    a !git commit --amend
+bind main    O +bash -c "~/dotfiles/bin/git_pull_request_open_by_hash %(commit)"
+
+bind main    ;      @hub browse -- commit/%(commit)

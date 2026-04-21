@@ -1,21 +1,87 @@
-#!/bin/bash
-KIND="memo"
-BASE_DIR=~/notes
-NOTE_DIR=${BASE_DIR}/${KIND}/$(LC_ALL=C date '+%Y_%m')
-FILE=$(LC_ALL=C date '+%Y_%m%d_%a').txt
+#!/usr/bin/env bash
 
-[ ! -d ${BASE_DIR} ] && ( mkdir -p ${BASE_DIR} && cd ${BASE_DIR} && git init && cd .. || exit $? )
-[ ! -d ${NOTE_DIR} ] && mkdir -p ${NOTE_DIR}
-[ ! -f ${NOTE_DIR}/${FILE} ] && echo -e "\n# ${KIND} $(LC_ALL=C date '+%Y/%m/%d(%a)')\n\n---\n" >> ${NOTE_DIR}/${FILE}
+base_dir="$HOME/memo"
+f_project="$base_dir/project/project.txt"
+f_todo="$base_dir/todo.txt"
+f_sticky="$base_dir/sticky.txt"
 
-CMD="echo ${BASE_DIR}/${KIND}/top.txt; rg --files --hidden -g '*.md' -g '*.txt' --sortr=path ${BASE_DIR}/${KIND}| grep -v 'top.txt'"
-eval "${CMD}" \
-  | sed -e "s#^${HOME}#~#" \
-  | fzf\
-    --info=inline \
-    --prompt="($( [ -L $0 ] && basename $(readlink $0) || basename $0))" --header="${CMD}" \
-    --bind 'j:down' --bind 'k:up' --bind 'i:unbind(i,j,k)' \
-    --bind 'enter:execute(f=$(echo {}| sed -e "s#^~#${HOME}#"); bash -c "(set -x; nvim -c 5 $f < /dev/tty > /dev/tty)")+abort' \
-    --preview='f=$(echo {}| sed -e "s#^~#${HOME}#"); bat $f --color=always --style=numbers'
+epoc=$(date '+%s')
+format_epoc_dt() {
+  LC_ALL=C date -r "$epoc" "$1"; return 0;
+}
+dt_ymda=$(format_epoc_dt "+%Y_%m%d_%a")
+dt_ymda2=$(format_epoc_dt "+%Y/%m/%d(%a)")
+dt_ym=${dt_ymda:0:7}
+f_daily="$base_dir/daily/$dt_ym/$dt_ymda.txt"
+f_daily_detail="$base_dir/daily_detail/$dt_ym/$dt_ymda.txt"
 
-cd ${BASE_DIR} && git add -A && git status --porcelain| grep "^[MA]" 1>/dev/null && git commit -m "$(date '+%Y/%m/%d(%a) %H時%M分%S秒')" 1>/dev/null
+format_dt() {
+  LC_ALL=C date -r "$1" "$2"; return 0;
+}
+sun_s=$(date -vsun '+%s')
+sat_s=$(date -vsat '+%s')
+sun_ym=$(format_dt "$sun_s" "+%Y_%m")
+sun=$(format_dt "$sun_s" "+%Y_%m%d_%a")
+sat=$(format_dt "$sat_s" "+%Y_%m%d_%a")
+f_weekly="$base_dir/weekly/$sun_ym/${sun}-${sat}.txt"
+
+ensure_basedir() {
+  [[ -d $base_dir ]] || mkdir -p "$base_dir"
+}
+find_up() {
+  local dir
+  dir=$PWD
+  while [[ $dir != "/" ]]; do
+    [[ -e $dir/$1 ]] && return 0
+    dir=${dir%/*}
+    dir=${dir:-/}
+  done
+  return 1
+}
+ensure_git_managed() {
+  (
+    cd "$base_dir" || return 1
+    find_up .git || git init
+  )
+}
+ensure_file() {
+  local file="$1"
+  local content="$2"
+
+  [[ -f "$file" ]] && return 0
+  local fdir="${file%/*}"
+  [[ -d "$fdir" ]] || mkdir -p "$fdir"
+  printf "\n# %s\n---\n" "$content">"$file"
+  echo "">>"$file"
+}
+ensure_files() {
+  ensure_file "$f_project" "プロジェクト進行状況"
+  ensure_file "$f_weekly" "週次：${sun}-${sat}"
+  ensure_file "$f_daily" "日次: $dt_ymda2"
+  ensure_file "$f_daily_detail" "日次詳細: $dt_ymda2"
+  ensure_file "$f_todo" "TODO"
+  ensure_file "$f_sticky" "固定メモ"
+}
+git_commit() {
+  (
+    cd "$base_dir" || return 1
+    git add -A
+    [[ -n $(git status -s| wc -l| tr -d ' ') ]] || return 1
+    git commit -m "update" 1>/dev/null
+  )
+}
+open_files_with_nvim() {
+  (
+    cd "$base_dir" || exit
+    nvim "$f_project" -c "set nowrap | vsplit $f_weekly\
+      | split $f_daily_detail | wincmd h | split $f_daily\
+      | wincmd k | wincmd l | vsplit $f_todo | vsplit $f_sticky\
+      | wincmd j"
+  )
+}
+
+ensure_basedir
+ensure_git_managed
+ensure_files
+open_files_with_nvim
+git_commit

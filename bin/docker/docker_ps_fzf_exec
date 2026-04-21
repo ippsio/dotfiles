@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+container_id=$(docker_ps_fzf)
+if [[ -n "${container_id}" ]]; then
+  printf "docker exec -it %s /usr/bin/env bash --login" "${container_id}"
+fi

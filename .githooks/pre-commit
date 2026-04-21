@@ -1,7 +1,10 @@
-#!/bin/sh
-#BRANCH=$(git branch --format="%(refname:short)" --contains)
-BRANCH=$(git symbolic-ref --short HEAD)
-DIR=$(cd $(dirname $0); pwd)
-${DIR}/guard_branches ${BRANCH} commit
-${DIR}/secretlint
+#!/usr/bin/env bash
+branch=$(git symbolic-ref --short HEAD)
+dir=$(dirname "$0")
+if ! "$dir"/is_committable_branch "$branch"; then
+  exit 1
+fi
 
+if ! "$dir"/secretlint; then
+  exit 1
+fi

@@ -1,15 +1,22 @@
-#!/bin/bash
-CMD='docker ps -a --format "table {{.ID}}\t{{.Names}}\t{{.Image}}\t{{.Status}}\t{{.RunningFor}}\t{{.Command}}\t{{.Ports}}"'
-
-_FZF_PROMPT="$( [ -L $0 ] && basename $(readlink $0) || basename $0) > "
-
-ROW=$(eval "${CMD}" | fzf --sync --info=inline --header-lines=1 --prompt="${_FZF_PROMPT}" --header="${CMD}")
-
-if [[ ! -z ${ROW} ]]; then
-  CONTAINER_HASH=$(echo "${ROW}"| awk '{ printf "%s", $1 }')
-  echo "${CONTAINER_HASH}"
-  exit 0;
-else
-  exit 1;
+#!/usr/bin/env bash
+do_docker_ps() {
+  docker ps -a --format "table {{.ID}}	{{.Names}}	{{.Image}}	{{.Ports}}"
+}
+docker_ps_res_empty() {
+  rows=$(echo "$1"| awk '{ if (NR >= 2) { print $0 }}')
+  if [[ -z "$rows" ]]; then
+    echo "No docker containers found."
+    return 0
+  else
+    return 1
+  fi
+}
+do_fzf() {
+  fzf --sync --info=inline --header-lines=1 --prompt="$(basename "$0") > "
+}
+docker_ps_res=$(do_docker_ps)
+if docker_ps_res_empty "$docker_ps_res"; then
+  exit 1
 fi
 
+echo "$docker_ps_res"| do_fzf| awk '{ printf "%s", $1 }' || exit 1

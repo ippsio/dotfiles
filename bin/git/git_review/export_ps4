@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# set -x等した時の"+"印出力時に、情報を追加したり背景色を設定したりします。
+# (set -x; ls)
+FG="${GRAY246}"
+BG="${GRAY252}"
+PS4_COLOR=$'\e[38;5;'${FG}'m'$'\e[48;5;'${BG}'m'
+
+PS4=""
+PS4+="${PS4_COLOR}"
+PS4+='(PS4)'
+PS4+='$(eval printf "%.0s+" {1.."${#BASH_SOURCE[@]}"})'
+PS4+=' '
+PS4+='$(home_as_tilde "${BASH_SOURCE[0]}(L${LINENO})"):'
+PS4+=$'\e[0m\n'
+

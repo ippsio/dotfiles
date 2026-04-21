@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+
+ranges=( )
+ranges+=( "0 9" )
+ranges+=( "10 21" )
+ranges+=( "22 33" )
+ranges+=( "34 45" )
+ranges+=( "46 57" )
+ranges+=( "58 69" )
+ranges+=( "70 81" )
+ranges+=( "82 93" )
+ranges+=( "94 105" )
+ranges+=( "106 117" )
+ranges+=( "118 129" )
+ranges+=( "130 141" )
+ranges+=( "142 153" )
+ranges+=( "154 165" )
+ranges+=( "166 177" )
+ranges+=( "178 189" )
+ranges+=( "190 201" )
+ranges+=( "202 213" )
+ranges+=( "214 225" )
+ranges+=( "226 237" )
+ranges+=( "238 249" )
+ranges+=( "250 255" )
+for range in "${ranges[@]}"; do
+  # shellcheck disable=SC2086
+  for i in $(seq ${range[0]} ${range[1]}); do
+    printf "\e[48;5;%dm" "$i"
+    printf "%5s" "$i"
+    printf "\e[0m"
+  done
+  echo
+done
+echo "------------------------------------------------------------"
+for range in "${ranges[@]}"; do
+  # shellcheck disable=SC2086
+  for i in $(seq ${range[0]} ${range[1]}); do
+    printf "\e[38;5;%dm" "$i"
+    printf "%5s" "$i"
+    printf "\e[0m"
+  done
+  echo
+done

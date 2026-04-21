@@ -1,0 +1,321 @@
+# https://zsh.sourceforge.io/Doc/Release/User-Contributions.html#Version-Control-Information
+#
+# 26.5.2 Configuration
+# The vcs_info feature can be configured via zstyle.
+#
+# First, the context in which we are working:
+#
+# :vcs_info:vcs-string:user-context:repo-root-name
+# vcs-string
+# is one of: git, git-svn, git-p4, hg, hg-git, hg-hgsubversion, hg-hgsvn, darcs, bzr, cdv, mtn, svn, cvs, svk, tla, p4 or fossil. This is followed by ‘.quilt-quilt-mode’ in Quilt mode (see Quilt Support for details) and by ‘+hook-name’ while hooks are active (see Hooks in vcs_info for details).
+#
+# Currently, hooks in quilt mode don’t add the ‘.quilt-quilt-mode’ information. This may change in the future.
+#
+# user-context
+# is a freely configurable string, assignable by the user as the first argument to vcs_info (see its description below).
+#
+# repo-root-name
+# is the name of a repository in which you want a style to match. So, if you want a setting specific to /usr/src/zsh, with that being a CVS checkout, you can set repo-root-name to zsh to make it so.
+#
+# There are three special values for vcs-string: The first is named -init-, that is in effect as long as there was no decision what VCS backend to use. The second is -preinit-; it is used before vcs_info is run, when initializing the data exporting variables. The third special value is formats and is used by the vcs_info_lastmsg for looking up its styles.
+#
+# The initial value of repo-root-name is -all- and it is replaced with the actual name, as soon as it is known. Only use this part of the context for defining the formats, actionformats or branchformat styles, as it is guaranteed that repo-root-name is set up correctly for these only. For all other styles, just use ’*’ instead.
+#
+# There are two pre-defined values for user-context:
+#
+# default
+# the one used if none is specified
+#
+# command
+# used by vcs_info_lastmsg to lookup its styles
+#
+# You can of course use ’:vcs_info:*’ to match all VCSs in all user-contexts at once.
+#
+# This is a description of all styles that are looked up.
+#
+# formats
+# A list of formats, used when actionformats is not used (which is most of the time).
+#
+# actionformats
+# A list of formats, used if there is a special action going on in your current repository; like an interactive rebase or a merge conflict.
+#
+# branchformat
+# Some backends replace %b in the formats and actionformats styles above, not only by a branch name but also by a revision number. This style lets you modify how that string should look.
+#
+# nvcsformats
+# These "formats" are set when we didn’t detect a version control system for the current directory or vcs_info was disabled. This is useful if you want vcs_info to completely take over the generation of your prompt. You would do something like PS1=’${vcs_info_msg_0_}’ to accomplish that.
+#
+# hgrevformat
+# hg uses both a hash and a revision number to reference a specific changeset in a repository. With this style you can format the revision string (see branchformat) to include either or both. It’s only useful when get-revision is true. Note, the full 40-character revision id is not available (except when using the use-simple option) because executing hg more than once per prompt is too slow; you may customize this behavior using hooks.
+#
+# max-exports
+# Defines the maximum number of vcs_info_msg_*_ variables vcs_info will set.
+#
+# enable
+# A list of backends you want to use. Checked in the -init- context. If this list contains an item called NONE no backend is used at all and vcs_info will do nothing. If this list contains ALL, vcs_info will use all known backends. Only with ALL in enable will the disable style have any effect. ALL and NONE are case insensitive.
+#
+# disable
+# A list of VCSs you don’t want vcs_info to test for repositories (checked in the -init- context, too). Only used if enable contains ALL.
+#
+# disable-patterns
+# A list of patterns that are checked against $PWD. If a pattern matches, vcs_info will be disabled. This style is checked in the :vcs_info:-init-:*:-all- context.
+#
+# Say, ~/.zsh is a directory under version control, in which you do not want vcs_info to be active, do:
+#
+# zstyle ':vcs_info:*' disable-patterns "${(b)HOME}/.zsh(|/*)"
+# use-quilt
+# If enabled, the quilt support code is active in ‘addon’ mode. See Quilt Support for details.
+#
+# quilt-standalone
+# If enabled, ‘standalone’ mode detection is attempted if no VCS is active in a given directory. See Quilt Support for details.
+#
+# quilt-patch-dir
+# Overwrite the value of the $QUILT_PATCHES environment variable. See Quilt Support for details.
+#
+# quiltcommand
+# When quilt itself is called in quilt support, the value of this style is used as the command name.
+#
+# check-for-changes
+# If enabled, this style causes the %c and %u format escapes to show when the working directory has uncommitted changes. The strings displayed by these escapes can be controlled via the stagedstr and unstagedstr styles. The only backends that currently support this option are git, hg, and bzr (the latter two only support unstaged).
+#
+# For this style to be evaluated with the hg backend, the get-revision style needs to be set and the use-simple style needs to be unset. The latter is the default; the former is not.
+#
+# With the bzr backend, lightweight checkouts only honor this style if the use-server style is set.
+#
+# Note, the actions taken if this style is enabled are potentially expensive (read: they may be slow, depending on how big the current repository is). Therefore, it is disabled by default.
+#
+# check-for-staged-changes
+# This style is like check-for-changes, but it never checks the worktree files, only the metadata in the .${vcs} dir. Therefore, this style initializes only the %c escape (with stagedstr) but not the %u escape. This style is faster than check-for-changes.
+#
+# In the git backend, this style checks for changes in the index. Other backends do not currently implement this style.
+#
+# This style is disabled by default.
+#
+# stagedstr
+# This string will be used in the %c escape if there are staged changes in the repository.
+#
+# unstagedstr
+# This string will be used in the %u escape if there are unstaged changes in the repository.
+#
+# command
+# This style causes vcs_info to use the supplied string as the command to use as the VCS’s binary. Note, that setting this in ’:vcs_info:*’ is not a good idea.
+#
+# If the value of this style is empty (which is the default), the used binary name is the name of the backend in use (e.g. svn is used in an svn repository).
+#
+# The repo-root-name part in the context is always the default -all- when this style is looked up.
+#
+# For example, this style can be used to use binaries from non-default installation directories. Assume, git is installed in /usr/bin but your sysadmin installed a newer version in /usr/local/bin. Instead of changing the order of your $PATH parameter, you can do this:
+#
+# zstyle ':vcs_info:git:*:-all-' command /usr/local/bin/git
+# use-server
+# This is used by the Perforce backend (p4) to decide if it should contact the Perforce server to find out if a directory is managed by Perforce. This is the only reliable way of doing this, but runs the risk of a delay if the server name cannot be found. If the server (more specifically, the host:port pair describing the server) cannot be contacted, its name is put into the associative array vcs_info_p4_dead_servers and is not contacted again during the session until it is removed by hand. If you do not set this style, the p4 backend is only usable if you have set the environment variable P4CONFIG to a file name and have corresponding files in the root directories of each Perforce client. See comments in the function VCS_INFO_detect_p4 for more detail.
+#
+# The Bazaar backend (bzr) uses this to permit contacting the server about lightweight checkouts, see the check-for-changes style.
+#
+# use-simple
+# If there are two different ways of gathering information, you can select the simpler one by setting this style to true; the default is to use the not-that-simple code, which is potentially a lot slower but might be more accurate in all possible cases. This style is used by the bzr, hg, and git backends. In the case of hg it will invoke the external hexdump program to parse the binary dirstate cache file; this method will not return the local revision number.
+#
+# get-revision
+# If set to true, vcs_info goes the extra mile to figure out the revision of a repository’s work tree (currently for the git and hg backends, where this kind of information is not always vital). For git, the hash value of the currently checked out commit is available via the %i expansion. With hg, the local revision number and the corresponding global hash are available via %i.
+#
+# get-mq
+# If set to true, the hg backend will look for a Mercurial Queue (mq) patch directory. Information will be available via the ‘%m’ replacement.
+#
+# get-bookmarks
+# If set to true, the hg backend will try to get a list of current bookmarks. They will be available via the ‘%m’ replacement.
+#
+# The default is to generate a comma-separated list of all bookmark names that refer to the currently checked out revision. If a bookmark is active, its name is suffixed an asterisk and placed first in the list.
+#
+# use-prompt-escapes
+# Determines if we assume that the assembled string from vcs_info includes prompt escapes. (Used by vcs_info_lastmsg.)
+#
+# debug
+# Enable debugging output to track possible problems. Currently this style is only used by vcs_info’s hooks system.
+#
+# hooks
+# A list style that defines hook-function names. See Hooks in vcs_info below for details.
+#
+# patch-format
+# nopatch-format
+# This pair of styles format the patch information used by the %m expando in formats and actionformats for the git and hg backends. The value is subject to certain %-expansions described below. The expanded value is made available in the global backend_misc array as ${backend_misc[patches]} (also if a set-patch-format hook is used).
+#
+# get-unapplied
+# This boolean style controls whether a backend should attempt to gather a list of unapplied patches (for example with Mercurial Queue patches).
+#
+# Used by the quilt, hg, and git backends.
+#
+# The default values for these styles in all contexts are:
+#
+# formats
+# " (%s)-[%b]%u%c-"
+#
+# actionformats
+# " (%s)-[%b|%a]%u%c-"
+#
+# branchformat
+# "%b:%r" (for bzr, svn, svk and hg)
+#
+# nvcsformats
+# ""
+#
+# hgrevformat
+# "%r:%h"
+#
+# max-exports
+# 2
+#
+# enable
+# ALL
+#
+# disable
+# (empty list)
+#
+# disable-patterns
+# (empty list)
+#
+# check-for-changes
+# false
+#
+# check-for-staged-changes
+# false
+#
+# stagedstr
+# (string: "S")
+#
+# unstagedstr
+# (string: "U")
+#
+# command
+# (empty string)
+#
+# use-server
+# false
+#
+# use-simple
+# false
+#
+# get-revision
+# false
+#
+# get-mq
+# true
+#
+# get-bookmarks
+# false
+#
+# use-prompt-escapes
+# true
+#
+# debug
+# false
+#
+# hooks
+# (empty list)
+#
+# use-quilt
+# false
+#
+# quilt-standalone
+# false
+#
+# quilt-patch-dir
+# empty - use $QUILT_PATCHES
+#
+# quiltcommand
+# quilt
+#
+# patch-format
+# backend dependent
+#
+# nopatch-format
+# backend dependent
+#
+# get-unapplied
+# false
+#
+# In normal formats and actionformats the following replacements are done:
+#
+# %s
+# The VCS in use (git, hg, svn, etc.).
+#
+# %b
+# Information about the current branch.
+#
+# %a
+# An identifier that describes the action. Only makes sense in actionformats.
+#
+# %i
+# The current revision number or identifier. For hg the hgrevformat style may be used to customize the output.
+#
+# %c
+# The string from the stagedstr style if there are staged changes in the repository.
+#
+# %u
+# The string from the unstagedstr style if there are unstaged changes in the repository.
+#
+# %R
+# The base directory of the repository.
+#
+# %r
+# The repository name. If %R is /foo/bar/repoXY, %r is repoXY.
+#
+# %S
+# A subdirectory within a repository. If $PWD is /foo/bar/repoXY/beer/tasty, %S is beer/tasty.
+#
+# %m
+# A "misc" replacement. It is at the discretion of the backend to decide what this replacement expands to.
+#
+# The hg and git backends use this expando to display patch information. hg sources patch information from the mq extensions; git from in-progress rebase and cherry-pick operations and from the stgit extension. The patch-format and nopatch-format styles control the generated string. The former is used when at least one patch from the patch queue has been applied, and the latter otherwise.
+#
+# The hg backend displays bookmark information in this expando (in addition to mq information). See the get-mq and get-bookmarks styles. Both of these styles may be enabled at the same time. If both are enabled, both resulting strings will be shown separated by a semicolon (that cannot currently be customized).
+#
+# The quilt ‘standalone’ backend sets this expando to the same value as the %Q expando.
+#
+# %Q
+# Quilt series information. When quilt is used (either in ‘addon’ mode or as a ‘standalone’ backend), this expando is set to the quilt series’ patch-format string. The set-patch-format hook and nopatch-format style are honoured.
+#
+# See Quilt Support below for details.
+#
+# In branchformat these replacements are done:
+#
+# %b
+# The branch name. For hg, the branch name can include a topic name.
+#
+# %r
+# The current revision number or the hgrevformat style for hg.
+#
+# In hgrevformat these replacements are done:
+#
+# %r
+# The current local revision number.
+#
+# %h
+# The current global revision identifier.
+#
+# In patch-format and nopatch-format these replacements are done:
+#
+# %p
+# The name of the top-most applied patch; may be overridden by the applied-string hook.
+#
+# %u
+# The number of unapplied patches; may be overridden by the unapplied-string hook.
+#
+# %n
+# The number of applied patches.
+#
+# %c
+# The number of unapplied patches.
+#
+# %a
+# The number of all patches (%a = %n + %c).
+#
+# %g
+# The names of active mq guards (hg backend).
+#
+# %G
+# The number of active mq guards (hg backend).
+#
+# Not all VCS backends have to support all replacements. For nvcsformats no replacements are performed at all, it is just a string.
+
+# vcs_info 設定
+

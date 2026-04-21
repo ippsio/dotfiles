@@ -1,0 +1,98 @@
+#!//usr/bin/env bash
+home_as_tilde "$0"| xargs -I {} echo "'{}' called"  1>&2
+# shellcheck disable=SC2155
+readonly JSON="$(git_root)/../pull_requests.json"
+readonly CURRENT_BRANCH=${1:-$(set -x; git_branch_current)}
+readonly BASE_BRANCH=$2
+now=$(date +'%Y-%m-%dT%H:%M:%SZ')
+readonly NOW="$now"
+readonly DQ='"'
+json_load() {
+  content=$(cat "$JSON" 2>/dev/null)
+  if [[ -z "${content}" ]]; then
+    content=$(echo {}| jq ".pull_requests |= .+[]")
+  fi
+  echo "${content}"
+  return 0
+}
+
+json_select() {
+  json_load| jq ".pull_requests[] | select(.head == ${DQ}$1${DQ})"
+  return 0
+}
+
+json_add() {
+  add=$(json_load| jq ".pull_requests |= .+[$1]")
+  echo "$add"> "$JSON"
+  return 0
+}
+
+if [[ -n "${BASE_BRANCH}" ]]; then
+  res=$(echo {}\
+    | jq ".number=1"\
+    | jq ".html_url=${DQ}${DQ}"\
+    | jq ".title=${DQ}${DQ}"\
+    | jq ".base=${DQ}${BASE_BRANCH}${DQ}"\
+    | jq ".head=${DQ}${CURRENT_BRANCH}${DQ}"\
+    | jq ".user=${DQ}${DQ}"\
+    | jq ".created_at=${DQ}${DQ}"\
+  )
+  echo "${res}"
+  exit
+fi
+
+json_selected=$(json_select "${CURRENT_BRANCH}")
+if [[ -n "${json_selected}" ]]; then
+  echo "${json_selected}"| jq 'del(.fetch_tat)'
+  exit
+fi
+
+prs=$(set -x; git_pr_search_with_branch "${CURRENT_BRANCH}")|| exit $?
+pr_numbers=$(echo "$prs"| awk -F '\t' '{ print $1 }')
+# shellcheck disable=SC2116
+for pr_number in $(echo "$pr_numbers"); do
+  [[ "${pr_number}" == "GIT_SEARCH_PR:PR_NOT_FOUND" ]] && continue
+  timer_clock_start_at=$(epocms)
+  json_git_pr_get=$(set -x; git_pr_get "${pr_number}")|| exit $?
+  timer_clock_end_at=$(epocms)
+  head_ref=$(echo "${json_git_pr_get}"| jq -r '.head.ref')
+  base_ref=$(echo "${json_git_pr_get}"| jq -r '.base.ref')
+  html_url=$(echo "${json_git_pr_get}"| jq -r '.html_url')
+  user=$(echo "${json_git_pr_get}"| jq -r '.user.login')
+  pr_title=$(echo "${json_git_pr_get}"| jq -r '.title')
+  created_at=$(echo "${json_git_pr_get}"| jq -r '.created_at')
+  fetch_tat=$(( timer_clock_end_at - timer_clock_start_at ))
+
+  if [[ "$head_ref" != "${CURRENT_BRANCH}" ]]; then
+    continue
+  elif [[ -z "${base_ref}" ]]; then
+    continue
+  fi
+  res=$(echo {}\
+    | jq ".number=${DQ}${pr_number}${DQ}"\
+    | jq ".html_url=${DQ}${html_url}${DQ}"\
+    | jq ".title=${DQ}${pr_title}${DQ}"\
+    | jq ".base=${DQ}${base_ref}${DQ}"\
+    | jq ".head=${DQ}${head_ref}${DQ}"\
+    | jq ".user=${DQ}${user}${DQ}"\
+    | jq ".created_at=${DQ}${created_at}${DQ}"\
+    | jq ".fetched_at=${DQ}${NOW}${DQ}"\
+    | jq ".fetch_tat=${DQ}${fetch_tat}${DQ}"\
+  )
+  json_add "${res}"
+  echo "$res"
+  exit
+done
+
+base=$(set -x; git_branch_fzf)|| exit $?
+res=$(echo {}\
+  | jq ".number=${DQ}${DQ}"\
+  | jq ".html_url=${DQ}${DQ}"\
+  | jq ".title=${DQ}${DQ}"\
+  | jq ".base=${DQ}${base}${DQ}"\
+  | jq ".head=${DQ}${CURRENT_BRANCH}${DQ}"\
+  | jq ".user=${DQ}${DQ}"\
+  | jq ".created_at=${DQ}${DQ}"\
+  | jq ".fetched_at=${DQ}${NOW}${DQ}"\
+)
+echo "$res"
