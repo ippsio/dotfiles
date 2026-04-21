@@ -14,20 +14,20 @@
 
 [diff]
   tool = nvimdiff
-  compactionHeuristic = true
+  # compactionHeuristic = true
 
 [difftool]
   prompt = false
 
 [difftool "nvimdiff"]
-  cmd = "(set -x; nvim -d \"$LOCAL\" \"$REMOTE\")"
+  cmd = "nvim +'set readonly nomodifiable' +'wincmd w | set readonly nomodifiable' -d \"$LOCAL\" \"$REMOTE\""
 
 [color "diff-highlight"]
-  oldNormal = 203 234
-  newNormal = 081 017
+  oldNormal = 203 default
+  newNormal = 063 default
   # 単語差分ハイライト部分
-  oldHighlight = 234 203 dim
-  newHighlight = 018 081 dim
+  oldHighlight = default 205
+  newHighlight = default 063
 
 [diff "color"]
   # git/diff.c
@@ -89,7 +89,7 @@
   # color.decorate.branch-------:-------------------------+         |                |
   # color.decorate.remoteBranch :-----------------------------------+----------------+
   #                             |
-  #                             | Author: ippsio <ippei.shioiri@gmail.com>
+  #                             | Author: ippsio <xxxxx.xxxxx@gmail.com>
   #                             | Date:   Thu Mar 3 10:36:54 2022 +0900
   #                             |
   #                             |     update
@@ -97,26 +97,22 @@
   #                             |  bin/git_log_fzf | 24 +++++++++---------------
   #                             |  1 file changed, 9 insertions(+), 15 deletions(-)
 
-  meta = 144 235
-  frag = 144 235
-  func = 051 017
-  context = 247
-  old = 203 234
-  oldMoved = 203 234
-  #oldMovedAlternative =       203 053
-  #oldMovedAlternativeDimmed = 203 053
-  new = 081 default
-  newMoved = 081 017
-  #newMovedAlternative =       047 024
-  #newMovedAlternativeDimmed = 047 024
-  commit = 223
+  meta     = default default
+  frag     = 100     default
+  func     = 100     default ul
+  context  = default default
+  old      = 203     default
+  oldMoved = 203     default
+  new =      063     default
+  newMoved = 063     default
+  commit   = 100     default
 
 [color "decorate"]
-  HEAD = 14
-  branch = "yellow"
-  remoteBranch = red
-  tag = "reverse bold yellow"
-  stash = magenta
+  HEAD         = 100 default ul
+  branch       = 100 default ul
+  remoteBranch = 100 default ul
+  tag          = "reverse bold yellow"
+  stash        = magenta
 
 [pager]
   log =  ((type diff-highlight >/dev/null 2>&1) && (diff-highlight | less --quiet)) || less --quiet
@@ -132,7 +128,5 @@
 [user]
 	name = 
 	email = 
-[commit]
-	template = ~/.stCommitMsg
 [merge]
   # ff = false

@@ -1,83 +1,56 @@
-#!/bin/bash
-# -------------------------------------------------------------
-# git_log_fzf <commit1> <commit2>
-# - commit1: required.
-# - commit2: optional.
-# -------------------------------------------------------------
-range=${1}
-file=${2}
-
-_ME=$( [ -L $0 ] && basename $(readlink $0) || basename $0)
-_FZF_PROMPT="${_ME} (range=[${range}],file=[$file]) > "
-_FZF_HEADER=" (enter: git diff) (ctrl-p: PR) (ctrl-y: yank hash)"
-
-GIT_LOG_CMD="git --no-pager log --graph --author-date-order --oneline --full-history --decorate=full --abbrev-commit --color=always"\
-" --date=format-local:'%Y/%m/%d %H:%M(%a)' --pretty=format:'"\
-"	"\
-"%an	"\
-"%s	"\
-"%h	"\
-"%cd	"\
-"%d'"\
-" ${range} -- ${file}"
-
-# --diff-merges たちの 違いがあまりわからない...。 diff-merges: 'on', 'first-parent',  'separate' , 'combined' , 'dense-combined'
-#DIFF_MERGES=""
-DIFF_MERGES="--diff-merges=first-parent"
-GIT_LOG_1_P_CMD="git log -1 --color=always ${DIFF_MERGES} -p --stat --pretty=fuller --abbrev-commit {2} ${file}"
-if ( type "diff-highlight" > /dev/null 2>&1 ); then
-  GIT_LOG_1_P_CMD="${GIT_LOG_1_P_CMD}| diff-highlight"
-fi
-
-# ============================================================================================================================================
-# result image of git log.
-# ============================================================================================================================================
-# *       ippsio  update-d  52618e2 2022/03/03 10:36(木)     (HEAD -> refs/heads/dotfiles, refs/remotes/origin/dotfiles, refs/remotes/origin/HEAD)
-# *       ippsio  update-c  2f0fee1 2022/03/03 07:06(木)
-# *       ippsio  update-b  46a7e05 2022/03/02 11:46(水)
-# *       ippsio  update-a  6ffabe4 2020/04/29 17:51(水)
-# ~~~~~~~ ~~~~~~  ~~~~~~~~  ~~~~~~~ ~~~~~~~~~~~~~~~~~~~~~    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# awk-$1  awk-$2  awk-$3    awk-$4  awk-$5                   awk-$6
-# fzf-{5} fzf-{4} fzf-{7}   fzf-{2} fzf-{3}                  fzf-{6}
-
-eval "${GIT_LOG_CMD}" \
-  | grep --fixed-strings '*' \
-  | awk -F '	' \
-    -v deco_git_hash="$(decorate -git_hash)" \
-    -v deco_git_cd="$(decorate -git_cd)" \
-    -v deco_git_an="$(decorate -git_an)" \
-    -v deco_git_d="$(decorate -git_d)" \
-    -v deco_git_s="$(decorate -git_s)" \
-    -v reset="\033[0m" \
-    -v dim="\033[2m" \
-    '{
-      printf "%s", dim; printf "%+2s", NR;                           printf "%s", reset; # awk-NR = fzf-{1} = index no
-      printf "	"; printf "%s", deco_git_hash;      printf "%s", $4; printf "%s", reset; # awk-$4 = fzf-{2} = %h
-      printf "	"; printf "%s%s", deco_git_cd, dim; printf "%s", $5; printf "%s", reset; # awk-$5 = fzf-{3} = %cd
-      printf "	"; printf "%s", deco_git_an;        printf "%s", $2; printf "%s", reset; # awk-$2 = fzf-{4} = %an
-      printf "	";                                  printf "%s", $1;                     # awk-$1 = fzf-{5} = commit graph
-      printf "	"; printf deco_git_d;               printf "%s", $6; printf "%s", reset; # awk-$6 = fzf-{6} = %d
-      printf "	"; printf deco_git_s;               printf "%s", $3; printf "%s", reset; # awk-$3 = fzf-{7} = %s
-      printf "\n";
-    }' \
-  | fzf --ansi --info=inline --prompt="${_FZF_PROMPT} ${GIT_LOG_CMD}" --no-clear --tabstop=1 --header="${_FZF_HEADER}" --no-sort --delimiter='\t' \
-  --bind "enter:execute(git log -1 -p --stat ${DIFF_MERGES} --pretty=fuller --abbrev-commit {2} ${file}| nvim -R -c \"set ft=diff nomod nolist nospell nu\" > /dev/tty)" \
-  --bind "tab:execute(git log -1 -p {2} ${file} < /dev/tty > /dev/tty)" \
-  --bind "ctrl-y:execute(echo -n {2}| pbcopy)" \
-  --bind "ctrl-/:toggle-preview" \
-  --bind "ctrl-_:toggle-preview" \
-  --bind "ctrl-p:execute:(git_pull_request_search_fzf {2})" \
-  --preview="
-      decorate -verbose_log \"${GIT_LOG_1_P_CMD}\";
-      echo;
-      # ここで GIT_LOG_1_P_CMD のコマンドを実行すると、何故か欲しい情報が得られない。
-      # 欲しい情報とは --pretty=format:'%d' の情報。
-      # この情報は fzf が持っている( {6} の情報。というわけで仕方ないのでfzf からもらう。
-      # 最後にeval する際、結果に tail -n +2 をかけることで、うまいこと見た目の帳尻を合わせる。
-      decorate -git_hash 'commit {2}';
-      echo -n ' '
-      [[ ! -z {6} ]] && decorate -git_d {6};
-      echo;
-      eval \"${GIT_LOG_1_P_CMD}\"| tail -n +2;
-    " --preview-window=bottom:85%
-
+#!/usr/bin/env bash
+range=$(echo "$1"| sed -E 's/^\.+//')
+file="$2"
+basename0=$(basename "$0")
+do_git_log() {
+  if [[ -n "$file" ]]; then
+    git --no-pager log --oneline --date=format-local:"%Y/%m/%d %H:%M(%a)" --pretty=format:"%h	%ad	%an	%s" "$range" -- "$file"
+  else
+    git --no-pager log --oneline --date=format-local:"%Y/%m/%d %H:%M(%a)" --pretty=format:"%h	%ad	%an	%s" "$range"
+  fi
+}
+do_fzf() {
+  get_fzf_prompt() {
+    printf '$0=%s, $1=[%s], $2=[%s] > ' "$basename0" "$range" "$file"
+  }
+  get_fzf_header() {
+    printf " (enter: git diff) (ctrl-p: PR) (ctrl-y: yank hash)"
+  }
+  get_fzf_preview() {
+    preview=$(printf "git log -1 --color=always -p --stat --pretty=fuller --abbrev-commit {2} %s" "$file")
+    if type "diff-highlight">/dev/null 2>&1; then
+      preview=$(printf "%s| diff-highlight" "$preview")
+    fi
+    printf '%s\n' "echo '$preview'"
+    printf '%s\n' "echo '---'"
+    printf '%s\n' "$preview| tail -n +2"
+  }
+  get_fzf_tab_cmd() {
+    printf 'git log -1 -p {2} %s < /dev/tty > /dev/tty' "$file"
+  }
+  get_fzf_enter_cmd() {
+    printf 'git log -1 -p --stat --pretty=fuller --abbrev-commit {2} %s' "$file"
+    printf '  | nvim -R -c "set ft=diff nomod nolist nospell nu"> /dev/tty'
+  }
+  fzf \
+    --ansi \
+    --info=inline \
+    --prompt="$(get_fzf_prompt)" \
+    --no-clear \
+    --tabstop=1 \
+    --header="$(get_fzf_header)" \
+    --no-sort \
+    --delimiter='\t' \
+    --bind "enter:execute($(get_fzf_enter_cmd))" \
+    --bind "tab:execute($(get_fzf_tab_cmd))" \
+    --bind "j:down" \
+    --bind "k:up" \
+    --bind "q:abort" \
+    --bind "ctrl-y:execute(echo -n {2}| pbcopy)" \
+    --bind "ctrl-/:toggle-preview" \
+    --bind "ctrl-_:toggle-preview" \
+    --bind "ctrl-p:execute:(git_pr_search_fzf {2})" \
+    --preview="$(get_fzf_preview)" \
+    --preview-window=bottom:85%
+}
+do_git_log| awk -F '	' '{ printf "%+2s	%s\n", NR, $0 }' | do_fzf || exit 0

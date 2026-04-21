@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+basename0=$(basename "$0")
+do_fzf() {
+  fzf_p_cmd() {
+    printf 'git_pr_open_by_file_line {2} {3}'
+  }
+  fzf_enter_cmd() {
+    printf 'nvim {2} +{3} < /dev/tty > /dev/tty'
+  }
+  fzf \
+    -m \
+    --no-sort \
+    --print-query \
+    --ansi \
+    --delimiter='\t' \
+    --tabstop=2 \
+    --prompt="$basename0 \"$1\" > " \
+    --info=inline \
+    --no-hscroll \
+    --style=minimal \
+    --bind "ctrl-/:toggle-preview" \
+    --bind "ctrl-_:toggle-preview" \
+    --bind "ctrl-b:page-up" \
+    --bind "ctrl-c:print-query" \
+    --bind "ctrl-f:page-down" \
+    --bind "ctrl-p:execute($(fzf_p_cmd))" \
+    --bind="enter:execute($(fzf_enter_cmd))" \
+    --preview-window 'bottom,60%,border-top,+{2}+3/3,~3' \
+    --preview="git_blame_colored {2} {3} {q}"
+}
+git_grep "$1"| do_fzf "$1"

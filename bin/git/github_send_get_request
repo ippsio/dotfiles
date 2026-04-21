@@ -1,6 +1,15 @@
-#!/bin/bash
-readonly HEADER1="Accept: application/vnd.github.v3+json"
-readonly HEADER2="Authorization: token $(git_find_hub_token)"
+#!/usr/bin/env bash
+token="$(git_find_hub_token)"
+if [[ -z "$token" ]]; then
+  exit 114 # FAILED TO GET TOKEN
+fi
+readonly H1="Accept: application/vnd.github+json"
+readonly H2="Authorization: Bearer $token"
+readonly H3="X-GitHub-Api-Version: 2022-11-28"
 readonly URL=$1
-curl -X GET -s -H "${HEADER1}" -H "${HEADER2}" "$URL"
 
+curl -X GET -s -L -H "${H1}" -H "${H2}" -H "${H3}" "$URL"
+exitcd="$?"
+if [[ "$exitcd" != "0" ]]; then
+  echo "curl returns exitcd $exitcd" 1>&2
+fi

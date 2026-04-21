@@ -1,3 +1,5 @@
-source ~/.config/tig/color.tigrc
+# source ~/.config/tig/color.tigrc
+source ~/.config/tig/color-light.tigrc
 source ~/.config/tig/set.tigrc
 source ~/.config/tig/bind.tigrc
+

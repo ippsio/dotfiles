@@ -1,11 +1,32 @@
-#!/bin/bash
-if ( is_git_repo ); then
-  git_grep "$@"
-  untracked_files=$(git status --short| grep "^??"| awk '{ printf "%s ", $2 }')
-  if [[ ! -z "${untracked_files}" ]]; then
-    echo "==ripgrep==(Because git-untracked file found)"
-    rg_wrap "$@" -- ${untracked_files}
+#!/usr/bin/env bash
+
+untracked_file_exists() {
+  is_git_repo || return 1
+
+  untracked=$(git status --short| grep "^??"| awk '{ printf "%s ", $2 }')
+  [[ -z "${untracked}" ]] && return 1
+
+  return 0
+}
+is_use_git_grep() {
+  return 1
+}
+
+if is_use_git_grep; then
+  if is_git_repo; then
+    if untracked_file_exists; then
+      git_grep "$@"
+
+      echo "==ripgrep==(Because git-untracked file found)"
+      # shellcheck disable=SC2086 # (Double quote to prevent globbing and word splitting.)
+      rg "$@" -- ${untracked}
+
+    else
+      git_grep "$@"
+    fi
+  else
+    rg "$@"
   fi
 else
-  rg_wrap "$@"
+  rg "$@"
 fi

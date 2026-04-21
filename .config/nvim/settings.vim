@@ -11,8 +11,6 @@
 set shada-=j
 set shadafile=~/.cache/nvim/my.shada
 
-"set termguicolors
-
 " nocompatible compatibleオプションをオフにする
 set nocompatible
 
@@ -59,7 +57,7 @@ set switchbuf=useopen
 " [スクロール]
 " scrolloff カーソルの上または下には、最低でもこのオプションに指定した数の行が表示 される。
 " nostartofline 移動コマンドを使ったとき、行頭に移動しない
-set scrolloff=2
+set scrolloff=10
 set nostartofline
 
 " [ウインドウ分割]
@@ -86,7 +84,7 @@ set shortmess+=I
 
 " [折りたたみ]
 " nofoldenable 折りたたみが個人的に好きでないので、無効化する。例えば :Gdiff 等で勝手に折りたたまれた状態で表示されると、いらいらする。
-set nofoldenable
+"set nofoldenable
 
 " [表示]
 " number 行番号を表示。
@@ -101,6 +99,7 @@ set nofoldenable
 " synmaxcol シンタックスハイライトの最大行数
 " t_Co 256色対応
 set number
+" set relativenumber
 set signcolumn=yes
 set cursorline
 "set cursorlineopt="line,screenline,number"
@@ -112,7 +111,7 @@ set wrap
 set textwidth=0
 set list
 set listchars=tab:»-,trail:-,extends:»,precedes:«,nbsp:%
-set ambiwidth=double
+"set ambiwidth=double
 set synmaxcol=1024
 set t_Co=256
 
@@ -133,7 +132,7 @@ set showtabline=2
 set maxmempattern=100000 " 100,000KB = 100MB
 set ignorecase
 set smartcase
-set incsearch
+"set incsearch
 set hlsearch
 set inccommand=
 
@@ -144,6 +143,8 @@ set infercase
 " [マウス]
 " mouse マウス利用可能なモードを設定する。
 if has("mouse")
-  set mouse=a
+  set mouse=nv
 endif
 
+" [ステータスライン]
+set laststatus=1

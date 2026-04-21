@@ -1,0 +1,97 @@
+#!/usr/bin/env bash
+perl_epocms() { perl -MTime::HiRes -e 'printf("%.0f\n",Time::HiRes::time()*1000)'; }
+hline() { eval printf '%.0s-' "{1..120}"; echo; return 0; }
+readonly DELIMITER=$'\t'
+
+start_time_millis=$(perl_epocms)
+# 特定の文言を含むコミットを抽出します。
+# - q_shell_escaped: 特定の文言
+# - range: コミット範囲
+# - files: ファイル
+q_raw=""
+range=""
+files=""
+while (( $# > 0 )); do
+  case $1 in
+    --range) range=" $2"; shift ;;
+    --) shift; files="$*"; break ;;
+    *)
+      if [[ -n "${q_raw}" ]]; then
+        echo "Usage: $(basename $0) 'searchword' --range commit1...commit2 -- files"
+        exit 1
+      else
+        q_raw="$1"
+      fi
+      ;;
+  esac
+  shift
+done
+if [[ -z "${q_raw}" ]]; then
+  echo "検索文字を入力して下さい"
+  exit 0
+fi
+
+q_shell_escaped=$(printf '%s\n' "${q_raw}"| sed -e 's/[^^]/[&]/g; s/\^/\\^/g')
+q_shell_escaped="${q_shell_escaped//\`/\\\`}"
+q_shell_escaped="${q_shell_escaped//\"/\\\"}"
+
+cd $(git_root "$files") && (
+  printf "[%s]\n" "$(basename $0)"
+  printf "PARAMETERS\n  in=%s\n  files=%s\n  q_raw=%s\n  q_shell_escaped=%s\n" "${range}" "${files}" "${q_raw}" "${q_shell_escaped}"
+  git_log_g_res_cmd="git --no-pager log --date=format:'%Y-%m-%d %H:%M' --pretty='%h	%ad	%an	%s' -G\"${q_shell_escaped}\"${range} -- ${files}"
+  printf "BASE GIT LOG COMMAND\n  %s\n" "${git_log_g_res_cmd}"
+  git_log_g_res=$(eval "${git_log_g_res_cmd}")
+  if [[ -z "${git_log_g_res}" ]]; then
+    echo "not found."
+    exit 1
+  fi
+  git_log_g_res_size=$(printf "%s" "${git_log_g_res}"| grep -Evc '^$')
+
+  (
+    git_log_g_res_idx=0
+    IFS=$'\n'
+    for git_log_g_res_1 in $(echo "${git_log_g_res}"); do
+      git_log_g_res_idx=$(( git_log_g_res_idx + 1 ))
+      # single_commit_start_time_millis=$(perl_epocms)
+      # １コミットの各要素を取得します(%h, %ad, %an, %s)。
+      git_log_h=$(echo "${git_log_g_res_1}"| awk -F '\t' '{ print $1 }')
+      git_log_ad=$(echo "${git_log_g_res_1}"| awk -F '\t' '{ printf "%s", $2 }')
+      git_log_an=$(echo "${git_log_g_res_1}"| awk -F '\t' '{ printf "%s", $3 }')
+      git_log_s=$(echo "${git_log_g_res_1}"| awk -F '\t' '{ printf "%s", $4 }')
+      if ( echo "${git_log_s}"| grep -Eo "[(]#[0-9]+[)]">/dev/null 2>&1 ); then
+        pull_request_no=$(echo "${git_log_s}"| grep -Eo "[(]#[0-9]+[)]"| tail -1)
+      else
+        pull_request_no="(#.....)"
+      fi
+
+      string_buffer=""
+      git_log_patch_filename=""
+      line_to_process=$(git --no-pager log --oneline -1 --patch --unified=0 ${git_log_h} -- ${files}| tail +2| grep -E "(^diff --git|^[\+|\-].*${q_shell_escaped})"| grep -Ev '^([\+]{3} b/|[\-]{3} a/)')
+      for git_log_patch_res_1 in $(printf "%s" "${line_to_process}"); do
+        if ( echo "${git_log_patch_res_1}"| grep -E "^diff --git a/.* b/.*">/dev/null 2>&1 ); then
+          git_log_patch_filename_a=$(echo "${git_log_patch_res_1}"| sed -E 's/^(diff --git )a\/(.*) b\/(.*)$/\2/')
+          git_log_patch_filename_b=$(echo "${git_log_patch_res_1}"| sed -E 's/^(diff --git )a\/(.*) b\/(.*)$/\3/')
+          git_log_patch_filename=$(echo "${git_log_patch_filename_a}"$'\n'"${git_log_patch_filename_b}"| uniq| xargs echo)
+        else
+          if ( printf '%s\n' "${git_log_patch_res_1}"| grep -E "${q_shell_escaped}">/dev/null 2>&1 ); then
+            git_log_patch_res_1_head1="${git_log_patch_res_1:0:1}"
+            if [[ "${git_log_patch_res_1_head1}" == "+" ]]; then
+              readable_label="追加"
+            elif [[ "${git_log_patch_res_1_head1}" == "-" ]]; then
+              readable_label="削除"
+            fi
+            #string_buffer+="(${git_log_g_res_idx}/${git_log_g_res_size}) ${git_log_h}	${pull_request_no}	${git_log_ad}	${git_log_an}	${git_log_patch_filename}"$'\n'
+            string_buffer+="(${git_log_g_res_idx}/${git_log_g_res_size})${DELIMITER}${git_log_h}${DELIMITER}${pull_request_no}${DELIMITER}${git_log_patch_filename}${DELIMITER}|${readable_label}|${git_log_patch_res_1}"$'\n'
+          fi
+        fi
+      done
+
+      hline
+      printf "%s\n" "(${git_log_g_res_idx}/${git_log_g_res_size})${DELIMITER}${git_log_h}${DELIMITER}${pull_request_no}${DELIMITER}${git_log_ad}${DELIMITER}${git_log_an}${DELIMITER}${git_log_s}"
+      printf "%s\n" "${string_buffer}"| grep -Ev "^$"
+    done
+    elapsed_time_millis=$(( $(perl_epocms) - start_time_millis ))
+    hline
+    echo "検索完了です(${git_log_g_res_size}commits, ${elapsed_time_millis}ms)"
+  )| grep -E --color=always "$|${q_shell_escaped}"
+)

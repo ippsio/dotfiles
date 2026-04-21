@@ -1,0 +1,11 @@
+bind status l       enter
+bind status <Right> enter
+bind status o       enter
+bind status C      !git commit
+bind status - >bash -c "~/dotfiles/bin/tig/tig_git_checkout_-- %(file)"
+bind status D ?bash -c "(set -x; rm %(file))"
+bind status <C-d> ?bash -c "(set -x; rm %(file))"
+bind status <C-g> +bash -c "$HOME/dotfiles/bin/tig/tig_copy_filename %(file)"
+bind status  t >bash -c "git difftool %(commit)^ $(commit) %(file)"
+bind status E >bash -c "~/dotfiles/bin/tig/tig_edit_with_vim_on_tmux %(file) %(lineno)"
+bind status q quit

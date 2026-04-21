@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+URL="https://www.googleapis.com/language/translate/v2?target=ja&source=en&q=${1// /+}"
+HEADER="X-goog-api-key: ${GOOGLE_CLOUD_DAILY_API_API_KEY}"
+curl -s -XGET -H"${HEADER}" "${URL}"| jq .data.translations[].translatedText

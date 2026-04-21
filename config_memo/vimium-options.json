@@ -1,0 +1,14 @@
+{
+  "keyMappings": "# # Navigating the page\n# #unmap j\n# unmap <c-e>\n# #unmap k\n# unmap <c-y>\n# #unmap gg\n# #unmap G\nunmap d\nunmap u\n# #unmap h\n# #unmap l\n# unmap r\n# unmap yy\n# unmap p\n# unmap P\n# unmap i\n# unmap v\n# unmap gi\n# #unmap f\n# unmap F\n# unmap gf\n# unmap gF\n# \nunmap o\nunmap O\n# unmap b\n# unmap B\n# unmap T\n# #unmap /\n# unmap N\nunmap H\nunmap L\nunmap t\n# unmap J\n# unmap gT\n# unmap K\n# unmap gt\n# unmap ^\n# unmap g0\n# unmap g$\n# unmap yt\n# unmap <a-p>\n# unmap <a-m>\nunmap W\nunmap x\nunmap X\n\nmap <C-o> goBack\nmap <C-i> goForward\nmap <c-f> scrollPageDown\nmap <c-b> scrollPageUp",
+  "settingsVersion": "2.3",
+  "exclusionRules": [
+    {
+      "passKeys": "",
+      "pattern": "https://docs.google.com/"
+    },
+    {
+      "passKeys": "",
+      "pattern": "https?://docs.google.com/*"
+    }
+  ]
+}

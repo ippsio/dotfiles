@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+grep -F "Host " ~/.ssh/config| grep -v "\*"| fzf| awk '{ print $2 }'

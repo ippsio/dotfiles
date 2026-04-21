@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+if [ -z "$1" ]; then
+  sed "s#^~#${HOME}#"| sed -r 's#/+#/#g'
+else
+  # evalを使用してBashに変数展開を行わせる。
+  eval echo "$1"| sed -r 's#/+#/#g'
+fi

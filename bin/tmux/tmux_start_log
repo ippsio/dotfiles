@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+LOG_DIR="$HOME/.tmux/log"
+get_log_filename() {
+  printf "%s/%s.log" "$LOG_DIR" "$(date +%Y-%m-%d_%H%M%S.%s)"
+}
+log_filename=$(get_log_filename)
+log_filename=${log_filename/$HOME/\$HOME}
+
+echo "*******************************************************************"
+echo " tmux_log_filename=$log_filename"
+echo "*******************************************************************"
+tmux pipe-pane "exec gawk '{print strftime(\"%Y-%m-%d %H:%M:%S\"), \$0; fflush()}' >> $log_filename"
+echo

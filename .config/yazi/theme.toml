@@ -1,0 +1,6 @@
+[flavor]
+dark  = "dracula"
+
+[mgr]
+find_keyword  = { fg = "#f1fa8c",               bold = true, italic = false, underline = true }
+find_position = { fg = "#ff79c6", bg = "reset", bold = true, italic = false }
