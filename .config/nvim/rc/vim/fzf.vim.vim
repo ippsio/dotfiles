@@ -80,6 +80,7 @@ command! -bang -nargs=? -complete=dir FzfFiles
       \       {
       \         'dir': s:GetDir(<q-args>),
       \         'source': 'rg '
+      \           .'--color=never '
       \           .'--files '
       \           .'--no-ignore '
       \           .'--hidden '
@@ -95,7 +96,7 @@ command! -bang -nargs=? -complete=dir FzfFiles
 
 function! s:EditFile(args0)
   let l:list = split(a:args0[0], "\t")
-  execute 'edit +' . l:list[2] . ' ' . l:list[1]
+  execute 'edit +' . l:list[1] . ' ' . l:list[0]
 endfunction
 
 " ファイルの内容をgit-grep、及びripgrepで検索して、さらにfzfで絞り込む
