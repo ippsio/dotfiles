@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-
-current=$(tmux display-message -p '#S')
-tmux ls -F '#S' \
-  | sed "s/^$current$/[&]/" \
-  | tr '\n' ' ' \
-  | sed 's/ $//'

@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-
-pane_pos=$(tmux display-message -p '#P')
-tmux rotate-pane
