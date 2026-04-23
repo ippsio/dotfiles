@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC1090
-source ~/dotfiles/bin/git/git_review/export_ps4
+# shellcheck disable=SC1090,SC1091
+source "$HOME/dotfiles/bin/git/review/export_ps4"
 handle_exception() {
   exitcd="$1"
   case "$exitcd" in
