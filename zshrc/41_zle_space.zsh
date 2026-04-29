@@ -15,7 +15,7 @@ zle_space() {
   lbuf_subtract_back "dej" 'deepl-cli-ej ""' && return 0
   lbuf_subtract_back "gej" 'gc-translate-cli-ej ""' && return 0
   lbuf_subtract_accept "i" "initvim" && return 0
-  lbuf_subtract "rgg" "rg-fzf " && return 0
+  lbuf_subtract "g" "rg2vim " && return 0
   lbuf_subtract_rbuf_eval "scp " "scp " "fzf_ssh_config" && return 0
   lbuf_subtract_rbuf_eval "ssh " "ssh " "fzf_ssh_config" && return 0
   lbuf_subtract_rbuf_eval "fd " "" "ls $HOME/dotfiles/bin/fd| fzf" && return 0

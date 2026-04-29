@@ -49,9 +49,7 @@ may_ln_dir $HOME/dotfiles/.config/alacritty
 may_ln_dir $HOME/dotfiles/.config/bat
 may_ln_dir $HOME/dotfiles/.config/direnv
 may_ln_dir $HOME/dotfiles/.config/karabiner/assets/complex_modifications
-may_ln_dir $HOME/dotfiles/.config/kitty
 may_ln_dir $HOME/dotfiles/.config/nvim
-may_ln_dir $HOME/dotfiles/.config/rio
 may_ln_dir $HOME/dotfiles/.config/tig
 may_ln_dir $HOME/dotfiles/.config/ripgrep
 

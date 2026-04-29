@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-rg --color=always --field-match-separator="	" --field-context-separator="	" --line-number "$@"
+rg-all --color=always --field-match-separator="\t" --field-context-separator="\t" --vimgrep --no-column "$@"

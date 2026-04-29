@@ -116,15 +116,6 @@ call jetpack#add('easymotion/vim-easymotion', { 'on_event': 'VimEnter', 'hook_po
 " jump between files
 call jetpack#add('tpope/vim-projectionist', { 'on_event': 'VimEnter', 'hook_post_source': 'source $HOME/.config/nvim/rc/vim/vim-projectionist.vim', })
 
-"colorscheme
-"call jetpack#add('projekt0n/github-nvim-theme', { 'on_event': 'VimEnter', 'hook_post_source': 'colorscheme github_dark_default', })
-"call jetpack#add('ribru17/bamboo.nvim', { 'on_event': 'VimEnter', 'hook_post_source': 'colorscheme bamboo', })
-"call jetpack#add('rebelot/kanagawa.nvim', { 'on_event': 'VimEnter', 'hook_post_source': 'colorscheme kanagawa', })
-"call jetpack#add('vague-theme/vague.nvim', {
-"  \ 'on_event': 'VimEnter',
-"  \ 'hook_post_source': 'source $HOME/.config/nvim/rc/lua/vague.nvim.lua',
-"  \ })
-
 " misc
 call jetpack#add('ippsio/clip_diff.vim', {
       \ 'on_event': 'VimEnter',
@@ -147,68 +138,10 @@ call jetpack#add('CopilotC-Nvim/CopilotChat.nvim', {
       \ 'depends': ['nvim-lua/plenary.nvim'],
       \ })
 
-"" Avante (Claude AI)
-"call jetpack#add('yetone/avante.nvim', {
-"      \ 'on_event': 'VimEnter',
-"      \ 'do': 'make',
-"      \ 'depends': ['nvim-lua/plenary.nvim', 'MunifTanjim/nui.nvim', 'nvim-treesitter/nvim-treesitter'],
-"      \ 'hook_post_source': 'source $HOME/.config/nvim/rc/lua/avante.nvim.lua',
-"      \ })
-
-"" Minuet (Claude inline completion)
-"call jetpack#add('milanglacier/minuet-ai.nvim', {
-"      \ 'on_event': 'InsertEnter',
-"      \ 'depends': ['nvim-lua/plenary.nvim'],
-"      \ 'hook_post_source': 'source $HOME/.config/nvim/rc/lua/minuet-ai.nvim.lua',
-"      \ })
-
-" ChatGPT
-"call jetpack#add('jackMort/ChatGPT.nvim', {
-"      \ 'on_cmd': ['ChatGPT', 'ChatGPTActAs', 'ChatGPTCompleteCode', 'ChatGPTEditWithInstructions', 'ChatGPTRun'],
-"      \ 'depends': [
-"      \   'MunifTanjim/nui.nvim',
-"      \   'folke/trouble.nvim',
-"      \   'nvim-lua/plenary.nvim',
-"      \   'nvim-telescope/telescope.nvim',
-"      \ ],
-"      \ 'hook_post_source': 'source $HOME/.config/nvim/rc/lua/ChatGPT.nvim.lua',
-"      \ })
-"call jetpack#add('MunifTanjim/nui.nvim', {
-"      \ 'on_cmd': [
-"      \   'ChatGPT',
-"      \   'ChatGPTActAs',
-"      \   'ChatGPTCompleteCode',
-"      \   'ChatGPTEditWithInstructions',
-"      \   'ChatGPTRun',
-"      \ ],
-"      \ })
-"call jetpack#add('folke/trouble.nvim', {
-"      \ 'on_cmd': [
-"      \ 'ChatGPT',
-"      \ 'ChatGPTActAs',
-"      \ 'ChatGPTCompleteCode',
-"      \ 'ChatGPTEditWithInstructions',
-"      \ 'ChatGPTRun',
-"      \ ],
-"      \ })
 call jetpack#add('nvim-lua/plenary.nvim')
 call jetpack#add('nvim-telescope/telescope.nvim', {
       \ 'hook_post_source': 'source $HOME/.config/nvim/rc/lua/telescope.nvim.lua',
       \ })
-" ChatGPT
-" call jetpack#add('i9wa4/vim-tmux-send-to-ai-cli', { 'on_event': 'VimEnter', })
-
-" Orgmode
-"call jetpack#add('nvim-orgmode/orgmode', {
-"      \ 'on_event': 'VimEnter',
-"      \ 'hook_post_source': 'source $HOME/.config/nvim/rc/lua/orgmode.lua',
-"      \ })
-
-"" Gemini
-"call jetpack#add('kiddos/gemini.nvim', {
-"      \ 'on_event': 'VimEnter',
-"      \ 'hook_post_source': 'source $HOME/.config/nvim/rc/lua/gemini.nvim.lua',
-"      \ })
 call jetpack#add('dstein64/vim-startuptime')
 
 " プラグインの構成が変わっていた時、ネットワーク接続があれば、jetpack#sync()を実行する。
