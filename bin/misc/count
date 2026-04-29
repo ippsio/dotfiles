@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-echo "$0"| home_as_tilde
-wc -l| tr -d ' '
-

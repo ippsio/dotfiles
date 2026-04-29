@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-echo "***************************************"
-echo " Hit key you want to inspect key code."
-echo "***************************************"
-set -x
-cat -v
