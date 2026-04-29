@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+rg --color=always --field-match-separator="	" --field-context-separator="	" --line-number "$@"

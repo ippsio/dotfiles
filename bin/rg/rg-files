@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+rg --files --hidden --no-binary --no-ignore --glob '!.git' --glob '!.git/*' --sort=path "$@" 2>/dev/null

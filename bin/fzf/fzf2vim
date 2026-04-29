@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+fzf -m --no-sort --info=inline --ansi --delimiter='	' --tabstop=2 \
+  --bind "enter:execute(nvim {1} +{2} < /dev/tty > /dev/tty)" \
+  --preview 'bat --color=always {1} --highlight-line {2}' \
+  --preview-window '+{2}+3/3,~7'

@@ -73,23 +73,31 @@ command! -bang -nargs=* BLinesWithPreview
 " ファイル名の一覧をfzfで絞り込む
 nnoremap <F9> :FzfFiles<CR>
 nnoremap <C-p> :FzfFiles<CR>
+"command! -bang -nargs=? -complete=dir FzfFiles
+"      \ call fzf#run(
+"      \   fzf#vim#with_preview(
+"      \     fzf#wrap(
+"      \       {
+"      \         'dir': s:GetDir(<q-args>),
+"      \         'source': 'rg '
+"      \           .'--color=never '
+"      \           .'--files '
+"      \           .'--no-ignore '
+"      \           .'--hidden '
+"      \           .'--binary '
+"      \           .'--glob !.git/ '
+"      \           .'--glob !.DS_Store '
+"      \           .'--sort=path'
+"      \       }
+"      \     ),
+"      \     'down:60%'
+"      \   )
+"      \ )
+
 command! -bang -nargs=? -complete=dir FzfFiles
       \ call fzf#run(
       \   fzf#vim#with_preview(
-      \     fzf#wrap(
-      \       {
-      \         'dir': s:GetDir(<q-args>),
-      \         'source': 'rg '
-      \           .'--color=never '
-      \           .'--files '
-      \           .'--no-ignore '
-      \           .'--hidden '
-      \           .'--binary '
-      \           .'--glob !.git/ '
-      \           .'--glob !.DS_Store '
-      \           .'--sort=path'
-      \       }
-      \     ),
+      \     fzf#wrap({ 'dir': s:GetDir(<q-args>), 'source': 'fd-all-exclude-dotgit' }),
       \     'down:60%'
       \   )
       \ )
@@ -102,7 +110,7 @@ endfunction
 " ファイルの内容をgit-grep、及びripgrepで検索して、さらにfzfで絞り込む
 command! -bang -nargs=* Grep
   \ call fzf#run({
-  \   'source': 'rg "' . <q-args> . '"',
+  \   'source': 'rg4fzf "' . <q-args> . '"',
   \   'sink*': function('s:EditFile'),
   \   'options': '-m'
   \   . ' --delimiter="\t" '
@@ -118,7 +126,7 @@ command! -bang -nargs=* Grep
   \   . ' --no-hscroll '
   \   . ' --bind "tab:execute(git_pull_request_open_by_file_line {2} {3})" '
   \   . ' --bind "ctrl-_:toggle-preview" '
-  \   . ' --preview "~/dotfiles/bin/git/git_blame/git_blame_colored {1} {2} ' . shellescape(<q-args>) . ' {q}"'
+  \   . ' --preview "git_blame_colored {1} {2} ' . shellescape(<q-args>) . ' {q}"'
   \   . ' --preview-window "bottom,60%,border-top,~3,+{1}+3/2" ',
   \   'window': { 'width': 0.95, 'height': 0.99 }
   \   })
@@ -134,7 +142,7 @@ command! -bang -nargs=* Gff
   \   . ' --prompt "fzf.vim.vim Gff > " '
   \   . ' --ansi '
   \   . ' --bind "change:reload:git_filter_files {q}||true" '
-  \   . ' --preview "~/dotfiles/bin/git/git_blame/git_blame_colored {}" '
+  \   . ' --preview "git_blame_colored {}" '
   \   . ' --preview-window="wrap:right:75%" ',
   \ }))
 

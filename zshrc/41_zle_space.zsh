@@ -15,9 +15,10 @@ zle_space() {
   lbuf_subtract_back "dej" 'deepl-cli-ej ""' && return 0
   lbuf_subtract_back "gej" 'gc-translate-cli-ej ""' && return 0
   lbuf_subtract_accept "i" "initvim" && return 0
-  lbuf_subtract "rgg" "rg_fzf_vim " && return 0
+  lbuf_subtract "rgg" "rg-fzf " && return 0
   lbuf_subtract_rbuf_eval "scp " "scp " "fzf_ssh_config" && return 0
   lbuf_subtract_rbuf_eval "ssh " "ssh " "fzf_ssh_config" && return 0
+  lbuf_subtract_rbuf_eval "fd " "" "ls $HOME/dotfiles/bin/fd| fzf" && return 0
 
   if $(is_git_repo); then
     lbuf_subtract "gfo" "git fetch origin --prune" && return 0
@@ -33,6 +34,7 @@ zle_space() {
     lbuf_subtract "git log " "git log --date=iso --pretty='%h %ad %an %s' -1" && return 0
     lbuf_subtract "gme" "git merge --ff " && return 0
     lbuf_subtract "gps" "git push -u origin HEAD" && return 0
+    lbuf_subtract_accept "t" "tig" && return 0
   fi
 
   if [[ -e Gemfile ]]; then

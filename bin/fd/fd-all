@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# 全ファイルの一覧を返す
+fd --hidden --no-ignore --follow "$@"

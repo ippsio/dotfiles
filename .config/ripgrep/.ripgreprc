@@ -1,15 +1,13 @@
---fixed-strings
---field-match-separator=\t
---field-context-separator=\t
---no-context-separator
---color=always
---ignore-dot
---no-ignore-exclude
---no-ignore-global
---no-ignore-parent
---ignore-vcs
+# 1. 隠しファイルを検索
 --hidden
---vimgrep
---no-column
+
+# 2. 特定ディレクトリ、特定ファイル形式の除外
 --glob=!.git/
 --glob=!.DS_Store
+--no-binary
+
+# 3. 出力フォーマット
+# --field-match-separator=\t
+# --field-context-separator=\t
+# --no-heading
+# --with-filename
