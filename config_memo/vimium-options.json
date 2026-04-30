@@ -1,14 +1,54 @@
 {
-  "keyMappings": "# # Navigating the page\n# #unmap j\n# unmap <c-e>\n# #unmap k\n# unmap <c-y>\n# #unmap gg\n# #unmap G\nunmap d\nunmap u\n# #unmap h\n# #unmap l\n# unmap r\n# unmap yy\n# unmap p\n# unmap P\n# unmap i\n# unmap v\n# unmap gi\n# #unmap f\n# unmap F\n# unmap gf\n# unmap gF\n# \nunmap o\nunmap O\n# unmap b\n# unmap B\n# unmap T\n# #unmap /\n# unmap N\nunmap H\nunmap L\nunmap t\n# unmap J\n# unmap gT\n# unmap K\n# unmap gt\n# unmap ^\n# unmap g0\n# unmap g$\n# unmap yt\n# unmap <a-p>\n# unmap <a-m>\nunmap W\nunmap x\nunmap X\n\nmap <C-o> goBack\nmap <C-i> goForward\nmap <c-f> scrollPageDown\nmap <c-b> scrollPageUp",
-  "settingsVersion": "2.3",
-  "exclusionRules": [
-    {
-      "passKeys": "",
-      "pattern": "https://docs.google.com/"
-    },
-    {
-      "passKeys": "",
-      "pattern": "https?://docs.google.com/*"
-    }
-  ]
+  "keyMappings": "unmapAll
+map yy copyCurrentUrl
+map i enterInsertMode
+map V enterVisualLineMode
+map v enterVisualMode
+map gi focusInput
+map ]] goNext
+map [[ goPrevious
+map gU goToRoot
+map gu goUp
+map f LinkHints.activateMode
+map F LinkHints.activateModeToOpenInNewTab
+map gF mainFrame
+map gf nextFrame
+map p openCopiedUrlInCurrentTab
+map P openCopiedUrlInNewTab
+map j scrollDown
+map h scrollLeft
+map d scrollPageDown
+map u scrollPageUp
+map l scrollRight
+map G scrollToBottom
+map zH scrollToLeft
+map zL scrollToRight
+map gg scrollToTop
+map k scrollUp
+map o Vomnibar.activate
+map b Vomnibar.activateBookmarks
+map B Vomnibar.activateBookmarksInNewTab
+map ge Vomnibar.activateEditUrl
+map gE Vomnibar.activateEditUrlInNewTab
+map O Vomnibar.activateInNewTab
+map T Vomnibar.activateTabSelection
+map / enterFindMode
+map * findSelected
+map # findSelectedBackwards
+map N performBackwardsFind
+map n performFind
+map H goBack
+map L goForward
+map g0 firstTab
+map g$ lastTab
+map << moveTabLeft
+map >> moveTabRight
+map K nextTab
+map J previousTab
+map ? showHelp
+map <C-o> goBack
+map <C-i> goForward
+map <c-f> scrollPageDown
+map <c-b> scrollPageUp",
+  "settingsVersion": "2.4.2"
 }
