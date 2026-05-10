@@ -1,5 +1,6 @@
 [flavor]
-dark  = "dracula"
+#dark  = "dracula"
+dark  = "eldritch"
 
 [mgr]
 find_keyword  = { fg = "#f1fa8c",               bold = true, italic = false, underline = true }

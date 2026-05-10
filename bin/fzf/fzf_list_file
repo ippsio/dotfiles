@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 get_list() {
-  # max-depth=6の数字6の根拠は特になし。適当。
-  rg --color=never --files --max-depth=6 --hidden --no-ignore --glob '!.git' --glob '!.git/*' --sort=path "$1" 2>/dev/null| sed 's#^./##g'| home_as_tilde| sort
+  fd --hidden --no-ignore --exclude .git --type f . "$1" | sed 's#^./##g' | home_as_tilde | sort
 }
 apply_fzf() {
   get_list "$1"| fzf +m\

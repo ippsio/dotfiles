@@ -146,6 +146,12 @@ function! s:SaveFile()
   endtry
 endfunction
 
+" マウス
+if has("mouse")
+  nnoremap <LeftMouse> <Cmd>set scrolloff=0<CR><LeftMouse><Cmd>set scrolloff=10<CR>
+  vnoremap <LeftMouse> <Cmd>set scrolloff=0<CR><LeftMouse><Cmd>set scrolloff=10<CR>
+endif
+
 " [その他]
 " ファイル名と行番号を表示する。ついでにファイル名をクリップボードにコピーする。
 " nnoremap <silent> <C-g> :let @* = substitute(expand("%:p"), $HOME, "~", "g")<CR><C-g>

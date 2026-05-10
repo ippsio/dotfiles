@@ -37,6 +37,7 @@ may_brew_install urlview
 may_brew_install extract_url
 may_brew_install gsed
 may_brew_install tmux
+may_brew_install chafa
 
 nodir_then_gitclone "${TMUX_PLUGINS}/tpm" "tmux-plugins/tpm"
 

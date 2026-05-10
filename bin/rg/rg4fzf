@@ -1,2 +1,3 @@
 #!/usr/bin/env bash
-rg-all --color=always --field-match-separator="\t" --field-context-separator="\t" --vimgrep --no-column "$@"
+# rg-all --color=always --field-match-separator="\t" --field-context-separator="\t" --vimgrep --no-column "$@"
+rg-respect-ignore --color=always --field-match-separator="\t" --field-context-separator="\t" --vimgrep --no-column "$@"
