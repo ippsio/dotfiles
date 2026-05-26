@@ -2,3 +2,5 @@
 .Gemfile.lock.tags
 .envrc
 
+
+**/.claude/settings.local.json

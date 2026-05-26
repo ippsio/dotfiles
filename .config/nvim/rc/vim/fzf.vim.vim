@@ -108,16 +108,18 @@ function! s:EditFile(args0)
 endfunction
 
 " ファイルの内容をgit-grep、及びripgrepで検索して、さらにfzfで絞り込む
+" :Grep  foo → リテラル検索 (-F)
+" :Grep! foo → 正規表現検索
 command! -bang -nargs=* Grep
   \ call fzf#run({
-  \   'source': 'rg4fzf "' . <q-args> . '"',
+  \   'source': 'rg4fzf ' . (<bang>0 ? '' : '-F ') . shellescape(<q-args>),
   \   'sink*': function('s:EditFile'),
   \   'options': '-m'
   \   . ' --delimiter="\t" '
   \   . ' --tabstop=3 '
   \   . ' --style=minimal '
   \   . ' --ansi '
-  \   . ' --prompt "fzf.vim.vim Grep (' . <q-args> . ') > " '
+  \   . ' --prompt ' . shellescape('fzf.vim.vim Grep' . (<bang>0 ? '!(regex)' : '(literal)') . ' (' . <q-args> . ') > ') . ' '
   \   . ' --info=inline '
   \   . ' --layout reverse '
   \   . ' --with-nth=1.. '
@@ -131,21 +133,6 @@ command! -bang -nargs=* Grep
   \   'window': { 'width': 0.95, 'height': 0.99 }
   \   })
 
-" 指定された文字をすべて含むファイルの一覧を取得します。
-command! -bang -nargs=* Gff
-  \ call fzf#run(fzf#wrap({
-  \   'source': 'git_filter_files <q-args>',
-  \   'sink':   function('s:open_file'),
-  \   'options': '--disabled '
-  \   . ' --query "' . <q-args> . ' " '
-  \   . ' --info=inline '
-  \   . ' --prompt "fzf.vim.vim Gff > " '
-  \   . ' --ansi '
-  \   . ' --bind "change:reload:git_filter_files {q}||true" '
-  \   . ' --preview "git_blame_colored {}" '
-  \   . ' --preview-window="wrap:right:75%" ',
-  \ }))
-
 function! s:open_file(file) abort
   execute 'edit' fnameescape(a:file)
 endfunction
@@ -153,7 +140,7 @@ endfunction
 " ファイルの内容をgit-grep、及びripgrepで検索して、さらにfzfで絞り込む
 command! -bang -nargs=* GitDeepblame
   \ call fzf#run({
-  \   'source': 'git_deepblame "' . <q-args> . '" -- ' . system('git_obtain_relative_path ' . expand('%:p')),
+  \   'source': 'git_deepblame ' . shellescape(<q-args>) . ' -- ' . system('git_obtain_relative_path ' . expand('%:p')),
   \   'sink*': function('s:EditFile'),
   \   'options': '-m'
   \   . ' --delimiter="\t" '

@@ -155,19 +155,24 @@ endif
 " [その他]
 " ファイル名と行番号を表示する。ついでにファイル名をクリップボードにコピーする。
 " nnoremap <silent> <C-g> :let @* = substitute(expand("%:p"), $HOME, "~", "g")<CR><C-g>
-nnoremap <silent> <C-g> :call <SID>CopyFilename()<CR>
+nnoremap <silent> <C-g><C-g> :call <SID>CopyFilename('absolute')<CR>
+nnoremap <silent> <C-g> :call <SID>CopyFilename('default')<CR>
 
-function! s:CopyFilename()
-  let l:dot_git = system('cd ' . expand('%:h') . '; git rev-parse --git-dir 2>/dev/null')
-  if l:dot_git == ''
-    " Outside git repository.
-    let l:file = substitute(expand("%:p"), $HOME, "~", "g")
+function! s:CopyFilename(mode)
+  if a:mode ==# 'absolute'
+    let l:file = expand("%:p")
   else
-    " Inside git repository.
-    let git_dir = fnamemodify(l:dot_git, ':h')
-    let l:file = system('cd ' . git_dir . '; git ls-files --full-name ' . expand('%') . ' 2>/dev/null')
-    if l:file == ''
+    let l:dot_git = system('cd ' . expand('%:h') . '; git rev-parse --git-dir 2>/dev/null')
+    if l:dot_git == ''
+      " Outside git repository.
       let l:file = substitute(expand("%:p"), $HOME, "~", "g")
+    else
+      " Inside git repository.
+      let git_dir = fnamemodify(l:dot_git, ':h')
+      let l:file = system('cd ' . git_dir . '; git ls-files --full-name ' . expand('%') . ' 2>/dev/null')
+      if l:file == ''
+        let l:file = substitute(expand("%:p"), $HOME, "~", "g")
+      endif
     endif
   endif
   let l:path = substitute(l:file, "[\\n|\\r]", "", "g")

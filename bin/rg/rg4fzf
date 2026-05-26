@@ -1,3 +1,8 @@
 #!/usr/bin/env bash
+# 引数が1個で先頭が - のときだけ、rg にフラグ誤認されないよう先頭をエスケープ
+# (regex 上 \- はリテラル - にマッチするので検索結果は変わらない)
+if [ "$#" -eq 1 ] && [ "${1#-}" != "$1" ]; then
+  set -- "\\$1"
+fi
 # rg-all --color=always --field-match-separator="\t" --field-context-separator="\t" --vimgrep --no-column "$@"
 rg-respect-ignore --color=always --field-match-separator="\t" --field-context-separator="\t" --vimgrep --no-column "$@"
