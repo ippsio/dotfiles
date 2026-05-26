@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-rg --hidden --no-ignore --follow --glob '!.git' --glob '!.git/*' "$@"
+rg-all --ignore-vcs "$@"

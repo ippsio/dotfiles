@@ -1,4 +1,9 @@
 [[mgr.prepend_keymap]]
+on = "<Esc>"
+run = "quit"
+desc = "Quit yazi"
+
+[[mgr.prepend_keymap]]
 on = "<Enter>"
 run = "plugin smart-enter"
 desc = "Enter the child directory, or open the file"
@@ -27,3 +32,18 @@ desc = "Disable search via fd"
 on = "t"
 run = "noop"
 desc = "Disable tab"
+
+# [[mgr.prepend_keymap]]
+# on = "f"
+# run = "find --smart"
+# desc = "Find next file"
+
+[[mgr.prepend_keymap]]
+on = "/"
+run = "filter --smart"
+desc = "Filter files"
+
+[[input.prepend_keymap]]
+on = "<Esc>"
+run = ["close", "escape"]
+desc = "Close input and clear filter/find/search state"
