@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+results=$(git_grep_fzf "$@") || exit
+[ -z "$results" ] && exit
+
+args=()
+while IFS=$'\t' read -r _ file line _; do
+  [ -n "$file" ] && args+=("+$line" "$file")
+done <<< "$results"
+
+[ ${#args[@]} -eq 0 ] && exit
+nvim "${args[@]}"
