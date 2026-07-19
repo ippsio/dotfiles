@@ -18,6 +18,8 @@ f_weekly="$base_dir/weekly/$sun_ym/${sun}-${sat}.txt"
 ensure_files() {
   ensure_file "$f_project" "プロジェクト進行状況"
   ensure_file "$f_weekly" "週次：${sun}-${sat}"
+  dt_ymda2=$(dt_ymd_a_local)
+  f_daily_detail=$(get_f_daily_detail)
   ensure_file "$f_daily" "日次: $dt_ymda2"
   ensure_file "$f_daily_detail" "日次詳細: $dt_ymda2"
   ensure_file "$f_todo" "TODO"

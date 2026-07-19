@@ -2,40 +2,24 @@
 # memo 系コマンドの共通関数・共通変数。各コマンドから source して使う。
 
 base_dir="$HOME/memo"
+printf -v epoc '%(%s)T' -1
 
-epoc=$(date '+%s')
-format_epoc_dt() {
-  LC_ALL=C date -r "$epoc" "$1"; return 0;
-}
-dt_ymda=$(format_epoc_dt "+%Y_%m%d_%a")
-dt_ymda2=$(format_epoc_dt "+%Y/%m/%d(%a)")
+dt_ymda=$(LC_ALL=C printf "%(%Y_%m%d_%a)T\n" "$epoc")
 dt_ym=${dt_ymda:0:7}
-
-f_daily_detail="$base_dir/daily_detail/$dt_ym/$dt_ymda.txt"
-
-format_dt() {
-  LC_ALL=C date -r "$1" "$2"; return 0;
-}
+dt_ymd_a_local() { LC_ALL=C printf "%(%Y/%m/%d(%a))T\n" "$epoc"; return 0; }
+get_f_daily_detail() { echo "$base_dir/daily_detail/$dt_ym/$dt_ymda.txt"; return 0; }
+format_dt() { LC_ALL=C date -r "$1" "$2"; return 0; }
 
 ensure_basedir() {
   [[ -d $base_dir ]] || mkdir -p "$base_dir"
 }
-find_up() {
-  local dir
-  dir=$PWD
-  while [[ $dir != "/" ]]; do
-    [[ -e $dir/$1 ]] && return 0
-    dir=${dir%/*}
-    dir=${dir:-/}
-  done
-  return 1
-}
+
 ensure_git_managed() {
-  (
-    cd "$base_dir" || return 1
-    find_up .git || git init
-  )
+  if [[ ! -d "$base_dir/.git" ]]; then
+    (cd "$base_dir" && git init)
+  fi
 }
+
 ensure_file() {
   local file="$1"
   local content="$2"
@@ -43,24 +27,31 @@ ensure_file() {
   [[ -f "$file" ]] && return 0
   local fdir="${file%/*}"
   [[ -d "$fdir" ]] || mkdir -p "$fdir"
-  printf "\n# %s\n---\n" "$content">"$file"
-  echo "">>"$file"
+  printf "\n# %s\n---\n" "$content" >"$file"
+  echo "" >>"$file"
 }
+
 git_commit() {
   (
     cd "$base_dir" || return 1
     git add -A
-    [[ -n $(git status -s| wc -l| tr -d ' ') ]] || return 1
-    git commit -m "update" 1>/dev/null
+    if ! git diff --cached --quiet || ! git diff --quiet; then
+      git commit -m "update" 1>/dev/null
+    fi
   )
 }
-# 本日より前で、実際に存在する最新の日次詳細ファイルパスを返す。
+
 find_prev_daily_detail() {
   local dd_dir="$base_dir/daily_detail"
-  local f b prev=""
-  while IFS= read -r f; do
-    b=${f##*/}; b=${b%.txt}   # basename 相当（fork せずパラメータ展開で処理）
-    [[ $b < $dt_ymda ]] && prev="$f"
-  done < <(LC_ALL=C find "$dd_dir" -type f -name '*.txt' 2>/dev/null | LC_ALL=C sort)
-  [[ -n $prev ]] && printf '%s\n' "$prev"
+  local files=("$dd_dir"/*/*.txt)
+  local i b f
+  for ((i=${#files[@]}-1; i>=0; i--)); do
+    f="${files[i]}"
+    [[ -e "$f" ]] || continue
+    b=${f##*/}; b=${b%.txt}
+    if [[ $b < $dt_ymda ]]; then
+      printf '%s\n' "$f"
+      return 0
+    fi
+  done
 }

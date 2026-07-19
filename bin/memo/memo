@@ -2,6 +2,7 @@
 
 # 共通関数・共通変数を読み込む
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/memo_common"
+f_daily_detail=$(get_f_daily_detail)
 
 # 日次詳細の「直前日分（直近の既存ファイル）」と「本日分」を nvim で開く。
 open_files_with_nvim() {
@@ -19,6 +20,6 @@ open_files_with_nvim() {
 
 ensure_basedir
 ensure_git_managed
-ensure_file "$f_daily_detail" "日次詳細: $dt_ymda2"
+ensure_file "$f_daily_detail" "日次詳細: $(dt_ymd_a_local)"
 open_files_with_nvim
 git_commit
