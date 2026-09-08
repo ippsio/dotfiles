@@ -154,28 +154,38 @@ endif
 
 " [その他]
 " ファイル名と行番号を表示する。ついでにファイル名をクリップボードにコピーする。
-" nnoremap <silent> <C-g> :let @* = substitute(expand("%:p"), $HOME, "~", "g")<CR><C-g>
-nnoremap <silent> <C-g><C-g> :call <SID>CopyFilename('absolute')<CR>
-nnoremap <silent> <C-g> :call <SID>CopyFilename('default')<CR>
+nnoremap <silent> <C-g> :call <SID>CopyFilename('absolute')<CR>
 
 function! s:CopyFilename(mode)
+  let l:abs = expand("%:p")
   if a:mode ==# 'absolute'
-    let l:file = expand("%:p")
+    " $HOME 配下なら $HOME で置き換える。
+    let l:file = substitute(l:abs, '^\V' . escape($HOME, '\') . '\v(/|$)', '$HOME\1', '')
   else
-    let l:dot_git = system('cd ' . expand('%:h') . '; git rev-parse --git-dir 2>/dev/null')
-    if l:dot_git == ''
-      " Outside git repository.
-      let l:file = substitute(expand("%:p"), $HOME, "~", "g")
-    else
-      " Inside git repository.
-      let git_dir = fnamemodify(l:dot_git, ':h')
-      let l:file = system('cd ' . git_dir . '; git ls-files --full-name ' . expand('%') . ' 2>/dev/null')
-      if l:file == ''
-        let l:file = substitute(expand("%:p"), $HOME, "~", "g")
+    " バッファのあるディレクトリ（未作成の場合は存在する親まで遡る）を起点に探す。
+    let l:dir = fnamemodify(l:abs, ':h')
+    while !isdirectory(l:dir) && l:dir !=# fnamemodify(l:dir, ':h')
+      let l:dir = fnamemodify(l:dir, ':h')
+    endwhile
+    let l:toplevel = ''
+    if isdirectory(l:dir)
+      let l:out = system('git -C ' . shellescape(l:dir) . ' rev-parse --show-toplevel 2>/dev/null')
+      if v:shell_error == 0
+        let l:toplevel = substitute(l:out, '[\n\r]\+$', '', '')
       endif
     endif
+    if l:toplevel !=# '' && stridx(l:abs, l:toplevel . '/') == 0
+      " Inside git repository. リポジトリルートからの相対パス。
+      let l:file = strpart(l:abs, strlen(l:toplevel) + 1)
+    elseif l:toplevel !=# '' && stridx(resolve(l:abs), resolve(l:toplevel) . '/') == 0
+      " シンボリックリンク経由で開いた場合。
+      let l:file = strpart(resolve(l:abs), strlen(resolve(l:toplevel)) + 1)
+    else
+      " Outside git repository.
+      let l:file = substitute(l:abs, '^\V' . escape($HOME, '\') . '\v(/|$)', '~\1', '')
+    endif
   endif
-  let l:path = substitute(l:file, "[\\n|\\r]", "", "g")
+  let l:path = substitute(l:file, '[\n\r]', '', 'g')
   let @* = l:path
   let l:msg = "Filename copied '" . l:path . "'"
   let l:maxlen = v:echospace + ((&cmdheight - 1) * &columns)

@@ -1,9 +1,45 @@
 #!/usr/bin/env bash
-if [[ -n "$TMUX_PANE_STYLE" ]]; then
-  current_pane_style=$(tmux display-message -p "fg=#{pane_fg},bg=#{pane_bg}"| perl -pe 's/[\r\n]//g')
-  if [[ "$current_pane_style" != "$TMUX_PANE_STYLE" ]]; then
-    tmux select-pane -P "$TMUX_PANE_STYLE"
-  fi
+# direnv が .envrc から export したペイン色にペインの背景色を追従させる。
+#   通常時         : $TMUX_PANE_STYLE
+#   グレースケール時: $TMUX_PANE_STYLE_GRAY  (switch-color on。未設定ならグローバル継承)
+# どちらを使うかは tmux のグローバルオプション @switch_color で判定する
+# (.config/tmux/tmux-theme-{normal,gray}.conf が設定)。
+#
+# 注意点 (1 番目がペイン間で色が混ざる原因):
+#   - tmux のコマンドは -t 省略時 $TMUX_PANE ではなく「アクティブペイン」に作用する。
+#     バックグラウンドのペインで precmd/preexec が発火すると他のペインの色を
+#     上書きしてしまうため、必ず -t "$TMUX_PANE" を明示する。
+#   - select-pane -P はスタイル設定と同時にフォーカスも奪うので set-option -p を使う。
+#   - #{pane_fg}/#{pane_bg} は pane-style ではなく端末の実描画色を返すため現在値の
+#     比較には使えない。show-options -p -v window-style で取得する。
+#   - 解除は 'bg=default,fg=default' の代入ではなく -u で unset し継承元へ戻す。
+#     代入だとペインスコープに値が残り続ける。
+#   - 2 つの候補色はペインオプションにも控える。switch-color 側はシェルの環境変数を
+#     読めないので、テーマ切り替え時の貼り直しはこの控えを使う
+#     (bin/misc/switch-color の reapply_pane_styles)。
+[[ -z "$TMUX_PANE" ]] && exit 0
+
+if [[ "$(tmux show-options -gv @switch_color 2>/dev/null)" == "on" ]]; then
+  style="$TMUX_PANE_STYLE_GRAY"
 else
-  tmux select-pane -P "bg=default,fg=default"
+  style="$TMUX_PANE_STYLE"
 fi
+
+current=$(tmux show-options -p -t "$TMUX_PANE" -v window-style 2>/dev/null)
+if [[ "$current" != "$style" ]]; then
+  if [[ -z "$style" ]]; then
+    tmux set-option -pu -t "$TMUX_PANE" window-style
+    tmux set-option -pu -t "$TMUX_PANE" window-active-style
+  else
+    tmux set-option -p -t "$TMUX_PANE" window-style        "$style"
+    tmux set-option -p -t "$TMUX_PANE" window-active-style "$style"
+  fi
+fi
+
+# 控えの更新。ディレクトリを跨いだ時だけ書き込めば十分なので差分を見る。
+saved=$(tmux show-options -p -t "$TMUX_PANE" -v @pane_style_normal 2>/dev/null)
+if [[ "$saved" != "$TMUX_PANE_STYLE" ]]; then
+  tmux set-option -p -t "$TMUX_PANE" @pane_style_normal "$TMUX_PANE_STYLE"
+  tmux set-option -p -t "$TMUX_PANE" @pane_style_gray   "$TMUX_PANE_STYLE_GRAY"
+fi
+exit 0

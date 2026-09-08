@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+
+# tmux の status 行から呼ぶコマンドの出力を TTL 付きでキャッシュするラッパー。
+#
+#   usage: tmux_cache <ttl_sec> <cache_key> <command> [args...]
+#
+# status-interval 1 を保ったまま、重いスクリプトの実行頻度だけ落とすために使う。
+# 毎秒通るキャッシュヒット側は外部コマンドを一切呼ばない (bash の組み込みだけで
+# 完結させる) 。1 プロセス fork するだけで 10ms 前後かかるため、ここで stat や
+# date を呼ぶとキャッシュの意味が薄れる。
+#
+# キャッシュの 1 行目は有効期限の epoch 秒、2 行目以降がコマンドの出力。
+# ファイルの mtime ではなく本文に期限を持たせているのは stat を避けるため。
+# コマンドが失敗したときは期限切れのキャッシュを返し、status 行が一瞬空になるのを防ぐ。
+
+set -u
+
+if [[ $# -lt 3 ]]; then
+  echo "usage: tmux_cache <ttl_sec> <cache_key> <command> [args...]" >&2
+  exit 2
+fi
+
+ttl=$1
+key=$2
+shift 2
+
+cache_dir="${TMPDIR:-/tmp}/tmux_status_cache.${UID}"
+cache="${cache_dir}/${key}"
+
+stale=""
+if [[ -f ${cache} ]]; then
+  content=$(<"${cache}")        # $(<file) はコマンド置換と違い fork しない
+  expire=${content%%$'\n'*}
+  stale=${content#*$'\n'}
+  if [[ ${expire} =~ ^[0-9]+$ ]] && (( EPOCHSECONDS < expire )); then
+    printf '%s\n' "${stale}"
+    exit 0
+  fi
+fi
+
+# ここから下は TTL 切れのときだけ通る。
+[[ -d ${cache_dir} ]] || mkdir -p "${cache_dir}" || exit 1
+
+if payload=$("$@" 2>/dev/null); then
+  # 複数の pane / client から同時に走っても壊れないよう一時ファイル経由で差し替える。
+  tmp="${cache}.$$"
+  printf '%s\n%s\n' "$(( EPOCHSECONDS + ttl ))" "${payload}" >"${tmp}" &&
+    mv -f "${tmp}" "${cache}"
+  printf '%s\n' "${payload}"
+else
+  printf '%s\n' "${stale}"
+fi
+
+exit 0

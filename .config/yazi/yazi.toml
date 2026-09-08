@@ -1,5 +1,7 @@
 [mgr]
 show_hidden    = true
+linemode       = "mtime"
+mouse_events   = []          # マウス操作 (click/scroll/drag) を無効化
 
 [[plugin.prepend_previewers]]
 url = "*.heic"
@@ -12,3 +14,7 @@ run = 'file'
 # [[plugin.prepend_previewers]]
 # url = "*"
 # run = 'piper -- hexyl --border=none --terminal-width=$w "$1"'
+
+[[plugin.prepend_preloaders]]
+mime = "application/pdf"
+run  = "noop"

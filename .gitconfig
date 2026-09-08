@@ -130,3 +130,10 @@
 	email = 
 [merge]
   # ff = false
+[include]
+    path = $HOME/ghq/github.com/dandavison/delta/themes.gitconfig
+[delta]
+  side-by-side = true
+  keep-plus-minus-markers = true
+  features = collared-trogon
+

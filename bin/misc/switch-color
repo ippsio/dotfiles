@@ -1,0 +1,143 @@
+#!/usr/bin/env python3
+"""switch-color -- 画面全体を「グレースケール」に切り替える
+
+システム設定 > アクセシビリティ > カラーフィルタ > グレイスケール
+を1コマンドでトグルするのが目的。あわせて tmux の配色も切り替える。
+
+## グレースケール
+MediaAccessibility.framework の表示フィルタ API を直接叩く。
+即時反映され、システム設定側の表示とも同期する (~/Library/Preferences/com.apple.mediaaccessibility.plist)。
+※ defaults write だけでは反映されない。監視しているプロセスがいないため API 呼び出しが必要。
+
+## tmux の配色
+グレイスケールフィルタ下では彩度が落ちて暗色同士の判別が付きにくいので、
+明るい無彩色の配色 (.config/tmux/tmux-theme-gray.conf) に差し替える。
+off で通常配色 (tmux-theme-normal.conf) に戻る。
+tmux 未インストール / サーバー未起動なら何もしない。
+
+direnv の $TMUX_PANE_STYLE でペイン個別に色を付けている場合、そのペインスコープ設定は
+グローバルより優先されるためテーマを読み込むだけでは取り残される。各 .envrc に
+$TMUX_PANE_STYLE_GRAY を用意しておくと、グレースケール時はそちらに切り替わる
+(未設定ならグローバルのライト背景を継承)。切り替えの実体は下記 2 箇所:
+  - bin/tmux/tmux_pane_style_with_env: ディレクトリ移動時。@switch_color を見て選ぶ
+  - reapply_pane_styles (このスクリプト): テーマ切り替え時。既存の全ペインに貼り直す
+
+## 使い方
+  switch-color            トグル
+  switch-color on|off     明示指定
+  switch-color status     状態を on / off で出力 (tmux ステータス等から利用可)
+"""
+
+import ctypes
+import subprocess
+import sys
+from pathlib import Path
+
+# --- MediaAccessibility: 表示フィルタ -------------------------------------
+# カテゴリもフィルタ種別も整数の enum。MADisplayFilterPrefCopyCategoriesForCurrentPlatform()
+# が返す値は macOS 26 時点で [1, 2, 3, 4, 5]。1 が plist 上の __Color__ (カラーフィルタ) に対応する。
+CATEGORY_COLOR = 1
+FILTER_GRAYSCALE = 1
+
+# --- tmux テーマ ----------------------------------------------------------
+# bin/misc/switch-color -> dotfiles/.config/tmux
+TMUX_THEME_DIR = Path(__file__).resolve().parents[2] / ".config" / "tmux"
+
+
+def _media_accessibility():
+    lib = ctypes.CDLL(
+        "/System/Library/Frameworks/MediaAccessibility.framework/MediaAccessibility"
+    )
+    lib.MADisplayFilterPrefSetCategoryEnabled.argtypes = [ctypes.c_int32, ctypes.c_bool]
+    lib.MADisplayFilterPrefSetCategoryEnabled.restype = None
+    lib.MADisplayFilterPrefGetCategoryEnabled.argtypes = [ctypes.c_int32]
+    lib.MADisplayFilterPrefGetCategoryEnabled.restype = ctypes.c_bool
+    lib.MADisplayFilterPrefSetType.argtypes = [ctypes.c_int32, ctypes.c_int32]
+    lib.MADisplayFilterPrefSetType.restype = None
+    return lib
+
+
+def grayscale_enabled():
+    return _media_accessibility().MADisplayFilterPrefGetCategoryEnabled(CATEGORY_COLOR)
+
+
+def set_grayscale(enabled):
+    lib = _media_accessibility()
+    if enabled:
+        lib.MADisplayFilterPrefSetType(CATEGORY_COLOR, FILTER_GRAYSCALE)
+    lib.MADisplayFilterPrefSetCategoryEnabled(CATEGORY_COLOR, enabled)
+
+
+def _tmux(args):
+    """tmux コマンドを実行する。未インストール / 失敗時は None を返す。"""
+    try:
+        result = subprocess.run(
+            ["tmux", *args],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+            text=True,
+            check=False,
+        )
+    except FileNotFoundError:
+        return None
+    return result if result.returncode == 0 else None
+
+
+def reapply_pane_styles(enabled):
+    """direnv 由来のペイン個別色を、切り替え後のテーマに合わせて貼り直す。
+
+    控え (@pane_style_normal / @pane_style_gray) は tmux_pane_style_with_env が
+    ディレクトリ移動のたびに更新している。こちらはシェルの環境変数を読めないので、
+    その控えだけを頼りに全ペインを回す。
+    """
+    key = "@pane_style_gray" if enabled else "@pane_style_normal"
+    listed = _tmux(["list-panes", "-a", "-F", "#{pane_id}\t#{%s}" % key])
+    if listed is None:
+        return
+    for line in listed.stdout.splitlines():
+        pane_id, _, style = line.partition("\t")
+        if not pane_id:
+            continue
+        for option in ("window-style", "window-active-style"):
+            if style:
+                _tmux(["set-option", "-p", "-t", pane_id, option, style])
+            else:
+                # 個別色なし / グレー用未設定 -> グローバルのテーマ色を継承させる
+                _tmux(["set-option", "-pu", "-t", pane_id, option])
+
+
+def apply_tmux_theme(enabled):
+    theme = TMUX_THEME_DIR / (
+        "tmux-theme-gray.conf" if enabled else "tmux-theme-normal.conf"
+    )
+    if not theme.exists():
+        return
+    if _tmux(["source-file", str(theme)]) is None:
+        return  # tmux 未インストール / サーバー未起動
+    reapply_pane_styles(enabled)
+
+
+def switch(enabled):
+    set_grayscale(enabled)
+    apply_tmux_theme(enabled)
+
+
+def main(argv):
+    command = argv[1] if len(argv) > 1 else "toggle"
+
+    if command == "status":
+        print("on" if grayscale_enabled() else "off")
+    elif command == "on":
+        switch(True)
+    elif command == "off":
+        switch(False)
+    elif command == "toggle":
+        switch(not grayscale_enabled())
+    else:
+        print(__doc__.strip(), file=sys.stderr)
+        return 1
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv))

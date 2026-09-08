@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+# f1 でメモをトグルするための tmux 用ラッパー。
+#
+# popup をやめて通常ウインドウで開くようにしたため、f1 は root キーテーブルで
+# tmux に奪われて memo の nvim まで届かない。そのままだと f1 を押すたびに
+# memo ウインドウが増えるので、ここで押した場所に応じて振り分ける。
+#
+#   - memo ウインドウ内   : F1 を nvim に送る（remaps.vim の :qa で閉じる）
+#   - 他ウインドウ (既存) : 既存の memo ウインドウへ移動
+#   - 他ウインドウ (無し) : memo ウインドウを新規作成
+set -u
+
+if [[ $(tmux display-message -p '#{window_name}') == memo ]]; then
+  tmux send-keys F1
+  exit
+fi
+
+memo_window_id=$(tmux list-windows -F '#{window_id} #{window_name}' | awk '$2 == "memo" { print $1; exit }')
+if [[ -n $memo_window_id ]]; then
+  tmux select-window -t "$memo_window_id"
+  exit
+fi
+
+# automatic-rename on だと窓名が memo から書き換わって判定できなくなるので、
+# 作った窓だけ automatic-rename を切って名前を固定する。
+new_window_id=$(tmux new-window -P -F '#{window_id}' -n memo "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/memo")
+tmux set-window-option -t "$new_window_id" automatic-rename off

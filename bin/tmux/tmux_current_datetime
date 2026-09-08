@@ -1,7 +1,23 @@
 #!/usr/bin/env bash
-client_width=$(~/dotfiles/bin/tmux/tmux_client_width)
-if [[ ${client_width} -gt 160 ]]; then
-  env LC_ALL=C date +'%a,%m/%d %H:%M:%S'
-elif [[ ${client_width} -gt 100 ]]; then
-  env LC_ALL=C date +'%H:%M:%S'
+
+#   usage: tmux_current_datetime [client_width]
+#
+# 秒まで表示するので status-interval 1 で毎秒 (実際は再描画のたびなのでそれ以上)
+# 呼ばれる。キャッシュできない代わりに fork をゼロにしてある:
+#   - 幅は conf 側から #{client_width} を渡してもらう (省略時のみ tmux に問い合わせ)
+#   - 日時は date コマンドではなく bash 組み込みの printf '%(...)T' で組み立てる
+# 1 プロセス fork するだけで 10ms 前後かかるため、この経路では外部コマンドを呼ばない。
+
+set -u
+
+# date に env LC_ALL=C を付けていたのと同じ意図。printf '%(...)T' の strftime にも効く。
+export LC_ALL=C
+
+width=${1:-}
+[[ ${width} =~ ^[0-9]+$ ]] || width=$("$HOME/dotfiles/bin/tmux/tmux_client_width")
+
+if (( width > 160 )); then
+  printf '%(%a,%m/%d %H:%M:%S)T' -1
+elif (( width > 100 )); then
+  printf '%(%H:%M:%S)T' -1
 fi

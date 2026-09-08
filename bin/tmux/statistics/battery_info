@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+# バッテリー状態を pmset 2 回の呼び出しでまとめて取得し、タブ区切り 1 行で返す。
+#
+#   <discharging(0|1)>	<percent>	<wattage>	<remaining>
+#
+# pmset は 1 回あたり数十 ms かかるので、項目ごとに呼び直さずここで一括で取る。
+
+ps_result=$(pmset -g ps)
+ac_result=$(pmset -g ac)
+
+if grep -qE "discharging" <<<"${ps_result}"; then
+  discharging=1
+else
+  discharging=0
+fi
+
+percent=$(  grep -o '[0-9]\+%'         <<<"${ps_result}"| head -1| tr -d '%')
+remaining=$(grep -o '[0-9]\+:[0-9]\+'  <<<"${ps_result}"| head -1)
+wattage=$(  grep -F "Wattage"          <<<"${ac_result}"| grep -o '[0-9]\+'| head -1)
+
+printf "%s\t%s\t%s\t%s\n" \
+  "${discharging}" "${percent:-0}" "${wattage:---}" "${remaining:---:--}"

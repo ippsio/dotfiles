@@ -1,11 +1,11 @@
 {
-  "title": "Japanese JIS to US Keyboard: Remap Symbol Keys",
+  "title": "[50:Japanese JIS to US Keyboard: Remap Symbol Keys]",
   "maintainers": [
     "halfwhole"
   ],
   "rules": [
     {
-      "description": "Change shift + 2 from \" to @",
+      "description": "5x: Change shift + 2 from \" to @",
       "manipulators": [
         {
           "conditions": [
@@ -39,7 +39,7 @@
       ]
     },
     {
-      "description": "Change shift + 6 from & to ^",
+      "description": "5x: Change shift + 6 from & to ^",
       "manipulators": [
         {
           "conditions": [
@@ -73,7 +73,7 @@
       ]
     },
     {
-      "description": "Change shift + 7 from ' to &",
+      "description": "5x: Change shift + 7 from ' to &",
       "manipulators": [
         {
           "conditions": [
@@ -110,7 +110,7 @@
       ]
     },
     {
-      "description": "Change shift + 8 from ( to *",
+      "description": "5x: Change shift + 8 from ( to *",
       "manipulators": [
         {
           "conditions": [
@@ -147,7 +147,7 @@
       ]
     },
     {
-      "description": "Change shift + 9 from ) to (",
+      "description": "5x: Change shift + 9 from ) to (",
       "manipulators": [
         {
           "conditions": [
@@ -184,7 +184,7 @@
       ]
     },
     {
-      "description": "Change shift + 0 from 0 to )",
+      "description": "5x: Change shift + 0 from 0 to )",
       "manipulators": [
         {
           "conditions": [
@@ -221,7 +221,7 @@
       ]
     },
     {
-      "description": "Change shift + - from = to _",
+      "description": "5x: Change shift + - from = to _",
       "manipulators": [
         {
           "conditions": [
@@ -255,7 +255,7 @@
       ]
     },
     {
-      "description": "Change ^ to =",
+      "description": "5x: Change ^ to =",
       "manipulators": [
         {
           "conditions": [
@@ -289,7 +289,7 @@
       ]
     },
     {
-      "description": "Change shift + ^ from ~ to +",
+      "description": "5x: Change shift + ^ from ~ to +",
       "manipulators": [
         {
           "conditions": [
@@ -325,7 +325,7 @@
       ]
     },
     {
-      "description": "Change command + ^ to expand(IncreaseFontSize)",
+      "description": "5x: Change command + ^ to expand(IncreaseFontSize)",
       "manipulators": [
         {
           "conditions": [
@@ -361,7 +361,7 @@
       ]
     },
     {
-      "description": "Change ¥ to `",
+      "description": "5x: Change ¥ to `",
       "manipulators": [
         {
           "conditions": [
@@ -395,7 +395,7 @@
       ]
     },
     {
-      "description": "Change shift + ¥ from | to ~",
+      "description": "5x: Change shift + ¥ from | to ~",
       "manipulators": [
         {
           "conditions": [
@@ -432,7 +432,7 @@
       ]
     },
     {
-      "description": "Change @ to [",
+      "description": "5x: Change @ to [",
       "manipulators": [
         {
           "conditions": [
@@ -463,7 +463,7 @@
       ]
     },
     {
-      "description": "Change shift + @ from ` to {",
+      "description": "5x: Change shift + @ from ` to {",
       "manipulators": [
         {
           "conditions": [
@@ -500,7 +500,7 @@
       ]
     },
     {
-      "description": "Change [ to ]",
+      "description": "5x: Change [ to ]",
       "manipulators": [
         {
           "conditions": [
@@ -531,7 +531,7 @@
       ]
     },
     {
-      "description": "Change shift + [ from { to }",
+      "description": "5x: Change shift + [ from { to }",
       "manipulators": [
         {
           "conditions": [
@@ -568,7 +568,7 @@
       ]
     },
     {
-      "description": "Change shift + ; from + to :",
+      "description": "5x: Change shift + ; from + to :",
       "manipulators": [
         {
           "conditions": [
@@ -602,7 +602,7 @@
       ]
     },
     {
-      "description": "Change : to '",
+      "description": "5x: Change : to '",
       "manipulators": [
         {
           "conditions": [
@@ -636,7 +636,7 @@
       ]
     },
     {
-      "description": "Change shift + : from * to \"",
+      "description": "5x: Change shift + : from * to \"",
       "manipulators": [
         {
           "conditions": [
@@ -673,7 +673,7 @@
       ]
     },
     {
-      "description": "Change ] to \\",
+      "description": "5x: Change ] to \\",
       "manipulators": [
         {
           "conditions": [
@@ -707,7 +707,7 @@
       ]
     },
     {
-      "description": "Change shift + ] from } to |",
+      "description": "5x: Change shift + ] from } to |",
       "manipulators": [
         {
           "conditions": [

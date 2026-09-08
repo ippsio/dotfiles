@@ -15,18 +15,22 @@ get_branches() {
 }
 do_awk() {
   awk -F '	' '{
-    h = $1
-    ad = $2
-    an = $3
-    branch = $4
-    s = $5
-    printf "(%+3s)	%s	%s	%-8.8s	%s	%s \n", NR, h, ad, an, branch, s;
+    h[NR] = $1
+    ad[NR] = $2
+    an[NR] = $3
+    branch[NR] = $4
+    s[NR] = $5
+    if (length($4) > branch_w) branch_w = length($4)
+  }
+  END {
+    fmt = "(%+3s)	%-" branch_w "s	%s	%s	%-8.8s	%s \n"
+    for (i = 1; i <= NR; i++) printf fmt, i, branch[i], h[i], ad[i], an[i], s[i]
   }'
 }
 do_fzf() {
   bind_tab() {
     printf '%s\n' "cd '$(git_root)'|| exit 1"
-    printf '%s\n' "git_log_fzf {5}"
+    printf '%s\n' "git_log_fzf {2}"
   }
   fzf \
     --ansi \
@@ -35,11 +39,11 @@ do_fzf() {
     --info=inline \
     --tabstop=3 \
     --delimiter="	" \
-    --nth=5 \
+    --nth=2,5 \
     --bind "tab:execute($(bind_tab))" \
-    --bind "ctrl-l:execute(cd $(git_root); git_log_fzf {7})"
+    --bind "ctrl-l:execute(cd $(git_root); git_log_fzf {2})"
   }
 get_branches\
   | do_awk\
   | do_fzf\
-  | awk -F '	' '{ sub(/^origin\//, "", $5); print $5 }'
+  | awk -F '	' '{ sub(/ +$/, "", $2); sub(/^origin\//, "", $2); print $2 }'

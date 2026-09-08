@@ -5,6 +5,7 @@ runtime! abbrevs.vim
 runtime! autocmds.vim
 runtime! jetpack.vim
 runtime! rc/functions/Hi.vim
+runtime! rc/functions/Calc.vim
 colorscheme sorbet
 augroup InitvimHi
   autocmd!

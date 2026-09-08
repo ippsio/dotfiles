@@ -23,9 +23,15 @@ background = "#111120"
 foreground = "#ececec"
 
 [font]
-size =14
+size =16
 offset = {x=0, y=3}
 normal = {family = "Moralerspace Neon HWJPDOC"}
+# normal = {family = "BIZ UDGothic"}
+# normal = {family = "Andale Mono"}
+# normal = {family = "Monaco"}
+# normal = {family = "Menlo"}
+# normal = {family = "Courier New"}
+# normal = {family = "Moralerspace Xenon HWJPDOC"}
 
 [[keyboard.bindings]]
 key = "w"

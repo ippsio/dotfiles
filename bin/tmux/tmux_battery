@@ -1,58 +1,39 @@
 #!/usr/bin/env bash
-is_discharging() {
-  if type "pmset" &>/dev/null && pmset -g ps | grep -E "discharging" >/dev/null 2>&1; then
-    return 0
-  else
-    return 1
-  fi
-}
 
-percent() {
-  pmset -g ps | grep -o '[0-9]\+%' | tr -d '%'
-}
-wattage() {
-  pmset -g ac| grep -F "Wattage"| grep -o '[0-9]\+'
-}
+#   usage: tmux_battery [client_width]
+#
+# pmset は 1 回あたり数十 ms かかるため、status-interval 1 で毎秒叩かないよう
+# statistics/battery_info の結果を tmux_cache 経由で受け取る。
+# 充電マークの点滅だけは毎秒動かしたいので、キャッシュを挟まずここで組み立てる。
+#
+# 毎秒通る経路なので fork を増やさないこと (1 プロセスあたり 10ms 前後かかる)。
+# client_width は conf 側から #{client_width} を渡してもらう。省略時だけ
+# tmux_client_width にフォールバックする。
 
-remaining() {
-  local res="$(pmset -g ps | grep -o '[0-9]\+:[0-9]\+')"
-  if [[ -z "$res" ]]; then
-    res="--:--"
-  fi
-  echo "$res"
-}
-charging_mark() {
-  second=$(date +'%S')
-  odd_or_even=$(( second % 2 ))
-  if is_discharging; then
-    if [[ $odd_or_even -eq 1 ]]; then
-      echo " "
-    else
-      echo "~"
-    fi
-  else
-    if [[ $odd_or_even -eq 1 ]]; then
-      echo " "
-    else
-      echo "+"
-    fi
-  fi
-}
+set -u
 
-get_status() {
-  charging_mark="$(charging_mark)"
-  charging_mark="${charging_mark:- }"
-  percent="$(percent)"
-  wattage="$(wattage)"
-  wattage="${wattage:---}"
-  remaining="$(remaining)"
-  width=$(~/dotfiles/bin/tmux/tmux_client_width)
+readonly bin_dir="$HOME/dotfiles/bin/tmux"
+readonly cache_ttl=10
 
-  if [[ $width -gt 160 ]]; then
-    printf "%s%2d%%(%sW,%s)" "$charging_mark" "$percent" "$wattage" "$remaining"
-  else
-    printf "%s%2d%%(%sW)" "$charging_mark" "$percent" "$wattage"
-  fi
-}
+width=${1:-}
+[[ ${width} =~ ^[0-9]+$ ]] || width=$("${bin_dir}/tmux_client_width")
 
-get_status
+# discharging / percent / wattage / remaining をタブ区切りで受け取る。
+IFS=$'\t' read -r discharging percent wattage remaining < <(
+  "${bin_dir}/tmux_cache" "${cache_ttl}" battery_info "${bin_dir}/statistics/battery_info"
+)
+
+# 秒の偶奇で点滅させる。date を呼ばずに済むよう EPOCHSECONDS を使う。
+if (( EPOCHSECONDS % 2 == 1 )); then
+  mark=" "
+elif [[ ${discharging} -eq 1 ]]; then
+  mark="~"
+else
+  mark="+"
+fi
+
+if (( width > 160 )); then
+  printf "%s%2d%%(%sW,%s)" "${mark}" "${percent}" "${wattage}" "${remaining}"
+else
+  printf "%s%2d%%(%sW)" "${mark}" "${percent}" "${wattage}"
+fi

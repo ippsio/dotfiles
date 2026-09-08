@@ -15,8 +15,18 @@ desc = "Disable trash"
 
 [[mgr.prepend_keymap]]
 on = "D"
-run = "noop"
-desc = "Disable permanent delete"
+run = "remove"
+desc = "Move to trash"
+
+[[mgr.prepend_keymap]]
+on = "M"
+run = "yank --cut"
+desc = "Cut files (move with P)"
+
+[[mgr.prepend_keymap]]
+on = "P"
+run = "paste"
+desc = "Paste files"
 
 [[mgr.prepend_keymap]]
 on = "a"
@@ -32,6 +42,11 @@ desc = "Disable search via fd"
 on = "t"
 run = "noop"
 desc = "Disable tab"
+
+[[mgr.prepend_keymap]]
+on = "e"
+run = 'shell --block -- nvim "$@"'
+desc = "Edit with nvim"
 
 # [[mgr.prepend_keymap]]
 # on = "f"
